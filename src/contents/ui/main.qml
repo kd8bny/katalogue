@@ -33,6 +33,7 @@ Kirigami.ApplicationWindow {
 
     globalDrawer: Kirigami.GlobalDrawer {
         id: globalDrawer
+
         title: i18n("katalogue")
         titleIcon: "applications-graphics"
         isMenu: !root.isMobile
