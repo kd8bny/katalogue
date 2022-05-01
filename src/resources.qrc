@@ -1,0 +1,11 @@
+<!--
+    SPDX-License-Identifier: CC0-1.0
+    SPDX-FileCopyrightText: 2022 Daryl Bennett <kd8bny@gmail.com>
+-->
+<RCC>
+    <qresource prefix="/">
+        <file alias="main.qml">contents/ui/main.qml</file>
+        <file alias="About.qml">contents/ui/About.qml</file>
+        <file alias="AddEventSheet.qml">contents/ui/sheets/AddEventSheet.qml</file>
+    </qresource>
+</RCC>
