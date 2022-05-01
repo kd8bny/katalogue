@@ -17,7 +17,8 @@ target_link_libraries(katalogue
     KF5::I18n
     KF5::CoreAddons
     KF5::ConfigCore
-    KF5::ConfigGui)
+    KF5::ConfigGui
+    SQLite::SQLite3)
 
 kconfig_add_kcfg_files(katalogue GENERATE_MOC katalogueconfig.kcfgc)
 install(TARGETS katalogue ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
