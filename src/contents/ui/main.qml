@@ -11,7 +11,6 @@ Kirigami.ApplicationWindow {
 
     title: i18n("katalogue")
 
-
     minimumWidth: Kirigami.Units.gridUnit * 20
     minimumHeight: Kirigami.Units.gridUnit * 20
 
@@ -59,9 +58,16 @@ Kirigami.ApplicationWindow {
             Kirigami.Action {
                 text: i18n("Todo")
                 icon.name: "task-new"
-                onTriggered: {
-                    addSheet.open()
-                }
+                // onTriggered: {
+                //     addSheet.open()
+                // }
+            },
+            Kirigami.Action {
+                text: i18n("Log")
+                icon.name: "file-catalog-symbolic"
+                // onTriggered: {
+                //     addSheet.open()
+                // }
             },
             Kirigami.Action {
                 text: i18n("About katalogue")
@@ -80,64 +86,11 @@ Kirigami.ApplicationWindow {
         id: contextDrawer
     }
 
-    pageStack.initialPage: page
-
-    Kirigami.Page {
-        id: page
-
-        Layout.fillWidth: true
-
-        title: i18n("Overview")
-
-
-        actions.main: 
-            Kirigami.Action {
-            text: i18n("Add Event")
-            icon.name: "list-add"
-            tooltip: i18n("Add new event")
-            // onTriggered: {
-            //     counter += 1
-            // }
-            //Kirigami.Action {
-            // text: i18n("Overview")
-            // iconName: "go-home"
-            // enabled: root.pageStack.lastVisibleItem != pageRoot
-            // onTriggered: root.pageStack.pop(-1)
-            // }
-
-        }
-
-        ColumnLayout {
-            width: page.width
-
-            anchors.centerIn: parent
-
-            Kirigami.Heading {
-                Layout.alignment: Qt.AlignCenter
-                //text: counter == 0 ? i18n("Hello, World!") : counter
-                text: i18n("Welcome to katalogue\nA tool to track all you maintenance needs")
-            }
-
-            Controls.Button {
-                Layout.alignment: Qt.AlignHCenter
-                text: i18n("Add Event")
-                onClicked: addEventSheet.open()
-            }
-            AddEventSheet {
-                id: addEventSheet
-                // onAdded: kountdownModel.append({
-                //     "name": name, 
-                //     "description": description, 
-                //     "date": Date.parse(kdate)
-                // });
-                // onEdited: kountdownModel.set(index, {
-                //     "name": name, 
-                //     "description": description, 
-                //     "date": Date.parse(kdate) 
-                // });
-                // onRemoved: kountdownModel.remove(index, 1)
-            }
-
-        }
+    Overview{
+        id: overviewPage
     }
+
+    pageStack.initialPage: overviewPage
+
+
 }
