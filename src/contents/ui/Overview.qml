@@ -7,13 +7,20 @@ import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.19 as Kirigami
 
 
-Kirigami.Page {
+Kirigami.ScrollablePage {
     id: overviewPage
 
     Layout.fillWidth: true
 
     title: i18n("Overview")
 
+    //Close the drawer with the back button
+    onBackRequested: {
+        if (sheet.sheetOpen) {
+            event.accepted = true;
+            sheet.close();
+        }
+    }
 
     actions {
         main: Kirigami.Action {
@@ -42,14 +49,35 @@ Kirigami.Page {
     }
 
     ColumnLayout {
-        width: page.width
-
-        anchors.centerIn: parent
-
         Kirigami.Heading {
-            Layout.alignment: Qt.AlignCenter
+            //Layout.alignment: Qt.AlignCenter
             //text: counter == 0 ? i18n("Hello, World!") : counter
             text: i18n("Welcome to katalogue\nA tool to track all you maintenance needs")
+        }
+        Kirigami.CardsLayout {
+            id: layout
+            width: page.width
+            Kirigami.Card {
+                headerOrientation: Qt.Horizontal
+                actions: [
+                    Kirigami.Action {
+                        text: qsTr("Action1")
+                        icon.name: "add-placemark"
+                    },
+                    Kirigami.Action {
+                        text: qsTr("Action2")
+                        icon.name: "address-book-new-symbolic"
+                    }
+                ]
+                // banner {
+                //     source: Qt.resolvedUrl("../banner.jpg")
+                //     title: "Title"
+                // }
+                contentItem: Controls.Label {
+                    wrapMode: Text.WordWrap
+                    text: qsTr("A card can optionally have horizontal orientation.\n In this case will be wider than tall, so is fit to be used also in a ColumnLayout.\nIf you need to put it in a CardsLayout, it will have by default a columnSpan of 2 (which can be overridden).")
+                }
+            }
         }
 
     }

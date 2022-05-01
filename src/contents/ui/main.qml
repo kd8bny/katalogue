@@ -57,11 +57,31 @@ Kirigami.ApplicationWindow {
 
         actions: [
             Kirigami.Action {
+                text: i18n("Overview")
+                icon.name: "go-home"
+            },
+            Kirigami.Action {
                 text: i18n("Todo")
                 icon.name: "task-new"
                 // onTriggered: {
                 //     addSheet.open()
                 // }
+            },
+            Kirigami.Action {
+                text: i18n("Add Event")
+                icon.name: "list-add"
+                tooltip: i18n("Add new event")
+                onTriggered: {
+                    addEventSheet.open()
+                }
+            },
+            Kirigami.Action {
+                text: i18n("Add Item")
+                icon.name: "list-add"
+                tooltip: i18n("Add new item")
+                onTriggered: {
+                    addEventSheet.open()
+                }
             },
             Kirigami.Action {
                 text: i18n("Log")
