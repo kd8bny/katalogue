@@ -10,6 +10,7 @@
 
 #include "about.h"
 #include "app.h"
+#include "database.h"
 #include "version-katalogue.h"
 #include <KAboutData>
 #include <KLocalizedContext>
@@ -51,6 +52,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     App application;
     qmlRegisterSingletonInstance("org.kde.katalogue", 1, 0, "App", &application);
+
+    Database database;
+    database.openDatabase();
 
     engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
