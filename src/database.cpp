@@ -1,19 +1,7 @@
+#include <database.h>
 
-#include <sqlite3.h>
-
-class Database
-{
-private:
-    sqlite3* DB;
-    const char* db = "test.db";
-
-public:
-    Database();
-    ~Database();
-    int openDatabase();
-};
-
-Database::Database()
+Database::Database(QObject *parent)
+    : QObject(parent)
 {
 }
 

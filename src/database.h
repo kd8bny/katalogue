@@ -1,14 +1,16 @@
-
 #include <sqlite3.h>
+#include <QObject>
 
-class Database
+class Database : public QObject
 {
+    Q_OBJECT
+
 private:
     sqlite3* DB;
     const char* db = "test.db";
 
 public:
-    Database();
+    explicit Database(QObject *parent = nullptr);
     ~Database();
     int openDatabase();
 };
