@@ -15,11 +15,11 @@ target_link_libraries(katalogue
     Qt5::Quick
     Qt5::QuickControls2
     Qt5::Svg
+    Qt5::Sql
     KF5::I18n
     KF5::CoreAddons
     KF5::ConfigCore
-    KF5::ConfigGui
-    SQLite::SQLite3)
+    KF5::ConfigGui)
 
 kconfig_add_kcfg_files(katalogue GENERATE_MOC katalogueconfig.kcfgc)
 install(TARGETS katalogue ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

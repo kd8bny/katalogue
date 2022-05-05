@@ -5,6 +5,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15 as Controls
 import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.19 as Kirigami
+import com.kd8bny.katalogue 1.0
 
 Kirigami.ApplicationWindow {
     id: root
@@ -37,8 +38,8 @@ Kirigami.ApplicationWindow {
         title: i18n("katalogue")
         titleIcon: "applications-graphics"
         isMenu: !root.isMobile
-        modal: false;
-        collapsible: true;
+        modal: false
+        collapsible: true
         showHeaderWhenCollapsed: true
 
         header: RowLayout {
@@ -51,7 +52,7 @@ Kirigami.ApplicationWindow {
             }
             Kirigami.SearchField {
                 visible: !globalDrawer.collapsed
-                Layout.fillWidth: true
+                //Layout.fillWidth: true
             }
         }
 
@@ -68,27 +69,19 @@ Kirigami.ApplicationWindow {
                 // }
             },
             Kirigami.Action {
-                text: i18n("Add Event")
-                icon.name: "list-add"
-                tooltip: i18n("Add new event")
-                onTriggered: {
-                    addEventSheet.open()
-                }
-            },
-            Kirigami.Action {
-                text: i18n("Add Item")
-                icon.name: "list-add"
-                tooltip: i18n("Add new item")
-                onTriggered: {
-                    addEventSheet.open()
-                }
-            },
-            Kirigami.Action {
                 text: i18n("Log")
                 icon.name: "file-catalog-symbolic"
                 // onTriggered: {
                 //     addSheet.open()
                 // }
+            },
+            Kirigami.Action {
+                text: i18n("Manage Data")
+                icon.name: "server-database"
+                tooltip: i18n("Add, edit, or remove items to track")
+                onTriggered: {
+                    //addEventSheet.open()
+                }
             },
             Kirigami.Action {
                 text: i18n("About katalogue")
@@ -112,6 +105,4 @@ Kirigami.ApplicationWindow {
     }
 
     pageStack.initialPage: overviewPage
-
-
 }

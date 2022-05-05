@@ -9,7 +9,6 @@ include(FeatureSummary)
 
 set(QT5_MIN_VERSION 5.15)
 set(KF5_MIN_VERSION 5.83)
-set(SQLite_MIN_VERSION 3.38)
 
 find_package(ECM ${KF5_MIN_VERSION} REQUIRED NO_MODULE)
 
@@ -27,9 +26,8 @@ ecm_setup_version(${PROJECT_VERSION}
     VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/src/version-katalogue.h"
 )
 
-find_package(Qt5 ${QT5_MIN_VERSION} REQUIRED COMPONENTS Core Gui Qml QuickControls2 Svg)
+find_package(Qt5 ${QT5_MIN_VERSION} REQUIRED COMPONENTS Core Gui Qml QuickControls2 Svg Sql)
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS Kirigami2 CoreAddons Config I18n)
-find_package(SQLite3)
 
 add_subdirectory(src)
 
