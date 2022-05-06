@@ -9,11 +9,13 @@
 
 #define DATABASE_NAME "katalogue.db"
 #define DATABASE_TYPE "QSQLITE"
+
 #define TABLE_ITEMS "ITEMS"
 #define TABLE_NAME "NAME"
 #define TABLE_NICK "NICK"
 #define TABLE_YEAR "YEAR"
 #define TABLE_CATEGORY "CATEGORY"
+
 #define TABLE_MAINTENANCE "MAINTENANCE"
 #define TABLE_DATE "DATE"
 #define TABLE_TASK "TASK"

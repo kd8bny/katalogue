@@ -52,7 +52,7 @@ Kirigami.ApplicationWindow {
             }
             Kirigami.SearchField {
                 visible: !globalDrawer.collapsed
-                //Layout.fillWidth: true
+                Layout.fillWidth: true
             }
         }
 

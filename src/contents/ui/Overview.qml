@@ -42,7 +42,7 @@ Kirigami.ScrollablePage {
                 icon.name: "list-add"
                 tooltip: i18n("Add new item")
                 onTriggered: {
-                    addEventSheet.open()
+                    addItemSheet.open()
                 }
             }
         ]
@@ -84,5 +84,9 @@ Kirigami.ScrollablePage {
 
     AddEventSheet {
         id: addEventSheet
+    }
+
+    AddItemSheet {
+        id: addItemSheet
     }
 }
