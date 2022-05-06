@@ -25,7 +25,7 @@ Kirigami.ScrollablePage {
     actions {
         main: Kirigami.Action {
             iconName: "go-home"
-            enabled: root.pageStack.lastVisibleItem != pageRoot
+            enabled: root.pageStack.lastVisibleItem != overviewPage
             onTriggered: root.pageStack.pop(-1)
         }
         contextualActions: [
@@ -56,7 +56,7 @@ Kirigami.ScrollablePage {
         }
         Kirigami.CardsLayout {
             id: layout
-            width: page.width
+            width: overviewPage.width
             Kirigami.Card {
                 headerOrientation: Qt.Horizontal
                 actions: [
