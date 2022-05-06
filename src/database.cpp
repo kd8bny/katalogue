@@ -20,6 +20,7 @@ bool Database::connect()
     if(db.open()){
         // Check if the database is empty
         if(db.tables().size() == 0){
+            qDebug() << "New database, creating tables";
             this->initializeSchema();
         }
         isDBOpen = true;
