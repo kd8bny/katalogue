@@ -22,4 +22,5 @@ target_link_libraries(katalogue
     KF5::ConfigGui)
 
 kconfig_add_kcfg_files(katalogue GENERATE_MOC katalogueconfig.kcfgc)
+target_compile_options(katalogue PUBLIC -fexceptions)
 install(TARGETS katalogue ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

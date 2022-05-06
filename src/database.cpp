@@ -41,8 +41,6 @@ bool Database::initializeSchema()
         TABLE_YEAR      " INT,"
         TABLE_NICK      " TEXT)";
 
-    query.exec(queryItems);
-
     const QString queryMaintenance = "CREATE TABLE " TABLE_MAINTENANCE
         " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
         TABLE_DATE      " NUMERIC   NOT NULL," //TODO type?
@@ -51,14 +49,15 @@ bool Database::initializeSchema()
         TABLE_TYPE      " TEXT,"
         TABLE_COMMENT   " VARCHAR(255))";
 
-    // try{
-    query.exec(queryMaintenance);
-    isSchemaCreate = true;
-    qDebug() << queryItems;
-    qDebug() << query.lastError();
-    // }catch(QSqlError::TransactionError ex){
-    //     //test
-    // }
+    try{
+        query.exec(queryItems);
+        query.exec(queryMaintenance);
+        isSchemaCreate = true;
+
+    }catch(QSqlError ex){
+        qDebug() << ex;
+        qDebug() << query.lastError();
+    }
 
     return isSchemaCreate;
 }

@@ -38,8 +38,8 @@ Kirigami.OverlaySheet {
 			enabled: nameField.text.length > 0
 			onClicked: {
 				kountdownModel.append({
-					name: nameField.text, 
-					description: descriptionField.text, 
+					name: nameField.text,
+					description: descriptionField.text,
 					//The parse() method parses a string and returns the number of milliseconds since January 1, 1970, 00:00:00 UTC.
 					//date: Date.parse(dateField.text)
 				});
