@@ -39,13 +39,23 @@ bool Database::initializeSchema()
 
     const QString queryItems = "CREATE TABLE " TABLE_ITEMS
         " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-        TABLE_NAME      " VARCHAR(255)    NOT NULL,"
-        TABLE_YEAR      " VARCHAR(255)    NOT NULL,"
-        TABLE_CATEGORY  " VARCHAR(255)    NOT NULL)";
-        // TABLE_NICK    "VARCHAR(255)    NULLABLE)";
+        TABLE_NAME      " TEXT  NOT NULL,"
+        TABLE_CATEGORY  " TEXT  NOT NULL,"
+        TABLE_YEAR      " INT,"
+        TABLE_NICK      " TEXT)";
+
+    query.exec(queryItems);
+
+    const QString queryMaintenance = "CREATE TABLE " TABLE_MAINTENANCE
+        " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        TABLE_DATE      " NUMERIC   NOT NULL," //TODO type?
+        TABLE_TASK      " TEXT      NOT NULL,"
+        TABLE_COST      " REAL,"
+        TABLE_TYPE      " TEXT,"
+        TABLE_COMMENT   " VARCHAR(255))";
 
     // try{
-    query.exec(queryItems);
+    query.exec(queryMaintenance);
     isSchemaCreate = true;
     qDebug() << queryItems;
     qDebug() << query.lastError();

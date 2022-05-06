@@ -14,6 +14,12 @@
 #define TABLE_NICK "NICK"
 #define TABLE_YEAR "YEAR"
 #define TABLE_CATEGORY "CATEGORY"
+#define TABLE_MAINTENANCE "MAINTENANCE"
+#define TABLE_DATE "DATE"
+#define TABLE_TASK "TASK"
+#define TABLE_COST "COST"
+#define TABLE_TYPE "TYPE"
+#define TABLE_COMMENT "COMMENT"
 
 class Database : public QObject
 {
