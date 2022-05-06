@@ -15,19 +15,15 @@ bool Database::connect()
     bool isDBOpen = false;
 
     db = QSqlDatabase::addDatabase(DATABASE_TYPE);
-    //db.setHostName(DATABASE_HOSTNAME);
     db.setDatabaseName(DATABASE_NAME);
 
-    // if(db.tables()){
-    //db.tables()
-
-    // }
-    
-
     if(db.open()){
+        // Check if the database is empty
+        if(db.tables().size() == 0){
+            this->initializeSchema();
+        }
         isDBOpen = true;
     }
-    this->initializeSchema();
 
     return isDBOpen;
 }
