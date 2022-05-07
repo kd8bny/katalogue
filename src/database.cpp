@@ -39,12 +39,13 @@ bool Database::initializeSchema()
         TABLE_NAME      " TEXT  NOT NULL,"
         TABLE_CATEGORY  " TEXT  NOT NULL,"
         TABLE_YEAR      " INT,"
-        TABLE_NICK      " TEXT)";
+        TABLE_NICK      " TEXT,"
+        TABLE_ARCHIVED  " BOOLEAN NOT NULL CHECK (" TABLE_ARCHIVED " IN (0, 1)))";
 
     const QString queryMaintenance = "CREATE TABLE " TABLE_MAINTENANCE
         " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-        TABLE_DATE      " NUMERIC   NOT NULL," //TODO type?
-        TABLE_TASK      " TEXT      NOT NULL,"
+        TABLE_DATE      " DATE  NOT NULL,"
+        TABLE_TASK      " TEXT  NOT NULL,"
         TABLE_COST      " REAL,"
         TABLE_TYPE      " TEXT,"
         TABLE_COMMENT   " VARCHAR(255))";
