@@ -25,6 +25,7 @@ Kirigami.ScrollablePage {
     actions {
         main: Kirigami.Action {
             iconName: "go-home"
+            tooltip: i18n("Overview")
             enabled: root.pageStack.lastVisibleItem != overviewPage
             onTriggered: root.pageStack.pop(-1)
         }

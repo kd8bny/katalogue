@@ -32,14 +32,13 @@ public:
     explicit Database(QObject *parent = nullptr);
     ~Database();
     bool connect();
+    bool insertItemEntry();
 
 private:
     QSqlDatabase db;
 
 private:
     bool initializeSchema();
-    // bool openDataBase();
     // bool restoreDataBase();
     // void closeDataBase();
-    // bool createTable();
 };

@@ -29,6 +29,33 @@ bool Database::connect()
     return isDBOpen;
 }
 
+bool Database::insertItemEntry()
+{
+    QSqlQuery query;
+    bool isInsert = false;
+
+    query.prepare("INSERT INTO " TABLE_ITEMS " ("
+        TABLE_NAME ", " TABLE_CATEGORY ", " TABLE_YEAR ", "
+        TABLE_NICK ", " TABLE_ARCHIVED") "
+        "VALUES (:name, :category, :year, :nick, :archived)");
+
+    // query.bindValue(":name", data[0].toString());
+    // query.bindValue(":category", data[1].toString());
+    // query.bindValue(":year", data[2].toInt());
+    // query.bindValue(":nick",       data[1].toString());
+    // query.bindValue(":archived",         data[2].toInt());
+ 
+ 
+    if(query.exec()){
+        isInsert = true;
+    } else {
+        qDebug() << "Error inserting record " << TABLE_ITEMS;
+        qDebug() << query.lastError().text();
+    }
+
+    return isInsert;
+}
+
 bool Database::initializeSchema()
 {
     QSqlQuery query;

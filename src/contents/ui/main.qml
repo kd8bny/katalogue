@@ -37,7 +37,7 @@ Kirigami.ApplicationWindow {
 
         title: i18n("katalogue")
         titleIcon: "applications-graphics"
-        isMenu: !root.isMobile
+        //isMenu: !root.isMobile
         modal: false
         collapsible: true
         showHeaderWhenCollapsed: true
@@ -60,6 +60,9 @@ Kirigami.ApplicationWindow {
             Kirigami.Action {
                 text: i18n("Overview")
                 icon.name: "go-home"
+                tooltip: i18n("Overview")
+                // enabled: root.pageStack.lastVisibleItem != overviewPage
+                onTriggered: root.pageStack.pop(-1)
             },
             Kirigami.Action {
                 text: i18n("Todo")
@@ -71,9 +74,7 @@ Kirigami.ApplicationWindow {
             Kirigami.Action {
                 text: i18n("Log")
                 icon.name: "file-catalog-symbolic"
-                // onTriggered: {
-                //     addSheet.open()
-                // }
+                onTriggered: root.pageStack.layers.push('qrc:items.qml')
             },
             Kirigami.Action {
                 text: i18n("Manage Data")
@@ -96,9 +97,9 @@ Kirigami.ApplicationWindow {
         ]
     }
 
-    contextDrawer: Kirigami.ContextDrawer {
-        id: contextDrawer
-    }
+    // contextDrawer: Kirigami.ContextDrawer {
+    //     id: contextDrawer
+    // }
 
     Overview{
         id: overviewPage
