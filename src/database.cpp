@@ -63,10 +63,12 @@ bool Database::initializeSchema()
 
     const QString queryItems = "CREATE TABLE " TABLE_ITEMS
         " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-        TABLE_NAME      " TEXT  NOT NULL,"
-        TABLE_CATEGORY  " TEXT  NOT NULL,"
+        TABLE_NAME      " TEXT      NOT NULL,"
+        TABLE_MAKE      " MAKE,"
+        TABLE_MODEL     " MODEL,"
         TABLE_YEAR      " INT,"
-        TABLE_NICK      " TEXT,"
+        TABLE_GROUP     " GROUP     NOT NULL,"
+        TABLE_CATEGORY  " TEXT      NOT NULL,"
         TABLE_ARCHIVED  " BOOLEAN NOT NULL CHECK (" TABLE_ARCHIVED " IN (0, 1)))";
 
     const QString queryMaintenance = "CREATE TABLE " TABLE_MAINTENANCE
