@@ -34,10 +34,10 @@ bool Database::insertItemEntry()
     QSqlQuery query;
     bool isInsert = false;
 
-    query.prepare("INSERT INTO " TABLE_ITEMS " ("
-        TABLE_NAME ", " TABLE_CATEGORY ", " TABLE_YEAR ", "
-        TABLE_NICK ", " TABLE_ARCHIVED") "
-        "VALUES (:name, :category, :year, :nick, :archived)");
+    // query.prepare("INSERT INTO " TABLE_ITEMS " ("
+    //     TABLE_NAME ", " TABLE_CATEGORY ", " TABLE_YEAR ", "
+    //     TABLE_NICK ", " TABLE_ARCHIVED") "
+    //     "VALUES (:name, :category, :year, :nick, :archived)");
 
     // query.bindValue(":name", data[0].toString());
     // query.bindValue(":category", data[1].toString());
@@ -63,30 +63,37 @@ bool Database::initializeSchema()
 
     const QString queryItems = "CREATE TABLE " TABLE_ITEMS
         " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-        TABLE_NAME      " TEXT      NOT NULL,"
-        TABLE_MAKE      " MAKE,"
-        TABLE_MODEL     " MODEL,"
-        TABLE_YEAR      " INT,"
-        TABLE_GROUP     " GROUP     NOT NULL,"
-        TABLE_CATEGORY  " TEXT      NOT NULL,"
+        TABLE_UID       " TEXT NOT NULL, "
+        TABLE_NAME      " TEXT NOT NULL, "
+        TABLE_MAKE      " TEXT, "
+        TABLE_MODEL     " TEXT, "
+        TABLE_YEAR      " INT, "
+        TABLE_GROUP     " TEXT, "
+        TABLE_CATEGORY  " TEXT NOT NULL, "
         TABLE_ARCHIVED  " BOOLEAN NOT NULL CHECK (" TABLE_ARCHIVED " IN (0, 1)))";
 
     const QString queryMaintenance = "CREATE TABLE " TABLE_MAINTENANCE
         " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        TABLE_UID       " TEXT NOT NULL, "
         TABLE_DATE      " DATE  NOT NULL,"
         TABLE_TASK      " TEXT  NOT NULL,"
         TABLE_COST      " REAL,"
         TABLE_TYPE      " TEXT,"
         TABLE_COMMENT   " VARCHAR(255))";
 
-    try{
-        query.exec(queryItems);
-        query.exec(queryMaintenance);
-        isSchemaCreate = true;
 
-    }catch(QSqlError ex){
-        qDebug() << ex;
+    query.exec(queryItems);
+    if(!query.lastError().NoError){ // TODO this doesnt quite work yet
+        qDebug() << queryItems;
         qDebug() << query.lastError();
+        isSchemaCreate = true;
+    }
+
+    query.exec(queryMaintenance);
+    if(!query.lastError().NoError){
+        qDebug() << queryMaintenance;
+        qDebug() << query.lastError();
+        isSchemaCreate = true;
     }
 
     return isSchemaCreate;
