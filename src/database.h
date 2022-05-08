@@ -42,6 +42,4 @@ private:
 
 private:
     bool initializeSchema();
-    // bool restoreDataBase();
-    // void closeDataBase();
 };

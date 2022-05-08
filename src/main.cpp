@@ -11,7 +11,9 @@
 #include "about.h"
 #include "app.h"
 #include "database.h"
+#include "itemModel.h"
 #include "version-katalogue.h"
+
 #include <KAboutData>
 #include <KLocalizedContext>
 #include <KLocalizedString>
@@ -38,6 +40,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
                          KAboutLicense::GPL,
                          // Copyright Statement.
                          i18n("(c) 2022"));
+
     aboutData.addAuthor(i18nc("@info:credit", "AUTHOR"), i18nc("@info:credit", "Author Role"), QStringLiteral("kd8bny@gmail.com"), QStringLiteral("https://yourwebsite.com"));
     KAboutData::setApplicationData(aboutData);
 
@@ -56,6 +59,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     Database database;
     database.connect();
     qmlRegisterSingletonInstance<Database>("com.kd8bny.katalogue", 1, 0, "Database", &database);
+
+    ItemModel *itemModel = new ItemModel();
+    engine.rootContext()->setContextProperty("itemModel", itemModel);
 
     engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));

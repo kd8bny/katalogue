@@ -6,6 +6,7 @@ add_executable(katalogue
     about.cpp
     app.cpp
     database.cpp
+    itemModel.cpp
     resources.qrc)
 
 target_link_libraries(katalogue
