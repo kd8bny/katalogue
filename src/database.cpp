@@ -81,6 +81,12 @@ bool Database::initializeSchema()
         TABLE_TYPE      " TEXT,"
         TABLE_COMMENT   " VARCHAR(255))";
 
+    const QString queryAttributes = "CREATE TABLE " TABLE_ATTRIBUTES
+        " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        TABLE_CATEGORY  " TEXT NOT NULL, "
+        TABLE_KEY       " TEXT  NOT NULL,"
+        TABLE_VALUE     " TEXT  NOT NULL)";
+
 
     query.exec(queryItems);
     if(!query.lastError().NoError){ // TODO this doesnt quite work yet
@@ -92,6 +98,13 @@ bool Database::initializeSchema()
     query.exec(queryMaintenance);
     if(!query.lastError().NoError){
         qDebug() << queryMaintenance;
+        qDebug() << query.lastError();
+        isSchemaCreate = true;
+    }
+
+    query.exec(queryAttributes);
+    if(!query.lastError().NoError){
+        qDebug() << queryAttributes;
         qDebug() << query.lastError();
         isSchemaCreate = true;
     }

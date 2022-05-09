@@ -9,9 +9,9 @@
 
 #define DATABASE_NAME "katalogue.db"
 #define DATABASE_TYPE "QSQLITE"
+#define TABLE_UID "UID"
 
 #define TABLE_ITEMS "ITEMS"
-#define TABLE_UID "UID"
 #define TABLE_NAME "NAME"
 #define TABLE_MAKE "MAKE"
 #define TABLE_MODEL "MODEL"
@@ -21,11 +21,16 @@
 #define TABLE_ARCHIVED "ARCHIVED"
 
 #define TABLE_MAINTENANCE "MAINTENANCE"
-#define TABLE_DATE "DATE"
 #define TABLE_TASK "TASK"
+#define TABLE_DATE "DATE"
 #define TABLE_COST "COST"
 #define TABLE_TYPE "TYPE"
 #define TABLE_COMMENT "COMMENT"
+
+#define TABLE_ATTRIBUTES "ATTRIBUTES"
+#define TABLE_CATEGORY "CATEGORY"
+#define TABLE_KEY "KEY"
+#define TABLE_VALUE "VALUE"
 
 class Database : public QObject
 {
