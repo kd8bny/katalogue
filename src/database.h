@@ -6,6 +6,7 @@
 #include <QFile>
 #include <QDate>
 #include <QDebug>
+#include <QUuid>
 
 #define DATABASE_NAME "katalogue.db"
 #define DATABASE_TYPE "QSQLITE"
@@ -28,9 +29,17 @@
 #define TABLE_COMMENT "COMMENT"
 
 #define TABLE_ATTRIBUTES "ATTRIBUTES"
-#define TABLE_CATEGORY "CATEGORY"
 #define TABLE_KEY "KEY"
 #define TABLE_VALUE "VALUE"
+
+typedef struct {
+    char name[15];
+    char make[15];
+    char model[15];
+    int year;
+    char category[15];
+    char group[15];
+} Item;
 
 class Database : public QObject
 {
@@ -40,11 +49,12 @@ public:
     explicit Database(QObject *parent = nullptr);
     ~Database();
     bool connect();
-    bool insertItemEntry();
+    bool insertItemEntry(Item item);
 
 private:
     QSqlDatabase db;
 
 private:
     bool initializeSchema();
+    void initializeDemoEntry();
 };

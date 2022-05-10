@@ -22,41 +22,40 @@ Kirigami.ScrollablePage {
         }
     }
 
-    actions {
-        main: Kirigami.Action {
-            iconName: "go-home"
-            tooltip: i18n("Overview")
-            enabled: root.pageStack.lastVisibleItem != overviewPage
-            onTriggered: root.pageStack.pop(-1)
-        }
-        contextualActions: [
-            Kirigami.Action {
-                text: i18n("Add Event")
-                icon.name: "list-add"
-                tooltip: i18n("Add new event")
-                onTriggered: {
-                    addEventSheet.open()
-                }
-            },
-            Kirigami.Action {
-                text: i18n("Add Item")
-                icon.name: "list-add"
-                tooltip: i18n("Add new item")
-                onTriggered: {
-                    addItemSheet.open()
-                }
-            }
-        ]
-    }
+    // actions {
+    //     main: Kirigami.Action {
+    //         iconName: "go-home"
+    //         tooltip: i18n("Overview")
+    //         enabled: root.pageStack.lastVisibleItem != overviewPage
+    //         onTriggered: root.pageStack.pop(-1)
+    //     }
+    //     contextualActions: [
+    //         Kirigami.Action {
+    //             text: i18n("Add Event")
+    //             icon.name: "list-add"
+    //             tooltip: i18n("Add new event")
+    //             onTriggered: {
+    //                 addEventSheet.open()
+    //             }
+    //         },
+    //         Kirigami.Action {
+    //             text: i18n("Add Item")
+    //             icon.name: "list-add"
+    //             tooltip: i18n("Add new item")
+    //             onTriggered: {
+    //                 addItemSheet.open()
+    //             }
+    //         }
+    //     ]
+    // }
 
     ColumnLayout {
         Kirigami.Heading {
-            //Layout.alignment: Qt.AlignCenter
-            //text: counter == 0 ? i18n("Hello, World!") : counter
             text: i18n("Welcome to katalogue\nA tool to track all you maintenance needs")
         }
         Kirigami.CardsLayout {
             id: layout
+
             width: overviewPage.width
             Kirigami.Card {
                 headerOrientation: Qt.Horizontal
@@ -83,11 +82,11 @@ Kirigami.ScrollablePage {
 
     }
 
-    AddEventSheet {
-        id: addEventSheet
-    }
+    // AddEventSheet {
+    //     id: addEventSheet
+    // }
 
-    AddItemSheet {
-        id: addItemSheet
-    }
+    // AddItemSheet {
+    //     id: addItemSheet
+    // }
 }

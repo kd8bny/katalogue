@@ -18,6 +18,7 @@ public:
     explicit ItemModel(QObject *parent = nullptr);
     ~ItemModel();
     void refresh();
+
     // Override the method that will return the data
     QVariant data(const QModelIndex &index, int role) const override;
 
@@ -28,7 +29,7 @@ protected:
 
 public slots:
     void updateModel();
-    // int getId(int row);
+    int getId(int row);
     // const static char* COLUMN_NAMES[];
     // const static char* SQL_SELECT;
 };

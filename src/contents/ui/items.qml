@@ -14,11 +14,19 @@ Kirigami.ScrollablePage {
 
     title: i18n("Katalogued Items")
 
-    Kirigami.CardsListView {
-    id: layout
-    model: itemModel
-    delegate: itemsDelegate
+    actions {
+        main: Kirigami.Action {
+            text: i18n("Add Item")
+            icon.name: "list-add"
+            tooltip: i18n("Add new item")
+            onTriggered: addItemSheet.open()
+        }
+    }
 
+    Kirigami.CardsListView {
+        id: layout
+        model: itemModel
+        delegate: itemsDelegate
     }
 
     Component {
@@ -43,14 +51,14 @@ Kirigami.ScrollablePage {
                     Kirigami.Heading {
                         Layout.fillHeight: true
                         level: 1
-                        text: NAME
+                        text: "icon tbd"
                     }
 
                     ColumnLayout {
                         Kirigami.Heading {
                             Layout.fillWidth: true
                             level: 2
-                            text: YEAR
+                            text: NAME
                         }
                         Kirigami.Separator {
                             Layout.fillWidth: true
@@ -59,7 +67,7 @@ Kirigami.ScrollablePage {
                         Controls.Label {
                             Layout.fillWidth: true
                             wrapMode: Text.WordWrap
-                            text: MODEL + MAKE
+                            text: YEAR + " " + MODEL + " " + MAKE
                             //visible: description.length > 0
                         }
                     }
@@ -73,4 +81,5 @@ Kirigami.ScrollablePage {
             }
         }
     }
+
 }

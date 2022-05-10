@@ -72,9 +72,9 @@ Kirigami.ApplicationWindow {
                 // }
             },
             Kirigami.Action {
-                text: i18n("Log")
+                text: i18n("Item Log")
                 icon.name: "file-catalog-symbolic"
-                onTriggered: root.pageStack.layers.push('qrc:items.qml')
+                onTriggered: pageStack.layers.push('qrc:items.qml')
             },
             Kirigami.Action {
                 text: i18n("Manage Data")
@@ -97,12 +97,20 @@ Kirigami.ApplicationWindow {
         ]
     }
 
-    // contextDrawer: Kirigami.ContextDrawer {
-    //     id: contextDrawer
-    // }
+    contextDrawer: Kirigami.ContextDrawer {
+        id: contextDrawer
+    }
 
     Overview{
         id: overviewPage
+    }
+
+    AddEventSheet {
+        id: addEventSheet
+    }
+
+    AddItemSheet {
+        id: addItemSheet
     }
 
     pageStack.initialPage: overviewPage

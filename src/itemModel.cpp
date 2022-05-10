@@ -46,8 +46,8 @@ void ItemModel::updateModel()
                    TABLE_MODEL ", " TABLE_MAKE " FROM " TABLE_ITEMS);
 }
 
-// Getting the id of the row in the data view model
-// int ListModel::getId(int row)
-// {
-//     return this->data(this->index(row, 0), IdRole).toInt();
-// }
+//Getting the id of the row in the data view model
+int ItemModel::getId(int row)
+{
+    return this->data(this->index(row, 0), rID).toInt();
+}

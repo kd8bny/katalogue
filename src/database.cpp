@@ -29,23 +29,26 @@ bool Database::connect()
     return isDBOpen;
 }
 
-bool Database::insertItemEntry()
+bool Database::insertItemEntry(Item item)
 {
-    QSqlQuery query;
     bool isInsert = false;
+    QSqlQuery query;
+    QString uuid = QUuid().createUuid().toString();
 
-    // query.prepare("INSERT INTO " TABLE_ITEMS " ("
-    //     TABLE_NAME ", " TABLE_CATEGORY ", " TABLE_YEAR ", "
-    //     TABLE_NICK ", " TABLE_ARCHIVED") "
-    //     "VALUES (:name, :category, :year, :nick, :archived)");
+    query.prepare("INSERT INTO " TABLE_ITEMS " ("
+        TABLE_UID ", " TABLE_NAME ", " TABLE_MAKE ", " TABLE_MODEL ", "
+        TABLE_YEAR ", " TABLE_GROUP ", " TABLE_CATEGORY  ", " TABLE_ARCHIVED")"
+        " VALUES (:uuid, :name, :make, :model, :year, :group, "
+        ":category, :archived)");
 
-    // query.bindValue(":name", data[0].toString());
-    // query.bindValue(":category", data[1].toString());
-    // query.bindValue(":year", data[2].toInt());
-    // query.bindValue(":nick",       data[1].toString());
-    // query.bindValue(":archived",         data[2].toInt());
- 
- 
+    query.bindValue(":uuid", uuid);
+    query.bindValue(":name", item.name);
+    query.bindValue(":make", item.make);
+    query.bindValue(":model", item.model);
+    query.bindValue(":year", item.year);
+    query.bindValue(":category", item.category);
+    query.bindValue(":archived", 0);
+
     if(query.exec()){
         isInsert = true;
     } else {
@@ -75,17 +78,18 @@ bool Database::initializeSchema()
     const QString queryMaintenance = "CREATE TABLE " TABLE_MAINTENANCE
         " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
         TABLE_UID       " TEXT NOT NULL, "
-        TABLE_DATE      " DATE  NOT NULL,"
-        TABLE_TASK      " TEXT  NOT NULL,"
+        TABLE_DATE      " DATE NOT NULL,"
+        TABLE_TASK      " TEXT NOT NULL,"
         TABLE_COST      " REAL,"
         TABLE_TYPE      " TEXT,"
+        TABLE_CATEGORY  " TEXT NOT NULL, "
         TABLE_COMMENT   " VARCHAR(255))";
 
     const QString queryAttributes = "CREATE TABLE " TABLE_ATTRIBUTES
         " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
         TABLE_CATEGORY  " TEXT NOT NULL, "
-        TABLE_KEY       " TEXT  NOT NULL,"
-        TABLE_VALUE     " TEXT  NOT NULL)";
+        TABLE_KEY       " TEXT NOT NULL, "
+        TABLE_VALUE     " TEXT NOT NULL)";
 
 
     query.exec(queryItems);
@@ -109,5 +113,21 @@ bool Database::initializeSchema()
         isSchemaCreate = true;
     }
 
+    this->initializeDemoEntry();
+
     return isSchemaCreate;
+}
+
+void Database::initializeDemoEntry()
+{
+    Item demoItem;
+    strcpy(demoItem.name, "name");
+    strcpy(demoItem.make, "make");
+    strcpy(demoItem.model, "model");
+    demoItem.year = 1992;
+    strcpy(demoItem.category, "category");
+    strcpy(demoItem.group, "group");
+
+    this->insertItemEntry(demoItem);
+
 }
