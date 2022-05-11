@@ -29,7 +29,8 @@ bool Database::connect()
     return isDBOpen;
 }
 
-bool Database::insertItemEntry(Item item)
+bool Database::insertItemEntry(QString name, QString make, QString model,
+QString year, QString category, QString group)
 {
     bool isInsert = false;
     QSqlQuery query;
@@ -42,15 +43,17 @@ bool Database::insertItemEntry(Item item)
         ":category, :archived)");
 
     query.bindValue(":uuid", uuid);
-    query.bindValue(":name", item.name);
-    query.bindValue(":make", item.make);
-    query.bindValue(":model", item.model);
-    query.bindValue(":year", item.year);
-    query.bindValue(":category", item.category);
+    query.bindValue(":name", name);
+    query.bindValue(":make", make);
+    query.bindValue(":model", model);
+    query.bindValue(":year", year.toInt());
+    query.bindValue(":category", category);
+    query.bindValue(":group", group); 
     query.bindValue(":archived", 0);
 
     if(query.exec()){
         isInsert = true;
+        qDebug() << query.lastError().text();
     } else {
         qDebug() << "Error inserting record " << TABLE_ITEMS;
         qDebug() << query.lastError().text();
@@ -120,14 +123,8 @@ bool Database::initializeSchema()
 
 void Database::initializeDemoEntry()
 {
-    Item demoItem;
-    strcpy(demoItem.name, "name");
-    strcpy(demoItem.make, "make");
-    strcpy(demoItem.model, "model");
-    demoItem.year = 1992;
-    strcpy(demoItem.category, "category");
-    strcpy(demoItem.group, "group");
+    QStringList demoEntry = {"name", "make", "model", "1992", "category", "group"};
 
-    this->insertItemEntry(demoItem);
+    // this->insertItemEntry(demoEntry);
 
 }

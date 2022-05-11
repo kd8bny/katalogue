@@ -49,7 +49,8 @@ public:
     explicit Database(QObject *parent = nullptr);
     ~Database();
     bool connect();
-    bool insertItemEntry(Item item);
+    Q_INVOKABLE bool insertItemEntry(QString name, QString make, QString model,
+        QString year, QString category, QString group);
 
 private:
     QSqlDatabase db;
