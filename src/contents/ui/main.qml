@@ -105,6 +105,10 @@ Kirigami.ApplicationWindow {
         id: itemsPage
     }
 
+    AddAttributeSheet {
+        id: addAttributeSheet
+    }
+
     AddEventSheet {
         id: addEventSheet
     }

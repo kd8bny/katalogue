@@ -8,65 +8,40 @@ import org.kde.kirigami 2.19 as Kirigami
 import com.kd8bny.katalogue 1.0
 
 Kirigami.OverlaySheet {
-    id: addItemSheet
+    id: addAttributeSheet
 
     parent: applicationWindow().overlay
 
     header: Kirigami.Heading {
-        text: i18nc("@title:window", "Add new item to katalogue")
+        text: i18nc("@title:window", "Item Attribute")
     }
 
-    Kirigami.FormLayout { // TODO required
+    Kirigami.FormLayout {
         Controls.TextField {
-            id: nameField
+            id: keyField
             Kirigami.FormData.label: i18nc("@label:textbox", "Name:")
-            placeholderText: i18n("My Car")
-            onAccepted: nicknameField.forceActiveFocus()
+            //placeholderText: i18n("My Car")
+            //onAccepted: nicknameField.forceActiveFocus()
         }
         Controls.TextField {
-            id: makeField
-            Kirigami.FormData.label: i18nc("@label:textbox", "Make:")
-            placeholderText: i18n("Ford")
-            onAccepted: dateField.forceActiveFocus()
-        }
-        Controls.TextField {
-            id: modelField
-            Kirigami.FormData.label: i18nc("@label:textbox", "Model:")
-            placeholderText: i18n("Mustang")
-        }
-        Controls.TextField {
-            id: yearField
-            Kirigami.FormData.label: i18nc("@label:textbox", "Year:")
-            placeholderText: i18n("2000")
-            //inputMask: "H"
+            id: valueField
+            Kirigami.FormData.label: i18nc("@label:textbox", "Value:")
+            //placeholderText: i18n("")
             //onAccepted: dateField.forceActiveFocus()
-        }
-        Controls.TextField {
-            id: categoryField
-            Kirigami.FormData.label: i18nc("@label:textbox", "Make:")
-            placeholderText: i18n("Optional")
-        }
-        Controls.TextField {
-            id: groupField
-            Kirigami.FormData.label: i18nc("@label:textbox", "Make:")
-            placeholderText: i18n("Optional")
         }
         Controls.Button {
             id: doneButton
             Layout.fillWidth: true
             text: i18nc("@action:button", "Add")
-            enabled: nameField.text.length > 0
+            enabled: (nameField.text.length & valueField.text.length) > 0
             onClicked: {
-                Database.insertItemEntry(
-                    nameField.text,
-                    makeField.text,
-                    modelField.text,
-                    yearField.text,
-                    categoryField.text,
-                    groupField.text
+                Database.insertAttributeEntry(
+                    "auto", //modelField.text,
+                    keyField.text,
+                    valueField.text,
                 )
-                ItemModel.updateModel()
-                addItemSheet.close()
+                AttributeModel.updateModel()
+                addAttributeSheet.close()
             }
         }
     }
