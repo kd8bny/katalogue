@@ -31,9 +31,12 @@ QHash<int, QByteArray> ItemModel::roleNames() const {
     roles[rID] = "id";
     roles[rUID] = TABLE_UID;
     roles[rNAME] = TABLE_NAME;
-    roles[rYEAR] = TABLE_YEAR;
-    roles[rMODEL] = TABLE_MODEL;
     roles[rMAKE] = TABLE_MAKE;
+    roles[rMODEL] = TABLE_MODEL;
+    roles[rYEAR] = TABLE_YEAR;
+    roles[rGroup] = TABLE_GROUP;
+    roles[rCategory] = TABLE_CATEGORY;
+    roles[rArchived] = TABLE_ARCHIVED;
 
     return roles;
 }

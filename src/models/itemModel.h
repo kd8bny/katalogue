@@ -10,9 +10,12 @@ public:
         rID = Qt::UserRole + 1,
         rUID,
         rNAME,
-        rYEAR,
+        rMAKE,
         rMODEL,
-        rMAKE
+        rYEAR,
+        rGroup,
+        rCategory,
+        rArchived
     };
 
     explicit ItemModel(QObject *parent = nullptr);
@@ -30,6 +33,4 @@ protected:
 public slots:
     void updateModel();
     int getId(int row);
-    // const static char* COLUMN_NAMES[];
-    // const static char* SQL_SELECT;
 };
