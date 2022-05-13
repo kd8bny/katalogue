@@ -43,7 +43,7 @@ Kirigami.ApplicationWindow {
         showHeaderWhenCollapsed: true
 
         header: RowLayout {
-            Layout.fillWidth: true
+            // Layout.fillWidth: true
             Controls.ToolButton {
                 icon.name: "application-menu"
                 visible: globalDrawer.collapsible

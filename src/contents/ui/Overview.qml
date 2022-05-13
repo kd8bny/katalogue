@@ -79,14 +79,5 @@ Kirigami.ScrollablePage {
                 }
             }
         }
-
     }
-
-    // AddEventSheet {
-    //     id: addEventSheet
-    // }
-
-    // AddItemSheet {
-    //     id: addItemSheet
-    // }
 }

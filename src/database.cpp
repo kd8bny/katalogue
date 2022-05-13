@@ -122,8 +122,6 @@ bool Database::initializeSchema()
 
 void Database::initializeDemoEntry()
 {
-    QStringList demoEntry = {"name", "make", "model", "1992", "category", "group"};
-
-    // this->insertItemEntry(demoEntry);
-
+    this->insertItemEntry(
+        "name", "make", "model", "1992", "category", "group");
 }

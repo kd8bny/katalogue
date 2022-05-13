@@ -11,7 +11,7 @@
 #include "about.h"
 #include "app.h"
 #include "database.h"
-#include "itemModel.h"
+#include "models/itemModel.h"
 #include "version-katalogue.h"
 
 #include <KAboutData>
