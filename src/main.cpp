@@ -56,13 +56,12 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     App application;
     qmlRegisterSingletonInstance("org.kde.katalogue", 1, 0, "App", &application);
 
-    Database *database = new Database();
-    database->connect();
-    //qmlRegisterSingletonInstance<Database>("com.kd8bny.katalogue", 1, 0, "Database", &database);
-    engine.rootContext()->setContextProperty("Database", database);
+    Database database;
+    database.connect();
+    qmlRegisterSingletonInstance<Database>("com.kd8bny.katalogue", 1, 0, "Database", &database);
 
-    ItemModel *itemModel = new ItemModel();
-    engine.rootContext()->setContextProperty("itemModel", itemModel);
+    ItemModel itemModel;
+    qmlRegisterSingletonInstance<ItemModel>("com.kd8bny.katalogue", 1, 0, "ItemModel", &itemModel);
 
     engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));

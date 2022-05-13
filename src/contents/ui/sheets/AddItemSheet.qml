@@ -5,7 +5,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15 as Controls
 import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.19 as Kirigami
-//import com.kd8bny.katalogue 1.0
+import com.kd8bny.katalogue 1.0
 
 Kirigami.OverlaySheet {
     id: addItemSheet
@@ -56,7 +56,6 @@ Kirigami.OverlaySheet {
             placeholderText: i18n("Optional")
             onAccepted: dateField.forceActiveFocus()
         }
-        //TODO category
         Controls.Button {
             id: doneButton
             Layout.fillWidth: true
@@ -69,8 +68,9 @@ Kirigami.OverlaySheet {
                     modelField.text,
                     yearField.text,
                     categoryField.text,
-                    groupField.text)
-                //itemModel.updateModel()
+                    groupField.text
+                )
+                ItemModel.updateModel()
                 addItemSheet.close()
             }
         }

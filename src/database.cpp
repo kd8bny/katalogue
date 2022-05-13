@@ -53,7 +53,6 @@ QString year, QString category, QString group)
 
     if(query.exec()){
         isInsert = true;
-        qDebug() << query.lastError().text();
     } else {
         qDebug() << "Error inserting record " << TABLE_ITEMS;
         qDebug() << query.lastError().text();

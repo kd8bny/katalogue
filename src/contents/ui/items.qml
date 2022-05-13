@@ -5,6 +5,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15 as Controls
 import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.19 as Kirigami
+import com.kd8bny.katalogue 1.0
 
 
 Kirigami.ScrollablePage {
@@ -25,7 +26,7 @@ Kirigami.ScrollablePage {
 
     Kirigami.CardsListView {
         id: layout
-        model: itemModel
+        model: ItemModel
         delegate: itemsDelegate
     }
 
@@ -81,5 +82,4 @@ Kirigami.ScrollablePage {
             }
         }
     }
-
 }
