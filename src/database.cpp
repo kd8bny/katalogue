@@ -61,6 +61,29 @@ QString year, QString category, QString group)
     return isInsert;
 }
 
+bool Database::insertAttributeEntry(QString category, QString key, QString value)
+{
+    bool isInsert = false;
+    QSqlQuery query;
+
+    query.prepare("INSERT INTO " TABLE_ATTRIBUTES " ("
+        TABLE_CATEGORY ", " TABLE_KEY ", " TABLE_VALUE ")"
+        " VALUES (:category, :key, :value)");
+
+    query.bindValue(":category", category);
+    query.bindValue(":key", key); 
+    query.bindValue(":value", value);
+
+    if(query.exec()){
+        isInsert = true;
+    } else {
+        qDebug() << "Error inserting record " << TABLE_ITEMS;
+        qDebug() << query.lastError().text();
+    }
+
+    return isInsert;
+}
+
 bool Database::initializeSchema()
 {
     QSqlQuery query;
@@ -123,5 +146,7 @@ bool Database::initializeSchema()
 void Database::initializeDemoEntry()
 {
     this->insertItemEntry(
-        "name", "make", "model", "1992", "category", "group");
+        "My Vehicle", "Ford", "Mustang", "2000", "auto", "My Group");
+
+    this->insertAttributeEntry("My Group", "Engine", "4.6L V8");
 }

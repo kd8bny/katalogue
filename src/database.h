@@ -51,6 +51,7 @@ public:
     bool connect();
     Q_INVOKABLE bool insertItemEntry(QString name, QString make, QString model,
         QString year, QString category, QString group);
+    Q_INVOKABLE bool insertAttributeEntry(QString category, QString key, QString value);
 
 private:
     QSqlDatabase db;
