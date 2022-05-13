@@ -73,12 +73,13 @@ Kirigami.ScrollablePage {
                             //visible: description.length > 0
                         }
                     }
-                    // Controls.Button {
-                    //     Layout.alignment: Qt.AlignRight
-                    //     Layout.columnSpan: 2
-                    //     text: i18n("Edit")
-                    //     // onClicked: to be done... soon!
-                    // }
+                    Controls.Button {
+                        Layout.alignment: Qt.AlignRight
+                        // Layout.alignment: Qt.AlignBottom
+                        Layout.columnSpan: 2
+                        text: i18n("Details")
+                        onClicked: pageStack.layers.push('qrc:Attributes.qml')
+                    }
                 }
             }
         }

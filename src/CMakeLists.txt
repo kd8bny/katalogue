@@ -7,6 +7,7 @@ add_executable(katalogue
     app.cpp
     database.cpp
     models/itemModel.cpp
+    models/attributeModel.cpp
     resources.qrc)
 
 target_link_libraries(katalogue
@@ -23,5 +24,5 @@ target_link_libraries(katalogue
     KF5::ConfigGui)
 
 kconfig_add_kcfg_files(katalogue GENERATE_MOC katalogueconfig.kcfgc)
-target_compile_options(katalogue PUBLIC -fexceptions)
+target_compile_options(katalogue PUBLIC)
 install(TARGETS katalogue ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

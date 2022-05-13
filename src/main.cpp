@@ -11,6 +11,7 @@
 #include "about.h"
 #include "app.h"
 #include "database.h"
+#include "models/attributeModel.h"
 #include "models/itemModel.h"
 #include "version-katalogue.h"
 
@@ -59,6 +60,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     Database database;
     database.connect();
     qmlRegisterSingletonInstance<Database>("com.kd8bny.katalogue", 1, 0, "Database", &database);
+
+    AttributeModel attributeModel;
+    qmlRegisterSingletonInstance<AttributeModel>("com.kd8bny.katalogue", 1, 0, "AttributeModel", &attributeModel);
 
     ItemModel itemModel;
     qmlRegisterSingletonInstance<ItemModel>("com.kd8bny.katalogue", 1, 0, "ItemModel", &itemModel);
