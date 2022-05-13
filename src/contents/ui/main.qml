@@ -70,7 +70,7 @@ Kirigami.ApplicationWindow {
             //     // onTriggered:
             // },
             Kirigami.Action {
-                text: i18n("Item Log")
+                text: i18n("Items")
                 icon.name: "file-catalog-symbolic"
                 onTriggered: pageStack.layers.push('qrc:Items.qml')
             },

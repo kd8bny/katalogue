@@ -11,11 +11,11 @@ import com.kd8bny.katalogue 1.0
 Kirigami.ScrollablePage {
     id: attributesPage
 
-    // required property string itemName
+    required property string itemName
 
     Layout.fillWidth: true
 
-    title: i18n("@itemName")
+    title: i18n(itemName)
 
     actions {
         main: Kirigami.Action {

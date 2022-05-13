@@ -70,15 +70,6 @@ Kirigami.ScrollablePage {
                             //visible: description.length > 0
                         }
                     }
-
-
-                    // Controls.Button {
-                    //     Layout.alignment: Qt.AlignRight
-                    //     // Layout.alignment: Qt.AlignBottom
-                    //     Layout.columnSpan: 2
-                    //     text: i18n("Details")
-                    //     onClicked: pageStack.layers.push('qrc:Attributes.qml')
-                    // }
                 }
             }
             actions: [
@@ -86,7 +77,7 @@ Kirigami.ScrollablePage {
                     text: "Details"
                     icon.name: "item"
 
-                    onTriggered: pageStack.layers.push('qrc:Attributes.qml')
+                    onTriggered: pageStack.push("qrc:Attributes.qml", {"itemName": NAME})
                 },
                 Kirigami.Action {
                     text: "Maintence"
