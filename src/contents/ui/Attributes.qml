@@ -11,16 +11,18 @@ import com.kd8bny.katalogue 1.0
 Kirigami.ScrollablePage {
     id: attributesPage
 
+    // required property string itemName
+
     Layout.fillWidth: true
 
-    title: i18n("Katalogued Items")
+    title: i18n("@itemName")
 
     actions {
         main: Kirigami.Action {
-            text: i18n("Add Item")
+            text: i18n("Add")
             icon.name: "list-add"
-            tooltip: i18n("Add new item")
-            onTriggered: addItemSheet.open()
+            tooltip: i18n("Add new attribute")
+            onTriggered: addAttributeSheet.open()
         }
     }
 
@@ -50,34 +52,23 @@ Kirigami.ScrollablePage {
                     columnSpacing: Kirigami.Units.largeSpacing
                     columns: root.wideScreen ? 4 : 2
 
-                    Kirigami.Heading {
-                        Layout.fillHeight: true
-                        level: 1
-                        text: "icon tbd"
-                    }
-
                     ColumnLayout {
                         Kirigami.Heading {
                             Layout.fillWidth: true
                             level: 2
-                            text: NAME
+                            text: KEY
                         }
-                        Kirigami.Separator {
+                        Kirigami.Heading {
                             Layout.fillWidth: true
-                            //visible: description.length > 0
-                        }
-                        Controls.Label {
-                            Layout.fillWidth: true
-                            wrapMode: Text.WordWrap
-                            text: YEAR + " " + MODEL + " " + MAKE
-                            //visible: description.length > 0
+                            level: 2
+                            text: VALUE
                         }
                     }
                     Controls.Button {
                         Layout.alignment: Qt.AlignRight
                         // Layout.alignment: Qt.AlignBottom
                         Layout.columnSpan: 2
-                        text: i18n("Details")
+                        text: i18n("Edit")
                         // onClicked: to be done... soon!
                     }
                 }
