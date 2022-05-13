@@ -57,33 +57,29 @@ Kirigami.ApplicationWindow {
         }
 
         actions: [
-            Kirigami.Action {
-                text: i18n("Overview")
-                icon.name: "go-home"
-                tooltip: i18n("Overview")
-                // enabled: root.pageStack.lastVisibleItem != overviewPage
-                onTriggered: root.pageStack.pop(-1)
-            },
-            Kirigami.Action {
-                text: i18n("Todo")
-                icon.name: "task-new"
-                // onTriggered: {
-                //     addSheet.open()
-                // }
-            },
-            Kirigami.Action {
-                text: i18n("Item Log")
-                icon.name: "file-catalog-symbolic"
-                onTriggered: pageStack.layers.push('qrc:items.qml')
-            },
-            Kirigami.Action {
-                text: i18n("Manage Data")
-                icon.name: "server-database"
-                tooltip: i18n("Add, edit, or remove items to track")
-                onTriggered: {
-                    //addEventSheet.open()
-                }
-            },
+            // Kirigami.Action {
+            //     text: i18n("Overview")
+            //     icon.name: "go-home"
+            //     tooltip: i18n("Overview")
+            //     // enabled: root.pageStack.lastVisibleItem != overviewPage
+            //     onTriggered: root.pageStack.pop(-1)
+            // },
+            // Kirigami.Action {
+            //     text: i18n("Todo")
+            //     icon.name: "task-new"
+            //     // onTriggered:
+            // },
+            // Kirigami.Action {
+            //     text: i18n("Item Log")
+            //     icon.name: "file-catalog-symbolic"
+            //     onTriggered: pageStack.layers.push('qrc:Items.qml')
+            // },
+            // Kirigami.Action {
+            //     text: i18n("Manage Data")
+            //     icon.name: "server-database"
+            //     tooltip: i18n("Add, edit, or remove items to track")
+            //     // onTriggered:
+            // },
             Kirigami.Action {
                 text: i18n("About katalogue")
                 icon.name: "help-about"
@@ -105,6 +101,10 @@ Kirigami.ApplicationWindow {
         id: overviewPage
     }
 
+    Items{
+        id: itemsPage
+    }
+
     AddEventSheet {
         id: addEventSheet
     }
@@ -113,5 +113,5 @@ Kirigami.ApplicationWindow {
         id: addItemSheet
     }
 
-    pageStack.initialPage: overviewPage
+    pageStack.initialPage: itemsPage; // TODO overviewPage
 }
