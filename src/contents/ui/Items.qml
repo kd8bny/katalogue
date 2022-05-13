@@ -33,12 +33,19 @@ Kirigami.ScrollablePage {
     Component {
         id: itemsDelegate
 
-        Kirigami.AbstractCard {
+        Kirigami.Card {
+
+            banner {
+                title: NAME
+                titleIcon: "car"
+            }
+
             contentItem: Item {
                 // implicitWidth/Height define the natural width/height of an item if no width or height is specified.
                 // The setting below defines a component's preferred size based on its content
                 implicitWidth: delegateLayout.implicitWidth
                 implicitHeight: delegateLayout.implicitHeight
+
                 GridLayout {
                     id: delegateLayout
                     anchors {
@@ -50,38 +57,44 @@ Kirigami.ScrollablePage {
                     columnSpacing: Kirigami.Units.largeSpacing
                     columns: root.wideScreen ? 4 : 2
 
-                    Kirigami.Heading {
-                        Layout.fillHeight: true
-                        level: 1
-                        text: "icon tbd"
-                    }
-
                     ColumnLayout {
-                        Kirigami.Heading {
-                            Layout.fillWidth: true
-                            level: 2
-                            text: NAME
-                        }
-                        Kirigami.Separator {
-                            Layout.fillWidth: true
-                            //visible: description.length > 0
-                        }
+
                         Controls.Label {
                             Layout.fillWidth: true
                             wrapMode: Text.WordWrap
                             text: YEAR + " " + MODEL + " " + MAKE
                             //visible: description.length > 0
                         }
+                        Kirigami.Separator {
+                            Layout.fillWidth: true
+                            //visible: description.length > 0
+                        }
                     }
-                    Controls.Button {
-                        Layout.alignment: Qt.AlignRight
-                        // Layout.alignment: Qt.AlignBottom
-                        Layout.columnSpan: 2
-                        text: i18n("Details")
-                        onClicked: pageStack.layers.push('qrc:Attributes.qml')
-                    }
+
+
+                    // Controls.Button {
+                    //     Layout.alignment: Qt.AlignRight
+                    //     // Layout.alignment: Qt.AlignBottom
+                    //     Layout.columnSpan: 2
+                    //     text: i18n("Details")
+                    //     onClicked: pageStack.layers.push('qrc:Attributes.qml')
+                    // }
                 }
             }
+            actions: [
+                  Kirigami.Action {
+                    text: "Details"
+                    icon.name: "item"
+
+                    onTriggered: pageStack.layers.push('qrc:Attributes.qml')
+                },
+                Kirigami.Action {
+                    text: "Maintence"
+                    icon.name: "item"
+
+                    //onTriggered: pageStack.layers.push('qrc:Attributes.qml')
+                }
+            ]
         }
     }
 }
