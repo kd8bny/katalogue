@@ -83,7 +83,7 @@ Kirigami.ScrollablePage {
                     text: "Maintence"
                     icon.name: "item"
 
-                    //onTriggered: pageStack.layers.push('qrc:Attributes.qml')
+                    onTriggered: pageStack.layers.push("qrc:Events.qml")
                 }
             ]
         }

@@ -43,8 +43,8 @@ QHash<int, QByteArray> EventModel::roleNames() const {
 void EventModel::updateModel()
 {
     // The update is performed SQL-queries to the database
-    this->setQuery("SELECT id, " TABLE_CATEGORY ", " TABLE_KEY ", "
-                   TABLE_VALUE " FROM " TABLE_EVENTS);
+    this->setQuery("SELECT id, " TABLE_CATEGORY ", " TABLE_DATE ", "
+                   TABLE_TASK " FROM " TABLE_EVENTS);
 }
 
 //Getting the id of the row in the data view model

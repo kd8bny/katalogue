@@ -104,6 +104,10 @@ Kirigami.ApplicationWindow {
         id: overviewPage
     }
 
+    Events{
+        id: eventsPage
+    }
+
     Items{
         id: itemsPage
     }
