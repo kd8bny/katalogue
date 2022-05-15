@@ -41,15 +41,30 @@ Kirigami.OverlaySheet {
             //inputMask: "H"
             //onAccepted: dateField.forceActiveFocus()
         }
-        Controls.TextField {
-            id: categoryField
-            Kirigami.FormData.label: i18nc("@label:textbox", "Make:")
-            placeholderText: i18n("Optional")
+        Controls.ComboBox {
+            editable: true
+            Kirigami.FormData.label: i18nc("@label:textbox", "Category:")
+            model: ListModel {
+                id: categoryField
+                ListElement { text: "Auto_ICE" }
+                ListElement { text: "Utility" }
+            }
+            onAccepted: {
+                if (find(editText) === -1)
+                    model.append({text: editText})
+            }
         }
-        Controls.TextField {
-            id: groupField
-            Kirigami.FormData.label: i18nc("@label:textbox", "Make:")
-            placeholderText: i18n("Optional")
+        Controls.ComboBox {
+            editable: true
+            Kirigami.FormData.label: i18nc("@label:textbox", "Group:")
+            model: ListModel {
+                id: groupField
+                ListElement { text: "Default" }
+            }
+            onAccepted: {
+                if (find(editText) === -1)
+                    model.append({text: editText})
+            }
         }
         Controls.Button {
             id: doneButton

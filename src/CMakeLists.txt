@@ -6,8 +6,9 @@ add_executable(katalogue
     about.cpp
     app.cpp
     database.cpp
-    models/itemModel.cpp
     models/attributeModel.cpp
+    models/eventModel.cpp
+    models/itemModel.cpp
     resources.qrc)
 
 target_link_libraries(katalogue

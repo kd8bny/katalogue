@@ -10,7 +10,7 @@
 
 #define DATABASE_NAME "katalogue.db"
 #define DATABASE_TYPE "QSQLITE"
-#define TABLE_UID "UID"
+#define TABLE_UUID "UUID"
 
 #define TABLE_ITEMS "ITEMS"
 #define TABLE_NAME "NAME"
@@ -21,25 +21,18 @@
 #define TABLE_GROUP "USERGROUP"
 #define TABLE_ARCHIVED "ARCHIVED"
 
-#define TABLE_MAINTENANCE "MAINTENANCE"
-#define TABLE_TASK "TASK"
+#define TABLE_EVENTS "EVENTS"
 #define TABLE_DATE "DATE"
+#define TABLE_TASK "TASK"
 #define TABLE_COST "COST"
 #define TABLE_TYPE "TYPE"
 #define TABLE_COMMENT "COMMENT"
 
 #define TABLE_ATTRIBUTES "ATTRIBUTES"
+#define TABLE_LABEL "LABEL"
 #define TABLE_KEY "KEY"
 #define TABLE_VALUE "VALUE"
 
-typedef struct {
-    char name[15];
-    char make[15];
-    char model[15];
-    int year;
-    char category[15];
-    char group[15];
-} Item;
 
 class Database : public QObject
 {
@@ -51,7 +44,10 @@ public:
     bool connect();
     Q_INVOKABLE bool insertItemEntry(QString name, QString make, QString model,
         QString year, QString category, QString group);
-    Q_INVOKABLE bool insertAttributeEntry(QString category, QString key, QString value);
+    Q_INVOKABLE bool insertAttributeEntry(QString uuid, QString label,
+        QString key, QString value);
+    Q_INVOKABLE bool insertEventEntry(QString uuid, QString date, QString task,
+        QString cost, QString type, QString category, QString comment);
 
 private:
     QSqlDatabase db;

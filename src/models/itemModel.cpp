@@ -29,7 +29,7 @@ QHash<int, QByteArray> ItemModel::roleNames() const {
 
     QHash<int, QByteArray> roles;
     roles[rID] = "id";
-    roles[rUID] = TABLE_UID;
+    roles[rUID] = TABLE_UUID;
     roles[rNAME] = TABLE_NAME;
     roles[rMAKE] = TABLE_MAKE;
     roles[rMODEL] = TABLE_MODEL;
@@ -45,7 +45,7 @@ QHash<int, QByteArray> ItemModel::roleNames() const {
 void ItemModel::updateModel()
 {
     // The update is performed SQL-queries to the database
-    this->setQuery("SELECT id, " TABLE_UID ", " TABLE_NAME ", " TABLE_YEAR ", "
+    this->setQuery("SELECT id, " TABLE_UUID ", " TABLE_NAME ", " TABLE_YEAR ", "
                    TABLE_MODEL ", " TABLE_MAKE " FROM " TABLE_ITEMS);
 }
 

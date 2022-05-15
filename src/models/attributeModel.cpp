@@ -28,7 +28,8 @@ QHash<int, QByteArray> AttributeModel::roleNames() const {
 
     QHash<int, QByteArray> roles;
     roles[rID] = "id";
-    roles[rCategory] = TABLE_CATEGORY;
+    roles[rUuid] = TABLE_UUID;
+    roles[rLabel] = TABLE_LABEL;
     roles[rKey] = TABLE_KEY;
     roles[rValue] = TABLE_VALUE;
 
@@ -38,8 +39,7 @@ QHash<int, QByteArray> AttributeModel::roleNames() const {
 // The method updates the tables in the data model representation
 void AttributeModel::updateModel()
 {
-    // The update is performed SQL-queries to the database
-    this->setQuery("SELECT id, " TABLE_CATEGORY ", " TABLE_KEY ", "
+    this->setQuery("SELECT id, " TABLE_UUID ", " TABLE_LABEL ", " TABLE_KEY ", "
                    TABLE_VALUE " FROM " TABLE_ATTRIBUTES);
 }
 

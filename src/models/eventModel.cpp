@@ -28,7 +28,7 @@ QHash<int, QByteArray> EventModel::roleNames() const {
 
     QHash<int, QByteArray> roles;
     roles[rID] = "id";
-    roles[rUid] = TABLE_UID;
+    roles[rUid] = TABLE_UUID;
     roles[rDate] = TABLE_DATE;
     roles[rTask] = TABLE_TASK;
     roles[rCost] = TABLE_COST;

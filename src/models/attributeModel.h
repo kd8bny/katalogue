@@ -8,7 +8,8 @@ class AttributeModel: public QSqlQueryModel
 public:
     enum Roles {
         rID = Qt::UserRole + 1,
-        rCategory,
+        rUuid,
+        rLabel,
         rKey,
         rValue,
     };

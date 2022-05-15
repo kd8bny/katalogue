@@ -34,7 +34,7 @@ Kirigami.OverlaySheet {
 		Controls.Button {
 			id: doneButton
 			Layout.fillWidth: true
-			text: i18nc("@action:button", "Done")
+			text: i18nc("@action:button", "Add")
 			enabled: nameField.text.length > 0
 			onClicked: {
 				kountdownModel.append({

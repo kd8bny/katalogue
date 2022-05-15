@@ -10,6 +10,8 @@ import com.kd8bny.katalogue 1.0
 Kirigami.OverlaySheet {
     id: addAttributeSheet
 
+    // required property string uid
+
     parent: applicationWindow().overlay
 
     header: Kirigami.Heading {
@@ -29,14 +31,27 @@ Kirigami.OverlaySheet {
             //placeholderText: i18n("")
             //onAccepted: dateField.forceActiveFocus()
         }
+        Controls.ComboBox {
+            editable: true
+            Kirigami.FormData.label: i18nc("@label:textbox", "Group:")
+            model: ListModel {
+                id: groupField
+                ListElement { text: "Default" }
+            }
+            onAccepted: {
+                if (find(editText) === -1)
+                    model.append({text: editText})
+            }
+        }
         Controls.Button {
             id: doneButton
             Layout.fillWidth: true
             text: i18nc("@action:button", "Add")
-            enabled: (nameField.text.length & valueField.text.length) > 0
+            enabled: (keyField.text.length & valueField.text.length) > 0
             onClicked: {
                 Database.insertAttributeEntry(
-                    "auto", //modelField.text,
+                    uid,
+                    groupField.text,
                     keyField.text,
                     valueField.text,
                 )

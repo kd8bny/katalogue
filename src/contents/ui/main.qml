@@ -120,5 +120,5 @@ Kirigami.ApplicationWindow {
         id: addItemSheet
     }
 
-    pageStack.initialPage: itemsPage; // TODO overviewPage
+    pageStack.initialPage: overviewPage;
 }
