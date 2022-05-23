@@ -10,28 +10,29 @@
 
 #define DATABASE_NAME "katalogue.db"
 #define DATABASE_TYPE "QSQLITE"
-#define TABLE_UUID "UUID"
+#define TABLE_ITEM_ID "item_id"
+//#define TABLE_UUID "UUID"
 
-#define TABLE_ITEMS "ITEMS"
-#define TABLE_NAME "NAME"
-#define TABLE_MAKE "MAKE"
-#define TABLE_MODEL "MODEL"
-#define TABLE_YEAR "YEAR"
-#define TABLE_CATEGORY "CATEGORY"
-#define TABLE_GROUP "USERGROUP"
-#define TABLE_ARCHIVED "ARCHIVED"
+#define TABLE_ITEMS "items"
+#define TABLE_NAME "name"
+#define TABLE_MAKE "make"
+#define TABLE_MODEL "model"
+#define TABLE_YEAR "year"
+#define TABLE_CATEGORY "category"
+#define TABLE_GROUP "user_group"
+#define TABLE_ARCHIVED "archived"
 
-#define TABLE_EVENTS "EVENTS"
-#define TABLE_DATE "DATE"
-#define TABLE_TASK "TASK"
-#define TABLE_COST "COST"
-#define TABLE_TYPE "TYPE"
-#define TABLE_COMMENT "COMMENT"
+#define TABLE_EVENTS "events"
+#define TABLE_DATE "date"
+#define TABLE_TASK "task"
+#define TABLE_COST "cost"
+#define TABLE_TYPE "type"
+#define TABLE_COMMENT "comment"
 
-#define TABLE_ATTRIBUTES "ATTRIBUTES"
-#define TABLE_LABEL "LABEL"
-#define TABLE_KEY "KEY"
-#define TABLE_VALUE "VALUE"
+#define TABLE_ATTRIBUTES "attributes"
+#define TABLE_LABEL "label"
+#define TABLE_KEY "key"
+#define TABLE_VALUE "value"
 
 
 class Database : public QObject
@@ -44,10 +45,10 @@ public:
     bool connect();
     Q_INVOKABLE bool insertItemEntry(QString name, QString make, QString model,
         QString year, QString category, QString group);
-    Q_INVOKABLE bool insertAttributeEntry(QString uuid, QString label,
-        QString key, QString value);
-    Q_INVOKABLE bool insertEventEntry(QString uuid, QString date, QString task,
-        QString cost, QString type, QString category, QString comment);
+    Q_INVOKABLE bool insertAttributeEntry(QString label, QString key,
+        QString value, QString item_id);
+    Q_INVOKABLE bool insertEventEntry(QString date, QString task, QString cost,
+        QString type, QString category, QString comment, QString item_id);
 
 private:
     QSqlDatabase db;

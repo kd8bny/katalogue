@@ -36,7 +36,7 @@ Kirigami.ScrollablePage {
         Kirigami.Card {
 
             banner {
-                title: NAME
+                title: name
                 titleIcon: "car"
             }
 
@@ -62,12 +62,10 @@ Kirigami.ScrollablePage {
                         Controls.Label {
                             Layout.fillWidth: true
                             wrapMode: Text.WordWrap
-                            text: YEAR + " " + MODEL + " " + MAKE
-                            //visible: description.length > 0
+                            text: year + " " + model + " " + make
                         }
                         Kirigami.Separator {
                             Layout.fillWidth: true
-                            //visible: description.length > 0
                         }
                     }
                 }
@@ -77,13 +75,13 @@ Kirigami.ScrollablePage {
                     text: "Details"
                     icon.name: "item"
 
-                    onTriggered: pageStack.push("qrc:Attributes.qml", {"itemName": NAME})
+                    onTriggered: pageStack.push("qrc:Attributes.qml", {"itemName": name, "item_id": id})
                 },
                 Kirigami.Action {
                     text: "Maintence"
                     icon.name: "item"
 
-                    onTriggered: pageStack.layers.push("qrc:Events.qml")
+                    onTriggered: pageStack.push("qrc:Events.qml", {"itemName": name, "item_id": id})
                 }
             ]
         }

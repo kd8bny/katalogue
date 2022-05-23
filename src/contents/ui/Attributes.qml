@@ -11,6 +11,7 @@ import com.kd8bny.katalogue 1.0
 Kirigami.ScrollablePage {
     id: attributesPage
 
+    required property string item_id
     required property string itemName
 
     Layout.fillWidth: true
@@ -31,6 +32,8 @@ Kirigami.ScrollablePage {
         model: AttributeModel
         delegate: attributeDelegate
     }
+
+    Component.onCompleted: AttributeModel.setItemID(item_id)
 
     Component {
         id: attributeDelegate
@@ -56,12 +59,12 @@ Kirigami.ScrollablePage {
                         Kirigami.Heading {
                             Layout.fillWidth: true
                             level: 2
-                            text: KEY
+                            text: key
                         }
                         Kirigami.Heading {
                             Layout.fillWidth: true
                             level: 2
-                            text: VALUE
+                            text: value
                         }
                     }
                     Controls.Button {

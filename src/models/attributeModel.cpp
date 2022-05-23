@@ -1,11 +1,13 @@
 #include "attributeModel.h"
 #include "database.h"
 
-
 AttributeModel::AttributeModel(QObject *parent) :
     QSqlQueryModel(parent)
 {
-    this->updateModel();
+    modelQuery = QString("SELECT id, %1,%2,%3 FROM %4 ").arg(
+        TABLE_LABEL, TABLE_KEY, TABLE_VALUE, TABLE_ATTRIBUTES);
+
+    setModelQuery();
 }
 
 AttributeModel::~AttributeModel()
@@ -28,19 +30,23 @@ QHash<int, QByteArray> AttributeModel::roleNames() const {
 
     QHash<int, QByteArray> roles;
     roles[rID] = "id";
-    roles[rUuid] = TABLE_UUID;
     roles[rLabel] = TABLE_LABEL;
     roles[rKey] = TABLE_KEY;
     roles[rValue] = TABLE_VALUE;
+    roles[rItemID] = TABLE_ITEM_ID;
 
     return roles;
 }
 
-// The method updates the tables in the data model representation
-void AttributeModel::updateModel()
+void AttributeModel::setModelQuery()
 {
-    this->setQuery("SELECT id, " TABLE_UUID ", " TABLE_LABEL ", " TABLE_KEY ", "
-                   TABLE_VALUE " FROM " TABLE_ATTRIBUTES);
+    this->setQuery(modelQuery);
+}
+
+void AttributeModel::setItemID(QString item_id)
+{
+    QString modelQueryID = QString("%1 WHERE %2=%3").arg(modelQuery, TABLE_ITEM_ID, item_id);
+    this->setQuery(modelQueryID);
 }
 
 //Getting the id of the row in the data view model

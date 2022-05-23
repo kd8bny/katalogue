@@ -8,13 +8,13 @@ class EventModel: public QSqlQueryModel
 public:
     enum Roles {
         rID = Qt::UserRole + 1,
-        rUid,
         rDate,
         rTask,
         rCost,
         rType,
         rCategory,
         rComment,
+        rItemID,
     };
 
     explicit EventModel(QObject *parent = nullptr);

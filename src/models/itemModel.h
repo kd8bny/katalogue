@@ -8,14 +8,13 @@ class ItemModel: public QSqlQueryModel
 public:
     enum Roles {
         rID = Qt::UserRole + 1,
-        rUID,
         rNAME,
         rMAKE,
         rMODEL,
         rYEAR,
         rGroup,
         rCategory,
-        rArchived
+        rArchived,
     };
 
     explicit ItemModel(QObject *parent = nullptr);
