@@ -1,11 +1,15 @@
-#include "eventModel.h"
 #include "database.h"
+#include "eventModel.h"
 
 
 EventModel::EventModel(QObject *parent) :
     QSqlQueryModel(parent)
 {
-    this->updateModel();
+    modelQuery = QString("SELECT id, %1,%2,%3, %4, %5, %6 FROM %7").arg(
+        TABLE_DATE, TABLE_TASK, TABLE_COST, TABLE_TYPE,
+        TABLE_CATEGORY, TABLE_COMMENT, TABLE_EVENTS);
+
+    this->setModelQuery();
 }
 
 EventModel::~EventModel()
@@ -40,11 +44,15 @@ QHash<int, QByteArray> EventModel::roleNames() const {
 }
 
 // The method updates the tables in the data model representation
-void EventModel::updateModel()
+void EventModel::setModelQuery()
 {
-    // The update is performed SQL-queries to the database
-    this->setQuery("SELECT id, " TABLE_CATEGORY ", " TABLE_DATE ", "
-                   TABLE_TASK " FROM " TABLE_EVENTS);
+    this->setQuery(modelQuery);
+}
+
+void EventModel::setItemID(QString item_id)
+{
+    QString modelQueryID = QString("%1 WHERE %2=%3").arg(modelQuery, TABLE_ITEM_ID, item_id);
+    this->setQuery(modelQueryID);
 }
 
 //Getting the id of the row in the data view model

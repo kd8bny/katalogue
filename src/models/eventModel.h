@@ -20,16 +20,18 @@ public:
     explicit EventModel(QObject *parent = nullptr);
     ~EventModel();
     void refresh();
+    void setModelQuery();
 
     // Override the method that will return the data
     QVariant data(const QModelIndex &index, int role) const override;
 
 protected:
     QHash<int, QByteArray> roleNames() const override;
+    QString modelQuery;
 
-//signals:
+signals:
 
 public slots:
-    void updateModel();
+    void setItemID(QString item_id);
     int getId(int row);
 };

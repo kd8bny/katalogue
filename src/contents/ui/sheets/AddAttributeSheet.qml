@@ -50,7 +50,6 @@ Kirigami.OverlaySheet {
             enabled: (keyField.text.length & valueField.text.length) > 0
             onClicked: {
                 Database.insertAttributeEntry(
-                    uid,
                     groupField.text,
                     keyField.text,
                     valueField.text,

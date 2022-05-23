@@ -7,7 +7,7 @@ AttributeModel::AttributeModel(QObject *parent) :
     modelQuery = QString("SELECT id, %1,%2,%3 FROM %4 ").arg(
         TABLE_LABEL, TABLE_KEY, TABLE_VALUE, TABLE_ATTRIBUTES);
 
-    setModelQuery();
+    this->setModelQuery();
 }
 
 AttributeModel::~AttributeModel()
