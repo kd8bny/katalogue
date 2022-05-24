@@ -7,10 +7,8 @@ import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.19 as Kirigami
 import com.kd8bny.katalogue 1.0
 
-Kirigami.OverlaySheet {
-    id: addItemSheet
-
-    parent: applicationWindow().overlay
+Kirigami.ScrollablePage {
+    id: addItemPage
 
     header: Kirigami.Heading {
         text: i18nc("@title:window", "Add new item to katalogue")
@@ -20,26 +18,20 @@ Kirigami.OverlaySheet {
         Controls.TextField {
             id: nameField
             Kirigami.FormData.label: i18nc("@label:textbox", "Name:")
-            placeholderText: i18n("My Car")
-            onAccepted: nicknameField.forceActiveFocus()
+            placeholderText: i18n("required")
         }
         Controls.TextField {
             id: makeField
             Kirigami.FormData.label: i18nc("@label:textbox", "Make:")
-            placeholderText: i18n("Ford")
-            onAccepted: dateField.forceActiveFocus()
         }
         Controls.TextField {
             id: modelField
             Kirigami.FormData.label: i18nc("@label:textbox", "Model:")
-            placeholderText: i18n("Mustang")
         }
         Controls.TextField {
             id: yearField
             Kirigami.FormData.label: i18nc("@label:textbox", "Year:")
-            placeholderText: i18n("2000")
             //inputMask: "H"
-            //onAccepted: dateField.forceActiveFocus()
         }
         Controls.ComboBox {
             editable: true

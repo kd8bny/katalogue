@@ -12,6 +12,6 @@
         <file alias="Overview.qml">contents/ui/Overview.qml</file>
         <file alias="AddAttributeSheet.qml">contents/ui/sheets/AddAttributeSheet.qml</file>
         <file alias="AddEventSheet.qml">contents/ui/sheets/AddEventSheet.qml</file>
-        <file alias="AddItemSheet.qml">contents/ui/sheets/AddItemSheet.qml</file>
+        <file alias="AddItem.qml">contents/ui/AddItem.qml</file>
     </qresource>
 </RCC>
