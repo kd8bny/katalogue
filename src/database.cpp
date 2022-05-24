@@ -30,11 +30,10 @@ bool Database::connect()
 }
 
 bool Database::insertItemEntry(QString name, QString make, QString model,
-QString year, QString category, QString group)
+    QString year, QString category, QString group)
 {
     bool isInsert = false;
     QSqlQuery query;
-    QString uuid = QUuid().createUuid().toString();
 
     query.prepare("INSERT INTO " TABLE_ITEMS " ("
         TABLE_NAME ", " TABLE_MAKE ", " TABLE_MODEL ", " TABLE_YEAR ", "
@@ -57,6 +56,23 @@ QString year, QString category, QString group)
     }
 
     return isInsert;
+}
+
+bool Database::deleteItemEntry(QString item_id)
+{
+    bool isDelete = false;
+    QSqlQuery query;
+
+    query.prepare(QString("DELETE FROM %1 WHERE id=:item_id").arg(TABLE_ITEMS));
+    query.bindValue(":item_id", item_id.toInt());
+
+    if(query.exec()){
+        isDelete = true;
+    } else {
+        qDebug() << "Error removing record " << query.lastError().text();
+    }
+
+    return isDelete;
 }
 
 bool Database::insertAttributeEntry(QString label, QString key, QString value, QString item_id)
@@ -134,7 +150,8 @@ bool Database::initializeSchema()
         TABLE_KEY       " TEXT NOT NULL, "
         TABLE_VALUE     " TEXT NOT NULL, "
         TABLE_ITEM_ID   " INT NOT NULL, "
-        "FOREIGN KEY (" TABLE_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) )";
+        "FOREIGN KEY (" TABLE_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
+        "ON DELETE CASCADE ON UPDATE CASCADE)";
 
     const QString queryEvent = "CREATE TABLE " TABLE_EVENTS
         " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -145,7 +162,8 @@ bool Database::initializeSchema()
         TABLE_CATEGORY  " TEXT, "
         TABLE_COMMENT   " VARCHAR(255), "
         TABLE_ITEM_ID   " INT NOT NULL, "
-        "FOREIGN KEY (" TABLE_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) )";
+        "FOREIGN KEY (" TABLE_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
+        "ON DELETE CASCADE ON UPDATE CASCADE)";
 
     bool isItems = false;
     bool isAttributes = false;
