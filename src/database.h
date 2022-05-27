@@ -50,6 +50,8 @@ public:
     Q_INVOKABLE bool insertEventEntry(QString date, QString task, QString cost,
         QString type, QString category, QString comment, QString item_id);
     Q_INVOKABLE bool deleteItemEntry(QString item_id);
+    Q_INVOKABLE bool updateItemEntry(QString name, QString make, QString model,
+        QString year, QString category, QString group);
 
 private:
     QSqlDatabase db;

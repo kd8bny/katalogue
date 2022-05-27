@@ -58,6 +58,37 @@ bool Database::insertItemEntry(QString name, QString make, QString model,
     return isInsert;
 }
 
+bool Database::updateItemEntry(QString name, QString make, QString model,
+    QString year, QString category, QString group)
+{
+    bool isInsert = false;
+    // QSqlQuery query;
+
+    // query.prepare(QString("UPDATE %1 SET %2=
+    // .arg(TABLE_ITEMS, 
+    //     "INSERT INTO "  " ("
+    //     TABLE_NAME ", " TABLE_MAKE ", " TABLE_MODEL ", " TABLE_YEAR ", "
+    //     TABLE_CATEGORY ", " TABLE_GROUP ", " TABLE_ARCHIVED")"
+    //     " VALUES (:name, :make, :model, :year, :category, "
+    //     ":view, :archived)");
+
+    // query.bindValue(":name", name);
+    // query.bindValue(":make", make);
+    // query.bindValue(":model", model);
+    // query.bindValue(":year", year.toInt());
+    // query.bindValue(":category", category);
+    // query.bindValue(":group", group); 
+    // query.bindValue(":archived", 0);
+
+    // if(query.exec()){
+    //     isInsert = true;
+    // } else {
+    //     qDebug() << "Error inserting record " << query.lastError().text();
+    // }
+
+    return isInsert;
+}
+
 bool Database::deleteItemEntry(QString item_id)
 {
     bool isDelete = false;

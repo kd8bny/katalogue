@@ -9,51 +9,61 @@ import com.kd8bny.katalogue 1.0
 
 
 Kirigami.ScrollablePage {
-    id: itemsPage
+    id: page
+
+    required property string item_id
+    required property string itemName
 
     Layout.fillWidth: true
 
-    title: i18n("Katalogued Items")
+    title: i18n(itemName)
 
     actions {
         main: Kirigami.Action {
-            text: i18n("Add Item")
-            icon.name: "list-add"
-            tooltip: i18n("Add new item")
-            onTriggered: pageStack.layers.push("qrc:AddItemPage.qml")
+                text: i18n("Add")
+                icon.name: "list-add"
+                tooltip: i18n("Add new attribute")
+                onTriggered: addAttributeSheet.open()
+            }
+        left: Kirigami.Action {
+            text: i18n("Edit")
+            icon.name: "entry-edit"
+            tooltip: i18n("Edit item")
+            onTriggered: pageStack.push("qrc:EditItemPage.qml", {"item_id": item_id})
         }
     }
 
     Kirigami.CardsListView {
         id: layout
-        model: ItemModel
-        delegate: itemsDelegate
+        model: AttributeModel
+        delegate: attributeDelegate
+        headerPositioning: ListView.OverlayHeader
+        header: Kirigami.ItemViewHeader {
+            //backgroundImage.source: "../banner.jpg"
+            title: page.title
+        }
+
 
         Kirigami.PlaceholderMessage {
             anchors.centerIn: parent
             width: parent.width - (Kirigami.Units.largeSpacing * 4)
 
             visible: layout.count == 0
-            text: i18n("Select add to set an item")
+            text: i18n("Select add to set an attribute")
         }
     }
 
+    Component.onCompleted: AttributeModel.setItemID(item_id)
+
     Component {
-        id: itemsDelegate
+        id: attributeDelegate
 
-        Kirigami.Card {
-
-            banner {
-                title: name
-                titleIcon: "car"
-            }
-
+        Kirigami.AbstractCard {
             contentItem: Item {
                 // implicitWidth/Height define the natural width/height of an item if no width or height is specified.
                 // The setting below defines a component's preferred size based on its content
                 implicitWidth: delegateLayout.implicitWidth
                 implicitHeight: delegateLayout.implicitHeight
-
                 GridLayout {
                     id: delegateLayout
                     anchors {
@@ -66,32 +76,26 @@ Kirigami.ScrollablePage {
                     columns: root.wideScreen ? 4 : 2
 
                     ColumnLayout {
-
-                        Controls.Label {
+                        Kirigami.Heading {
                             Layout.fillWidth: true
-                            wrapMode: Text.WordWrap
-                            text: year + " " + model + " " + make
+                            level: 2
+                            text: key
                         }
-                        Kirigami.Separator {
+                        Kirigami.Heading {
                             Layout.fillWidth: true
+                            level: 2
+                            text: value
                         }
+                    }
+                    Controls.Button {
+                        Layout.alignment: Qt.AlignRight
+                        // Layout.alignment: Qt.AlignBottom
+                        Layout.columnSpan: 2
+                        text: i18n("Edit")
+                        // onClicked: to be done... soon!
                     }
                 }
             }
-            actions: [
-                  Kirigami.Action {
-                    text: "Details"
-                    icon.name: "item"
-
-                    onTriggered: pageStack.push("qrc:Details.qml", {"itemName": name, "item_id": id})
-                },
-                Kirigami.Action {
-                    text: "Maintence"
-                    icon.name: "item"
-
-                    onTriggered: pageStack.push("qrc:Events.qml", {"itemName": name, "item_id": id})
-                }
-            ]
         }
     }
 }
