@@ -15,7 +15,7 @@ Kirigami.ApplicationWindow {
     minimumWidth: Kirigami.Units.gridUnit * 20
     minimumHeight: Kirigami.Units.gridUnit * 20
 
-    onClosing: Controller.saveWindowGeometry(root)
+    // onClosing: Controller.saveWindowGeometry(root)
 
     onWidthChanged: saveWindowGeometryTimer.restart()
     onHeightChanged: saveWindowGeometryTimer.restart()
@@ -29,7 +29,7 @@ Kirigami.ApplicationWindow {
     Timer {
         id: saveWindowGeometryTimer
         interval: 1000
-        onTriggered: Controller.saveWindowGeometry(root)
+        // onTriggered: Controller.saveWindowGeometry(root)
     }
 
     globalDrawer: Kirigami.GlobalDrawer {
@@ -57,16 +57,16 @@ Kirigami.ApplicationWindow {
         }
 
         actions: [
-            Kirigami.Action {
-                text: i18n("Overview")
-                icon.name: "go-home"
-                tooltip: i18n("Overview")
-                // enabled: root.pageStack.lastVisibleItem != overviewPage
-                onTriggered: {
-                    root.pageStack.clear()
-                    pageStack.push('qrc:Overview.qml')
-                }
-            },
+            // Kirigami.Action {
+            //     text: i18n("Overview")
+            //     icon.name: "go-home"
+            //     tooltip: i18n("Overview")
+            //     // enabled: root.pageStack.lastVisibleItem != overviewPage
+            //     onTriggered: {
+            //         root.pageStack.clear()
+            //         pageStack.push('qrc:Overview.qml')
+            //     }
+            // },
             // Kirigami.Action {
             //     text: i18n("Todo")
             //     icon.name: "task-new"
@@ -75,7 +75,9 @@ Kirigami.ApplicationWindow {
             Kirigami.Action {
                 text: i18n("Items")
                 icon.name: "file-catalog-symbolic"
-                onTriggered: pageStack.push('qrc:Items.qml')
+                onTriggered: {
+                    pageStack.push('qrc:Items.qml')
+                }
             },
             // Kirigami.Action {
             //     text: i18n("Manage Data")
@@ -100,13 +102,9 @@ Kirigami.ApplicationWindow {
         id: contextDrawer
     }
 
-    Overview{
-        id: overviewPage
-    }
-
     Items{
         id: itemsPage
     }
 
-    pageStack.initialPage: overviewPage;
+    pageStack.initialPage: itemsPage;
 }

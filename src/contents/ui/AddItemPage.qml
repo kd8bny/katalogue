@@ -14,7 +14,9 @@ Kirigami.ScrollablePage {
         text: i18nc("@title:window", "Add new item to katalogue")
     }
 
-    Kirigami.FormLayout { // TODO required
+    Kirigami.FormLayout {
+    id: form
+
         Controls.TextField {
             id: nameField
             Kirigami.FormData.label: i18nc("@label:textbox", "Name:")
@@ -58,6 +60,7 @@ Kirigami.ScrollablePage {
                     model.append({text: editText})
             }
         }
+
         Controls.Button {
             id: doneButton
             Layout.fillWidth: true
@@ -70,10 +73,10 @@ Kirigami.ScrollablePage {
                     modelField.text,
                     yearField.text,
                     categoryField.text,
-                    groupField.text
+                    groupField.text,
                 )
                 ItemModel.updateModel()
-                addItemSheet.close()
+                pageStack.layers.pop()
             }
         }
     }

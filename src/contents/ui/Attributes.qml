@@ -20,10 +20,16 @@ Kirigami.ScrollablePage {
 
     actions {
         main: Kirigami.Action {
-            text: i18n("Add")
-            icon.name: "list-add"
-            tooltip: i18n("Add new attribute")
-            onTriggered: addAttributeSheet.open()
+                text: i18n("Add")
+                icon.name: "list-add"
+                tooltip: i18n("Add new attribute")
+                onTriggered: addAttributeSheet.open()
+            }
+        left: Kirigami.Action {
+            text: i18n("Edit")
+            icon.name: "entry-edit"
+            tooltip: i18n("Edit item")
+            onTriggered: pageStack.push("qrc:EditItemPage.qml", {"item_id": item_id})
         }
     }
 
@@ -31,6 +37,14 @@ Kirigami.ScrollablePage {
         id: layout
         model: AttributeModel
         delegate: attributeDelegate
+
+        Kirigami.PlaceholderMessage {
+            anchors.centerIn: parent
+            width: parent.width - (Kirigami.Units.largeSpacing * 4)
+
+            visible: layout.count == 0
+            text: i18n("Select add to set an attribute")
+        }
     }
 
     Component.onCompleted: AttributeModel.setItemID(item_id)

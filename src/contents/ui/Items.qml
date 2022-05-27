@@ -20,7 +20,7 @@ Kirigami.ScrollablePage {
             text: i18n("Add Item")
             icon.name: "list-add"
             tooltip: i18n("Add new item")
-            onTriggered: pageStack.layers.push("qrc:AddItem.qml")
+            onTriggered: pageStack.layers.push("qrc:AddItemPage.qml")
         }
     }
 
@@ -28,6 +28,14 @@ Kirigami.ScrollablePage {
         id: layout
         model: ItemModel
         delegate: itemsDelegate
+
+        Kirigami.PlaceholderMessage {
+            anchors.centerIn: parent
+            width: parent.width - (Kirigami.Units.largeSpacing * 4)
+
+            visible: layout.count == 0
+            text: i18n("Select add to set an item")
+        }
     }
 
     Component {

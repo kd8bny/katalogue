@@ -150,7 +150,7 @@ bool Database::initializeSchema()
         TABLE_KEY       " TEXT NOT NULL, "
         TABLE_VALUE     " TEXT NOT NULL, "
         TABLE_ITEM_ID   " INT NOT NULL, "
-        "FOREIGN KEY (" TABLE_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
+        "CONSTRAINT item_id FOREIGN KEY (" TABLE_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
         "ON DELETE CASCADE ON UPDATE CASCADE)";
 
     const QString queryEvent = "CREATE TABLE " TABLE_EVENTS
@@ -162,7 +162,7 @@ bool Database::initializeSchema()
         TABLE_CATEGORY  " TEXT, "
         TABLE_COMMENT   " VARCHAR(255), "
         TABLE_ITEM_ID   " INT NOT NULL, "
-        "FOREIGN KEY (" TABLE_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
+        "CONSTRAINT item_id FOREIGN KEY (" TABLE_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
         "ON DELETE CASCADE ON UPDATE CASCADE)";
 
     bool isItems = false;
