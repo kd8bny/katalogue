@@ -18,12 +18,22 @@ bool Database::connect()
     db.setDatabaseName(DATABASE_NAME);
 
     if(db.open()){
+        QSqlQuery query;
+
         // Check if the database is empty
-        if(db.tables().size() == 0){
+        query.exec("PRAGMA user_version");
+        int db_version = query.next();
+        if(db_version == 0){
             qDebug() << "New database, creating tables";
+            query.exec(QString("PRAGMA user_version = %1").arg(USER_VERSION));
             this->initializeSchema();
+        }else if(db_version > USER_VERSION){
+            qDebug() << "Database is newer than application";
+        }else{
+            // Enable ON CASCADE
+            query.exec("PRAGMA foreign_keys = ON;");
+            isDBOpen = true;
         }
-        isDBOpen = true;
     }
 
     return isDBOpen;
