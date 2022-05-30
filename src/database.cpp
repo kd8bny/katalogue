@@ -45,11 +45,10 @@ bool Database::insertItemEntry(QString name, QString make, QString model,
     bool isInsert = false;
     QSqlQuery query;
 
-    query.prepare("INSERT INTO " TABLE_ITEMS " ("
-        TABLE_NAME ", " TABLE_MAKE ", " TABLE_MODEL ", " TABLE_YEAR ", "
-        TABLE_CATEGORY ", " TABLE_GROUP ", " TABLE_ARCHIVED")"
-        " VALUES (:name, :make, :model, :year, :category, "
-        ":view, :archived)");
+    query.prepare(QString("INSERT INTO %1 (%2, %3, %4, %5, %6, %7, %8) "
+        "VALUES (:name, :make :model, :year, :category, :view, :archived)").arg(
+            TABLE_ITEMS, TABLE_NAME,  TABLE_MAKE, TABLE_MODEL, TABLE_YEAR,
+            TABLE_CATEGORY,  TABLE_GROUP, TABLE_ARCHIVED));
 
     query.bindValue(":name", name);
     query.bindValue(":make", make);
