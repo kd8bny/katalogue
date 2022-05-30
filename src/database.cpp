@@ -22,11 +22,13 @@ bool Database::connect()
 
         // Check if the database is empty
         query.exec("PRAGMA user_version");
-        int db_version = query.next();
+        query.next();
+        int db_version = query.value(0).toInt();
         qDebug() << "database version: " << db_version;
 
-        if(db_version == 1){
+        if(db_version == 0){
             qDebug() << "New database, creating tables";
+
             query.exec(QString("PRAGMA user_version = %1").arg(USER_VERSION));
             this->initializeSchema();
         }else if(db_version > USER_VERSION){

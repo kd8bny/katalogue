@@ -10,7 +10,7 @@
 
 #define DATABASE_NAME "katalogue.db"
 #define DATABASE_TYPE "QSQLITE"
-#define USER_VERSION 2
+#define USER_VERSION 1
 
 #define TABLE_ITEM_ID "fk_item_id"
 
