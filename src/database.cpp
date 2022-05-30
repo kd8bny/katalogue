@@ -23,7 +23,9 @@ bool Database::connect()
         // Check if the database is empty
         query.exec("PRAGMA user_version");
         int db_version = query.next();
-        if(db_version == 0){
+        qDebug() << "database version: " << db_version;
+
+        if(db_version == 1){
             qDebug() << "New database, creating tables";
             query.exec(QString("PRAGMA user_version = %1").arg(USER_VERSION));
             this->initializeSchema();
@@ -46,22 +48,22 @@ bool Database::insertItemEntry(QString name, QString make, QString model,
     QSqlQuery query;
 
     query.prepare(QString("INSERT INTO %1 (%2, %3, %4, %5, %6, %7, %8) "
-        "VALUES (:name, :make :model, :year, :category, :view, :archived)").arg(
+        "VALUES (:name, :make, :model, :year, :category, :group, :archived)").arg(
             TABLE_ITEMS, TABLE_NAME,  TABLE_MAKE, TABLE_MODEL, TABLE_YEAR,
-            TABLE_CATEGORY,  TABLE_GROUP, TABLE_ARCHIVED));
+            TABLE_CATEGORY, TABLE_GROUP, TABLE_ARCHIVED));
 
     query.bindValue(":name", name);
     query.bindValue(":make", make);
     query.bindValue(":model", model);
     query.bindValue(":year", year.toInt());
     query.bindValue(":category", category);
-    query.bindValue(":group", group); 
+    query.bindValue(":group", group);
     query.bindValue(":archived", 0);
 
     if(query.exec()){
         isInsert = true;
     } else {
-        qDebug() << "Error inserting record " << query.lastError().text();
+        qDebug() << "Error inserting record " << query.lastError();
     }
 
     return isInsert;
