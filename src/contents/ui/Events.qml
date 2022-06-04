@@ -11,8 +11,8 @@ import com.kd8bny.katalogue 1.0
 Kirigami.ScrollablePage {
     id: eventsPage
 
-    required property string item_id
-    required property string itemName
+    // required property string item_id
+    // required property string itemName
 
     Layout.fillWidth: true
 

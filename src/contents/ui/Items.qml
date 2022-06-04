@@ -80,13 +80,13 @@ Kirigami.ScrollablePage {
             }
             actions: [
                   Kirigami.Action {
-                    text: "Details"
+                    text: i18n("Attributes")
                     icon.name: "item"
 
-                    onTriggered: pageStack.push("qrc:Details.qml", {"itemName": name, "item_id": id})
+                    onTriggered: pageStack.push("qrc:Attributes.qml", {"itemName": name, "item_id": id})
                 },
                 Kirigami.Action {
-                    text: "Maintence"
+                    text: i18n("Maintence")
                     icon.name: "item"
 
                     onTriggered: pageStack.push("qrc:Events.qml", {"itemName": name, "item_id": id})

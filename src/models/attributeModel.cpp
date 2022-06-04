@@ -4,8 +4,8 @@
 AttributeModel::AttributeModel(QObject *parent) :
     QSqlQueryModel(parent)
 {
-    modelQuery = QString("SELECT id, %1,%2,%3 FROM %4 ").arg(
-        TABLE_LABEL, TABLE_KEY, TABLE_VALUE, TABLE_ATTRIBUTES);
+    modelQuery = QString("SELECT id, %1, %2, %3, %4 FROM %5 ").arg(
+        TABLE_LABEL, TABLE_KEY, TABLE_VALUE, TABLE_ITEM_ID, TABLE_ATTRIBUTES);
 
     this->setModelQuery();
 }
@@ -49,7 +49,6 @@ void AttributeModel::setItemID(QString item_id)
     this->setQuery(modelQueryID);
 }
 
-//Getting the id of the row in the data view model
 int AttributeModel::getId(int row)
 {
     return this->data(this->index(row, 0), rID).toInt();

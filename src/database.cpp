@@ -71,9 +71,9 @@ bool Database::insertItemEntry(QString name, QString make, QString model,
     return isInsert;
 }
 
-bool Database::updateItemEntry(QString name, QString make, QString model,
-    QString year, QString category, QString group)
-{
+// bool Database::updateItemEntry(QString name, QString make, QString model,
+//     QString year, QString category, QString group)
+// {
     bool isInsert = false;
     // QSqlQuery query;
 
@@ -99,8 +99,8 @@ bool Database::updateItemEntry(QString name, QString make, QString model,
     //     qDebug() << "Error inserting record " << query.lastError().text();
     // }
 
-    return isInsert;
-}
+//     return isInsert;
+// }
 
 bool Database::deleteItemEntry(QString item_id)
 {
@@ -119,17 +119,17 @@ bool Database::deleteItemEntry(QString item_id)
     return isDelete;
 }
 
-bool Database::insertAttributeEntry(QString label, QString key, QString value, QString item_id)
+bool Database::insertAttributeEntry(QString item_id, QString label, QString key, QString value)
 {
     bool isInsert = false;
     QSqlQuery query;
 
-    query.prepare("INSERT INTO " TABLE_ATTRIBUTES " ("
-        TABLE_LABEL ", " TABLE_KEY ", " TABLE_VALUE  ", " TABLE_ITEM_ID")"
-        " VALUES (:label, :key, :value, :item_id)");
+    query.prepare(QString(
+        "INSERT INTO %1 (%2, %3, %4, %5) VALUES (:label, :key, :value, :item_id)").arg(
+            TABLE_ATTRIBUTES, TABLE_LABEL, TABLE_KEY, TABLE_VALUE, TABLE_ITEM_ID));
 
     query.bindValue(":label", label);
-    query.bindValue(":key", key); 
+    query.bindValue(":key", key);
     query.bindValue(":value", value);
     query.bindValue(":item_id", item_id);
 
@@ -137,7 +137,9 @@ bool Database::insertAttributeEntry(QString label, QString key, QString value, Q
         isInsert = true;
     } else {
         qDebug() << "Error inserting record " << TABLE_ATTRIBUTES;
-        qDebug() << query.lastError().text();
+        qDebug() << query.lastError();//.text();
+        qDebug() << query.lastQuery();
+        qDebug() << label << key << value << item_id;
     }
 
     return isInsert;
@@ -190,9 +192,9 @@ bool Database::initializeSchema()
 
     const QString queryAttributes = "CREATE TABLE " TABLE_ATTRIBUTES
         " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-        TABLE_LABEL     " TEXT NOT NULL, "
         TABLE_KEY       " TEXT NOT NULL, "
         TABLE_VALUE     " TEXT NOT NULL, "
+        TABLE_LABEL     " TEXT, "
         TABLE_ITEM_ID   " INT NOT NULL, "
         "CONSTRAINT item_id FOREIGN KEY (" TABLE_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
         "ON DELETE CASCADE ON UPDATE CASCADE)";
@@ -245,7 +247,7 @@ void Database::initializeDemoEntry()
     this->insertItemEntry(
         "My Vehicle", "Ford", "Mustang", "2000", "auto", "My Group");
 
-    this->insertAttributeEntry("Default", "Engine", "4.6L V8", "1");
+    this->insertAttributeEntry("1", "Default", "Engine", "4.6L V8");
     this->insertEventEntry("2022-05-22", "Check Oil", "0.00", "checkup",
         "auto", "Comment about event", "1");
 }

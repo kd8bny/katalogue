@@ -40,16 +40,28 @@ QHash<int, QByteArray> ItemModel::roleNames() const {
     return roles;
 }
 
-// The method updates the tables in the data model representation
 void ItemModel::updateModel()
 {
-    // The update is performed SQL-queries to the database
-    this->setQuery("SELECT id, " TABLE_NAME ", " TABLE_YEAR ", "
-                   TABLE_MODEL ", " TABLE_MAKE " FROM " TABLE_ITEMS);
+    this->setQuery(QString("SELECT id, %1, %2 , %3, %4 FROM %5").arg(
+            TABLE_NAME, TABLE_YEAR, TABLE_MODEL, TABLE_MAKE, TABLE_ITEMS));
 }
 
-//Getting the id of the row in the data view model
 int ItemModel::getId(int row)
 {
     return this->data(this->index(row, 0), rID).toInt();
+}
+
+QVariantList ItemModel::getItemData(QString item_id)
+{
+    QSqlQuery query;
+    QVariantList itemData;
+    query.prepare(QString(
+        "SELECT %1, %2, %3, %4, %5, %6, %7 FROM %8 WHERE id=:item_id").arg(
+            TABLE_NAME, TABLE_MAKE, TABLE_MODEL, TABLE_YEAR, TABLE_CATEGORY,
+            TABLE_GROUP, TABLE_ARCHIVED, TABLE_ITEMS));
+    query.bindValue(":item_id", item_id.toInt());
+    query.exec();
+    qDebug() << query.next();
+
+    return itemData;
 }

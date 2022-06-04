@@ -106,5 +106,10 @@ Kirigami.ApplicationWindow {
         id: itemsPage
     }
 
+    AddAttributeSheet{
+        id:addAttributeSheet
+        item_id: ""
+    }
+
     pageStack.initialPage: itemsPage;
 }

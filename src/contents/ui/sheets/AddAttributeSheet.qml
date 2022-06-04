@@ -10,7 +10,7 @@ import com.kd8bny.katalogue 1.0
 Kirigami.OverlaySheet {
     id: addAttributeSheet
 
-    // required property string uid
+    required property string item_id
 
     parent: applicationWindow().overlay
 
@@ -22,20 +22,17 @@ Kirigami.OverlaySheet {
         Controls.TextField {
             id: keyField
             Kirigami.FormData.label: i18nc("@label:textbox", "Name:")
-            //placeholderText: i18n("My Car")
-            //onAccepted: nicknameField.forceActiveFocus()
         }
         Controls.TextField {
             id: valueField
             Kirigami.FormData.label: i18nc("@label:textbox", "Value:")
-            //placeholderText: i18n("")
-            //onAccepted: dateField.forceActiveFocus()
         }
         Controls.ComboBox {
+            id: labelComboBox
             editable: true
-            Kirigami.FormData.label: i18nc("@label:textbox", "Group:")
+            Kirigami.FormData.label: i18nc("@label:textbox", "Label:")
             model: ListModel {
-                id: groupField
+                id: labelField
                 ListElement { text: "Default" }
             }
             onAccepted: {
@@ -50,11 +47,12 @@ Kirigami.OverlaySheet {
             enabled: (keyField.text.length & valueField.text.length) > 0
             onClicked: {
                 Database.insertAttributeEntry(
-                    groupField.text,
+                    item_id,
+                    labelComboBox.text,
                     keyField.text,
                     valueField.text,
                 )
-                AttributeModel.updateModel()
+                AttributeModel.setItemID(item_id)
                 addAttributeSheet.close()
             }
         }

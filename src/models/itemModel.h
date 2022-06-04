@@ -32,4 +32,5 @@ protected:
 public slots:
     void updateModel();
     int getId(int row);
+    QVariantList getItemData(QString item_id);
 };

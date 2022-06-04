@@ -11,9 +11,9 @@
         <file alias="Events.qml">contents/ui/Events.qml</file>
         <file alias="Items.qml">contents/ui/Items.qml</file>
         <file alias="Overview.qml">contents/ui/Overview.qml</file>
-        <file alias="AddAttributeSheet.qml">contents/ui/sheets/AddAttributeSheet.qml</file>
-        <file alias="AddEventSheet.qml">contents/ui/sheets/AddEventSheet.qml</file>
         <file alias="AddItemPage.qml">contents/ui/AddItemPage.qml</file>
         <file alias="EditItemPage.qml">contents/ui/EditItemPage.qml</file>
+        <file alias="AddAttributeSheet.qml">contents/ui/sheets/AddAttributeSheet.qml</file>
+        <file alias="AddEventSheet.qml">contents/ui/sheets/AddEventSheet.qml</file>
     </qresource>
 </RCC>

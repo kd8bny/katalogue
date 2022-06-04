@@ -9,7 +9,7 @@ import com.kd8bny.katalogue 1.0
 
 
 Kirigami.ScrollablePage {
-    id: attributesPage
+    id: page
 
     required property string item_id
     required property string itemName
@@ -20,11 +20,14 @@ Kirigami.ScrollablePage {
 
     actions {
         main: Kirigami.Action {
-                text: i18n("Add")
-                icon.name: "list-add"
-                tooltip: i18n("Add new attribute")
-                onTriggered: addAttributeSheet.open()
+            text: i18n("Add")
+            icon.name: "list-add"
+            tooltip: i18n("Add new attribute")
+            onTriggered: {
+                addAttributeSheet.item_id = item_id
+                addAttributeSheet.open()
             }
+        }
         left: Kirigami.Action {
             text: i18n("Edit")
             icon.name: "entry-edit"
@@ -37,6 +40,12 @@ Kirigami.ScrollablePage {
         id: layout
         model: AttributeModel
         delegate: attributeDelegate
+
+        headerPositioning: ListView.OverlayHeader
+        header: Kirigami.ItemViewHeader {
+            //backgroundImage.source: "../banner.jpg"
+            title: page.title
+        }
 
         Kirigami.PlaceholderMessage {
             anchors.centerIn: parent
@@ -69,24 +78,32 @@ Kirigami.ScrollablePage {
                     columnSpacing: Kirigami.Units.largeSpacing
                     columns: root.wideScreen ? 4 : 2
 
-                    ColumnLayout {
-                        Kirigami.Heading {
-                            Layout.fillWidth: true
-                            level: 2
-                            text: key
+                    ColumnLayout{
+                        RowLayout{
+                            Kirigami.Heading {
+                                Layout.fillWidth: true
+                                level: 2
+                                text: key
+                            }
+                            Controls.Button {
+                                Layout.alignment: Qt.AlignRight
+                                // Layout.alignment: Qt.AlignBottom
+                                Layout.columnSpan: 2
+                                text: i18n("Edit")
+                                // onClicked: to be done... soon!
+                            }
                         }
-                        Kirigami.Heading {
+                        RowLayout {
                             Layout.fillWidth: true
-                            level: 2
-                            text: value
+                            Controls.Label {
+                                wrapMode: Text.WordWrap
+                                text: value
+                            }
+                            Controls.Label {
+                                wrapMode: Text.WordWrap
+                                text: "label: " + label
+                            }
                         }
-                    }
-                    Controls.Button {
-                        Layout.alignment: Qt.AlignRight
-                        // Layout.alignment: Qt.AlignBottom
-                        Layout.columnSpan: 2
-                        text: i18n("Edit")
-                        // onClicked: to be done... soon!
                     }
                 }
             }

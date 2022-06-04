@@ -11,13 +11,15 @@ Kirigami.ScrollablePage {
     id: addItemPage
 
     required property string item_id
+    // required property string name
+    // required property string make
 
     header: Kirigami.Heading {
         text: i18nc("@title:window", "Add new item to katalogue")
     }
 
     Kirigami.FormLayout {
-    id: form
+        id: form
 
         Controls.TextField {
             id: nameField
@@ -96,5 +98,7 @@ Kirigami.ScrollablePage {
                 pageStack.push("qrc:Items.qml")
             }
         }
+
+
     }
 }
