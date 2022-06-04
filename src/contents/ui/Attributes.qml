@@ -28,12 +28,14 @@ Kirigami.ScrollablePage {
                 addAttributeSheet.open()
             }
         }
-        left: Kirigami.Action {
-            text: i18n("Edit")
-            icon.name: "entry-edit"
-            tooltip: i18n("Edit item")
-            onTriggered: pageStack.push("qrc:EditItemPage.qml", {"item_id": item_id})
-        }
+        contextualActions: [
+            Kirigami.Action {
+                text: i18n("Edit")
+                icon.name: "entry-edit"
+                tooltip: i18n("Edit item")
+                onTriggered: pageStack.push("qrc:EditItemPage.qml", {"item_id": item_id})
+            }
+        ]
     }
 
     Kirigami.CardsListView {
@@ -52,7 +54,7 @@ Kirigami.ScrollablePage {
             width: parent.width - (Kirigami.Units.largeSpacing * 4)
 
             visible: layout.count == 0
-            text: i18n("Select add to set an attribute")
+            text: i18n("Select add to add an attribute to this item")
         }
     }
 

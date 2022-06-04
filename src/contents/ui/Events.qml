@@ -9,10 +9,10 @@ import com.kd8bny.katalogue 1.0
 
 
 Kirigami.ScrollablePage {
-    id: eventsPage
+    id: page
 
-    // required property string item_id
-    // required property string itemName
+    required property string item_id
+    required property string itemName
 
     Layout.fillWidth: true
 
@@ -23,8 +23,19 @@ Kirigami.ScrollablePage {
             text: i18n("Add")
             icon.name: "list-add"
             tooltip: i18n("Add new event")
-            onTriggered: addEventSheet.open()
+            onTriggered: {
+                addEventSheet.item_id = item_id
+                addEventSheet.open()
+            }
         }
+        contextualActions: [
+            Kirigami.Action {
+                text: i18n("Edit")
+                icon.name: "entry-edit"
+                tooltip: i18n("Edit item")
+                onTriggered: pageStack.push("qrc:EditItemPage.qml", {"item_id": item_id})
+            }
+        ]
     }
 
     Component.onCompleted: EventModel.setItemID(item_id)
@@ -33,6 +44,20 @@ Kirigami.ScrollablePage {
         id: layout
         model: EventModel
         delegate: eventDelegate
+
+        headerPositioning: ListView.OverlayHeader
+        header: Kirigami.ItemViewHeader {
+            //backgroundImage.source: "../banner.jpg"
+            title: page.title
+        }
+
+        Kirigami.PlaceholderMessage {
+            anchors.centerIn: parent
+            width: parent.width - (Kirigami.Units.largeSpacing * 4)
+
+            visible: layout.count == 0
+            text: i18n("Select add to add an event to this item")
+        }
     }
 
     Component {
