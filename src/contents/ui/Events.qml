@@ -34,6 +34,12 @@ Kirigami.ScrollablePage {
                 icon.name: "entry-edit"
                 tooltip: i18n("Edit item")
                 onTriggered: pageStack.push("qrc:EditItemPage.qml", {"item_id": item_id})
+            },
+            Kirigami.Action {
+                text: i18n("Attributes")
+                icon.name: "item"
+                tooltip: i18n("Swap to Attributes")
+                onTriggered: pageStack.replace("qrc:Attributes.qml", {"itemName": itemName, "item_id": item_id})
             }
         ]
     }
