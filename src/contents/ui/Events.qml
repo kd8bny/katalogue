@@ -95,7 +95,7 @@ Kirigami.ScrollablePage {
                         Kirigami.Heading {
                             Layout.fillWidth: true
                             level: 2
-                            text: task
+                            text: event
                         }
                     }
                     Controls.Button {

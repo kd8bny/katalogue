@@ -25,7 +25,7 @@
 
 #define TABLE_EVENTS "events"
 #define TABLE_DATE "date"
-#define TABLE_TASK "task"
+#define TABLE_EVENT "event"
 #define TABLE_COST "cost"
 #define TABLE_TYPE "type"
 #define TABLE_COMMENT "comment"

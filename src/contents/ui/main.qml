@@ -110,6 +110,10 @@ Kirigami.ApplicationWindow {
         id:addAttributeSheet
         item_id: ""
     }
+    AddEventSheet{
+        id:addEventSheet
+        item_id: ""
+    }
 
     pageStack.initialPage: itemsPage;
 }

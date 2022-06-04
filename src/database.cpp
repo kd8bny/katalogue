@@ -137,27 +137,27 @@ bool Database::insertAttributeEntry(QString item_id, QString label, QString key,
         isInsert = true;
     } else {
         qDebug() << "Error inserting record " << TABLE_ATTRIBUTES;
-        qDebug() << query.lastError();//.text();
+        qDebug() << query.lastError();
         qDebug() << query.lastQuery();
-        qDebug() << label << key << value << item_id;
     }
 
     return isInsert;
 }
 
-bool Database::insertEventEntry(QString date, QString task, QString cost, 
-    QString type, QString category, QString comment, QString item_id)
+bool Database::insertEventEntry(QString item_id, QString date, QString event, QString cost, 
+    QString type, QString category, QString comment)
 {
     bool isInsert = false;
     QSqlQuery query;
 
-    query.prepare("INSERT INTO " TABLE_EVENTS " ("
-        TABLE_DATE ", " TABLE_TASK ", " TABLE_COST ", "
-        TABLE_TYPE ", " TABLE_CATEGORY  ", " TABLE_COMMENT ", " TABLE_ITEM_ID")"
-        " VALUES (:date, :task, :cost, :type, :category, :comment, :item_id)");
+    query.prepare(QString(
+        "INSERT INTO %1 ( %2, %3, %4, %5, %6, %7, %8) VALUES "
+        "(:date, :event, :cost, :type, :category, :comment, :item_id)").arg(
+            TABLE_EVENTS, TABLE_DATE, TABLE_EVENT, TABLE_COST, TABLE_TYPE,
+            TABLE_CATEGORY, TABLE_COMMENT, TABLE_ITEM_ID));
 
     query.bindValue(":date", date);
-    query.bindValue(":task", task);
+    query.bindValue(":event", event);
     query.bindValue(":cost", cost);
     query.bindValue(":type", type);
     query.bindValue(":category", category);
@@ -202,7 +202,7 @@ bool Database::initializeSchema()
     const QString queryEvent = "CREATE TABLE " TABLE_EVENTS
         " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
         TABLE_DATE      " DATE NOT NULL, "
-        TABLE_TASK      " TEXT NOT NULL, "
+        TABLE_EVENT     " TEXT NOT NULL, "
         TABLE_COST      " REAL, "
         TABLE_TYPE      " TEXT, "
         TABLE_CATEGORY  " TEXT, "
@@ -248,6 +248,6 @@ void Database::initializeDemoEntry()
         "My Vehicle", "Ford", "Mustang", "2000", "auto", "My Group");
 
     this->insertAttributeEntry("1", "Default", "Engine", "4.6L V8");
-    this->insertEventEntry("2022-05-22", "Check Oil", "0.00", "checkup",
-        "auto", "Comment about event", "1");
+    this->insertEventEntry("1", "2022-05-22", "Check Oil", "0.00", "checkup",
+        "auto", "Comment about event");
 }

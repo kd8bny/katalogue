@@ -9,7 +9,7 @@ public:
     enum Roles {
         rID = Qt::UserRole + 1,
         rDate,
-        rTask,
+        rEvent,
         rCost,
         rType,
         rCategory,

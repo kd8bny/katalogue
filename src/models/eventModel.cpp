@@ -6,7 +6,7 @@ EventModel::EventModel(QObject *parent) :
     QSqlQueryModel(parent)
 {
     modelQuery = QString("SELECT id, %1,%2,%3, %4, %5, %6 FROM %7").arg(
-        TABLE_DATE, TABLE_TASK, TABLE_COST, TABLE_TYPE,
+        TABLE_DATE, TABLE_EVENT, TABLE_COST, TABLE_TYPE,
         TABLE_CATEGORY, TABLE_COMMENT, TABLE_EVENTS);
 
     this->setModelQuery();
@@ -33,7 +33,7 @@ QHash<int, QByteArray> EventModel::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[rID] = "id";
     roles[rDate] = TABLE_DATE;
-    roles[rTask] = TABLE_TASK;
+    roles[rEvent] = TABLE_EVENT;
     roles[rCost] = TABLE_COST;
     roles[rType] = TABLE_TYPE;
     roles[rCategory] = TABLE_CATEGORY;

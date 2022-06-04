@@ -5,49 +5,72 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15 as Controls
 import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.19 as Kirigami
-
+import com.kd8bny.katalogue 1.0
 
 Kirigami.OverlaySheet {
 	id: addEventSheet
-	header: Kirigami.Heading {
-		text: i18nc("@title:window", "Add kountdown")
-	}
-	Kirigami.FormLayout {
-		Controls.TextField {
-			id: nameField
-			Kirigami.FormData.label: i18nc("@label:textbox", "Name:")
-			placeholderText: i18n("Event name (required)")
-			onAccepted: descriptionField.forceActiveFocus()
-		}
-		Controls.TextField {
-			id: descriptionField
-			Kirigami.FormData.label: i18nc("@label:textbox", "Description:")
-			placeholderText: i18n("Optional")
-			onAccepted: dateField.forceActiveFocus()
-		}
-		Controls.TextField {
-			id: dateField
-			Kirigami.FormData.label: i18nc("@label:textbox", "Date:")
-			placeholderText: i18n("YYYY-MM-DD")
-			inputMask: "0000-00-00"
-		}
-		Controls.Button {
-			id: doneButton
-			Layout.fillWidth: true
-			text: i18nc("@action:button", "Add")
-			enabled: nameField.text.length > 0
-			onClicked: {
-				kountdownModel.append({
-					name: nameField.text, 
-					description: descriptionField.text, 
-					//The parse() method parses a string and returns the number of milliseconds since January 1, 1970, 00:00:00 UTC.
-					date: Date.parse(dateField.text)
-				});
-				nameField.text = ""
-				descriptionField.text = ""
-				dateField.text = ""
-				addSheet.close();
-			}
-		}
-	}
+
+    required property string item_id
+
+    parent: applicationWindow().overlay
+
+    header: Kirigami.Heading {
+        text: i18nc("@title:window", "Item Attribute")
+    }
+
+    Kirigami.FormLayout {
+        Controls.TextField {
+            id: dateField
+            Kirigami.FormData.label: i18nc("@label:textbox", "Date:")
+        }
+        Controls.TextField {
+            id: eventField
+            Kirigami.FormData.label: i18nc("@label:textbox", "Event:")
+        }
+        Controls.TextField {
+            id: costField
+            Kirigami.FormData.label: i18nc("@label:textbox", "Cost:")
+        }
+        // Controls.TextField {
+        //     id: valueField
+        //     Kirigami.FormData.label: i18nc("@label:textbox", "Type:")
+        // }
+        //cat
+        Controls.TextField {
+            id: commentField
+            Kirigami.FormData.label: i18nc("@label:textbox", "Comment:")
+        }
+
+        // Controls.ComboBox {
+        //     id: labelComboBox
+        //     editable: true
+        //     Kirigami.FormData.label: i18nc("@label:textbox", ":")
+        //     model: ListModel {
+        //         id: labelField
+        //         ListElement { text: "Default" }
+        //     }
+        //     onAccepted: {
+        //         if (find(editText) === -1)
+        //             model.append({text: editText})
+        //     }
+        // }
+        Controls.Button {
+            id: doneButton
+            Layout.fillWidth: true
+            text: i18nc("@action:button", "Add")
+            enabled: (keyField.text.length & valueField.text.length) > 0
+            onClicked: {
+                Database.insertEventEntry(
+                    item_id,
+                    dateField.text,
+                    eventField.text,
+                    costField.txt,
+                    "type", "category",
+                    commentField.text,
+                )
+                EventModel.setItemID(item_id)
+                addEventSheet.close()
+            }
+        }
+    }
 }
