@@ -16,7 +16,7 @@ Kirigami.ScrollablePage {
 
     Layout.fillWidth: true
 
-    title: i18n(itemName)
+    title: i18n("Attributes")
 
     actions {
         main: Kirigami.Action {
@@ -52,12 +52,12 @@ Kirigami.ScrollablePage {
         headerPositioning: ListView.OverlayHeader
         header: Kirigami.ItemViewHeader {
             //backgroundImage.source: "../banner.jpg"
-            title: page.title
+            title: itemName
         }
 
         Kirigami.PlaceholderMessage {
-            anchors.centerIn: parent
-            width: parent.width - (Kirigami.Units.largeSpacing * 4)
+            anchors.centerIn: layout
+            width: layout.width - (Kirigami.Units.largeSpacing * 4)
 
             visible: layout.count == 0
             text: i18n("Select add to add an attribute to this item")

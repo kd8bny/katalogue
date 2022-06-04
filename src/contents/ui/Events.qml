@@ -16,7 +16,7 @@ Kirigami.ScrollablePage {
 
     Layout.fillWidth: true
 
-    title: i18n(itemName)
+    title: i18n("Events")
 
     actions {
         main: Kirigami.Action {
@@ -54,7 +54,7 @@ Kirigami.ScrollablePage {
         headerPositioning: ListView.OverlayHeader
         header: Kirigami.ItemViewHeader {
             //backgroundImage.source: "../banner.jpg"
-            title: page.title
+            title: itemName
         }
 
         Kirigami.PlaceholderMessage {
