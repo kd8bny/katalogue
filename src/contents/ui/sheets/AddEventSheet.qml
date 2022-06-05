@@ -41,24 +41,26 @@ Kirigami.OverlaySheet {
             Kirigami.FormData.label: i18nc("@label:textbox", "Comment:")
         }
 
-        // Controls.ComboBox {
-        //     id: labelComboBox
-        //     editable: true
-        //     Kirigami.FormData.label: i18nc("@label:textbox", ":")
-        //     model: ListModel {
-        //         id: labelField
-        //         ListElement { text: "Default" }
-        //     }
-        //     onAccepted: {
-        //         if (find(editText) === -1)
-        //             model.append({text: editText})
-        //     }
-        // }
+        Controls.ComboBox {
+            id: labelComboBox
+
+            // editable: true
+            Kirigami.FormData.label: i18nc("@label:textbox", ":")
+            model: ListModel {
+                id: labelField
+                ListElement { text: "Auto_ICE" }
+                ListElement { text: "Utility" }
+            }
+            onAccepted: {
+                if (find(editText) === -1)
+                    model.append({text: editText})
+            }
+        }
         Controls.Button {
             id: doneButton
             Layout.fillWidth: true
             text: i18nc("@action:button", "Add")
-            enabled: (keyField.text.length & valueField.text.length) > 0
+            //enabled: (keyField.text.length & valueField.text.length) > 0
             onClicked: {
                 Database.insertEventEntry(
                     item_id,

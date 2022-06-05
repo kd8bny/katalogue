@@ -58,8 +58,8 @@ Kirigami.ScrollablePage {
         }
 
         Kirigami.PlaceholderMessage {
-            anchors.centerIn: parent
-            width: parent.width - (Kirigami.Units.largeSpacing * 4)
+            anchors.centerIn: layout
+            width: layout.width - (Kirigami.Units.largeSpacing * 4)
 
             visible: layout.count == 0
             text: i18n("Select add to add an event to this item")
@@ -71,10 +71,9 @@ Kirigami.ScrollablePage {
 
         Kirigami.AbstractCard {
             contentItem: Item {
-                // implicitWidth/Height define the natural width/height of an item if no width or height is specified.
-                // The setting below defines a component's preferred size based on its content
                 implicitWidth: delegateLayout.implicitWidth
                 implicitHeight: delegateLayout.implicitHeight
+
                 GridLayout {
                     id: delegateLayout
                     anchors {
@@ -86,7 +85,7 @@ Kirigami.ScrollablePage {
                     columnSpacing: Kirigami.Units.largeSpacing
                     columns: root.wideScreen ? 4 : 2
 
-                    ColumnLayout {
+                    RowLayout {
                         Kirigami.Heading {
                             Layout.fillWidth: true
                             level: 2
@@ -97,13 +96,13 @@ Kirigami.ScrollablePage {
                             level: 2
                             text: event
                         }
-                    }
-                    Controls.Button {
-                        Layout.alignment: Qt.AlignRight
-                        // Layout.alignment: Qt.AlignBottom
-                        Layout.columnSpan: 2
-                        text: i18n("Edit")
-                        // onClicked: to be done... soon!
+                        Controls.Button {
+                            Layout.alignment: Qt.AlignRight
+                            // Layout.alignment: Qt.AlignBottom
+                            Layout.columnSpan: 2
+                            text: i18n("Edit")
+                            // onClicked: to be done... soon!
+                        }
                     }
                 }
             }
