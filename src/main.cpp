@@ -9,6 +9,7 @@
 #include <QtQml>
 #include <QStandardPaths>
 #include <QDir>
+#include <QProcessEnvironment>
 
 #include "about.h"
 #include "app.h"
@@ -49,7 +50,13 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     KAboutData::setApplicationData(aboutData);
 
     // Set Application Directories
-    QString qPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    // QProcessEnvironment::systemEnvironment();
+    QString qPath = QProcessEnvironment::systemEnvironment().value(
+        "KATALOGUE_DATA", "");
+    if(qPath.length() == 0){
+        qPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    }
+
     if(!QDir(qPath).mkpath(qPath)){
         qDebug() << "Path not writeable " << qPath;
 
