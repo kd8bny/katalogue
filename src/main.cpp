@@ -7,6 +7,8 @@
 #include <QQmlApplicationEngine>
 #include <QUrl>
 #include <QtQml>
+#include <QStandardPaths>
+#include <QDir>
 
 #include "about.h"
 #include "app.h"
@@ -26,7 +28,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 {
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
-    QCoreApplication::setOrganizationName(QStringLiteral("KDE"));
+    //QCoreApplication::setOrganizationName(QStringLiteral("KDE"));
     QCoreApplication::setApplicationName(QStringLiteral("katalogue"));
 
     KAboutData aboutData(
@@ -46,10 +48,17 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     aboutData.addAuthor(i18nc("@info:credit", "AUTHOR"), i18nc("@info:credit", "Author Role"), QStringLiteral("kd8bny@gmail.com"), QStringLiteral("https://yourwebsite.com"));
     KAboutData::setApplicationData(aboutData);
 
+    // Set Application Directories
+    QString qPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    if(!QDir(qPath).mkpath(qPath)){
+        qDebug() << "Path not writeable " << qPath;
+
+        return -1;
+    }
+
     QQmlApplicationEngine engine;
 
     auto config = katalogueConfig::self();
-
     qmlRegisterSingletonInstance("org.kde.katalogue", 1, 0, "Config", config);
 
     AboutType about;
@@ -59,7 +68,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterSingletonInstance("org.kde.katalogue", 1, 0, "App", &application);
 
     Database database;
-    database.connect();
+    database.connect(qPath);
     qmlRegisterSingletonInstance<Database>("com.kd8bny.katalogue", 1, 0, "Database", &database);
 
     AttributeModel attributeModel;

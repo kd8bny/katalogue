@@ -8,8 +8,8 @@
 #include <QDebug>
 #include <QUuid>
 
-#define DATABASE_NAME "katalogue.db"
 #define DATABASE_TYPE "QSQLITE"
+#define DATABASE_NAME "katalogue.db"
 #define USER_VERSION 1
 
 #define TABLE_ITEM_ID "fk_item_id"
@@ -43,7 +43,7 @@ class Database : public QObject
 public:
     explicit Database(QObject *parent = nullptr);
     ~Database();
-    bool connect();
+    bool connect(QString path);
     Q_INVOKABLE bool insertItemEntry(QString name, QString make, QString model,
         QString year, QString category, QString group);
     Q_INVOKABLE bool insertAttributeEntry(QString item_id, QString label,

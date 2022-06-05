@@ -10,12 +10,12 @@ Database::~Database()
 
 }
 
-bool Database::connect()
+bool Database::connect(QString path)
 {
     bool isDBOpen = false;
 
     db = QSqlDatabase::addDatabase(DATABASE_TYPE);
-    db.setDatabaseName(DATABASE_NAME);
+    db.setDatabaseName(QString("%1/%2").arg(path, DATABASE_NAME));
 
     if(db.open()){
         QSqlQuery query;
