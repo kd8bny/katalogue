@@ -33,13 +33,15 @@ Kirigami.ScrollablePage {
         Controls.TextField {
             id: yearField
             Kirigami.FormData.label: i18nc("@label:textbox", "Year:")
-            //inputMask: "H"
+            placeholderText: i18n("YYYY")
+            inputMask: "9999"
         }
         Controls.ComboBox {
+            id: categoryBox
             editable: true
             Kirigami.FormData.label: i18nc("@label:textbox", "Category:")
             model: ListModel {
-                id: categoryField
+
                 ListElement { text: "Auto_ICE" }
                 ListElement { text: "Utility" }
             }
@@ -49,10 +51,10 @@ Kirigami.ScrollablePage {
             }
         }
         Controls.ComboBox {
+            id: groupBox
             editable: true
             Kirigami.FormData.label: i18nc("@label:textbox", "Group:")
             model: ListModel {
-                id: groupField
                 ListElement { text: "Default" }
             }
             onAccepted: {
@@ -72,8 +74,8 @@ Kirigami.ScrollablePage {
                     makeField.text,
                     modelField.text,
                     yearField.text,
-                    categoryField.text,
-                    groupField.text,
+                    categoryBox.currentText,
+                    groupBox.currentText,
                 )
                 ItemModel.updateModel()
                 pageStack.layers.pop()
