@@ -18,6 +18,23 @@ Kirigami.ScrollablePage {
         text: i18nc("@title:window", "Add new item to katalogue")
     }
 
+    Kirigami.PromptDialog {
+        id: deleteDialog
+        // modal: true
+        title: i18n("Delete")
+        subtitle: i18n("Are you sure you want to delete: ")// + itemName
+        standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
+        onAccepted: {
+            Database.deleteItemEntry(item_id)
+            ItemModel.updateModel()
+            pageStack.clear()
+            pageStack.push("qrc:Items.qml")
+        }
+        onRejected: {
+            pageStack.pop("qrc:Items.qml")
+        }
+    }
+
     Kirigami.FormLayout {
         id: form
 
@@ -91,14 +108,7 @@ Kirigami.ScrollablePage {
             id: deleteButton
             Layout.fillWidth: true
             text: i18nc("@action:button", "Delete")
-            onClicked: {
-                Database.deleteItemEntry(item_id)
-                ItemModel.updateModel()
-                pageStack.clear()
-                pageStack.push("qrc:Items.qml")
-            }
+            onClicked: deleteDialog.open()
         }
-
-
     }
 }
