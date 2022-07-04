@@ -11,8 +11,10 @@ Kirigami.ScrollablePage {
     id: addItemPage
 
     required property string item_id
-    // required property string name
-    // required property string make
+    required property string itemName
+    required property string itemMake
+    required property string itemModel
+    required property string itemYear
 
     header: Kirigami.Heading {
         text: i18nc("@title:window", "Add new item to katalogue")
@@ -20,7 +22,7 @@ Kirigami.ScrollablePage {
 
     Kirigami.PromptDialog {
         id: deleteDialog
-        // modal: true
+
         title: i18n("Delete")
         subtitle: i18n("Are you sure you want to delete: ")// + itemName
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
@@ -41,46 +43,49 @@ Kirigami.ScrollablePage {
         Controls.TextField {
             id: nameField
             Kirigami.FormData.label: i18nc("@label:textbox", "Name:")
-            placeholderText: i18n("required")
+            placeholderText: i18n(itemName)
         }
         Controls.TextField {
             id: makeField
             Kirigami.FormData.label: i18nc("@label:textbox", "Make:")
+            placeholderText: i18n(itemMake)
         }
         Controls.TextField {
             id: modelField
             Kirigami.FormData.label: i18nc("@label:textbox", "Model:")
+            placeholderText: i18n(itemModel)
         }
         Controls.TextField {
             id: yearField
             Kirigami.FormData.label: i18nc("@label:textbox", "Year:")
             //inputMask: "H"
+            placeholderText: i18n(itemYear)
         }
-        Controls.ComboBox {
-            editable: true
-            Kirigami.FormData.label: i18nc("@label:textbox", "Category:")
-            model: ListModel {
-                id: categoryField
-                ListElement { text: "Auto_ICE" }
-                ListElement { text: "Utility" }
-            }
-            onAccepted: {
-                if (find(editText) === -1)
-                    model.append({text: editText})
-            }
-        }
-        Controls.ComboBox {
-            editable: true
-            Kirigami.FormData.label: i18nc("@label:textbox", "Group:")
-            model: ListModel {
-                id: groupField
-                ListElement { text: "Default" }
-            }
-            onAccepted: {
-                if (find(editText) === -1)
-                    model.append({text: editText})
-            }
-        }
+        // Controls.ComboBox {
+        //     editable: true
+        //     Kirigami.FormData.label: i18nc("@label:textbox", "Category:")
+        //     model: ListModel {
+        //         id: categoryField
+        //         ListElement { text: "Auto_ICE" }
+        //         ListElement { text: "Utility" }
+        //     }
+        //     onAccepted: {
+        //         if (find(editText) === -1)
+        //             model.append({text: editText})
+        //     }
+        // }
+        // Controls.ComboBox {
+        //     editable: true
+        //     Kirigami.FormData.label: i18nc("@label:textbox", "Group:")
+        //     model: ListModel {
+        //         id: groupField
+        //         ListElement { text: "Default" }
+        //     }
+        //     onAccepted: {
+        //         if (find(editText) === -1)
+        //             model.append({text: editText})
+        //     }
+        // }
         Controls.CheckBox {
             id: archivedBox
             Kirigami.FormData.label: i18nc("@label:textbox", "Archive:")
@@ -96,8 +101,8 @@ Kirigami.ScrollablePage {
                     makeField.text,
                     modelField.text,
                     yearField.text,
-                    categoryField.text,
-                    groupField.text,
+                    "default",  // categoryField.text,
+                    "default",  // groupField.text,
                     archivedBox.checked
                 )
                 ItemModel.updateModel()

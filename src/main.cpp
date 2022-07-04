@@ -15,6 +15,7 @@
 #include "app.h"
 #include "database.h"
 #include "models/attributeModel.h"
+#include "models/comboBoxModel.h"
 #include "models/eventModel.h"
 #include "models/itemModel.h"
 #include "version-katalogue.h"
@@ -56,6 +57,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     if(qPath.length() == 0){
         qPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     }
+    qDebug() << qPath;
 
     if(!QDir(qPath).mkpath(qPath)){
         qDebug() << "Path not writeable " << qPath;
@@ -80,6 +82,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     AttributeModel attributeModel;
     qmlRegisterSingletonInstance<AttributeModel>("com.kd8bny.katalogue", 1, 0, "AttributeModel", &attributeModel);
+
+    ComboBoxModel comboBoxModel;
+    qmlRegisterSingletonInstance<ComboBoxModel>("com.kd8bny.katalogue", 1, 0, "ComboBoxModel", &comboBoxModel);
 
     EventModel eventModel;
     qmlRegisterSingletonInstance<EventModel>("com.kd8bny.katalogue", 1, 0, "EventModel", &eventModel);

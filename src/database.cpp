@@ -44,21 +44,20 @@ bool Database::connect(QString path)
 }
 
 bool Database::insertItemEntry(QString name, QString make, QString model,
-    QString year, QString category, QString group)
+    QString year, QString type, QString group)
 {
     bool isInsert = false;
     QSqlQuery query;
 
     query.prepare(QString("INSERT INTO %1 (%2, %3, %4, %5, %6, %7, %8) "
-        "VALUES (:name, :make, :model, :year, :category, :group, :archived)").arg(
-            TABLE_ITEMS, TABLE_NAME,  TABLE_MAKE, TABLE_MODEL, TABLE_YEAR,
-            TABLE_CATEGORY, TABLE_GROUP, TABLE_ARCHIVED));
+        "VALUES (:name, :make, :model, :year, :type, :group, :archived)").arg(
+            TABLE_ITEMS, NAME,  MAKE, MODEL, YEAR, TYPE, GROUP, ARCHIVED));
 
     query.bindValue(":name", name);
     query.bindValue(":make", make);
     query.bindValue(":model", model);
     query.bindValue(":year", year.toInt());
-    query.bindValue(":category", category);
+    query.bindValue(":type", type);
     query.bindValue(":group", group);
     query.bindValue(":archived", 0);
 
@@ -71,6 +70,11 @@ bool Database::insertItemEntry(QString name, QString make, QString model,
     return isInsert;
 }
 
+// void Database::getItemEntry(QString itemId)
+// {
+    
+// }
+
 // bool Database::updateItemEntry(QString name, QString make, QString model,
 //     QString year, QString category, QString group)
 // {
@@ -78,10 +82,10 @@ bool Database::insertItemEntry(QString name, QString make, QString model,
     // QSqlQuery query;
 
     // query.prepare(QString("UPDATE %1 SET %2=
-    // .arg(TABLE_ITEMS, 
+    // .arg(ITEMS, 
     //     "INSERT INTO "  " ("
-    //     TABLE_NAME ", " TABLE_MAKE ", " TABLE_MODEL ", " TABLE_YEAR ", "
-    //     TABLE_CATEGORY ", " TABLE_GROUP ", " TABLE_ARCHIVED")"
+    //     NAME ", " MAKE ", " MODEL ", " YEAR ", "
+    //     CATEGORY ", " GROUP ", " ARCHIVED")"
     //     " VALUES (:name, :make, :model, :year, :category, "
     //     ":view, :archived)");
 
@@ -102,13 +106,13 @@ bool Database::insertItemEntry(QString name, QString make, QString model,
 //     return isInsert;
 // }
 
-bool Database::deleteItemEntry(QString item_id)
+bool Database::deleteItemEntry(QString itemId)
 {
     bool isDelete = false;
     QSqlQuery query;
 
-    query.prepare(QString("DELETE FROM %1 WHERE id=:item_id").arg(TABLE_ITEMS));
-    query.bindValue(":item_id", item_id.toInt());
+    query.prepare(QString("DELETE FROM %1 WHERE id=:itemId").arg(TABLE_ITEMS));
+    query.bindValue(":itemId", itemId.toInt());
 
     if(query.exec()){
         isDelete = true;
@@ -119,32 +123,31 @@ bool Database::deleteItemEntry(QString item_id)
     return isDelete;
 }
 
-bool Database::insertAttributeEntry(QString item_id, QString label, QString key, QString value)
+bool Database::insertAttributeEntry(QString itemId, QString key, QString value, QString category)
 {
     bool isInsert = false;
     QSqlQuery query;
 
     query.prepare(QString(
-        "INSERT INTO %1 (%2, %3, %4, %5) VALUES (:label, :key, :value, :item_id)").arg(
-            TABLE_ATTRIBUTES, TABLE_LABEL, TABLE_KEY, TABLE_VALUE, TABLE_ITEM_ID));
+        "INSERT INTO %1 (%2, %3, %4, %5) VALUES (:key, :value, :category, :itemId)").arg(
+            TABLE_ATTRIBUTES, KEY, VALUE, CATEGORY, KEY_ITEM_ID));
 
-    query.bindValue(":label", label);
     query.bindValue(":key", key);
     query.bindValue(":value", value);
-    query.bindValue(":item_id", item_id);
+    query.bindValue(":category", category);
+    query.bindValue(":itemId", itemId);
 
     if(query.exec()){
         isInsert = true;
     } else {
         qDebug() << "Error inserting record " << TABLE_ATTRIBUTES;
         qDebug() << query.lastError();
-        qDebug() << query.lastQuery();
     }
 
     return isInsert;
 }
 
-bool Database::insertEventEntry(QString item_id, QString date, QString event, QString cost, 
+bool Database::insertEventEntry(QString itemId, QString date, QString event, QString cost, 
     QString type, QString category, QString comment)
 {
     bool isInsert = false;
@@ -152,102 +155,143 @@ bool Database::insertEventEntry(QString item_id, QString date, QString event, QS
 
     query.prepare(QString(
         "INSERT INTO %1 ( %2, %3, %4, %5, %6, %7, %8) VALUES "
-        "(:date, :event, :cost, :type, :category, :comment, :item_id)").arg(
-            TABLE_EVENTS, TABLE_DATE, TABLE_EVENT, TABLE_COST, TABLE_TYPE,
-            TABLE_CATEGORY, TABLE_COMMENT, TABLE_ITEM_ID));
+        "(:date, :event, :cost, :category, :type, :comment, :itemId)").arg(
+            TABLE_EVENTS, DATE, EVENT, COST, CATEGORY, TYPE, COMMENT, KEY_ITEM_ID));
 
     query.bindValue(":date", date);
     query.bindValue(":event", event);
     query.bindValue(":cost", cost);
-    query.bindValue(":type", type);
     query.bindValue(":category", category);
+    query.bindValue(":type", type);
     query.bindValue(":comment", comment);
-    query.bindValue(":item_id", item_id);
+    query.bindValue(":itemId", itemId);
 
     if(query.exec()){
         isInsert = true;
     } else {
         qDebug() << "Error inserting record " << TABLE_EVENTS;
-        qDebug() << query.lastError().text();
+        qDebug() << query.lastError();
     }
 
     return isInsert;
 }
+
+// bool Database::insertDefaultEntry(QString type, QString value)
+// {
+//     bool isInsert = false;
+//     QSqlQuery query;
+
+//     query.prepare(QString(
+//         "INSERT INTO %1 (%2, %3, %4, %5) VALUES (:type, :key, :value, :itemId)").arg(
+//             TABLE_DEFAULTS, TYPE, VALUE));
+
+//     query.bindValue(":type", type);
+//     query.bindValue(":value", value);
+
+//     if(query.exec()){
+//         isInsert = true;
+//     } else {
+//         qDebug() << "Error inserting record " << TABLE_ATTRIBUTES;
+//         qDebug() << query.lastError();
+//         qDebug() << query.lastQuery();
+//     }
+
+//     return isInsert;
+// }
 
 bool Database::initializeSchema()
 {
     bool isSchemaCreate = false;
     QSqlQuery query;
 
-
     const QString queryItems = "CREATE TABLE " TABLE_ITEMS
         " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-        TABLE_NAME      " TEXT NOT NULL, "
-        TABLE_MAKE      " TEXT, "
-        TABLE_MODEL     " TEXT, "
-        TABLE_YEAR      " INT, "
-        TABLE_GROUP     " TEXT, "
-        TABLE_CATEGORY  " TEXT, "
-        TABLE_ARCHIVED  " BOOLEAN NOT NULL CHECK (" TABLE_ARCHIVED " IN (0, 1)))";
+        NAME      " TEXT NOT NULL, "
+        MAKE      " TEXT, "
+        MODEL     " TEXT, "
+        YEAR      " INT, "
+        TYPE      " TEXT NOT NULL, "
+        GROUP     " TEXT NOT NULL, "
+        ARCHIVED  " BOOLEAN NOT NULL CHECK (" ARCHIVED " IN (0, 1)))";
 
     const QString queryAttributes = "CREATE TABLE " TABLE_ATTRIBUTES
         " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-        TABLE_KEY       " TEXT NOT NULL, "
-        TABLE_VALUE     " TEXT NOT NULL, "
-        TABLE_LABEL     " TEXT, "
-        TABLE_ITEM_ID   " INT NOT NULL, "
-        "CONSTRAINT item_id FOREIGN KEY (" TABLE_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
+        KEY           " TEXT NOT NULL, "
+        VALUE         " TEXT NOT NULL, "
+        CATEGORY      " TEXT, "
+        KEY_ITEM_ID   " INT NOT NULL, "
+        "CONSTRAINT itemId FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
         "ON DELETE CASCADE ON UPDATE CASCADE)";
 
-    const QString queryEvent = "CREATE TABLE " TABLE_EVENTS
+    const QString queryEvents = "CREATE TABLE " TABLE_EVENTS
         " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-        TABLE_DATE      " DATE NOT NULL, "
-        TABLE_EVENT     " TEXT NOT NULL, "
-        TABLE_COST      " REAL, "
-        TABLE_TYPE      " TEXT, "
-        TABLE_CATEGORY  " TEXT, "
-        TABLE_COMMENT   " VARCHAR(255), "
-        TABLE_ITEM_ID   " INT NOT NULL, "
-        "CONSTRAINT item_id FOREIGN KEY (" TABLE_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
+        DATE        " DATE NOT NULL, "
+        EVENT       " TEXT NOT NULL, "
+        COST        " REAL, "
+        CATEGORY    " TEXT, "
+        TYPE        " TEXT, "
+        COMMENT     " VARCHAR(255), "
+        KEY_ITEM_ID " INT NOT NULL, "
+        "CONSTRAINT itemId FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
         "ON DELETE CASCADE ON UPDATE CASCADE)";
 
-    bool isItems = false;
-    bool isAttributes = false;
-    bool isEvents = false;
+    // const QString queryDefaults = "CREATE TABLE " TABLE_DEFAULTS
+    //     " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+    //     TYPE    " TEXT NOT NULL, "
+    //     VALUE   " TEXT NOT NULL)";
 
-    if(query.exec(queryItems)){
-        isItems = true;
-    }else{
+    if(!query.exec(queryItems)){
         qDebug() << query.lastError();
+        return false;
     }
 
-    if(query.exec(queryAttributes)){
-        isAttributes = true;
-    }else{
-        qDebug() << queryAttributes;
+    if(!query.exec(queryAttributes)){
         qDebug() << query.lastError();
+        return false;
     }
 
-    if(query.exec(queryEvent)){
-        isEvents = true;
-    }else{
+    if(!query.exec(queryEvents)){
         qDebug() << query.lastError();
+        return false;
     }
 
-    if(isItems && isAttributes && isEvents){
-        isSchemaCreate = true;
-        this->initializeDemoEntry();
-    }
+    // if(!query.exec(queryDefaults)){
+    //     qDebug() << query.lastError();
+    //     return false;
+    // }
+
+    // this->initializeDefaults();
+    this->initializeDemoEntry();
+    isSchemaCreate = true;
 
     return isSchemaCreate;
 }
 
+// void Database::initializeDefaults()
+// {
+//     const QStringList groups = {"Default"};
+//     const QStringList types = {"Auto", "Yard", "Utility", "Home"};
+
+
+//     for (const auto& group : groups)
+//     {
+//         this->insertDefaultEntry(GROUP, group);
+//     }
+
+//     for (const auto& type : types)
+//     {
+//         this->insertDefaultEntry(TYPE, type);
+//     }
+// }
+
 void Database::initializeDemoEntry()
 {
     this->insertItemEntry(
-        "My Vehicle", "Ford", "Mustang", "2000", "auto", "My Group");
+        "My Vehicle", "Ford", "Mustang", "2000", "Auto", "Default");
 
-    this->insertAttributeEntry("1", "Default", "Engine", "4.6L V8");
-    this->insertEventEntry("1", "2022-05-22", "Check Oil", "0.00", "checkup",
-        "auto", "Comment about event");
+    this->insertAttributeEntry("1", "Engine", "4.6L V8", "Engine Specs");
+    this->insertEventEntry("1", "2022-05-22", "Idle Pulley", "100.00", "Auto",
+        "maintenance", "I fixed this thing");
+    this->insertEventEntry("1", "2022-06-22", "Check Oil", "0.00", "Auto",
+        "log", "Seems to be 2qt low");
 }

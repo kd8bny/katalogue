@@ -15,7 +15,7 @@ Kirigami.ScrollablePage {
     }
 
     Kirigami.FormLayout {
-    id: form
+        id: form
 
         Controls.TextField {
             id: nameField
@@ -40,14 +40,14 @@ Kirigami.ScrollablePage {
             id: categoryBox
             editable: true
             Kirigami.FormData.label: i18nc("@label:textbox", "Category:")
-            model: ListModel {
-
-                ListElement { text: "Auto_ICE" }
-                ListElement { text: "Utility" }
-            }
-            onAccepted: {
-                if (find(editText) === -1)
-                    model.append({text: editText})
+            model: ComboBoxModel
+            // onAccepted: {
+            //     if (find(editText) === -1)
+            //         model.append({text: editText})
+            // }
+            Component.onCompleted: {
+                ComboBoxModel.setModelQuery("category", "items")
+                categoryBox.currentIndex = 0
             }
         }
         Controls.ComboBox {

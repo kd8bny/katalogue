@@ -7,6 +7,7 @@ add_executable(katalogue
     app.cpp
     database.cpp
     models/attributeModel.cpp
+    models/comboBoxModel.cpp
     models/eventModel.cpp
     models/itemModel.cpp
     resources.qrc)

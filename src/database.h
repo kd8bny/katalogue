@@ -12,28 +12,28 @@
 #define DATABASE_NAME "katalogue.db"
 #define USER_VERSION 1
 
-#define TABLE_ITEM_ID "fk_item_id"
-
 #define TABLE_ITEMS "items"
-#define TABLE_NAME "name"
-#define TABLE_MAKE "make"
-#define TABLE_MODEL "model"
-#define TABLE_YEAR "year"
-#define TABLE_CATEGORY "category"
-#define TABLE_GROUP "user_group"
-#define TABLE_ARCHIVED "archived"
-
 #define TABLE_EVENTS "events"
-#define TABLE_DATE "date"
-#define TABLE_EVENT "event"
-#define TABLE_COST "cost"
-#define TABLE_TYPE "type"
-#define TABLE_COMMENT "comment"
-
 #define TABLE_ATTRIBUTES "attributes"
-#define TABLE_LABEL "label"
-#define TABLE_KEY "key"
-#define TABLE_VALUE "value"
+#define TABLE_DEFAULTS "defaults"
+
+#define KEY_ITEM_ID "fk_item_id"
+
+#define ARCHIVED "archived"
+#define CATEGORY "category"
+#define COMMENT "comment"
+#define COST "cost"
+#define DATE "date"
+#define GROUP "item_group"
+#define KEY "key"
+#define LABEL "label"
+#define EVENT "event"
+#define MAKE "make"
+#define MODEL "model"
+#define NAME "name"
+#define TYPE "type"
+#define VALUE "value"
+#define YEAR "year"
 
 
 class Database : public QObject
@@ -59,5 +59,7 @@ private:
 
 private:
     bool initializeSchema();
+    // void initializeDefaults();
     void initializeDemoEntry();
+    // bool insertDefaultEntry(QString type, QString value);
 };

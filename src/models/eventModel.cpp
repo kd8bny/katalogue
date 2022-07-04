@@ -6,8 +6,7 @@ EventModel::EventModel(QObject *parent) :
     QSqlQueryModel(parent)
 {
     modelQuery = QString("SELECT id, %1,%2,%3, %4, %5, %6 FROM %7").arg(
-        TABLE_DATE, TABLE_EVENT, TABLE_COST, TABLE_TYPE,
-        TABLE_CATEGORY, TABLE_COMMENT, TABLE_EVENTS);
+        DATE, EVENT, COST, TYPE, CATEGORY, COMMENT, TABLE_EVENTS);
 
     this->setModelQuery();
 }
@@ -32,13 +31,13 @@ QHash<int, QByteArray> EventModel::roleNames() const {
 
     QHash<int, QByteArray> roles;
     roles[rID] = "id";
-    roles[rDate] = TABLE_DATE;
-    roles[rEvent] = TABLE_EVENT;
-    roles[rCost] = TABLE_COST;
-    roles[rType] = TABLE_TYPE;
-    roles[rCategory] = TABLE_CATEGORY;
-    roles[rComment] = TABLE_COMMENT;
-    roles[rItemID] = TABLE_ITEM_ID;
+    roles[rDate] = DATE;
+    roles[rEvent] = EVENT;
+    roles[rCost] = COST;
+    roles[rType] = TYPE;
+    roles[rCategory] = CATEGORY;
+    roles[rComment] = COMMENT;
+    roles[rItemID] = KEY_ITEM_ID;
 
     return roles;
 }
@@ -51,7 +50,7 @@ void EventModel::setModelQuery()
 
 void EventModel::setItemID(QString item_id)
 {
-    QString modelQueryID = QString("%1 WHERE %2=%3").arg(modelQuery, TABLE_ITEM_ID, item_id);
+    QString modelQueryID = QString("%1 WHERE %2=%3").arg(modelQuery, KEY_ITEM_ID, item_id);
     this->setQuery(modelQueryID);
 }
 
