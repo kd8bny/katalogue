@@ -5,7 +5,7 @@ AttributeModel::AttributeModel(QObject *parent) :
     QSqlQueryModel(parent)
 {
     modelQuery = QString("SELECT id, %1, %2, %3, %4 FROM %5 ").arg(
-        TABLE_LABEL, TABLE_KEY, TABLE_VALUE, TABLE_ITEM_ID, TABLE_ATTRIBUTES);
+        KEY, VALUE, CATEGORY, KEY_ITEM_ID, TABLE_ATTRIBUTES);
 
     this->setModelQuery();
 }
@@ -30,10 +30,10 @@ QHash<int, QByteArray> AttributeModel::roleNames() const {
 
     QHash<int, QByteArray> roles;
     roles[rID] = "id";
-    roles[rLabel] = TABLE_LABEL;
-    roles[rKey] = TABLE_KEY;
-    roles[rValue] = TABLE_VALUE;
-    roles[rItemID] = TABLE_ITEM_ID;
+    roles[rLabel] = LABEL;
+    roles[rKey] = KEY;
+    roles[rValue] = VALUE;
+    roles[rItemID] = KEY_ITEM_ID;
 
     return roles;
 }
@@ -45,8 +45,9 @@ void AttributeModel::setModelQuery()
 
 void AttributeModel::setItemID(QString item_id)
 {
-    QString modelQueryID = QString("%1 WHERE %2=%3").arg(modelQuery, TABLE_ITEM_ID, item_id);
+    QString modelQueryID = QString("%1 WHERE %2=%3").arg(modelQuery, KEY_ITEM_ID, item_id);
     this->setQuery(modelQueryID);
+    qDebug() << this->lastError();
 }
 
 int AttributeModel::getId(int row)
