@@ -61,7 +61,7 @@ QVariantList ItemModel::getItemData(QString item_id)
     query.next();
 
     for (int i=0; i<query.record().count(); i++){
-        itemData.append(query.record().value(i));
+        itemData.append(query.value(i));
     }
 
     return itemData;

@@ -1,5 +1,6 @@
 #include <QObject>
 #include <QSqlQueryModel>
+#include <QSqlRecord>
 
 class ItemModel: public QSqlQueryModel
 {

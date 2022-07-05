@@ -36,7 +36,6 @@ Kirigami.ScrollablePage {
 
     Component.onCompleted: {
         itemData = ItemModel.getItemData(item_id)
-        console.log(itemData)
         nameField.text = itemData[0]
         makeField.text = itemData[1]
         modelField.text = itemData[2]
