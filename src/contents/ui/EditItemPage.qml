@@ -11,10 +11,7 @@ Kirigami.ScrollablePage {
     id: addItemPage
 
     required property string item_id
-    required property string itemName
-    required property string itemMake
-    required property string itemModel
-    required property string itemYear
+    property var itemData
 
     header: Kirigami.Heading {
         text: i18nc("@title:window", "Add new item to katalogue")
@@ -37,29 +34,39 @@ Kirigami.ScrollablePage {
         }
     }
 
+    Component.onCompleted: {
+        itemData = ItemModel.getItemData(item_id)
+        console.log(itemData)
+        nameField.text = itemData[0]
+        makeField.text = itemData[1]
+        modelField.text = itemData[2]
+        yearField.text = itemData[3]
+        archivedBox.checked = itemData[6]
+    }
+
     Kirigami.FormLayout {
         id: form
 
         Controls.TextField {
             id: nameField
             Kirigami.FormData.label: i18nc("@label:textbox", "Name:")
-            placeholderText: i18n(itemName)
+            // placeholderText: i18n(itemName)
         }
         Controls.TextField {
             id: makeField
             Kirigami.FormData.label: i18nc("@label:textbox", "Make:")
-            placeholderText: i18n(itemMake)
+            // placeholderText: i18n(itemMake)
         }
         Controls.TextField {
             id: modelField
             Kirigami.FormData.label: i18nc("@label:textbox", "Model:")
-            placeholderText: i18n(itemModel)
+            // placeholderText: i18n(itemModel)
         }
         Controls.TextField {
             id: yearField
             Kirigami.FormData.label: i18nc("@label:textbox", "Year:")
-            //inputMask: "H"
-            placeholderText: i18n(itemYear)
+            inputMask: "9999"
+            // placeholderText: i18n(itemYear)
         }
         // Controls.ComboBox {
         //     editable: true

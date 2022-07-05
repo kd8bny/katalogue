@@ -55,10 +55,14 @@ QVariantList ItemModel::getItemData(QString item_id)
     QVariantList itemData;
     query.prepare(QString(
         "SELECT %1, %2, %3, %4, %5, %6, %7 FROM %8 WHERE id=:item_id").arg(
-            NAME, MAKE, MODEL, YEAR, CATEGORY, GROUP, ARCHIVED, TABLE_ITEMS));
+            NAME, MAKE, MODEL, YEAR, TYPE, GROUP, ARCHIVED, TABLE_ITEMS));
     query.bindValue(":item_id", item_id.toInt());
     query.exec();
-    qDebug() << query.next();
+    query.next();
+
+    for (int i=0; i<query.record().count(); i++){
+        itemData.append(query.record().value(i));
+    }
 
     return itemData;
 }
