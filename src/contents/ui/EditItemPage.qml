@@ -102,14 +102,15 @@ Kirigami.ScrollablePage {
             text: i18nc("@action:button", "Update")
             enabled: nameField.text.length > 0
             onClicked: {
-                Database.insertItemEntry(
+                Database.updateItemEntry(
+                    item_id,
                     nameField.text,
                     makeField.text,
                     modelField.text,
                     yearField.text,
                     "default",  // categoryField.text,
                     "default",  // groupField.text,
-                    archivedBox.checked
+                    archivedBox.checked ? 1 : 0
                 )
                 ItemModel.updateModel()
                 pageStack.pop()

@@ -70,41 +70,32 @@ bool Database::insertItemEntry(QString name, QString make, QString model,
     return isInsert;
 }
 
-// void Database::getItemEntry(QString itemId)
-// {
-    
-// }
+bool Database::updateItemEntry(QString itemID, QString name, QString make, QString model,
+    QString year, QString type, QString group, QString archived)
+{
+    bool isUpdate = false;
+    QSqlQuery query;
 
-// bool Database::updateItemEntry(QString name, QString make, QString model,
-//     QString year, QString category, QString group)
-// {
-    bool isInsert = false;
-    // QSqlQuery query;
+    query.prepare(QString("UPDATE %1 SET %2=:name, %3=:make, %4=:model, "
+        "%5=:year, %6=:type, %7=:group, %8=:archived WHERE id=%9").arg(
+            TABLE_ITEMS, NAME,  MAKE, MODEL, YEAR, TYPE, GROUP, ARCHIVED, itemID));
 
-    // query.prepare(QString("UPDATE %1 SET %2=
-    // .arg(ITEMS, 
-    //     "INSERT INTO "  " ("
-    //     NAME ", " MAKE ", " MODEL ", " YEAR ", "
-    //     CATEGORY ", " GROUP ", " ARCHIVED")"
-    //     " VALUES (:name, :make, :model, :year, :category, "
-    //     ":view, :archived)");
+    query.bindValue(":name", name);
+    query.bindValue(":make", make);
+    query.bindValue(":model", model);
+    query.bindValue(":year", year.toInt());
+    query.bindValue(":type", type);
+    query.bindValue(":group", group);
+    query.bindValue(":archived", archived);
 
-    // query.bindValue(":name", name);
-    // query.bindValue(":make", make);
-    // query.bindValue(":model", model);
-    // query.bindValue(":year", year.toInt());
-    // query.bindValue(":category", category);
-    // query.bindValue(":group", group); 
-    // query.bindValue(":archived", 0);
+    if(query.exec()){
+        isUpdate = true;
+    } else {
+        qDebug() << "Error updating record " << query.lastError();
+    }
 
-    // if(query.exec()){
-    //     isInsert = true;
-    // } else {
-    //     qDebug() << "Error inserting record " << query.lastError().text();
-    // }
-
-//     return isInsert;
-// }
+    return isUpdate;
+}
 
 bool Database::deleteItemEntry(QString itemId)
 {

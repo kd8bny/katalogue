@@ -36,32 +36,32 @@ Kirigami.ScrollablePage {
             placeholderText: i18n("YYYY")
             inputMask: "9999"
         }
-        Controls.ComboBox {
-            id: categoryBox
-            editable: true
-            Kirigami.FormData.label: i18nc("@label:textbox", "Category:")
-            model: ComboBoxModel
-            // onAccepted: {
-            //     if (find(editText) === -1)
-            //         model.append({text: editText})
-            // }
-            Component.onCompleted: {
-                ComboBoxModel.setModelQuery("category", "items")
-                categoryBox.currentIndex = 0
-            }
-        }
-        Controls.ComboBox {
-            id: groupBox
-            editable: true
-            Kirigami.FormData.label: i18nc("@label:textbox", "Group:")
-            model: ListModel {
-                ListElement { text: "Default" }
-            }
-            onAccepted: {
-                if (find(editText) === -1)
-                    model.append({text: editText})
-            }
-        }
+        // Controls.ComboBox {
+        //     id: categoryBox
+        //     editable: true
+        //     Kirigami.FormData.label: i18nc("@label:textbox", "Category:")
+        //     model: ComboBoxModel
+        //     // onAccepted: {
+        //     //     if (find(editText) === -1)
+        //     //         model.append({text: editText})
+        //     // }
+        //     Component.onCompleted: {
+        //         ComboBoxModel.setModelQuery("category", "items")
+        //         categoryBox.currentIndex = 0
+        //     }
+        // }
+        // Controls.ComboBox {
+        //     id: groupBox
+        //     editable: true
+        //     Kirigami.FormData.label: i18nc("@label:textbox", "Group:")
+        //     model: ListModel {
+        //         ListElement { text: "Default" }
+        //     }
+        //     onAccepted: {
+        //         if (find(editText) === -1)
+        //             model.append({text: editText})
+        //     }
+        // }
 
         Controls.Button {
             id: doneButton
@@ -74,8 +74,8 @@ Kirigami.ScrollablePage {
                     makeField.text,
                     modelField.text,
                     yearField.text,
-                    categoryBox.currentText,
-                    groupBox.currentText,
+                    "default",   // categoryBox.currentText,
+                    "default",  // groupBox.currentText,
                 )
                 ItemModel.updateModel()
                 pageStack.layers.pop()
