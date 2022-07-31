@@ -8,7 +8,7 @@ EventModel::EventModel(QObject *parent) :
     modelQuery = QString("SELECT id, %1,%2,%3, %4, %5, %6 FROM %7").arg(
         DATE, EVENT, COST, TYPE, CATEGORY, COMMENT, TABLE_EVENTS);
 
-    this->setModelQuery();
+    this->updateModel();
 }
 
 EventModel::~EventModel()
@@ -43,7 +43,7 @@ QHash<int, QByteArray> EventModel::roleNames() const {
 }
 
 // The method updates the tables in the data model representation
-void EventModel::setModelQuery()
+void EventModel::updateModel()
 {
     this->setQuery(modelQuery);
 }

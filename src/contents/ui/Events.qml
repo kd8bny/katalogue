@@ -24,8 +24,7 @@ Kirigami.ScrollablePage {
             icon.name: "list-add"
             tooltip: i18n("Add new event")
             onTriggered: {
-                addEventSheet.item_id = item_id
-                addEventSheet.open()
+                pageStack.push("qrc:AddEditEventPage.qml", {"itemId": item_id})
             }
         }
         contextualActions: [
@@ -101,7 +100,10 @@ Kirigami.ScrollablePage {
                             // Layout.alignment: Qt.AlignBottom
                             Layout.columnSpan: 2
                             text: i18n("Edit")
-                            // onClicked: to be done... soon!
+                            onClicked: {
+                                pageStack.push("qrc:AddEditEventPage.qml", {"itemId": item_id, "isEdit": true, "eventId": index+1})
+
+                            }
                         }
                     }
                 }

@@ -192,6 +192,35 @@ bool Database::insertEventEntry(QString itemId, QString date, QString event, QSt
     return isInsert;
 }
 
+bool Database::updateEventEntry(QString eventId, QString date, QString event, QString cost, 
+    QString type, QString category, QString comment)
+{
+    bool isUpdate = false;
+    QSqlQuery query;
+
+    query.prepare(QString(
+        "UPDATE %1 SET %2=:date, %3=:event, %4=:cost, %5:category, %6:type, %7:comment, "
+        "%8:eventId WHERE id=:eventId").arg(
+            TABLE_EVENTS, DATE, EVENT, COST, CATEGORY, TYPE, COMMENT, KEY_ITEM_ID));
+
+    query.bindValue(":date", date);
+    query.bindValue(":event", event);
+    query.bindValue(":cost", cost);
+    query.bindValue(":category", category);
+    query.bindValue(":type", type);
+    query.bindValue(":comment", comment);
+    query.bindValue(":eventId", eventId);
+
+    if(query.exec()){
+        isUpdate = true;
+    } else {
+        qDebug() << "Error updating record " << TABLE_EVENTS;
+        qDebug() << query.lastError();
+    }
+
+    return isUpdate;
+}
+
 // bool Database::insertDefaultEntry(QString type, QString value)
 // {
 //     bool isInsert = false;
