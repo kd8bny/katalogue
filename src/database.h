@@ -46,13 +46,15 @@ public:
     bool connect(QString path);
     Q_INVOKABLE bool insertItemEntry(QString name, QString make, QString model,
         QString year, QString category, QString group);
+    Q_INVOKABLE bool updateItemEntry(QString itemID, QString name, QString make,
+        QString model, QString year, QString type, QString group, QString archived);
+    Q_INVOKABLE bool deleteItemEntry(QString item_id);
     Q_INVOKABLE bool insertAttributeEntry(QString item_id, QString label,
         QString key, QString value);
+    Q_INVOKABLE bool updateAttributeEntry(QString attributeId, QString key,
+        QString value, QString category);
     Q_INVOKABLE bool insertEventEntry(QString date, QString task, QString cost,
         QString type, QString category, QString comment, QString item_id);
-    Q_INVOKABLE bool deleteItemEntry(QString item_id);
-    Q_INVOKABLE bool updateItemEntry(QString itemID, QString name, QString make, QString model,
-        QString year, QString type, QString group, QString archived);
 
 private:
     QSqlDatabase db;

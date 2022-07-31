@@ -24,8 +24,7 @@ Kirigami.ScrollablePage {
             icon.name: "list-add"
             tooltip: i18n("Add new attribute")
             onTriggered: {
-                addAttributeSheet.item_id = item_id
-                addAttributeSheet.open()
+                pageStack.push("qrc:AddEditAttributePage.qml", {"itemId": item_id})
             }
         }
         contextualActions: [
@@ -98,7 +97,9 @@ Kirigami.ScrollablePage {
                                 // Layout.alignment: Qt.AlignBottom
                                 Layout.columnSpan: 2
                                 text: i18n("Edit")
-                                // onClicked: to be done... soon!
+                                onClicked: {
+                                    pageStack.push("qrc:AddEditAttributePage.qml", {"itemId": item_id, "isEdit": true, "attributeId": index+1})
+                                }
                             }
                         }
                         RowLayout {

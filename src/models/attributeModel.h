@@ -19,7 +19,6 @@ public:
     explicit AttributeModel(QObject *parent = nullptr);
     ~AttributeModel();
     void refresh();
-    void setModelQuery();
 
     // Override the method that will return the data
     QVariant data(const QModelIndex &index, int role) const override;
@@ -31,6 +30,7 @@ protected:
 signals:
 
 public slots:
+    void updateModel();
     void setItemID(QString item_id);
     int getId(int row);
 };

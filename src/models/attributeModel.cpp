@@ -7,7 +7,7 @@ AttributeModel::AttributeModel(QObject *parent) :
     modelQuery = QString("SELECT id, %1, %2, %3, %4 FROM %5 ").arg(
         KEY, VALUE, CATEGORY, KEY_ITEM_ID, TABLE_ATTRIBUTES);
 
-    this->setModelQuery();
+    this->updateModel();
 }
 
 AttributeModel::~AttributeModel()
@@ -38,7 +38,7 @@ QHash<int, QByteArray> AttributeModel::roleNames() const {
     return roles;
 }
 
-void AttributeModel::setModelQuery()
+void AttributeModel::updateModel()
 {
     this->setQuery(modelQuery);
 }

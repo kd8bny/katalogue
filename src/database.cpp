@@ -77,8 +77,8 @@ bool Database::updateItemEntry(QString itemID, QString name, QString make, QStri
     QSqlQuery query;
 
     query.prepare(QString("UPDATE %1 SET %2=:name, %3=:make, %4=:model, "
-        "%5=:year, %6=:type, %7=:group, %8=:archived WHERE id=%9").arg(
-            TABLE_ITEMS, NAME,  MAKE, MODEL, YEAR, TYPE, GROUP, ARCHIVED, itemID));
+        "%5=:year, %6=:type, %7=:group, %8=:archived WHERE id=:id").arg(
+            TABLE_ITEMS, NAME,  MAKE, MODEL, YEAR, TYPE, GROUP, ARCHIVED));
 
     query.bindValue(":name", name);
     query.bindValue(":make", make);
@@ -87,6 +87,7 @@ bool Database::updateItemEntry(QString itemID, QString name, QString make, QStri
     query.bindValue(":type", type);
     query.bindValue(":group", group);
     query.bindValue(":archived", archived);
+    query.bindValue(":id", itemID);
 
     if(query.exec()){
         isUpdate = true;
@@ -136,6 +137,30 @@ bool Database::insertAttributeEntry(QString itemId, QString key, QString value, 
     }
 
     return isInsert;
+}
+
+bool Database::updateAttributeEntry(QString attributeId, QString key, QString value, QString category)
+{
+    bool isUpdate = false;
+    QSqlQuery query;
+
+    query.prepare(QString(
+        "UPDATE %1 SET %2=:key, %3=:value, %4=:category WHERE id=:attributeId").arg(
+            TABLE_ATTRIBUTES, KEY, VALUE, CATEGORY));
+
+    query.bindValue(":key", key);
+    query.bindValue(":value", value);
+    query.bindValue(":category", category);
+    query.bindValue(":attributeId", attributeId);
+
+    if(query.exec()){
+        isUpdate = true;
+    } else {
+        qDebug() << "Error updating record " << TABLE_ATTRIBUTES;
+        qDebug() << query.lastError();
+    }
+
+    return isUpdate;
 }
 
 bool Database::insertEventEntry(QString itemId, QString date, QString event, QString cost, 
