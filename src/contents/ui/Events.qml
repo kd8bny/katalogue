@@ -101,7 +101,16 @@ Kirigami.ScrollablePage {
                             Layout.columnSpan: 2
                             text: i18n("Edit")
                             onClicked: {
-                                pageStack.push("qrc:AddEditEventPage.qml", {"itemId": item_id, "isEdit": true, "eventId": index+1})
+                                var recordData = EventModel.getRecord(index);
+                                pageStack.push("qrc:AddEditEventPage.qml", {
+                                    "itemId": item_id, "isEdit": true,
+                                    "eventId": EventModel.getId(index),
+                                    "date": recordData[1],
+                                    "event": recordData[2],
+                                    "cost": recordData[3],
+                                    "type": recordData[4],
+                                    "category": recordData[5],
+                                    "comment": recordData[6]})
                             }
                         }
                     }

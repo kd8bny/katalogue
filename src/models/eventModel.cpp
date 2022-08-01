@@ -54,8 +54,22 @@ void EventModel::setItemID(QString item_id)
     this->setQuery(modelQueryID);
 }
 
-//Getting the id of the row in the data view model
 int EventModel::getId(int row)
 {
     return this->data(this->index(row, 0), rID).toInt();
+}
+
+QVariantList EventModel::getRecord(int row)
+{
+    QVariantList recordData;
+
+    recordData.append(this->data(this->index(row, 0), rID).toInt());
+    recordData.append(this->data(this->index(row, 1), rDate));
+    recordData.append(this->data(this->index(row, 2), rEvent));
+    recordData.append(this->data(this->index(row, 3), rCost));
+    recordData.append(this->data(this->index(row, 4), rType));
+    recordData.append(this->data(this->index(row, 5), rCategory));
+    recordData.append(this->data(this->index(row, 6), rComment));
+
+    return recordData;
 }

@@ -13,13 +13,16 @@ Kirigami.ScrollablePage {
     required property string itemId
     property bool isEdit: false
 
-    property string attributeId: ""
-    property string name: ""
-    property string value: ""
+    property string eventId: ""
+    property string date: ""
+    property string event: ""
+    property string cost: ""
     property string type: ""
+    property string category: ""
+    property string comment: ""
 
     header: Kirigami.Heading {
-        text: i18nc("@title:window", "Attribute")
+        text: i18nc("@title:window", "Event")
     }
 
     Kirigami.PromptDialog {
@@ -42,21 +45,23 @@ Kirigami.ScrollablePage {
     Kirigami.FormLayout {
         Controls.TextField {
             id: dateField
+            text: date
             Kirigami.FormData.label: i18nc("@label:textbox", "Date:")
         }
         Controls.TextField {
             id: eventField
+            text: event
             Kirigami.FormData.label: i18nc("@label:textbox", "Event:")
         }
         Controls.TextField {
             id: costField
+            text: cost
             Kirigami.FormData.label: i18nc("@label:textbox", "Cost:")
         }
         // Controls.TextField {
         //     id: valueField
         //     Kirigami.FormData.label: i18nc("@label:textbox", "Type:")
         // }
-        //cat
         Controls.TextField {
             id: commentField
             Kirigami.FormData.label: i18nc("@label:textbox", "Comment:")

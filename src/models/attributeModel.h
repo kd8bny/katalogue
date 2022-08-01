@@ -1,8 +1,6 @@
 #include <QObject>
 #include <QSqlQueryModel>
 
-
-
 class AttributeModel: public QSqlQueryModel
 {
     Q_OBJECT
