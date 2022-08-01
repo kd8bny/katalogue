@@ -33,4 +33,5 @@ public slots:
     void updateModel();
     void setItemID(QString item_id);
     int getId(int row);
+    QVariantList getRecord(int row);
 };

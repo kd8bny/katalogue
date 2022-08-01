@@ -54,3 +54,15 @@ int AttributeModel::getId(int row)
 {
     return this->data(this->index(row, 0), rID).toInt();
 }
+
+QVariantList AttributeModel::getRecord(int row)
+{
+    QVariantList recordData;
+
+    recordData.append(this->data(this->index(row, 0), rID).toInt());
+    recordData.append(this->data(this->index(row, 1), rLabel));
+    recordData.append(this->data(this->index(row, 2), rKey));
+    recordData.append(this->data(this->index(row, 3), rValue));
+
+    return recordData;
+}

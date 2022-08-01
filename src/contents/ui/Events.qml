@@ -102,7 +102,6 @@ Kirigami.ScrollablePage {
                             text: i18n("Edit")
                             onClicked: {
                                 pageStack.push("qrc:AddEditEventPage.qml", {"itemId": item_id, "isEdit": true, "eventId": index+1})
-
                             }
                         }
                     }

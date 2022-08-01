@@ -14,9 +14,9 @@ Kirigami.ScrollablePage {
     property bool isEdit: false
 
     property string attributeId: ""
-    property string name: ""
+    property string key: ""
     property string value: ""
-    property string type: ""
+    property string label: ""
 
     header: Kirigami.Heading {
         text: i18nc("@title:window", "Attribute")
@@ -42,7 +42,7 @@ Kirigami.ScrollablePage {
     Kirigami.FormLayout {
         Controls.TextField {
             id: keyField
-            text: name
+            text: key
             Kirigami.FormData.label: i18nc("@label:textbox", "Name:")
         }
         Controls.TextField {
