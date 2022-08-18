@@ -20,7 +20,7 @@ Kirigami.ScrollablePage {
             text: i18n("Add Item")
             icon.name: "list-add"
             tooltip: i18n("Add new item")
-            onTriggered: pageStack.layers.push("qrc:AddItemPage.qml")
+            onTriggered: pageStack.layers.push("qrc:AddEditItemPage.qml")
         }
     }
 
