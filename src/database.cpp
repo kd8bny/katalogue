@@ -44,22 +44,22 @@ bool Database::connect(QString path)
 }
 
 bool Database::insertItemEntry(QString name, QString make, QString model,
-    QString year, QString type, QString group)
+    QString year, QString type, QString parent)
 {
     bool isInsert = false;
     QSqlQuery query;
 
     query.prepare(QString("INSERT INTO %1 (%2, %3, %4, %5, %6, %7, %8) "
-        "VALUES (:name, :make, :model, :year, :type, :group, :archived)").arg(
-            TABLE_ITEMS, NAME,  MAKE, MODEL, YEAR, TYPE, GROUP, ARCHIVED));
+        "VALUES (:name, :make, :model, :year, :type, :archived, :parent)").arg(
+            TABLE_ITEMS, NAME,  MAKE, MODEL, YEAR, TYPE, ARCHIVED, KEY_ITEM_ID));
 
     query.bindValue(":name", name);
     query.bindValue(":make", make);
     query.bindValue(":model", model);
     query.bindValue(":year", year.toInt());
     query.bindValue(":type", type);
-    query.bindValue(":group", group);
     query.bindValue(":archived", 0);
+    query.bindValue(":parent", parent);
 
     if(query.exec()){
         isInsert = true;
@@ -71,22 +71,22 @@ bool Database::insertItemEntry(QString name, QString make, QString model,
 }
 
 bool Database::updateItemEntry(QString itemID, QString name, QString make, QString model,
-    QString year, QString type, QString group, QString archived)
+    QString year, QString type, QString archived, QString parent)
 {
     bool isUpdate = false;
     QSqlQuery query;
 
     query.prepare(QString("UPDATE %1 SET %2=:name, %3=:make, %4=:model, "
-        "%5=:year, %6=:type, %7=:group, %8=:archived WHERE id=:id").arg(
-            TABLE_ITEMS, NAME,  MAKE, MODEL, YEAR, TYPE, GROUP, ARCHIVED));
+        "%5=:year, %6=:type, %7=:archived, %8=:parent WHERE id=:id").arg(
+            TABLE_ITEMS, NAME,  MAKE, MODEL, YEAR, TYPE, ARCHIVED, KEY_ITEM_ID));
 
     query.bindValue(":name", name);
     query.bindValue(":make", make);
     query.bindValue(":model", model);
     query.bindValue(":year", year.toInt());
     query.bindValue(":type", type);
-    query.bindValue(":group", group);
     query.bindValue(":archived", archived);
+    query.bindValue(":parent", parent);
     query.bindValue(":id", itemID);
 
     if(query.exec()){
@@ -251,13 +251,15 @@ bool Database::initializeSchema()
 
     const QString queryItems = "CREATE TABLE " TABLE_ITEMS
         " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-        NAME      " TEXT NOT NULL, "
-        MAKE      " TEXT, "
-        MODEL     " TEXT, "
-        YEAR      " INT, "
-        TYPE      " TEXT NOT NULL, "
-        GROUP     " TEXT NOT NULL, "
-        ARCHIVED  " BOOLEAN NOT NULL CHECK (" ARCHIVED " IN (0, 1)))";
+        NAME        " TEXT NOT NULL, "
+        MAKE        " TEXT, "
+        MODEL       " TEXT, "
+        YEAR        " INT, "
+        TYPE        " TEXT NOT NULL, "
+        ARCHIVED    " BOOLEAN NOT NULL CHECK (" ARCHIVED " IN (0, 1)) "
+        KEY_ITEM_ID " INT, "
+        "CONSTRAINT itemParentId FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
+        "ON DELETE CASCADE ON UPDATE CASCADE)";
 
     const QString queryAttributes = "CREATE TABLE " TABLE_ATTRIBUTES
         " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
