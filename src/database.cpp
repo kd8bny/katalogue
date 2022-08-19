@@ -256,7 +256,7 @@ bool Database::initializeSchema()
         MODEL       " TEXT, "
         YEAR        " INT, "
         TYPE        " TEXT NOT NULL, "
-        ARCHIVED    " BOOLEAN NOT NULL CHECK (" ARCHIVED " IN (0, 1)) "
+        ARCHIVED    " BOOLEAN NOT NULL CHECK (" ARCHIVED " IN (0, 1)), "
         KEY_ITEM_ID " INT, "
         "CONSTRAINT itemParentId FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
         "ON DELETE CASCADE ON UPDATE CASCADE)";
@@ -288,6 +288,7 @@ bool Database::initializeSchema()
     //     VALUE   " TEXT NOT NULL)";
 
     if(!query.exec(queryItems)){
+        qDebug() << queryItems;
         qDebug() << query.lastError();
         return false;
     }
