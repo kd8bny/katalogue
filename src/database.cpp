@@ -64,6 +64,8 @@ bool Database::insertItemEntry(QString name, QString make, QString model,
     if(query.exec()){
         isInsert = true;
     } else {
+        qDebug() << type;
+        qDebug() << parent;
         qDebug() << "Error inserting record " << query.lastError();
     }
 
@@ -258,7 +260,7 @@ bool Database::initializeSchema()
         TYPE        " TEXT NOT NULL, "
         ARCHIVED    " BOOLEAN NOT NULL CHECK (" ARCHIVED " IN (0, 1)), "
         KEY_ITEM_ID " INT, "
-        "CONSTRAINT itemParentId FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
+        "FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
         "ON DELETE CASCADE ON UPDATE CASCADE)";
 
     const QString queryAttributes = "CREATE TABLE " TABLE_ATTRIBUTES
