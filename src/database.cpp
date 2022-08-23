@@ -335,7 +335,7 @@ bool Database::initializeSchema()
 void Database::initializeDemoEntry()
 {
     this->insertItemEntry(
-        "My Vehicle", "Ford", "Mustang", "2000", "Auto", "Default");
+        "My Vehicle", "Ford", "Mustang", "2000", "Auto", "NULL");
 
     this->insertAttributeEntry("1", "Engine", "4.6L V8", "Engine Specs");
     this->insertEventEntry("1", "2022-05-22", "Idle Pulley", "100.00", "Auto",

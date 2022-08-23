@@ -13,9 +13,8 @@ public:
         rMAKE,
         rMODEL,
         rYEAR,
-        rGroup,
-        rCategory,
-        rArchived,
+        rTYPE,
+        rARCHIVED,
     };
 
     explicit ItemModel(QObject *parent = nullptr);

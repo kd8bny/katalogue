@@ -8,7 +8,7 @@ import org.kde.kirigami 2.19 as Kirigami
 import com.kd8bny.katalogue 1.0
 
 Kirigami.ScrollablePage {
-    id: addEditItemPage
+    id: addEditEventPage
 
     required property string itemId
     property bool isEdit: false

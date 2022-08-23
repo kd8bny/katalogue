@@ -31,17 +31,16 @@ QHash<int, QByteArray> ItemModel::roleNames() const {
     roles[rMAKE] = MAKE;
     roles[rMODEL] = MODEL;
     roles[rYEAR] = YEAR;
-    roles[rGroup] = GROUP;
-    roles[rCategory] = CATEGORY;
-    roles[rArchived] = ARCHIVED;
+    roles[rTYPE] = TYPE;
+    roles[rARCHIVED] = ARCHIVED;
 
     return roles;
 }
 
 void ItemModel::updateModel()
 {
-    this->setQuery(QString("SELECT id, %1, %2 , %3, %4 FROM %5").arg(
-            NAME, YEAR, MODEL, MAKE, TABLE_ITEMS));
+    this->setQuery(QString("SELECT id, %1, %2 , %3, %4, %5 FROM %6").arg(
+            NAME, YEAR, MODEL, MAKE, TYPE, TABLE_ITEMS));
 }
 
 int ItemModel::getId(int row)
@@ -60,7 +59,8 @@ QVariantList ItemModel::getItemData(QString item_id)
     query.exec();
     query.next();
 
-    for (int i=0; i<query.record().count(); i++){
+    for (int i=0; i<query.record().count(); i++)
+    {
         itemData.append(query.value(i));
     }
 
