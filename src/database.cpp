@@ -59,7 +59,9 @@ bool Database::insertItemEntry(QString name, QString make, QString model,
     query.bindValue(":year", year.toInt());
     query.bindValue(":type", type);
     query.bindValue(":archived", 0);
-    query.bindValue(":parent", parent);
+    if(parent != "NULL"){
+        query.bindValue(":parent", parent);
+    }
 
     if(query.exec()){
         isInsert = true;

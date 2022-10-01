@@ -94,8 +94,8 @@ QVariantList ItemModel::getItemParents()
     QSqlQuery query;
     QVariantList itemParents;
     query.prepare(QString( 
-        "SELECT DISTINCT %1 FROM %2").arg(NAME, TABLE_ITEMS,
-            KEY_ITEM_ID)); //WHERE %3 IS NOT NULL
+        "SELECT DISTINCT %1 FROM %2 WHERE %3 IS NULL").arg(NAME, TABLE_ITEMS,
+            KEY_ITEM_ID));
 
     query.exec();
     query.next();
