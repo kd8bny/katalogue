@@ -40,8 +40,13 @@ QHash<int, QByteArray> ItemModel::roleNames() const {
 
 void ItemModel::updateModel()
 {
-    this->setQuery(QString("SELECT id, %1, %2 , %3, %4, %5 FROM %6").arg(
-            NAME, YEAR, MODEL, MAKE, TYPE, TABLE_ITEMS));
+    this->setQuery(QString("SELECT id, %1, %2 , %3, %4, %5 FROM %6 WHERE %7 IS NULL").arg(
+            NAME, YEAR, MODEL, MAKE, TYPE, TABLE_ITEMS, KEY_ITEM_ID));
+}
+
+void ItemModel::setModelComponents(){
+    this->setQuery(QString("SELECT id, %1, %2 , %3, %4, %5 FROM %6 WHERE %7 IS NOT NULL").arg(
+            NAME, YEAR, MODEL, MAKE, TYPE, TABLE_ITEMS, KEY_ITEM_ID));
 }
 
 int ItemModel::getId(int row)

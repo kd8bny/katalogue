@@ -12,6 +12,7 @@ Kirigami.ScrollablePage {
     id: itemsPage
 
     Layout.fillWidth: true
+    property bool isComponent: false
 
     title: i18n("Katalogued Items")
 
@@ -35,6 +36,12 @@ Kirigami.ScrollablePage {
 
             visible: layout.count == 0
             text: i18n("Select add to set an item")
+        }
+    }
+
+    Component.onCompleted: {
+        if (isComponent){
+            ItemModel.setModelComponents()
         }
     }
 
@@ -101,7 +108,9 @@ Kirigami.ScrollablePage {
                     text: i18n("Components")
                     icon.name: "item"
 
-                    //onTriggered: pageStack.push("qrc:Events.qml", {"itemName": name, "item_id": id})
+                    onTriggered: {
+                        pageStack.push("qrc:Items.qml", {"isComponent": true})
+                    }
                 }
             ]
         }
