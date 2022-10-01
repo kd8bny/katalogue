@@ -10,8 +10,7 @@ import com.kd8bny.katalogue 1.0
 Kirigami.ScrollablePage {
     id: addEditItemPage
 
-
-    // Component.onCompleted: ComboBoxModel.getItemNames()
+    property var types: ItemModel.getItemTypes()
 
     header: Kirigami.Heading {
         text: i18nc("@title:window", "Add new item to katalogue")
@@ -43,16 +42,9 @@ Kirigami.ScrollablePage {
             id: typeBox
             editable: true
             Kirigami.FormData.label: i18nc("@label:textbox", "Item Type:")
-            model: ItemModel.getItemTypes()
-
-            onAccepted: {
-                if (find(editText) === -1)
-                    model.append({text: editText})
-            }
-            Component.onCompleted: {
-                typeBox.currentIndex = 0
-            }
+            model: types
         }
+
         Controls.CheckBox {
             id: itemParentEnabled
             Kirigami.FormData.label: i18nc("@label:textbox", "Component of Item:")
@@ -62,7 +54,7 @@ Kirigami.ScrollablePage {
             editable: false
             enabled: itemParentEnabled.checked
             model: ItemModel.getItemParents()
-            Kirigami.FormData.label: i18nc("@label:textbox", "Parent Item:")
+            Kirigami.FormData.label: i18nc("@label:textbox", "Component of:")
         }
 
         Controls.Button {
@@ -71,6 +63,13 @@ Kirigami.ScrollablePage {
             text: i18nc("@action:button", "Add")
             enabled: nameField.text.length > 0
             onClicked: {
+                var type = ""
+                if (typeBox.find(typeBox.editText) === -1){
+                    type = typeBox.editText
+                }else{
+                    type = typeBox.currentText
+                }
+
                 var parentId = "NULL"
                 if (itemParentEnabled.checked)
                     parentId = ItemModel.getId(itemParentBox.currentIndex)
@@ -80,7 +79,7 @@ Kirigami.ScrollablePage {
                     makeField.text,
                     modelField.text,
                     yearField.text,
-                    typeBox.currentText,
+                    type,
                     parentId
                 )
                 ItemModel.updateModel()

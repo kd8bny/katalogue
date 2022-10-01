@@ -77,14 +77,11 @@ QVariantList ItemModel::getItemTypes()
         "SELECT DISTINCT %1 FROM %2").arg(TYPE, TABLE_ITEMS));
 
     query.exec();
-    query.next();
 
-    for (int i=0; i<query.record().count(); i++)
+    while(query.next())
     {
-        itemTypes.append(query.value(i));
+        itemTypes.append(query.record().value(0));
     }
-
-    qDebug() << itemTypes;
 
     return itemTypes;
 }
@@ -98,14 +95,10 @@ QVariantList ItemModel::getItemParents()
             KEY_ITEM_ID));
 
     query.exec();
-    query.next();
-
-    for (int i=0; i<query.record().count(); i++)
+    while(query.next())
     {
-        itemParents.append(query.value(i));
+        itemParents.append(query.record().value(0));
     }
-
-    qDebug() << itemParents;
 
     return itemParents;
 }
