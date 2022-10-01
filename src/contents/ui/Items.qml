@@ -72,6 +72,12 @@ Kirigami.ScrollablePage {
                             wrapMode: Text.WordWrap
                             text: year + " " + model + " " + make
                         }
+                        Controls.Label {
+                            Layout.fillWidth: true
+                            wrapMode: Text.WordWrap
+                            text: "Parent " + type + " " +archived+" " + fk_item_id
+
+                        }
                         Kirigami.Separator {
                             Layout.fillWidth: true
                         }
@@ -90,6 +96,12 @@ Kirigami.ScrollablePage {
                     icon.name: "item"
 
                     onTriggered: pageStack.push("qrc:Events.qml", {"itemName": name, "item_id": id})
+                },
+                Kirigami.Action {
+                    text: i18n("Components")
+                    icon.name: "item"
+
+                    //onTriggered: pageStack.push("qrc:Events.qml", {"itemName": name, "item_id": id})
                 }
             ]
         }

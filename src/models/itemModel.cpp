@@ -33,6 +33,7 @@ QHash<int, QByteArray> ItemModel::roleNames() const {
     roles[rYEAR] = YEAR;
     roles[rTYPE] = TYPE;
     roles[rARCHIVED] = ARCHIVED;
+    roles[rPARENT] = KEY_ITEM_ID;
 
     return roles;
 }
@@ -53,8 +54,9 @@ QVariantList ItemModel::getItemData(QString item_id)
     QSqlQuery query;
     QVariantList itemData;
     query.prepare(QString(
-        "SELECT %1, %2, %3, %4, %5, %6, %7 FROM %8 WHERE id=:item_id").arg(
-            NAME, MAKE, MODEL, YEAR, TYPE, GROUP, ARCHIVED, TABLE_ITEMS));
+        "SELECT %1, %2, %3, %4, %5, %6, %7, %8 FROM %9 WHERE id=:item_id").arg(
+            NAME, MAKE, MODEL, YEAR, TYPE, GROUP, ARCHIVED, KEY_ITEM_ID,
+            TABLE_ITEMS));
     query.bindValue(":item_id", item_id.toInt());
     query.exec();
     query.next();
@@ -65,4 +67,45 @@ QVariantList ItemModel::getItemData(QString item_id)
     }
 
     return itemData;
+}
+
+QVariantList ItemModel::getItemTypes()
+{
+    QSqlQuery query;
+    QVariantList itemTypes;
+    query.prepare(QString(
+        "SELECT DISTINCT %1 FROM %2").arg(TYPE, TABLE_ITEMS));
+
+    query.exec();
+    query.next();
+
+    for (int i=0; i<query.record().count(); i++)
+    {
+        itemTypes.append(query.value(i));
+    }
+
+    qDebug() << itemTypes;
+
+    return itemTypes;
+}
+
+QVariantList ItemModel::getItemParents()
+{
+    QSqlQuery query;
+    QVariantList itemParents;
+    query.prepare(QString( 
+        "SELECT DISTINCT %1 FROM %2").arg(NAME, TABLE_ITEMS,
+            KEY_ITEM_ID)); //WHERE %3 IS NOT NULL
+
+    query.exec();
+    query.next();
+
+    for (int i=0; i<query.record().count(); i++)
+    {
+        itemParents.append(query.value(i));
+    }
+
+    qDebug() << itemParents;
+
+    return itemParents;
 }

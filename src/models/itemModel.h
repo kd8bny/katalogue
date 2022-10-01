@@ -15,6 +15,7 @@ public:
         rYEAR,
         rTYPE,
         rARCHIVED,
+        rPARENT
     };
 
     explicit ItemModel(QObject *parent = nullptr);
@@ -33,4 +34,6 @@ public slots:
     void updateModel();
     int getId(int row);
     QVariantList getItemData(QString item_id);
+    QVariantList getItemTypes();
+    QVariantList getItemParents();
 };
