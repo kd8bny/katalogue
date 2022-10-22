@@ -1,0 +1,54 @@
+# Maintainer: kd8bny <kd8bny at gmail dot com>
+
+pkgname=katalogue-git
+pkgver=0.1
+pkgrel=1
+pkgdesc="A catalog to assist tracking maintenance events and todos for your home, car, and otherwise"
+arch=('x86_64')
+license=('AGPLv3')
+url="https://github.com/kd8bny/katalogue"
+depends=(cmake)
+source=(
+  https://github.com/kd8bny/katalogue/archive/refs/heads/main.zip
+  # ${url}/releases/download/v${pkgver}/trilium-linux-x64-${pkgver}.tar.xz
+)
+sha512sums=(
+  eee6bbad615c2a1bea4196ed1f55086375427a16dac896fb559f30d82749829d1b218b27bd4ab903b0bb9be68e3f0de3d52dbad42a22a5cc5fe1de0b558e3abb
+)
+
+_exec_name="katalogue"
+_desktop_file="katalogue.desktop"
+_release_name="katalogue"
+_install_path="/opt/${pkgname}/"
+
+build(){
+  ls
+  cd katalogue-main/
+  # cmake -DCMAKE_BUILD_TYPE=Release -S src -B src/build
+  # cmake --build src/build
+  cmake -B build/ . && cmake --build build/
+}
+
+package() {
+    # Install sources in /opt
+    mkdir -p "${pkgdir}/${_install_path}"
+    cp katalogue-main/build/bin/katalogue "${pkgdir}/${_install_path}"
+
+    # Link to exec
+    mkdir -p "${pkgdir}/usr/bin/" && chmod 755 "${pkgdir}/usr/bin/"
+    ln -s "${_install_path}${_exec_name}" "${pkgdir}/usr/bin/${_exec_name}"
+
+
+   # cd "${srcdir}/${_release_name}"
+    # mkdir -p "${pkgdir}/${_install_path}"
+    # cp -r * "${pkgdir}/${_install_path}"
+
+    # # Install .desktop
+    # install -Dm644 "../../${_desktop_file}" "${pkgdir}/usr/share/applications/${_desktop_file}"
+
+    # # # Install icons
+    # # install -Dm644 "..${_desktop_file}" "${pkgdir}/usr/share/applications/${pkgname}"
+
+    # # Install License
+    # install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
