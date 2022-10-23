@@ -66,9 +66,6 @@ bool Database::insertItemEntry(QString name, QString make, QString model,
     if(query.exec()){
         isInsert = true;
     } else {
-        qDebug() << type;
-        qDebug() << parent;
-        qDebug() << query.lastQuery();
         qDebug() << "Error inserting record " << query.lastError();
     }
 

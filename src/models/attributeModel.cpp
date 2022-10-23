@@ -30,9 +30,9 @@ QHash<int, QByteArray> AttributeModel::roleNames() const {
 
     QHash<int, QByteArray> roles;
     roles[rID] = "id";
-    roles[rLabel] = LABEL;
     roles[rKey] = KEY;
     roles[rValue] = VALUE;
+    roles[rCategory] = CATEGORY;
     roles[rItemID] = KEY_ITEM_ID;
 
     return roles;
@@ -43,7 +43,7 @@ void AttributeModel::updateModel()
     this->setQuery(modelQuery);
 }
 
-void AttributeModel::setItemID(QString item_id)
+void AttributeModel::setItemId(QString item_id)
 {
     QString modelQueryID = QString("%1 WHERE %2=%3").arg(modelQuery, KEY_ITEM_ID, item_id);
     this->setQuery(modelQueryID);
@@ -60,9 +60,9 @@ QVariantList AttributeModel::getRecord(int row)
     QVariantList recordData;
 
     recordData.append(this->data(this->index(row, 0), rID).toInt());
-    recordData.append(this->data(this->index(row, 1), rLabel));
-    recordData.append(this->data(this->index(row, 2), rKey));
-    recordData.append(this->data(this->index(row, 3), rValue));
+    recordData.append(this->data(this->index(row, 1), rKey));
+    recordData.append(this->data(this->index(row, 2), rValue));
+    recordData.append(this->data(this->index(row, 3), rCategory));
 
     return recordData;
 }

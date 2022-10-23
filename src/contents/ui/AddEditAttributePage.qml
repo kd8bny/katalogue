@@ -8,7 +8,7 @@ import org.kde.kirigami 2.19 as Kirigami
 import com.kd8bny.katalogue 1.0
 
 Kirigami.ScrollablePage {
-    id: addEditItemPage
+    id: addEditAttributePage
 
     required property string itemId
     property bool isEdit: false
@@ -16,7 +16,7 @@ Kirigami.ScrollablePage {
     property string attributeId: ""
     property string key: ""
     property string value: ""
-    property string label: ""
+    property string category: ""
 
     header: Kirigami.Heading {
         text: i18nc("@title:window", "Attribute")
@@ -51,11 +51,11 @@ Kirigami.ScrollablePage {
             Kirigami.FormData.label: i18nc("@label:textbox", "Value:")
         }
         Controls.ComboBox {
-            id: labelComboBox
+            id: categoryComboBox
             editable: true
             Kirigami.FormData.label: i18nc("@label:textbox", "Label:")
             model: ListModel {
-                id: labelField
+                id: categoryField
                 ListElement { text: "Default" }
             }
             onAccepted: {
@@ -74,7 +74,7 @@ Kirigami.ScrollablePage {
                         attributeId,
                         keyField.text,
                         valueField.text,
-                        labelComboBox.text,
+                        categoryComboBox.text,
                     )
                 }
                 else{
@@ -82,11 +82,12 @@ Kirigami.ScrollablePage {
                         itemId,
                         keyField.text,
                         valueField.text,
-                        labelComboBox.text,
+                        categoryComboBox.text,
                     )
                 }
 
                 AttributeModel.updateModel()
+                AttributeModel.setItemId(itemId)
                 pageStack.pop()
             }
         }

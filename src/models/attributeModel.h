@@ -8,9 +8,9 @@ class AttributeModel: public QSqlQueryModel
 public:
     enum Roles {
         rID = Qt::UserRole + 1,
-        rLabel,
         rKey,
         rValue,
+        rCategory,
         rItemID,
     };
 
@@ -29,7 +29,7 @@ signals:
 
 public slots:
     void updateModel();
-    void setItemID(QString item_id);
+    void setItemId(QString item_id);
     int getId(int row);
     QVariantList getRecord(int row);
 };

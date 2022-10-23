@@ -101,11 +101,13 @@ Kirigami.ScrollablePage {
                                 onClicked: {
                                     var recordData = AttributeModel.getRecord(index);
                                     pageStack.push("qrc:AddEditAttributePage.qml", {
-                                        "itemId": item_id, "isEdit": true,
+                                        "itemId": item_id,
+                                        "isEdit": true,
                                         "attributeId": AttributeModel.getId(index),
-                                        "label": recordData[1],
-                                        "key": recordData[2],
-                                        "value": recordData[3]})
+                                        "key": recordData[1],
+                                        "value": recordData[2],
+                                        "category": recordData[3]}
+                                    )
                                 }
                             }
                         }
