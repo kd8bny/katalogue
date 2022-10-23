@@ -10,11 +10,11 @@ import com.kd8bny.katalogue 1.0
 Kirigami.ScrollablePage {
     id: addEditItemPage
 
+    property string itemId
+    property bool isEdit: false
     property var types: ItemModel.getItemTypes()
 
-    header: Kirigami.Heading {
-        text: i18nc("@title:window", "Add new item to katalogue")
-    }
+    title: (isEdit) ? i18n("Edit Item") : i18n("Add Item")
 
     Kirigami.FormLayout {
         id: form
@@ -22,7 +22,7 @@ Kirigami.ScrollablePage {
         Controls.TextField {
             id: nameField
             Kirigami.FormData.label: i18nc("@label:textbox", "Name:")
-            placeholderText: i18n("required")
+            placeholderText: i18n("Required")
         }
         Controls.TextField {
             id: makeField
@@ -85,6 +85,14 @@ Kirigami.ScrollablePage {
                 )
                 ItemModel.updateModel()
                 pageStack.layers.pop()
+            }
+        }
+        Controls.Button {
+            id: cancelButton
+            Layout.fillWidth: true
+            text: i18nc("@action:button", "Cancel")
+            onClicked: {
+                pageStack.pop()
             }
         }
     }

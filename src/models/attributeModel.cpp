@@ -66,3 +66,20 @@ QVariantList AttributeModel::getRecord(int row)
 
     return recordData;
 }
+
+QVariantList AttributeModel::getCategories()
+{
+    QSqlQuery query;
+    QVariantList categories;
+    query.prepare(QString(
+        "SELECT DISTINCT %1 FROM %2").arg(CATEGORY, TABLE_ATTRIBUTES));
+
+    query.exec();
+
+    while(query.next())
+    {
+        // categories.append(query.record().value(0));
+    }
+
+    return categories;
+}

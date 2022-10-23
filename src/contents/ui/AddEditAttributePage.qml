@@ -13,31 +13,33 @@ Kirigami.ScrollablePage {
     required property string itemId
     property bool isEdit: false
 
+    property var categories: AttributeModel.getCategories()
+
     property string attributeId: ""
     property string key: ""
     property string value: ""
     property string category: ""
 
-    header: Kirigami.Heading {
-        text: i18nc("@title:window", "Attribute")
-    }
 
-    Kirigami.PromptDialog {
-        id: deleteDialog
+    title: (isEdit) ? i18n("Edit Attribute") : i18n("Add Attribute")
+    // header: Kirigami.Heading
 
-        title: i18n("Delete")
-        subtitle: i18n("Are you sure you want to delete: ")
-        standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
-        onAccepted: {
-            Database.deleteItemEntry(itemId)
-            ItemModel.updateModel()
-            pageStack.clear()
-            pageStack.push("qrc:Items.qml")
-        }
-        onRejected: {
-            pageStack.pop("qrc:Items.qml")
-        }
-    }
+    // Kirigami.PromptDialog {
+    //     id: deleteDialog
+
+    //     title: i18n("Delete")
+    //     subtitle: i18n("Are you sure you want to delete: ")
+    //     standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
+    //     onAccepted: {
+    //         Database.deleteItemEntry(itemId)
+    //         ItemModel.updateModel()
+    //         pageStack.clear()
+    //         pageStack.push("qrc:Items.qml")
+    //     }
+    //     onRejected: {
+    //         pageStack.pop("qrc:Items.qml")
+    //     }
+    // }
 
     Kirigami.FormLayout {
         Controls.TextField {
@@ -54,19 +56,12 @@ Kirigami.ScrollablePage {
             id: categoryComboBox
             editable: true
             Kirigami.FormData.label: i18nc("@label:textbox", "Label:")
-            model: ListModel {
-                id: categoryField
-                ListElement { text: "Default" }
-            }
-            onAccepted: {
-                if (find(editText) === -1)
-                    model.append({text: editText})
-            }
+            model: categories
         }
         Controls.Button {
             id: doneButton
             Layout.fillWidth: true
-            text: i18nc("@action:button", "Add") //TODO add/update
+            text: (isEdit) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
             // enabled: (keyField.text.length & valueField.text.length) > 0
             onClicked: {
                 if(isEdit){
@@ -88,6 +83,14 @@ Kirigami.ScrollablePage {
 
                 AttributeModel.updateModel()
                 AttributeModel.setItemId(itemId)
+                pageStack.pop()
+            }
+        }
+        Controls.Button {
+            id: cancelButton
+            Layout.fillWidth: true
+            text: i18nc("@action:button", "Cancel")
+            onClicked: {
                 pageStack.pop()
             }
         }

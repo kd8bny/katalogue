@@ -15,8 +15,6 @@ Kirigami.ScrollablePage {
     required property string itemName
     // property var recordData
 
-    Layout.fillWidth: true
-
     title: i18n("Attributes")
 
     actions {
