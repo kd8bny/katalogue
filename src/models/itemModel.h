@@ -32,7 +32,7 @@ protected:
 
 public slots:
     void updateModel();
-    void setModelComponents();
+    void setModelComponents(QString item_id);
     int getId(int row);
     QVariantList getItemData(QString item_id);
     QVariantList getItemTypes();

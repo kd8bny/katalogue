@@ -36,3 +36,7 @@
 **/.cache/*
 **/.vscode/*
 *.code-workspace
+
+# Other/Env
+**.directory
+

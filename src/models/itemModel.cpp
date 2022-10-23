@@ -44,9 +44,9 @@ void ItemModel::updateModel()
             NAME, YEAR, MODEL, MAKE, TYPE, TABLE_ITEMS, KEY_ITEM_ID));
 }
 
-void ItemModel::setModelComponents(){
-    this->setQuery(QString("SELECT id, %1, %2 , %3, %4, %5 FROM %6 WHERE %7 IS NOT NULL").arg(
-            NAME, YEAR, MODEL, MAKE, TYPE, TABLE_ITEMS, KEY_ITEM_ID));
+void ItemModel::setModelComponents(QString item_id){
+    this->setQuery(QString("SELECT id, %1, %2 , %3, %4, %5 FROM %6 WHERE %7=%8").arg(
+            NAME, YEAR, MODEL, MAKE, TYPE, TABLE_ITEMS, KEY_ITEM_ID, item_id));
 }
 
 int ItemModel::getId(int row)
