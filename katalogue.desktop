@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: CC0-1.0
+# SPDX-FileCopyrightText: 2022 Daryl Bennett <kd8bny@gmail.com>
+[Desktop Entry]
+Name=katalogue
+Comment=Catalog to track maintenance events and todos
+Version=0.1
+Exec=katalogue
+Icon=car
+Type=Application
+Terminal=false
+# Add an actual main category here (and possibly applicable additional ones)
+#   https://specifications.freedesktop.org/menu-spec/latest/apa.html#main-category-registry
+Categories=Qt;KDE;
