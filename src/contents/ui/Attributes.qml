@@ -87,11 +87,20 @@ Kirigami.ScrollablePage {
                     columns: root.wideScreen ? 4 : 2
 
                     ColumnLayout{
+                        Controls.Label {
+                            wrapMode: Text.WordWrap
+                            text: "Category: " + category
+                        }
                         RowLayout{
                             Kirigami.Heading {
-                                Layout.fillWidth: true
+                                wrapMode: Text.WordWrap
                                 level: 2
-                                text: key
+                                text: key + ": "
+                            }
+                            Kirigami.Heading {
+                                Layout.fillWidth: true
+                                wrapMode: Text.WordWrap
+                                text: value
                             }
                             Controls.Button {
                                 Layout.alignment: Qt.AlignRight
@@ -109,17 +118,6 @@ Kirigami.ScrollablePage {
                                         "category": recordData[3]}
                                     )
                                 }
-                            }
-                        }
-                        RowLayout {
-                            Layout.fillWidth: true
-                            Controls.Label {
-                                wrapMode: Text.WordWrap
-                                text: value
-                            }
-                            Controls.Label {
-                                wrapMode: Text.WordWrap
-                                text: "label: " + label
                             }
                         }
                     }
