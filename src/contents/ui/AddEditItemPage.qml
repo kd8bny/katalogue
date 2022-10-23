@@ -71,8 +71,9 @@ Kirigami.ScrollablePage {
                 }
 
                 var parentId = "NULL"
-                if (itemParentEnabled.checked)
+                if (itemParentEnabled.checked){
                     parentId = ItemModel.getId(itemParentBox.currentIndex)
+                }
 
                 Database.insertItemEntry(
                     nameField.text,

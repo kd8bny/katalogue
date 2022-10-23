@@ -51,7 +51,7 @@ bool Database::insertItemEntry(QString name, QString make, QString model,
 
     query.prepare(QString("INSERT INTO %1 (%2, %3, %4, %5, %6, %7, %8) "
         "VALUES (:name, :make, :model, :year, :type, :archived, :parent)").arg(
-            TABLE_ITEMS, NAME,  MAKE, MODEL, YEAR, TYPE, ARCHIVED, KEY_ITEM_ID));
+            TABLE_ITEMS, NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, KEY_ITEM_ID));
 
     query.bindValue(":name", name);
     query.bindValue(":make", make);
@@ -68,6 +68,7 @@ bool Database::insertItemEntry(QString name, QString make, QString model,
     } else {
         qDebug() << type;
         qDebug() << parent;
+        qDebug() << query.lastQuery();
         qDebug() << "Error inserting record " << query.lastError();
     }
 
