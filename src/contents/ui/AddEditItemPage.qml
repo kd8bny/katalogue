@@ -92,7 +92,7 @@ Kirigami.ScrollablePage {
             Layout.fillWidth: true
             text: i18nc("@action:button", "Cancel")
             onClicked: {
-                pageStack.pop()
+                pageStack.layers.pop()
             }
         }
     }
