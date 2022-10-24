@@ -78,7 +78,7 @@ QVariantList AttributeModel::getCategories()
 
     while(query.next())
     {
-        // categories.append(query.record().value(0));
+        categories.append(query.value(0));
     }
 
     return categories;

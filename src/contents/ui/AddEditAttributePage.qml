@@ -62,7 +62,7 @@ Kirigami.ScrollablePage {
             id: doneButton
             Layout.fillWidth: true
             text: (isEdit) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
-            // enabled: (keyField.text.length & valueField.text.length) > 0
+            enabled: (keyField.text.length && valueField.text.length) > 0
             onClicked: {
                 if(isEdit){
                     Database.updateAttributeEntry(
