@@ -53,7 +53,7 @@ Kirigami.ScrollablePage {
             Kirigami.FormData.label: i18nc("@label:textbox", "Value:")
         }
         Controls.ComboBox {
-            id: categoryComboBox
+            id: categoryBox
             editable: true
             Kirigami.FormData.label: i18nc("@label:textbox", "Label:")
             model: categories
@@ -64,12 +64,19 @@ Kirigami.ScrollablePage {
             text: (isEdit) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
             enabled: (keyField.text.length && valueField.text.length) > 0
             onClicked: {
+                var category = ""
+                if (categoryBox.find(categoryBox.editText) === -1){
+                    category = categoryBox.editText
+                }else{
+                    category = categoryBox.currentText
+                }
+
                 if(isEdit){
                     Database.updateAttributeEntry(
                         attributeId,
                         keyField.text,
                         valueField.text,
-                        categoryComboBox.text,
+                        category
                     )
                 }
                 else{
@@ -77,7 +84,7 @@ Kirigami.ScrollablePage {
                         itemId,
                         keyField.text,
                         valueField.text,
-                        categoryComboBox.text,
+                        category
                     )
                 }
 
