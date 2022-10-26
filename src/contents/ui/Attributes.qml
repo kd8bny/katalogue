@@ -28,12 +28,6 @@ Kirigami.ScrollablePage {
         }
         contextualActions: [
             Kirigami.Action {
-                text: i18n("Edit")
-                icon.name: "entry-edit"
-                tooltip: i18n("Edit item")
-                onTriggered: pageStack.push("qrc:AddEditItemPage.qml", {"itemId": itemId, "isEdit": true})
-            },
-            Kirigami.Action {
                 text: i18n("Events")
                 icon.name: "item"
                 tooltip: i18n("Swap to Events")

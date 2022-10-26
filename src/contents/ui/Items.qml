@@ -112,6 +112,17 @@ Kirigami.ScrollablePage {
                     onTriggered: {
                         pageStack.push("qrc:Items.qml", {"isComponent": true, "itemId": id})
                     }
+                },
+                Kirigami.Action {
+                    Layout.alignment: Qt.AlignRight
+                    Layout.fillWidth: true
+                    text: i18n("Edit")
+                    icon.name: "entry-edit"
+                    tooltip: i18n("Edit item")
+
+                    onTriggered: {
+                        pageStack.push("qrc:AddEditItemPage.qml", {"itemId": id, "isEdit": true})
+                    }
                 }
             ]
         }
