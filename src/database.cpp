@@ -165,6 +165,24 @@ bool Database::updateAttributeEntry(QString attributeId, QString key, QString va
     return isUpdate;
 }
 
+bool Database::deleteAttributeEntry(QString attributeId)
+{
+    bool isDelete = false;
+    QSqlQuery query;
+
+    query.prepare(
+        QString("DELETE FROM %1 WHERE id=:attributeId").arg(TABLE_ATTRIBUTES));
+    query.bindValue(":attributeId", attributeId.toInt());
+
+    if(query.exec()){
+        isDelete = true;
+    } else {
+        qDebug() << "Error removing record " << query.lastError().text();
+    }
+
+    return isDelete;
+}
+
 bool Database::insertEventEntry(QString itemId, QString date, QString event, QString cost, 
     QString type, QString category, QString comment)
 {

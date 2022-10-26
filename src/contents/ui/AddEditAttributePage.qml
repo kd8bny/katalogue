@@ -22,24 +22,33 @@ Kirigami.ScrollablePage {
 
 
     title: (isEdit) ? i18n("Edit Attribute") : i18n("Add Attribute")
-    // header: Kirigami.Heading
 
-    // Kirigami.PromptDialog {
-    //     id: deleteDialog
+    actions {
+        main: Kirigami.Action {
+            enabled: isEdit
+            text: i18n("Delete")
+            icon.name: "delete"
+            tooltip: i18n("Remove Attribute")
+            onTriggered: {
+                deleteDialog.open()
+            }
+        }
+    }
 
-    //     title: i18n("Delete")
-    //     subtitle: i18n("Are you sure you want to delete: ")
-    //     standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
-    //     onAccepted: {
-    //         Database.deleteItemEntry(itemId)
-    //         ItemModel.updateModel()
-    //         pageStack.clear()
-    //         pageStack.push("qrc:Items.qml")
-    //     }
-    //     onRejected: {
-    //         pageStack.pop("qrc:Items.qml")
-    //     }
-    // }
+    Kirigami.PromptDialog {
+        id: deleteDialog
+        title: i18n("Delete")
+        subtitle: i18n("Are you sure you want to delete: ")
+        standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
+        onAccepted: {
+            Database.deleteAttributeEntry(attributeId)
+            pageStack.pop()
+            AttributeModel.updateModel()
+        }
+        onRejected: {
+            pageStack.pop()
+        }
+    }
 
     Kirigami.FormLayout {
         Controls.TextField {

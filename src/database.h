@@ -54,6 +54,7 @@ public:
         QString key, QString value);
     Q_INVOKABLE bool updateAttributeEntry(QString attributeId, QString key,
         QString value, QString category);
+    Q_INVOKABLE bool deleteAttributeEntry(QString attributeId);
 
     Q_INVOKABLE bool insertEventEntry(QString date, QString task, QString cost,
         QString type, QString category, QString comment, QString item_id);

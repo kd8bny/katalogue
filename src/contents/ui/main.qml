@@ -10,7 +10,7 @@ import com.kd8bny.katalogue 1.0
 Kirigami.ApplicationWindow {
     id: root
 
-    title: i18n("katalogue")
+    title: i18n("Katalogue")
 
     minimumWidth: Kirigami.Units.gridUnit * 20
     minimumHeight: Kirigami.Units.gridUnit * 20

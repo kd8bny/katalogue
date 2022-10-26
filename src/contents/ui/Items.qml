@@ -13,7 +13,7 @@ Kirigami.ScrollablePage {
 
     Layout.fillWidth: true
     property bool isComponent: false
-    property string item_id: ""
+    property string itemId: ""
 
     title: i18n("Katalogued Items")
 
@@ -22,7 +22,7 @@ Kirigami.ScrollablePage {
             text: i18n("Add Item")
             icon.name: "list-add"
             tooltip: i18n("Add new item")
-            onTriggered: pageStack.layers.push("qrc:AddEditItemPage.qml")
+            onTriggered: pageStack.push("qrc:AddEditItemPage.qml")
         }
     }
 
@@ -42,7 +42,7 @@ Kirigami.ScrollablePage {
 
     Component.onCompleted: {
         if (isComponent){
-            ItemModel.setModelComponents(item_id)
+            ItemModel.setModelComponents(itemId)
         }
     }
 
@@ -97,20 +97,20 @@ Kirigami.ScrollablePage {
                     text: i18n("Attributes")
                     icon.name: "item"
 
-                    onTriggered: pageStack.push("qrc:Attributes.qml", {"itemName": name, "item_id": id})
+                    onTriggered: pageStack.push("qrc:Attributes.qml", {"itemName": name, "itemId": id})
                 },
                 Kirigami.Action {
                     text: i18n("Maintence")
                     icon.name: "item"
 
-                    onTriggered: pageStack.push("qrc:Events.qml", {"itemName": name, "item_id": id})
+                    onTriggered: pageStack.push("qrc:Events.qml", {"itemName": name, "itemId": id})
                 },
                 Kirigami.Action {
                     text: i18n("Components")
                     icon.name: "item"
 
                     onTriggered: {
-                        pageStack.push("qrc:Items.qml", {"isComponent": true, "item_id": id})
+                        pageStack.push("qrc:Items.qml", {"isComponent": true, "itemId": id})
                     }
                 }
             ]

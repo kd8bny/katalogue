@@ -11,7 +11,7 @@ import com.kd8bny.katalogue 1.0
 Kirigami.ScrollablePage {
     id: page
 
-    required property string item_id
+    required property string itemId
     required property string itemName
     // property var recordData
 
@@ -23,7 +23,7 @@ Kirigami.ScrollablePage {
             icon.name: "list-add"
             tooltip: i18n("Add new attribute")
             onTriggered: {
-                pageStack.push("qrc:AddEditAttributePage.qml", {"itemId": item_id})
+                pageStack.push("qrc:AddEditAttributePage.qml", {"itemId": itemId})
             }
         }
         contextualActions: [
@@ -31,13 +31,13 @@ Kirigami.ScrollablePage {
                 text: i18n("Edit")
                 icon.name: "entry-edit"
                 tooltip: i18n("Edit item")
-                onTriggered: pageStack.push("qrc:EditItemPage.qml", {"item_id": item_id})
+                onTriggered: pageStack.push("qrc:AddEditItemPage.qml", {"itemId": itemId, "isEdit": true})
             },
             Kirigami.Action {
                 text: i18n("Events")
                 icon.name: "item"
                 tooltip: i18n("Swap to Events")
-                onTriggered: pageStack.replace("qrc:Events.qml", {"itemName": itemName, "item_id": item_id})
+                onTriggered: pageStack.replace("qrc:Events.qml", {"itemName": itemName, "itemId": itemId, "isEdit": true})
             }
         ]
     }
@@ -62,7 +62,7 @@ Kirigami.ScrollablePage {
         }
     }
 
-    Component.onCompleted: AttributeModel.setItemID(item_id)
+    Component.onCompleted: AttributeModel.setItemId(itemId)
 
     Component {
         id: attributeDelegate
@@ -108,7 +108,7 @@ Kirigami.ScrollablePage {
                                 onClicked: {
                                     var recordData = AttributeModel.getRecord(index);
                                     pageStack.push("qrc:AddEditAttributePage.qml", {
-                                        "itemId": item_id,
+                                        "itemId": itemId,
                                         "isEdit": true,
                                         "attributeId": AttributeModel.getId(index),
                                         "key": recordData[1],

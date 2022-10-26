@@ -12,9 +12,39 @@ Kirigami.ScrollablePage {
 
     property string itemId
     property bool isEdit: false
+
     property var types: ItemModel.getItemTypes()
 
     title: (isEdit) ? i18n("Edit Item") : i18n("Add Item")
+
+    actions {
+        main: Kirigami.Action {
+            enabled: isEdit
+            text: i18n("Delete")
+            icon.name: "delete"
+            tooltip: i18n("Remove Item")
+            onTriggered: {
+                deleteDialog.open()
+            }
+        }
+    }
+
+    Kirigami.PromptDialog {
+        id: deleteDialog
+
+        title: i18n("Delete")
+        subtitle: i18n("Are you sure you want to delete Item")
+        standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
+        onAccepted: {
+            Database.deleteItemEntry(itemId)
+            ItemModel.updateModel()
+            pageStack.clear()
+            pageStack.push("qrc:Items.qml")
+        }
+        onRejected: {
+            pageStack.pop()//"qrc:Items.qml")
+        }
+    }
 
     Kirigami.FormLayout {
         id: form
@@ -84,7 +114,7 @@ Kirigami.ScrollablePage {
                     parentId
                 )
                 ItemModel.updateModel()
-                pageStack.layers.pop()
+                pageStack.pop()
             }
         }
         Controls.Button {
@@ -92,7 +122,7 @@ Kirigami.ScrollablePage {
             Layout.fillWidth: true
             text: i18nc("@action:button", "Cancel")
             onClicked: {
-                pageStack.layers.pop()
+                pageStack.pop()
             }
         }
     }
