@@ -37,7 +37,7 @@ Kirigami.ScrollablePage {
         ]
     }
 
-    Component.onCompleted: EventModel.setItemID(itemId)
+    Component.onCompleted: EventModel.setItemId(itemId)
 
     Kirigami.CardsListView {
         id: layout
