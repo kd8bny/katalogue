@@ -57,28 +57,20 @@ Kirigami.ApplicationWindow {
         }
 
         actions: [
-            // Kirigami.Action {
-            //     text: i18n("Overview")
-            //     icon.name: "go-home"
-            //     tooltip: i18n("Overview")
-            //     // enabled: root.pageStack.lastVisibleItem != overviewPage
-            //     onTriggered: {
-            //         root.pageStack.clear()
-            //         pageStack.push('qrc:Overview.qml')
-            //     }
-            // },
+            Kirigami.Action {
+                text: i18n("Items")
+                tooltip: i18n("Tracked Items")
+                icon.name: "file-catalog-symbolic"
+                onTriggered: {
+                    pageStack.clear()
+                    pageStack.push('qrc:Items.qml')
+                }
+            },
             // Kirigami.Action {
             //     text: i18n("Todo")
             //     icon.name: "task-new"
             //     // onTriggered:
             // },
-            Kirigami.Action {
-                text: i18n("Items")
-                icon.name: "file-catalog-symbolic"
-                onTriggered: {
-                    pageStack.push('qrc:Items.qml')
-                }
-            },
             // Kirigami.Action {
             //     text: i18n("Manage Data")
             //     icon.name: "server-database"
@@ -86,7 +78,8 @@ Kirigami.ApplicationWindow {
             //     // onTriggered:
             // },
             Kirigami.Action {
-                text: i18n("About katalogue")
+                text: i18n("About")
+                tooltip: i18n("About katalogue")
                 icon.name: "help-about"
                 onTriggered: pageStack.layers.push('qrc:About.qml')
             },
