@@ -13,7 +13,6 @@ Kirigami.ScrollablePage {
 
     required property string itemId
     required property string itemName
-    // property var recordData
 
     title: i18n("Attributes")
 
@@ -100,15 +99,11 @@ Kirigami.ScrollablePage {
                                 Layout.columnSpan: 2
                                 text: i18n("Edit")
                                 onClicked: {
-                                    var recordData = AttributeModel.getRecord(index);
                                     pageStack.push("qrc:AddEditAttributePage.qml", {
                                         "itemId": itemId,
                                         "isEdit": true,
-                                        "attributeId": AttributeModel.getId(index),
-                                        "key": recordData[1],
-                                        "value": recordData[2],
-                                        "category": recordData[3]}
-                                    )
+                                        "attributeId": index
+                                    })
                                 }
                             }
                         }

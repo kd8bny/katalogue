@@ -11,9 +11,11 @@ Kirigami.ScrollablePage {
     id: addEditItemPage
 
     property string itemId
+    property int modelIndex
     property bool isEdit: false
+    property bool isArchived: false
 
-    property var types: ItemModel.getItemTypes()
+    property var types: Database.getItemTypes()
 
     title: (isEdit) ? i18n("Edit Item") : i18n("Add Item")
 
@@ -27,6 +29,18 @@ Kirigami.ScrollablePage {
                 deleteDialog.open()
             }
         }
+        contextualActions: [
+            Kirigami.Action {
+                enabled: isEdit
+                text: (isArchived) ? i18n("Unarchive") : i18n("Archive")
+                // icon.name: "delete"
+                tooltip: i18n("Archive Item")
+                onTriggered: {
+                    isArchived = !isArchived
+                    Database.archiveItemEntry(itemId, isArchived)
+                }
+            }
+        ]
     }
 
     Kirigami.PromptDialog {
@@ -42,7 +56,29 @@ Kirigami.ScrollablePage {
             pageStack.push("qrc:Items.qml")
         }
         onRejected: {
-            pageStack.pop()//"qrc:Items.qml")
+            pageStack.pop()
+        }
+    }
+
+    Component.onCompleted: {
+        if (isEdit) {
+            var recordData = ItemModel.getRecord(modelIndex)
+
+            nameField.text = recordData[1]
+            makeField.text = recordData[2]
+            modelField.text = recordData[3]
+            yearField.text = recordData[4]
+
+            typeBox.find(recordData[5])
+
+            if (recordData[6]){
+                isArchived = true
+            }
+
+            if (recordData[7]){
+                itemParentEnabled.checked = recordData[6]
+                itemParentBox.find(recordData[7])
+            }
         }
     }
 
@@ -67,6 +103,7 @@ Kirigami.ScrollablePage {
             Kirigami.FormData.label: i18nc("@label:textbox", "Year:")
             placeholderText: i18n("YYYY")
             inputMask: "9999"
+            text: "2000"
         }
         Controls.ComboBox {
             id: typeBox
@@ -74,7 +111,6 @@ Kirigami.ScrollablePage {
             Kirigami.FormData.label: i18nc("@label:textbox", "Item Type:")
             model: types
         }
-
         Controls.CheckBox {
             id: itemParentEnabled
             Kirigami.FormData.label: i18nc("@label:textbox", "Component of Item:")
@@ -83,14 +119,14 @@ Kirigami.ScrollablePage {
             id: itemParentBox
             editable: false
             enabled: itemParentEnabled.checked
-            model: ItemModel.getItemParents()
+            model: Database.getItemParents()
             Kirigami.FormData.label: i18nc("@label:textbox", "Component of:")
         }
 
         Controls.Button {
             id: doneButton
             Layout.fillWidth: true
-            text: i18nc("@action:button", "Add")
+            text: (isEdit) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
             enabled: nameField.text.length > 0
             onClicked: {
                 var type = ""
@@ -105,14 +141,26 @@ Kirigami.ScrollablePage {
                     parentId = ItemModel.getId(itemParentBox.currentIndex)
                 }
 
-                Database.insertItemEntry(
-                    nameField.text,
-                    makeField.text,
-                    modelField.text,
-                    yearField.text,
-                    type,
-                    parentId
-                )
+                if(isEdit){
+                     Database.updateItemEntry(
+                        nameField.text,
+                        makeField.text,
+                        modelField.text,
+                        yearField.text,
+                        type,
+                        parentId
+                    )
+                }
+                else{
+                    Database.insertItemEntry(
+                        nameField.text,
+                        makeField.text,
+                        modelField.text,
+                        yearField.text,
+                        type,
+                        parentId
+                    )
+                }
                 ItemModel.updateModel()
                 pageStack.pop()
             }

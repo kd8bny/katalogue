@@ -43,6 +43,74 @@ bool Database::connect(QString path)
     return isDBOpen;
 }
 
+QVariantList Database::getItemTypes()
+{
+    QSqlQuery query;
+    QVariantList itemTypes;
+    query.prepare(QString(
+        "SELECT DISTINCT %1 FROM %2").arg(TYPE, TABLE_ITEMS));
+
+    query.exec();
+
+    while(query.next())
+    {
+        itemTypes.append(query.record().value(0));
+    }
+
+    return itemTypes;
+}
+
+QVariantList Database::getItemParents()
+{
+    QSqlQuery query;
+    QVariantList itemParents;
+    query.prepare(QString( 
+        "SELECT DISTINCT %1 FROM %2 WHERE %3 IS NULL").arg(NAME, TABLE_ITEMS,
+            KEY_ITEM_ID));
+
+    query.exec();
+    while(query.next())
+    {
+        itemParents.append(query.record().value(0));
+    }
+
+    return itemParents;
+}
+
+QVariantList Database::getAttributeCategories()
+{
+    QSqlQuery query;
+    QVariantList categories;
+    query.prepare(QString(
+        "SELECT DISTINCT %1 FROM %2").arg(CATEGORY, TABLE_ATTRIBUTES));
+
+    query.exec();
+
+    while(query.next())
+    {
+        categories.append(query.value(0));
+    }
+
+    return categories;
+}
+
+QVariantList Database::getEventCategories()
+{
+    QSqlQuery query;
+    QVariantList categories;
+    query.prepare(QString(
+        "SELECT DISTINCT %1 FROM %2").arg(CATEGORY, TABLE_EVENTS));
+
+    query.exec();
+
+    while(query.next())
+    {
+        categories.append(query.value(0));
+    }
+
+    return categories;
+}
+
 bool Database::insertItemEntry(QString name, QString make, QString model,
     QString year, QString type, QString parent)
 {
@@ -73,21 +141,20 @@ bool Database::insertItemEntry(QString name, QString make, QString model,
 }
 
 bool Database::updateItemEntry(QString itemID, QString name, QString make, QString model,
-    QString year, QString type, QString archived, QString parent)
+    QString year, QString type, QString parent)
 {
     bool isUpdate = false;
     QSqlQuery query;
 
     query.prepare(QString("UPDATE %1 SET %2=:name, %3=:make, %4=:model, "
-        "%5=:year, %6=:type, %7=:archived, %8=:parent WHERE id=:id").arg(
-            TABLE_ITEMS, NAME,  MAKE, MODEL, YEAR, TYPE, ARCHIVED, KEY_ITEM_ID));
+        "%5=:year, %6=:type, %7=:parent WHERE id=:id").arg(
+            TABLE_ITEMS, NAME, MAKE, MODEL, YEAR, TYPE, KEY_ITEM_ID));
 
     query.bindValue(":name", name);
     query.bindValue(":make", make);
     query.bindValue(":model", model);
     query.bindValue(":year", year.toInt());
     query.bindValue(":type", type);
-    query.bindValue(":archived", archived);
     query.bindValue(":parent", parent);
     query.bindValue(":id", itemID);
 
@@ -98,6 +165,31 @@ bool Database::updateItemEntry(QString itemID, QString name, QString make, QStri
     }
 
     return isUpdate;
+}
+
+bool Database::archiveItemEntry(QString itemId, QString archived)
+{
+    bool isSuccess = false;
+    int archivedInt = 0;
+    QSqlQuery query;
+
+    query.prepare(QString("UPDATE %1 SET %2=:archived WHERE id=:id").arg(
+            TABLE_ITEMS, ARCHIVED));
+
+    if (archived == "true"){
+        archivedInt = 1;
+    }
+
+    query.bindValue(":archived", archivedInt);
+    query.bindValue(":id", itemId);
+
+    if(query.exec()){
+        isSuccess = true;
+    } else {
+        qDebug() << "Error archiving record " << query.lastError();
+    }
+
+    return isSuccess;
 }
 
 bool Database::deleteItemEntry(QString itemId)
@@ -184,7 +276,7 @@ bool Database::deleteAttributeEntry(QString attributeId)
 }
 
 bool Database::insertEventEntry(QString itemId, QString date, QString event, QString cost, 
-    QString type, QString category, QString comment)
+    QString category, QString type, QString comment)
 {
     bool isInsert = false;
     QSqlQuery query;
@@ -213,7 +305,7 @@ bool Database::insertEventEntry(QString itemId, QString date, QString event, QSt
 }
 
 bool Database::updateEventEntry(QString eventId, QString date, QString event, QString cost, 
-    QString type, QString category, QString comment)
+    QString category, QString type, QString comment)
 {
     bool isUpdate = false;
     QSqlQuery query;

@@ -32,5 +32,4 @@ public slots:
     void setItemId(QString item_id);
     int getId(int row);
     QVariantList getRecord(int row);
-    QVariantList getCategories();
 };

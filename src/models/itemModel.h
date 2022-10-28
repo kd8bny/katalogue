@@ -1,6 +1,6 @@
 #include <QObject>
 #include <QSqlQueryModel>
-#include <QSqlRecord>
+
 
 class ItemModel: public QSqlQueryModel
 {
@@ -34,7 +34,5 @@ public slots:
     void updateModel();
     void setModelComponents(QString item_id);
     int getId(int row);
-    QVariantList getItemData(QString item_id);
-    QVariantList getItemTypes();
-    QVariantList getItemParents();
+    QVariantList getRecord(int row);
 };

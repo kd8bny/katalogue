@@ -12,17 +12,23 @@ Kirigami.ScrollablePage {
 
     required property string itemId
     property bool isEdit: false
-
     property string eventId: ""
-    property string date: ""
-    property string event: ""
-    property string cost: ""
-    property string type: ""
-    property string category: ""
-    property string comment: ""
 
-    header: Kirigami.Heading {
-        text: i18nc("@title:window", "Event")
+    property var categories: Database.getEventCategories()
+    property var types: Database.getItemTypes()
+
+    title: (isEdit) ? i18n("Edit Event") : i18n("Add Event")
+
+    actions {
+        main: Kirigami.Action {
+            enabled: isEdit
+            text: i18n("Delete")
+            icon.name: "delete"
+            tooltip: i18n("Remove Attribute")
+            onTriggered: {
+                deleteDialog.open()
+            }
+        }
     }
 
     Kirigami.PromptDialog {
@@ -32,70 +38,77 @@ Kirigami.ScrollablePage {
         subtitle: i18n("Are you sure you want to delete: ")
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: {
-            Database.deleteItemEntry(itemId)
-            ItemModel.updateModel()
-            pageStack.clear()
-            pageStack.push("qrc:Items.qml")
+            Database.deleteEventEntry(eventId)
+            pageStack.pop()
+            EventModel.updateModel()
         }
         onRejected: {
-            pageStack.pop("qrc:Items.qml")
+            pageStack.pop()
+        }
+    }
+
+    Component.onCompleted: {
+        if (isEdit) {
+            var recordData = EventModel.getRecord(eventId)
+            dateField.text = recordData[1]
+            eventField.text = recordData[2]
+            costField.text = recordData[3]
+            typeBox.find(recordData[4])
+            categoryBox.find(recordData[5])
+            commentField.text = recordData[6]
         }
     }
 
     Kirigami.FormLayout {
         Controls.TextField {
             id: dateField
-            text: date
             Kirigami.FormData.label: i18nc("@label:textbox", "Date:")
         }
         Controls.TextField {
             id: eventField
-            text: event
             Kirigami.FormData.label: i18nc("@label:textbox", "Event:")
         }
         Controls.TextField {
             id: costField
-            text: cost
             Kirigami.FormData.label: i18nc("@label:textbox", "Cost:")
         }
-        // Controls.TextField {
-        //     id: valueField
-        //     Kirigami.FormData.label: i18nc("@label:textbox", "Type:")
-        // }
         Controls.TextField {
             id: commentField
             Kirigami.FormData.label: i18nc("@label:textbox", "Comment:")
         }
-
         Controls.ComboBox {
-            id: labelComboBox
-
-            // editable: true
-            Kirigami.FormData.label: i18nc("@label:textbox", ":")
-            model: ListModel {
-                id: labelField
-                ListElement { text: "Auto_ICE" }
-                ListElement { text: "Utility" }
-            }
-            onAccepted: {
-                if (find(editText) === -1)
-                    model.append({text: editText})
-            }
+            id: categoryBox
+            Kirigami.FormData.label: i18nc("@label:textbox", "Category")
+            editable: true
+            model: categories
+        }
+        Controls.ComboBox {
+            id: typeBox
+            Kirigami.FormData.label: i18nc("@label:textbox", "Item Type")
+            model: types
         }
         Controls.Button {
             id: doneButton
             Layout.fillWidth: true
-            text: i18nc("@action:button", "Add") //TODO add/update
+            text: (isEdit) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
             // enabled: (keyField.text.length & valueField.text.length) > 0
             onClicked: {
+                var category = ""
+                if (categoryBox.find(categoryBox.editText) === -1){
+                    category = categoryBox.editText
+                }else{
+                    category = categoryBox.currentText
+                }
+
                 if(isEdit){
                     Database.updateEventEntry(
                         eventId,
                         dateField.text,
                         eventField.text,
-                        costField.txt,
-                        "type", "category",
-                        commentField.text,
+                        costField.text,
+                        category,
+                        typeBox.currentText,
+                        commentField.text
                     )
                 }
                 else{
@@ -103,13 +116,23 @@ Kirigami.ScrollablePage {
                         itemId,
                         dateField.text,
                         eventField.text,
-                        costField.txt,
-                        "type", "category",
-                        commentField.text,
+                        costField.text,
+                        category,
+                        typeBox.currentText,
+                        commentField.text
                     )
                 }
 
                 EventModel.updateModel()
+                EventModel.setItemId(itemId)
+                pageStack.pop()
+            }
+        }
+        Controls.Button {
+            id: cancelButton
+            Layout.fillWidth: true
+            text: i18nc("@action:button", "Cancel")
+            onClicked: {
                 pageStack.pop()
             }
         }

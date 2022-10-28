@@ -11,7 +11,7 @@ import com.kd8bny.katalogue 1.0
 Kirigami.ScrollablePage {
     id: page
 
-    required property string item_id
+    required property string itemId
     required property string itemName
 
     Layout.fillWidth: true
@@ -24,7 +24,7 @@ Kirigami.ScrollablePage {
             icon.name: "list-add"
             tooltip: i18n("Add new event")
             onTriggered: {
-                pageStack.push("qrc:AddEditEventPage.qml", {"itemId": item_id})
+                pageStack.push("qrc:AddEditEventPage.qml", {"itemId": itemId})
             }
         }
         contextualActions: [
@@ -32,12 +32,12 @@ Kirigami.ScrollablePage {
                 text: i18n("Attributes")
                 icon.name: "item"
                 tooltip: i18n("Swap to Attributes")
-                onTriggered: pageStack.replace("qrc:Attributes.qml", {"itemName": itemName, "item_id": item_id})
+                onTriggered: pageStack.replace("qrc:Attributes.qml", {"itemName": itemName, "itemId": itemId})
             }
         ]
     }
 
-    Component.onCompleted: EventModel.setItemID(item_id)
+    Component.onCompleted: EventModel.setItemID(itemId)
 
     Kirigami.CardsListView {
         id: layout
@@ -97,7 +97,7 @@ Kirigami.ScrollablePage {
                             onClicked: {
                                 var recordData = EventModel.getRecord(index);
                                 pageStack.push("qrc:AddEditEventPage.qml", {
-                                    "itemId": item_id, "isEdit": true,
+                                    "itemId": itemId, "isEdit": true,
                                     "eventId": EventModel.getId(index),
                                     "date": recordData[1],
                                     "event": recordData[2],

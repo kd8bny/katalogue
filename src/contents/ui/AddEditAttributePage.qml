@@ -12,14 +12,9 @@ Kirigami.ScrollablePage {
 
     required property string itemId
     property bool isEdit: false
-
-    property var categories: AttributeModel.getCategories()
-
     property string attributeId: ""
-    property string key: ""
-    property string value: ""
-    property string category: ""
 
+    property var categories: Database.getAttributeCategories()
 
     title: (isEdit) ? i18n("Edit Attribute") : i18n("Add Attribute")
 
@@ -37,6 +32,7 @@ Kirigami.ScrollablePage {
 
     Kirigami.PromptDialog {
         id: deleteDialog
+
         title: i18n("Delete")
         subtitle: i18n("Are you sure you want to delete: ")
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
@@ -50,21 +46,28 @@ Kirigami.ScrollablePage {
         }
     }
 
+    Component.onCompleted: {
+        if (isEdit) {
+            var recordData = AttributeModel.getRecord(attributeId)
+            keyField.text = recordData[1]
+            valueField.text = recordData[2]
+            categoryBox.find(recordData[3])
+        }
+    }
+
     Kirigami.FormLayout {
         Controls.TextField {
             id: keyField
-            text: key
             Kirigami.FormData.label: i18nc("@label:textbox", "Name:")
         }
         Controls.TextField {
             id: valueField
-            text: value
             Kirigami.FormData.label: i18nc("@label:textbox", "Value:")
         }
         Controls.ComboBox {
             id: categoryBox
             editable: true
-            Kirigami.FormData.label: i18nc("@label:textbox", "Label:")
+            Kirigami.FormData.label: i18nc("@label:textbox", "Category:")
             model: categories
         }
         Controls.Button {

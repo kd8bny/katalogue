@@ -48,9 +48,9 @@ void EventModel::updateModel()
     this->setQuery(modelQuery);
 }
 
-void EventModel::setItemID(QString item_id)
+void EventModel::setItemId(QString itemId)
 {
-    QString modelQueryID = QString("%1 WHERE %2=%3").arg(modelQuery, KEY_ITEM_ID, item_id);
+    QString modelQueryID = QString("%1 WHERE %2=%3").arg(modelQuery, KEY_ITEM_ID, itemId);
     this->setQuery(modelQueryID);
 }
 
@@ -70,6 +70,8 @@ QVariantList EventModel::getRecord(int row)
     recordData.append(this->data(this->index(row, 4), rType));
     recordData.append(this->data(this->index(row, 5), rCategory));
     recordData.append(this->data(this->index(row, 6), rComment));
+
+    qDebug() << recordData;
 
     return recordData;
 }

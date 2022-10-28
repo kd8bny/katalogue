@@ -121,7 +121,11 @@ Kirigami.ScrollablePage {
                     tooltip: i18n("Edit item")
 
                     onTriggered: {
-                        pageStack.push("qrc:AddEditItemPage.qml", {"itemId": id, "isEdit": true})
+                        pageStack.push("qrc:AddEditItemPage.qml", {
+                            "itemId": id,
+                            "isEdit": true,
+                            "modelIndex": index
+                        })
                     }
                 }
             ]

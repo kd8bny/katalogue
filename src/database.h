@@ -3,6 +3,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QSqlDatabase>
+#include <QSqlRecord>
 #include <QFile>
 #include <QDate>
 #include <QDebug>
@@ -44,10 +45,17 @@ public:
     explicit Database(QObject *parent = nullptr);
     ~Database();
     bool connect(QString path);
+
+    Q_INVOKABLE QVariantList getItemTypes();
+    Q_INVOKABLE QVariantList getItemParents();
+    Q_INVOKABLE QVariantList getAttributeCategories();
+    Q_INVOKABLE QVariantList getEventCategories();
+
     Q_INVOKABLE bool insertItemEntry(QString name, QString make, QString model,
         QString year, QString category, QString parent);
     Q_INVOKABLE bool updateItemEntry(QString itemID, QString name, QString make,
-        QString model, QString year, QString type, QString archived, QString parent);
+        QString model, QString year, QString type, QString parent);
+    Q_INVOKABLE bool archiveItemEntry(QString itemID, QString archived);
     Q_INVOKABLE bool deleteItemEntry(QString item_id);
 
     Q_INVOKABLE bool insertAttributeEntry(QString item_id, QString label,
@@ -57,9 +65,9 @@ public:
     Q_INVOKABLE bool deleteAttributeEntry(QString attributeId);
 
     Q_INVOKABLE bool insertEventEntry(QString date, QString task, QString cost,
-        QString type, QString category, QString comment, QString item_id);
+        QString category, QString type, QString comment, QString item_id);
     Q_INVOKABLE bool updateEventEntry(QString eventId, QString date, QString event, QString cost, 
-    QString type, QString category, QString comment);
+        QString category, QString type, QString comment);
 
 private:
     QSqlDatabase db;
