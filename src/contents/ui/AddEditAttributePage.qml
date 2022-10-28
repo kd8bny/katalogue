@@ -12,7 +12,7 @@ Kirigami.ScrollablePage {
 
     required property string itemId
     property bool isEdit: false
-    property string attributeId: ""
+    property string attributeIndex: ""
 
     property var categories: Database.getAttributeCategories()
 
@@ -37,7 +37,7 @@ Kirigami.ScrollablePage {
         subtitle: i18n("Are you sure you want to delete: ")
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: {
-            Database.deleteAttributeEntry(attributeId)
+            Database.deleteAttributeEntry(AttributeModel.getId(attributeIndex))
             pageStack.pop()
             AttributeModel.updateModel()
         }
@@ -48,7 +48,7 @@ Kirigami.ScrollablePage {
 
     Component.onCompleted: {
         if (isEdit) {
-            var recordData = AttributeModel.getRecord(attributeId)
+            var recordData = AttributeModel.getRecord(attributeIndex)
             keyField.text = recordData[1]
             valueField.text = recordData[2]
             categoryBox.find(recordData[3])
@@ -85,7 +85,7 @@ Kirigami.ScrollablePage {
 
                 if(isEdit){
                     Database.updateAttributeEntry(
-                        attributeId,
+                        AttributeModel.getId(attributeIndex),
                         keyField.text,
                         valueField.text,
                         category

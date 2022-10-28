@@ -333,6 +333,24 @@ bool Database::updateEventEntry(QString eventId, QString date, QString event, QS
     return isUpdate;
 }
 
+bool Database::deleteEventEntry(QString eventId)
+{
+    bool isDelete = false;
+    QSqlQuery query;
+
+    query.prepare(
+        QString("DELETE FROM %1 WHERE id=:eventId").arg(TABLE_EVENTS));
+    query.bindValue(":eventId", eventId.toInt());
+
+    if(query.exec()){
+        isDelete = true;
+    } else {
+        qDebug() << "Error removing record " << query.lastError().text();
+    }
+
+    return isDelete;
+}
+
 // bool Database::insertDefaultEntry(QString type, QString value)
 // {
 //     bool isInsert = false;

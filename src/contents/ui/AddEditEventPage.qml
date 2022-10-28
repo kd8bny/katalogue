@@ -12,7 +12,7 @@ Kirigami.ScrollablePage {
 
     required property string itemId
     property bool isEdit: false
-    property string eventId: ""
+    property string eventIndex: ""
 
     property var categories: Database.getEventCategories()
     property var types: Database.getItemTypes()
@@ -38,9 +38,9 @@ Kirigami.ScrollablePage {
         subtitle: i18n("Are you sure you want to delete: ")
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: {
-            Database.deleteEventEntry(eventId)
-            pageStack.pop()
+            Database.deleteEventEntry(EventModel.getId(eventIndex))
             EventModel.updateModel()
+            pageStack.pop()
         }
         onRejected: {
             pageStack.pop()
@@ -49,7 +49,7 @@ Kirigami.ScrollablePage {
 
     Component.onCompleted: {
         if (isEdit) {
-            var recordData = EventModel.getRecord(eventId)
+            var recordData = EventModel.getRecord(eventIndex)
             dateField.text = recordData[1]
             eventField.text = recordData[2]
             costField.text = recordData[3]
@@ -102,7 +102,7 @@ Kirigami.ScrollablePage {
 
                 if(isEdit){
                     Database.updateEventEntry(
-                        eventId,
+                        EventModel.getId(eventIndex),
                         dateField.text,
                         eventField.text,
                         costField.text,

@@ -102,7 +102,7 @@ Kirigami.ScrollablePage {
                                     pageStack.push("qrc:AddEditAttributePage.qml", {
                                         "itemId": itemId,
                                         "isEdit": true,
-                                        "attributeId": index
+                                        "attributeIndex": index
                                     })
                                 }
                             }
