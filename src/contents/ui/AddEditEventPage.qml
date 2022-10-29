@@ -48,6 +48,11 @@ Kirigami.ScrollablePage {
     }
 
     Component.onCompleted: {
+        var locale = Qt.locale()
+        var currentDate = new Date()
+        var dateString = currentDate.toLocaleDateString(locale, Locale.ShortFormat);
+        dateField.text = dateString
+
         if (isEdit) {
             var recordData = EventModel.getRecord(eventIndex)
             dateField.text = recordData[1]
@@ -63,6 +68,7 @@ Kirigami.ScrollablePage {
         Controls.TextField {
             id: dateField
             Kirigami.FormData.label: i18nc("@label:textbox", "Date:")
+            // inputMask: 
         }
         Controls.TextField {
             id: eventField
