@@ -32,7 +32,6 @@ protected:
 
 public slots:
     void updateModel();
-    void setModelComponents(QString item_id);
     int getId(int row);
     QVariantList getRecord(int row);
 };

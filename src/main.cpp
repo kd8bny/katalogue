@@ -15,6 +15,7 @@
 #include "app.h"
 #include "database.h"
 #include "models/attributeModel.h"
+#include "models/componentModel.h"
 #include "models/eventModel.h"
 #include "models/itemModel.h"
 #include "version-katalogue.h"
@@ -81,6 +82,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     AttributeModel attributeModel;
     qmlRegisterSingletonInstance<AttributeModel>("com.kd8bny.katalogue", 1, 0, "AttributeModel", &attributeModel);
+
+    ComponentModel componentModel;
+    qmlRegisterSingletonInstance<ComponentModel>("com.kd8bny.katalogue", 1, 0, "ComponentModel", &componentModel);
 
     EventModel eventModel;
     qmlRegisterSingletonInstance<EventModel>("com.kd8bny.katalogue", 1, 0, "EventModel", &eventModel);

@@ -12,7 +12,6 @@ Kirigami.ScrollablePage {
     id: itemsPage
 
     Layout.fillWidth: true
-    property bool isComponent: false
     property string itemId: ""
 
     title: i18n("Katalogued Items")
@@ -41,9 +40,7 @@ Kirigami.ScrollablePage {
     }
 
     Component.onCompleted: {
-        if (isComponent){
-            ItemModel.setModelComponents(itemId)
-        }
+
     }
 
     Component {
@@ -80,12 +77,6 @@ Kirigami.ScrollablePage {
                             wrapMode: Text.WordWrap
                             text: year + " " + model + " " + make
                         }
-                        Controls.Label {
-                            Layout.fillWidth: true
-                            wrapMode: Text.WordWrap
-                            text: "Parent " + type + " " +archived+" " + fk_item_id
-
-                        }
                         Kirigami.Separator {
                             Layout.fillWidth: true
                         }
@@ -110,7 +101,7 @@ Kirigami.ScrollablePage {
                     icon.name: "item"
 
                     onTriggered: {
-                        pageStack.push("qrc:Items.qml", {"isComponent": true, "itemId": id})
+                        pageStack.push("qrc:Components.qml", {"parentName": name, "itemId": id})
                     }
                 },
                 Kirigami.Action {

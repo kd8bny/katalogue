@@ -44,11 +44,6 @@ void ItemModel::updateModel()
             NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, TABLE_ITEMS, KEY_ITEM_ID));
 }
 
-void ItemModel::setModelComponents(QString item_id){
-    this->setQuery(QString("SELECT id, %1, %2, %3, %4, %5, %6 FROM %7 WHERE %8=%9").arg(
-            NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, TABLE_ITEMS, KEY_ITEM_ID, item_id));
-}
-
 int ItemModel::getId(int row)
 {
     return this->data(this->index(row, 0), rID).toInt();
@@ -66,9 +61,6 @@ QVariantList ItemModel::getRecord(int row)
     recordData.append(this->data(this->index(row, 5), rTYPE));
     recordData.append(this->data(this->index(row, 6), rARCHIVED).toInt());
     recordData.append(this->data(this->index(row, 7), rPARENT).toInt());
-
-    qDebug() << row;
-    qDebug() << recordData;
 
     return recordData;
 }

@@ -35,16 +35,16 @@ Kirigami.ScrollablePage {
         ]
     }
 
-    Kirigami.CardsListView {
+    ListView {
         id: layout
         model: AttributeModel
         delegate: attributeDelegate
+        section.property: "category"
+        section.delegate: sectionDelegate
+        focus: true
 
-        headerPositioning: ListView.OverlayHeader
-        header: Kirigami.ItemViewHeader {
-            //backgroundImage.source: "../banner.jpg"
-            title: itemName
-        }
+        // headerPositioning: ListView.OverlayHeader
+        // header: itemName
 
         Kirigami.PlaceholderMessage {
             anchors.centerIn: layout
@@ -58,56 +58,44 @@ Kirigami.ScrollablePage {
     Component.onCompleted: AttributeModel.setItemId(itemId)
 
     Component {
+        id: sectionDelegate
+        Kirigami.ListSectionHeader {
+            label: section
+        }
+    }
+
+    Component {
         id: attributeDelegate
+        Kirigami.SwipeListItem {
+            separatorVisible: true
 
-        Kirigami.AbstractCard {
-            contentItem: Item {
-                // implicitWidth/Height define the natural width/height of an item if no width or height is specified.
-                // The setting below defines a component's preferred size based on its content
-                implicitWidth: delegateLayout.implicitWidth
-                implicitHeight: delegateLayout.implicitHeight
-                GridLayout {
-                    id: delegateLayout
-                    anchors {
-                        left: parent.left
-                        top: parent.top
-                        right: parent.right
+            actions: [
+                Kirigami.Action {
+                    icon.name: "edit-entry"
+                    onTriggered: {
+                        pageStack.push("qrc:AddEditAttributePage.qml", {
+                            "itemId": itemId,
+                            "isEdit": true,
+                            "attributeIndex": index
+                        })
                     }
-                    rowSpacing: Kirigami.Units.largeSpacing
-                    columnSpacing: Kirigami.Units.largeSpacing
-                    columns: root.wideScreen ? 4 : 2
+                }
+                //, Kirigami.Action {
+                //     icon.name: model.action2Icon
+                //     onTriggered: print("do something")
+                // }
+            ]
 
-                    ColumnLayout{
-                        Controls.Label {
-                            wrapMode: Text.WordWrap
-                            text: "Category: " + category
-                        }
-                        RowLayout{
-                            Kirigami.Heading {
-                                wrapMode: Text.WordWrap
-                                level: 2
-                                text: key + ": "
-                            }
-                            Kirigami.Heading {
-                                Layout.fillWidth: true
-                                wrapMode: Text.WordWrap
-                                text: value
-                            }
-                            Controls.Button {
-                                Layout.alignment: Qt.AlignRight
-                                // Layout.alignment: Qt.AlignBottom
-                                Layout.columnSpan: 2
-                                text: i18n("Edit")
-                                onClicked: {
-                                    pageStack.push("qrc:AddEditAttributePage.qml", {
-                                        "itemId": itemId,
-                                        "isEdit": true,
-                                        "attributeIndex": index
-                                    })
-                                }
-                            }
-                        }
-                    }
+            RowLayout {
+                id: delegateLayout
+                Controls.Label {
+                    wrapMode: Text.WordWrap
+                    text: key + ": "
+                }
+                Controls.Label {
+                    Layout.fillWidth: true
+                    wrapMode: Text.WordWrap
+                    text: value
                 }
             }
         }

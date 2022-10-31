@@ -68,7 +68,6 @@ Kirigami.ScrollablePage {
         Controls.TextField {
             id: dateField
             Kirigami.FormData.label: i18nc("@label:textbox", "Date:")
-            // inputMask: 
         }
         Controls.TextField {
             id: eventField
