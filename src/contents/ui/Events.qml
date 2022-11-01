@@ -39,16 +39,11 @@ Kirigami.ScrollablePage {
 
     Component.onCompleted: EventModel.setItemId(itemId)
 
-    Kirigami.CardsListView {
+    ListView {
         id: layout
         model: EventModel
         delegate: eventDelegate
-
-        headerPositioning: ListView.OverlayHeader
-        header: Kirigami.ItemViewHeader {
-            //backgroundImage.source: "../banner.jpg"
-            title: itemName
-        }
+        focus: true
 
         Kirigami.PlaceholderMessage {
             anchors.centerIn: layout
@@ -62,48 +57,33 @@ Kirigami.ScrollablePage {
     Component {
         id: eventDelegate
 
-        Kirigami.AbstractCard {
-            contentItem: Item {
-                implicitWidth: delegateLayout.implicitWidth
-                implicitHeight: delegateLayout.implicitHeight
+        Kirigami.SwipeListItem {
+            separatorVisible: true
 
-                GridLayout {
-                    id: delegateLayout
-                    anchors {
-                        left: parent.left
-                        top: parent.top
-                        right: parent.right
+            actions: [
+                Kirigami.Action {
+                    icon.name: "edit-entry"
+                    onTriggered: {
+                        pageStack.push("qrc:AddEditEventPage.qml", {
+                            "itemId": itemId,
+                            "isEdit": true,
+                            "eventIndex": index,
+                        })
                     }
-                    rowSpacing: Kirigami.Units.largeSpacing
-                    columnSpacing: Kirigami.Units.largeSpacing
-                    columns: root.wideScreen ? 4 : 2
+                }
+            ]
 
-                    RowLayout {
-                        Kirigami.Heading {
-                            Layout.fillWidth: true
-                            level: 2
-                            text: date
-                        }
-                        Kirigami.Heading {
-                            Layout.fillWidth: true
-                            level: 2
-                            text: event
-                        }
-                        Controls.Button {
-                            Layout.alignment: Qt.AlignRight
-                            // Layout.alignment: Qt.AlignBottom
-                            Layout.columnSpan: 2
-                            text: i18n("Edit")
-                            onClicked: {
-                                console.log(index)
-                                pageStack.push("qrc:AddEditEventPage.qml", {
-                                    "itemId": itemId,
-                                    "isEdit": true,
-                                    "eventIndex": index,
-                                })
-                            }
-                        }
-                    }
+            RowLayout {
+                id: delegateLayout
+
+                Controls.Label {
+                    wrapMode: Text.WordWrap
+                    text: date
+                }
+                Controls.Label {
+                    Layout.fillWidth: true
+                    wrapMode: Text.WordWrap
+                    text: event
                 }
             }
         }

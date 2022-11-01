@@ -35,6 +35,8 @@ Kirigami.ScrollablePage {
         ]
     }
 
+    Component.onCompleted: AttributeModel.setItemId(itemId)
+
     ListView {
         id: layout
         model: AttributeModel
@@ -55,8 +57,6 @@ Kirigami.ScrollablePage {
         }
     }
 
-    Component.onCompleted: AttributeModel.setItemId(itemId)
-
     Component {
         id: sectionDelegate
         Kirigami.ListSectionHeader {
@@ -66,6 +66,7 @@ Kirigami.ScrollablePage {
 
     Component {
         id: attributeDelegate
+
         Kirigami.SwipeListItem {
             separatorVisible: true
 
