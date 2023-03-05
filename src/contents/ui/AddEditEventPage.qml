@@ -78,6 +78,10 @@ Kirigami.ScrollablePage {
             Kirigami.FormData.label: i18nc("@label:textbox", "Cost:")
         }
         Controls.TextField {
+            id: odometerField
+            Kirigami.FormData.label: i18nc("@label:textbox", "Odometer:")
+        }
+        Controls.TextField {
             id: commentField
             Kirigami.FormData.label: i18nc("@label:textbox", "Comment:")
         }
@@ -111,6 +115,7 @@ Kirigami.ScrollablePage {
                         dateField.text,
                         eventField.text,
                         costField.text,
+                        odometerField.text,
                         category,
                         typeBox.currentText,
                         commentField.text
@@ -122,6 +127,7 @@ Kirigami.ScrollablePage {
                         dateField.text,
                         eventField.text,
                         costField.text,
+                        odometerField.text,
                         category,
                         typeBox.currentText,
                         commentField.text

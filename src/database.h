@@ -35,6 +35,7 @@
 #define TYPE "type"
 #define VALUE "value"
 #define YEAR "year"
+#define ODOMETER "odometer"
 
 
 class Database : public QObject
@@ -65,9 +66,9 @@ public:
     Q_INVOKABLE bool deleteAttributeEntry(QString attributeId);
 
     Q_INVOKABLE bool insertEventEntry(QString date, QString task, QString cost,
-        QString category, QString type, QString comment, QString itemId);
-    Q_INVOKABLE bool updateEventEntry(QString eventId, QString date, QString event, QString cost, 
-        QString category, QString type, QString comment);
+        QString odometer, QString category, QString type, QString comment, QString itemId);
+    Q_INVOKABLE bool updateEventEntry(QString eventId, QString date, QString event, QString cost,
+        QString odometer, QString category, QString type, QString comment);
     Q_INVOKABLE bool deleteEventEntry(QString eventId);
 
 private:
