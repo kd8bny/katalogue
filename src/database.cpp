@@ -284,7 +284,7 @@ bool Database::insertEventEntry(QString itemId, QString date, QString event, QSt
     query.prepare(QString(
         "INSERT INTO %1 ( %2, %3, %4, %5, %6, %7, %8, %9) VALUES "
         "(:date, :event, :cost, :odometer, :category, :type, :comment, :itemId)").arg(
-            TABLE_EVENTS, DATE, EVENT, COST, CATEGORY, TYPE, COMMENT, KEY_ITEM_ID));
+            TABLE_EVENTS, DATE, EVENT, COST, ODOMETER, CATEGORY, TYPE, COMMENT, KEY_ITEM_ID));
 
     query.bindValue(":date", date);
     query.bindValue(":event", event);
@@ -300,6 +300,7 @@ bool Database::insertEventEntry(QString itemId, QString date, QString event, QSt
     } else {
         qDebug() << "Error inserting record " << TABLE_EVENTS;
         qDebug() << query.lastError();
+        qDebug() << query.lastQuery();
     }
 
     return isInsert;
@@ -314,7 +315,7 @@ bool Database::updateEventEntry(QString eventId, QString date, QString event, QS
     query.prepare(QString(
         "UPDATE %1 SET %2=:date, %3=:event, %4=:cost, %5=:odometer, %6:category,"
         "%7:type, %8:comment, %9:eventId WHERE id=:eventId").arg(
-            TABLE_EVENTS, DATE, EVENT, COST, CATEGORY, TYPE, COMMENT, KEY_ITEM_ID));
+            TABLE_EVENTS, DATE, EVENT, COST, ODOMETER, CATEGORY, TYPE, COMMENT, KEY_ITEM_ID));
 
     query.bindValue(":date", date);
     query.bindValue(":event", event);

@@ -40,3 +40,5 @@
 # Other/Env
 **.directory
 
+# CMAKE and CPP
+**CMakeFiles
