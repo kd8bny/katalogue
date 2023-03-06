@@ -155,13 +155,16 @@ bool Database::updateItemEntry(QString itemID, QString name, QString make, QStri
     query.bindValue(":model", model);
     query.bindValue(":year", year.toInt());
     query.bindValue(":type", type);
-    query.bindValue(":parent", parent);
+    if(parent != "NULL"){
+        query.bindValue(":parent", parent);
+    }
     query.bindValue(":id", itemID);
 
     if(query.exec()){
         isUpdate = true;
     } else {
         qDebug() << "Error updating record " << query.lastError();
+        qDebug() << query.lastQuery();
     }
 
     return isUpdate;
