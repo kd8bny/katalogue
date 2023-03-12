@@ -62,6 +62,12 @@ Kirigami.ScrollablePage {
 
             actions: [
                 Kirigami.Action {
+                    icon.name: "kdocumentinfo"
+                    onTriggered: {
+                        infoSheet.open({"eventIndex": index})
+                    }
+                },
+                Kirigami.Action {
                     icon.name: "edit-entry"
                     onTriggered: {
                         pageStack.push("qrc:AddEditEventPage.qml", {
@@ -84,6 +90,66 @@ Kirigami.ScrollablePage {
                     Layout.fillWidth: true
                     wrapMode: Text.WordWrap
                     text: event
+                }
+            }
+        }
+    }
+
+    Kirigami.OverlaySheet {
+        id: infoSheet
+
+        header: Kirigami.Heading {
+            text: "Event"
+        }
+
+        footer: Controls.Button {
+            Layout.fillWidth: true
+            text: i18nc("@action:button", "Close")
+            onClicked: {
+                infoSheet.close()
+            }
+        }
+
+        Component.onCompleted: {
+            var recordData = EventModel.getRecord(0)
+            dateField.text = recordData[1]
+            eventField.text = recordData[2]
+            costField.text = recordData[3]
+            categoryField = recordData[5]
+            typeField = recordData[4]
+            commentField.text = recordData[6]
+        }
+
+        ColumnLayout {
+            RowLayout {
+                Layout.fillWidth: true
+                Controls.Label {
+                    id: dateField
+                    wrapMode: Text.WordWrap
+                }
+                Controls.Label {
+                    id: eventField
+                    wrapMode: Text.WordWrap
+                }
+                Controls.Label {
+                    id: costField
+                    wrapMode: Text.WordWrap
+                }
+                Controls.Label {
+                    id: odometerField
+                    wrapMode: Text.WordWrap
+                }
+                Controls.Label {
+                    id: commentField
+                    wrapMode: Text.WordWrap
+                }
+                Controls.Label {
+                    id: categoryField
+                    wrapMode: Text.WordWrap
+                }
+                Controls.Label {
+                    id: typeField
+                    wrapMode: Text.WordWrap
                 }
             }
         }
