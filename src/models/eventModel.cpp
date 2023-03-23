@@ -5,8 +5,8 @@
 EventModel::EventModel(QObject *parent) :
     QSqlQueryModel(parent)
 {
-    modelQuery = QString("SELECT id, %1,%2,%3, %4, %5, %6 FROM %7").arg(
-        DATE, EVENT, COST, TYPE, CATEGORY, COMMENT, TABLE_EVENTS);
+    modelQuery = QString("SELECT id, %1, %2, %3, %4, %5, %6, %7 FROM %8").arg(
+        DATE, EVENT, COST, ODOMETER, TYPE, CATEGORY, COMMENT, TABLE_EVENTS);
 
     this->updateModel();
 }
@@ -34,6 +34,7 @@ QHash<int, QByteArray> EventModel::roleNames() const {
     roles[rDate] = DATE;
     roles[rEvent] = EVENT;
     roles[rCost] = COST;
+    roles[rOdometer] = ODOMETER;
     roles[rType] = TYPE;
     roles[rCategory] = CATEGORY;
     roles[rComment] = COMMENT;
@@ -67,9 +68,10 @@ QVariantList EventModel::getRecord(int row)
     recordData.append(this->data(this->index(row, 1), rDate));
     recordData.append(this->data(this->index(row, 2), rEvent));
     recordData.append(this->data(this->index(row, 3), rCost));
-    recordData.append(this->data(this->index(row, 4), rType));
-    recordData.append(this->data(this->index(row, 5), rCategory));
-    recordData.append(this->data(this->index(row, 6), rComment));
+    recordData.append(this->data(this->index(row, 4), rOdometer));
+    recordData.append(this->data(this->index(row, 5), rType));
+    recordData.append(this->data(this->index(row, 6), rCategory));
+    recordData.append(this->data(this->index(row, 7), rComment));
 
     qDebug() << recordData;
 

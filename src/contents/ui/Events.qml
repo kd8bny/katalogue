@@ -115,9 +115,10 @@ Kirigami.ScrollablePage {
             dateField.text = recordData[1]
             eventField.text = recordData[2]
             costField.text = recordData[3]
-            categoryField = recordData[5]
-            typeField = recordData[4]
-            commentField.text = recordData[6]
+            odometerField.text = recordData[4]
+            typeField = recordData[5]
+            categoryField = recordData[6]
+            commentField.text = recordData[7]
         }
 
         ColumnLayout {

@@ -11,6 +11,7 @@ public:
         rDate,
         rEvent,
         rCost,
+        rOdometer,
         rType,
         rCategory,
         rComment,
