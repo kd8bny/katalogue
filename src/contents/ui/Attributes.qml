@@ -35,6 +35,16 @@ Kirigami.ScrollablePage {
         ]
     }
 
+    function openInfoSheet(index = -1) {
+        var recordData = AttributeModel.getRecord(index)
+
+        attributeInfoSheet.key = recordData[1]
+        attributeInfoSheet.value = recordData[2]
+        attributeInfoSheet.category = recordData[3]
+
+        attributeInfoSheet.open()
+    }
+
     Component.onCompleted: AttributeModel.setItemId(itemId)
 
     ListView {
@@ -74,7 +84,7 @@ Kirigami.ScrollablePage {
                 Kirigami.Action {
                     icon.name: "kdocumentinfo"
                     onTriggered: {
-                        infoSheet.open({"attributeIndex": index})
+                        openInfoSheet(index)
                     }
                 },
                 Kirigami.Action {
@@ -99,52 +109,6 @@ Kirigami.ScrollablePage {
                     Layout.fillWidth: true
                     wrapMode: Text.WordWrap
                     text: value
-                }
-            }
-        }
-    }
-
-    Kirigami.OverlaySheet {
-        id: infoSheet
-
-        // required property string attributeIndex
-
-        // parent: applicationWindow().overlay
-
-        header: Kirigami.Heading {
-            text: "Attribute"
-        }
-
-        footer: Controls.Button {
-            Layout.fillWidth: true
-            text: i18nc("@action:button", "Close")
-            onClicked: {
-                infoSheet.close()
-            }
-        }
-
-        Component.onCompleted: {
-            var recordData = AttributeModel.getRecord(0)
-            keyField.text = recordData[1]
-            valueField.text = recordData[2]
-            categoryField.text = recordData[3]
-        }
-
-        ColumnLayout {
-            Controls.Label {
-                id: categoryField
-                Layout.fillWidth: true
-                wrapMode: Text.WordWrap
-            }
-            RowLayout {
-                Layout.fillWidth: true
-                Controls.Label {
-                    id: keyField
-                    wrapMode: Text.WordWrap
-                }
-                    Controls.Label {
-                    id: valueField
-                    wrapMode: Text.WordWrap
                 }
             }
         }

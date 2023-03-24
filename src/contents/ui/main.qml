@@ -99,6 +99,10 @@ Kirigami.ApplicationWindow {
         id: itemsPage
     }
 
+    AttributeInfoSheet {
+        id: attributeInfoSheet
+    }
+
     EventInfoSheet {
         id: eventInfoSheet
     }
