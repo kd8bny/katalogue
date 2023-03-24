@@ -99,5 +99,9 @@ Kirigami.ApplicationWindow {
         id: itemsPage
     }
 
+    EventInfoSheet {
+        id: eventInfoSheet
+    }
+
     pageStack.initialPage: itemsPage;
 }

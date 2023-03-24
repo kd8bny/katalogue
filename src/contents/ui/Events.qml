@@ -14,6 +14,8 @@ Kirigami.ScrollablePage {
     required property string itemId
     required property string itemName
 
+    property int eventIndex
+
     Layout.fillWidth: true
 
     title: i18n("Events")
@@ -36,6 +38,21 @@ Kirigami.ScrollablePage {
             }
         ]
     }
+
+    function openInfoSheet(index = -1) {
+        var recordData = EventModel.getRecord(index)
+
+        eventInfoSheet.date = recordData[1]
+        eventInfoSheet.event = recordData[2]
+        eventInfoSheet.cost = recordData[3]
+        eventInfoSheet.odometer = recordData[4]
+        eventInfoSheet.type = recordData[5]
+        eventInfoSheet.category = recordData[6]
+        eventInfoSheet.comment = recordData[7]
+
+        eventInfoSheet.open()
+    }
+
 
     Component.onCompleted: EventModel.setItemId(itemId)
 
@@ -64,7 +81,7 @@ Kirigami.ScrollablePage {
                 Kirigami.Action {
                     icon.name: "kdocumentinfo"
                     onTriggered: {
-                        infoSheet.open({"eventIndex": index})
+                        openInfoSheet(index)
                     }
                 },
                 Kirigami.Action {
@@ -90,67 +107,6 @@ Kirigami.ScrollablePage {
                     Layout.fillWidth: true
                     wrapMode: Text.WordWrap
                     text: event
-                }
-            }
-        }
-    }
-
-    Kirigami.OverlaySheet {
-        id: infoSheet
-
-        header: Kirigami.Heading {
-            text: "Event"
-        }
-
-        footer: Controls.Button {
-            Layout.fillWidth: true
-            text: i18nc("@action:button", "Close")
-            onClicked: {
-                infoSheet.close()
-            }
-        }
-
-        Component.onCompleted: {
-            var recordData = EventModel.getRecord(0)
-            dateField.text = recordData[1]
-            eventField.text = recordData[2]
-            costField.text = recordData[3]
-            odometerField.text = recordData[4]
-            typeField = recordData[5]
-            categoryField = recordData[6]
-            commentField.text = recordData[7]
-        }
-
-        ColumnLayout {
-            RowLayout {
-                Layout.fillWidth: true
-                Controls.Label {
-                    id: dateField
-                    wrapMode: Text.WordWrap
-                }
-                Controls.Label {
-                    id: eventField
-                    wrapMode: Text.WordWrap
-                }
-                Controls.Label {
-                    id: costField
-                    wrapMode: Text.WordWrap
-                }
-                Controls.Label {
-                    id: odometerField
-                    wrapMode: Text.WordWrap
-                }
-                Controls.Label {
-                    id: commentField
-                    wrapMode: Text.WordWrap
-                }
-                Controls.Label {
-                    id: categoryField
-                    wrapMode: Text.WordWrap
-                }
-                Controls.Label {
-                    id: typeField
-                    wrapMode: Text.WordWrap
                 }
             }
         }
