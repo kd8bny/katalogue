@@ -66,6 +66,15 @@ Kirigami.ApplicationWindow {
                     pageStack.push('qrc:Items.qml')
                 }
             },
+            Kirigami.Action {
+                text: i18n("Archive")
+                tooltip: i18n("Archived Items")
+                icon.name: "add-files-to-archive-symbolic"
+                onTriggered: {
+                    pageStack.clear()
+                    pageStack.push('qrc:Archive.qml')
+                }
+            },
             // Kirigami.Action {
             //     text: i18n("Todo")
             //     icon.name: "task-new"
@@ -95,8 +104,12 @@ Kirigami.ApplicationWindow {
         id: contextDrawer
     }
 
-    Items{
+    Items {
         id: itemsPage
+    }
+
+    Archive {
+        id: archivePage
     }
 
     AttributeInfoSheet {

@@ -7,6 +7,7 @@
         <file alias="main.qml">contents/ui/main.qml</file>
         <file alias="About.qml">contents/ui/About.qml</file>
         <file alias="Attributes.qml">contents/ui/Attributes.qml</file>
+        <file alias="Archive.qml">contents/ui/Archive.qml</file>
         <file alias="Details.qml">contents/ui/Details.qml</file>
         <file alias="Events.qml">contents/ui/Events.qml</file>
         <file alias="Items.qml">contents/ui/Items.qml</file>
@@ -16,5 +17,6 @@
         <file alias="AddEditAttributePage.qml">contents/ui/AddEditAttributePage.qml</file>
         <file alias="AddEditEventPage.qml">contents/ui/AddEditEventPage.qml</file>
         <file alias="EventInfoSheet.qml">contents/sheets/EventInfoSheet.qml</file>
+        <file alias="AttributeInfoSheet.qml">contents/sheets/AttributeInfoSheet.qml</file>
     </qresource>
 </RCC>

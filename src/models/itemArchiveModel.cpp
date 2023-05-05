@@ -1,19 +1,19 @@
-#include "itemModel.h"
+#include "itemArchiveModel.h"
 #include "database.h"
 
 
-ItemModel::ItemModel(QObject *parent) :
+ItemArchiveModel::ItemArchiveModel(QObject *parent) :
     QSqlQueryModel(parent)
 {
     this->updateModel();
 }
 
-ItemModel::~ItemModel()
+ItemArchiveModel::~ItemArchiveModel()
 {
 
 }
 
-QVariant ItemModel::data(const QModelIndex & index, int role) const {
+QVariant ItemArchiveModel::data(const QModelIndex & index, int role) const {
 
     // Define the column number, on the role of number
     int columnId = role - Qt::UserRole - 1;
@@ -23,7 +23,7 @@ QVariant ItemModel::data(const QModelIndex & index, int role) const {
     return QSqlQueryModel::data(modelIndex, Qt::DisplayRole);
 }
 
-QHash<int, QByteArray> ItemModel::roleNames() const {
+QHash<int, QByteArray> ItemArchiveModel::roleNames() const {
 
     QHash<int, QByteArray> roles;
     roles[rID] = "id";
@@ -38,18 +38,18 @@ QHash<int, QByteArray> ItemModel::roleNames() const {
     return roles;
 }
 
-void ItemModel::updateModel()
+void ItemArchiveModel::updateModel()
 {
-    this->setQuery(QString("SELECT id, %1, %2, %3, %4, %5, %6 FROM %7 WHERE %8 IS NULL AND %6 IS 0").arg(
+    this->setQuery(QString("SELECT id, %1, %2, %3, %4, %5, %6 FROM %7 WHERE %8 IS NULL AND %6 IS 1").arg(
             NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, TABLE_ITEMS, KEY_ITEM_ID));
 }
 
-int ItemModel::getId(int row)
+int ItemArchiveModel::getId(int row)
 {
     return this->data(this->index(row, 0), rID).toInt();
 }
 
-QVariantList ItemModel::getRecord(int row)
+QVariantList ItemArchiveModel::getRecord(int row)
 {
     QVariantList recordData;
 
