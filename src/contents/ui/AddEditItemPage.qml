@@ -37,8 +37,7 @@ Kirigami.ScrollablePage {
         subtitle: i18n("Are you sure you want to delete Item")
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: {
-            Database.deleteItemEntry(ItemModel.getId(itemIndex))
-            ItemModel.updateModel()
+            ItemModel.deleteRecord(ItemModel.getId(itemIndex))
             pageStack.clear()
             pageStack.push("qrc:Items.qml")
         }
@@ -151,7 +150,7 @@ Kirigami.ScrollablePage {
                     archived,
                     parentId
                 )
-                // signal dataChanged()
+
                 //TODO check results of insert
                 pageStack.pop()
             }

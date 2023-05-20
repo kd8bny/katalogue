@@ -24,15 +24,15 @@ public:
     explicit ItemModel(QObject *parent = nullptr);
     ~ItemModel();
 
-
     // Override the method that will return the data
     QVariant data(const QModelIndex &index, int role) const override;
 
     Q_INVOKABLE int getId(int row);
-    // Item getRecord(int row);
+    Item getRecord(int row);
     Q_INVOKABLE QVariantList getRecordAsList(int row);
     Q_INVOKABLE bool setRecord(int itemID, QString name, QString make,
         QString model, int year, QString type, int archived, QString parent);
+    Q_INVOKABLE bool deleteRecord(int itemId);
 
 protected:
     QHash<int, QByteArray> roleNames() const override;
@@ -41,7 +41,6 @@ signals:
     void dataChanged();
 
 public slots:
-    // void dataChanged();
     void refresh();
 
 private:

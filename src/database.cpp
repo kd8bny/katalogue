@@ -201,13 +201,13 @@ bool Database::archiveItemEntry(QString itemId, QString archived)
     return isSuccess;
 }
 
-bool Database::deleteItemEntry(QString itemId)
+bool Database::deleteItemEntry(int itemId)
 {
     bool isDelete = false;
     QSqlQuery query;
 
     query.prepare(QString("DELETE FROM %1 WHERE id=:itemId").arg(TABLE_ITEMS));
-    query.bindValue(":itemId", itemId.toInt());
+    query.bindValue(":itemId", itemId);
 
     if(query.exec()){
         isDelete = true;

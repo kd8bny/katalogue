@@ -102,3 +102,17 @@ bool ItemModel::setRecord(int itemID, QString name, QString make,
     return success;
 
 }
+
+bool ItemModel::deleteRecord(int itemId)
+{
+    Database db;
+
+    bool success = false;
+
+    success = db.deleteItemEntry(itemId);
+
+    if (success)
+        emit dataChanged();
+
+    return success;
+}
