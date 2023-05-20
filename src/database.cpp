@@ -65,7 +65,7 @@ QVariantList Database::getItemParents()
 {
     QSqlQuery query;
     QVariantList itemParents;
-    query.prepare(QString( 
+    query.prepare(QString(
         "SELECT DISTINCT %1 FROM %2 WHERE %3 IS NULL").arg(NAME, TABLE_ITEMS,
             KEY_ITEM_ID));
 
@@ -150,7 +150,7 @@ bool Database::updateItemEntry(Item item)
     QSqlQuery query;
     qDebug() << item.getMake();
 
-    // TODO 
+    // TODO
 
     // query.prepare(QString("UPDATE %1 SET %2=:name, %3=:make, %4=:model, "
     //     "%5=:year, %6=:type, %7=:parent WHERE id=:id").arg(
@@ -176,13 +176,13 @@ bool Database::updateItemEntry(Item item)
     return isUpdate;
 }
 
-bool Database::deleteItemEntry(int itemId)
+bool Database::deleteItemEntry(int id)
 {
     bool isDelete = false;
     QSqlQuery query;
 
     query.prepare(QString("DELETE FROM %1 WHERE id=:itemId").arg(TABLE_ITEMS));
-    query.bindValue(":itemId", itemId);
+    query.bindValue(":itemId", id);
 
     if(query.exec()){
         isDelete = true;

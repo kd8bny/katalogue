@@ -59,10 +59,7 @@ public:
 
     bool insertItemEntry(Item item);
     bool updateItemEntry(Item item);
-
-    // Q_INVOKABLE bool updateItemEntry(QString itemID, QString name, QString make,
-    //     QString model, QString year, QString type, QString parent);
-    bool deleteItemEntry(int itemId);
+    bool deleteItemEntry(int id);
 
     Q_INVOKABLE bool insertAttributeEntry(QString itemId, QString label,
         QString key, QString value);
