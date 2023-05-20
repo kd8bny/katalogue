@@ -113,7 +113,6 @@ QVariantList Database::getEventCategories()
 }
 
 bool Database::insertItemEntry(Item item)
-    //QString name, QString make, QString model, QString year, QString type, QString parent)
 {
     bool isInsert = false;
     QSqlQuery query;
@@ -143,35 +142,33 @@ bool Database::insertItemEntry(Item item)
 }
 
 bool Database::updateItemEntry(Item item)
-// bool Database::updateItemEntry(QString itemID, QString name, QString make, QString model,
-//     QString year, QString type, QString parent)
 {
     bool isUpdate = false;
     QSqlQuery query;
-    qDebug() << item.getMake();
 
-    // TODO
+    query.prepare(QString("UPDATE %1 SET %2=:name, %3=:make, %4=:model, "
+        "%5=:year, %6=:type, %7=:archived, %8=:parent WHERE id=:id").arg(
+            TABLE_ITEMS, NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, KEY_ITEM_ID));
 
-    // query.prepare(QString("UPDATE %1 SET %2=:name, %3=:make, %4=:model, "
-    //     "%5=:year, %6=:type, %7=:parent WHERE id=:id").arg(
-    //         TABLE_ITEMS, NAME, MAKE, MODEL, YEAR, TYPE, KEY_ITEM_ID));
+    query.bindValue(":name", item.getName());
+    query.bindValue(":make", item.getMake());
+    query.bindValue(":model", item.getModel());
+    query.bindValue(":year", item.getYear());
+    query.bindValue(":type", item.getType());
+    query.bindValue(":archived", item.getArchived());
 
-    // query.bindValue(":name", name);
-    // query.bindValue(":make", make);
-    // query.bindValue(":model", model);
-    // query.bindValue(":year", year.toInt());
-    // query.bindValue(":type", type);
-    // if(parent != "NULL"){
-    //     query.bindValue(":parent", parent);
-    // }
-    // query.bindValue(":id", itemID);
+    if (item.getParent() != -1) {
+        query.bindValue(":parent", item.getParent());
+    }
 
-    // if(query.exec()){
-    //     isUpdate = true;
-    // } else {
-    //     qDebug() << "Error updating record " << query.lastError();
-    //     qDebug() << query.lastQuery();
-    // }
+    query.bindValue(":id", item.getId());
+
+    if (query.exec()) {
+        isUpdate = true;
+    } else {
+        qDebug() << "Error updating record " << query.lastError();
+        qDebug() << query.lastQuery();
+    }
 
     return isUpdate;
 }

@@ -10,7 +10,7 @@ import com.kd8bny.katalogue 1.0
 Kirigami.ScrollablePage {
     id: addEditItemPage
 
-    property int itemIndex
+    property int itemIndex: -1
     property bool isEdit: false
     property bool isArchived: false
 
@@ -121,10 +121,6 @@ Kirigami.ScrollablePage {
             text: (isEdit) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
             enabled: nameField.text.length > 0
             onClicked: {
-                var itemId = -1
-                if (isEdit) {
-                    var item = ItemModel.getId(itemIndex)
-                }
                 var type = ""
                 if (typeBox.find(typeBox.editText) === -1) {
                     type = typeBox.editText
@@ -141,7 +137,7 @@ Kirigami.ScrollablePage {
                 }
 
                 ItemModel.setRecord(
-                    itemId,
+                    itemIndex,
                     nameField.text,
                     makeField.text,
                     modelField.text,

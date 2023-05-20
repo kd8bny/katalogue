@@ -30,7 +30,7 @@ public:
     Q_INVOKABLE int getId(int row);
     Item getRecord(int row);
     Q_INVOKABLE QVariantList getRecordAsList(int row);
-    Q_INVOKABLE bool setRecord(int itemID, QString name, QString make,
+    Q_INVOKABLE bool setRecord(int itemIndex, QString name, QString make,
         QString model, int year, QString type, int archived, QString parent);
     Q_INVOKABLE bool deleteRecord(int itemId);
 

@@ -72,11 +72,12 @@ QVariantList ItemModel::getRecordAsList(int row)
     return item.asList();
 }
 
-bool ItemModel::setRecord(int itemID, QString name, QString make,
+bool ItemModel::setRecord(int itemIndex, QString name, QString make,
     QString model, int year, QString type, int archived, QString parent)
 {
     Database db;
-    Item item(itemID);
+    // itemIndex defaults to -1 for new entries.
+    Item item(this->getId(itemIndex));
 
     bool success = false;
 
@@ -88,7 +89,7 @@ bool ItemModel::setRecord(int itemID, QString name, QString make,
     item.setArchived(archived);
     item.setParent(parent);
 
-    if (itemID == -1) {
+    if (itemIndex == -1) {
         success = db.insertItemEntry(item);
         qDebug() << "itemModel | Inserting Entry | " << success;
     } else {
