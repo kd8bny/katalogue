@@ -1,11 +1,12 @@
 #include "itemModel.h"
-#include "database.h"
 
 
 ItemModel::ItemModel(QObject *parent) :
     QSqlQueryModel(parent)
 {
-    this->updateModel();
+    QObject::connect(this, SIGNAL(dataChanged()), this, SLOT(refresh()));
+
+    this->refresh();
 }
 
 ItemModel::~ItemModel()
@@ -13,7 +14,7 @@ ItemModel::~ItemModel()
 
 }
 
-QVariant ItemModel::data(const QModelIndex & index, int role) const {
+QVariant ItemModel::data(const QModelIndex &index, int role) const {
 
     // Define the column number, on the role of number
     int columnId = role - Qt::UserRole - 1;
@@ -38,10 +39,9 @@ QHash<int, QByteArray> ItemModel::roleNames() const {
     return roles;
 }
 
-void ItemModel::updateModel()
+void ItemModel::refresh()
 {
-    this->setQuery(QString("SELECT id, %1, %2, %3, %4, %5, %6 FROM %7 WHERE %8 IS NULL AND %6 IS 0").arg(
-            NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, TABLE_ITEMS, KEY_ITEM_ID));
+    this->setQuery(this->modelQuery);
 }
 
 int ItemModel::getId(int row)
@@ -49,18 +49,56 @@ int ItemModel::getId(int row)
     return this->data(this->index(row, 0), rID).toInt();
 }
 
-QVariantList ItemModel::getRecord(int row)
+Item ItemModel::getRecord(int row)
 {
-    QVariantList recordData;
+    int id = this->data(this->index(row, 0), rID).toInt();
+    Item item(id);
 
-    recordData.append(this->data(this->index(row, 0), rID).toInt());
-    recordData.append(this->data(this->index(row, 1), rNAME));
-    recordData.append(this->data(this->index(row, 2), rMAKE));
-    recordData.append(this->data(this->index(row, 3), rMODEL));
-    recordData.append(this->data(this->index(row, 4), rYEAR));
-    recordData.append(this->data(this->index(row, 5), rTYPE));
-    recordData.append(this->data(this->index(row, 6), rARCHIVED).toInt());
-    recordData.append(this->data(this->index(row, 7), rPARENT).toInt());
+    item.setName(this->data(this->index(row, 1), rNAME).toString());
+    item.setMake(this->data(this->index(row, 2), rMAKE).toString());
+    item.setModel(this->data(this->index(row, 3), rMODEL).toString());
+    item.setYear(this->data(this->index(row, 4), rYEAR).toInt());
+    item.setType(this->data(this->index(row, 5), rTYPE).toString());
+    item.setArchived(this->data(this->index(row, 6), rARCHIVED).toInt());
+    item.setParent(this->data(this->index(row, 7), rPARENT).toString());
 
-    return recordData;
+    return item;
+}
+
+QVariantList ItemModel::getRecordAsList(int row)
+{
+    Item item = this->getRecord(row);
+
+    return item.asList();
+}
+
+bool ItemModel::setRecord(int itemID, QString name, QString make,
+    QString model, int year, QString type, int archived, QString parent)
+{
+    Database db;
+    Item item(itemID);
+
+    bool success = false;
+
+    item.setName(name);
+    item.setMake(make);
+    item.setModel(model);
+    item.setYear(year);
+    item.setType(type);
+    item.setArchived(archived);
+    item.setParent(parent);
+
+    if (itemID == -1) {
+        success = db.insertItemEntry(item);
+        qDebug() << "itemModel | Inserting Entry | " << success;
+    } else {
+        success = db.updateItemEntry(item);
+        qDebug() << "itemModel | Updating Entry | " << success;
+    }
+
+    if (success)
+        emit dataChanged();
+
+    return success;
+
 }

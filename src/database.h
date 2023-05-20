@@ -9,6 +9,11 @@
 #include <QDebug>
 #include <QUuid>
 
+#include "data/item.h"
+
+#ifndef DATABASE_H
+#define DATABASE_H
+
 #define DATABASE_TYPE "QSQLITE"
 #define DATABASE_NAME "katalogue.db"
 #define USER_VERSION 1
@@ -52,10 +57,13 @@ public:
     Q_INVOKABLE QVariantList getAttributeCategories();
     Q_INVOKABLE QVariantList getEventCategories();
 
-    Q_INVOKABLE bool insertItemEntry(QString name, QString make, QString model,
-        QString year, QString category, QString parent);
-    Q_INVOKABLE bool updateItemEntry(QString itemID, QString name, QString make,
-        QString model, QString year, QString type, QString parent);
+    bool insertItemEntry(Item item);
+    bool updateItemEntry(Item item);
+
+    // Q_INVOKABLE bool insertItemEntry(QString name, QString make, QString model,
+    //     QString year, QString category, QString parent);
+    // Q_INVOKABLE bool updateItemEntry(QString itemID, QString name, QString make,
+    //     QString model, QString year, QString type, QString parent);
     Q_INVOKABLE bool archiveItemEntry(QString itemID, QString archived);
     Q_INVOKABLE bool deleteItemEntry(QString itemId);
 
@@ -74,9 +82,10 @@ public:
 private:
     QSqlDatabase db;
 
-private:
     bool initializeSchema();
     // void initializeDefaults();
     void initializeDemoEntry();
     // bool insertDefaultEntry(QString type, QString value);
 };
+
+#endif

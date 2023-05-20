@@ -1,5 +1,5 @@
-#include "database.h"
 #include "eventModel.h"
+#include "database.h"
 
 
 EventModel::EventModel(QObject *parent) :

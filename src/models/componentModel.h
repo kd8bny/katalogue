@@ -18,7 +18,7 @@ public:
         rPARENT
     };
 
-    explicit ComponentModel(QString itemId = "", QObject *parent = nullptr);
+    explicit ComponentModel(QObject *parent = nullptr);
     ~ComponentModel();
     void refresh();
 

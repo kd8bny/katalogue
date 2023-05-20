@@ -1,6 +1,9 @@
 #include <QObject>
 #include <QSqlQueryModel>
 
+#include "../database.h"
+#include "data/item.h"
+
 
 class ItemModel: public QSqlQueryModel
 {
@@ -20,18 +23,30 @@ public:
 
     explicit ItemModel(QObject *parent = nullptr);
     ~ItemModel();
-    void refresh();
+
 
     // Override the method that will return the data
     QVariant data(const QModelIndex &index, int role) const override;
 
+    Q_INVOKABLE int getId(int row);
+    // Item getRecord(int row);
+    Q_INVOKABLE QVariantList getRecordAsList(int row);
+    Q_INVOKABLE bool setRecord(int itemID, QString name, QString make,
+        QString model, int year, QString type, int archived, QString parent);
+
 protected:
     QHash<int, QByteArray> roleNames() const override;
 
-//signals:
+signals:
+    void dataChanged();
 
 public slots:
-    void updateModel();
-    int getId(int row);
-    QVariantList getRecord(int row);
+    // void dataChanged();
+    void refresh();
+
+private:
+    const QString modelQuery = QString(
+        "SELECT id, %1, %2, %3, %4, %5, %6 FROM %7 WHERE %8 IS NULL AND %6 IS 0"
+            ).arg(NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, TABLE_ITEMS, KEY_ITEM_ID);
+
 };

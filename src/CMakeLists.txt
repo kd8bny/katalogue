@@ -10,6 +10,8 @@ add_executable(katalogue
     models/componentModel.cpp
     models/eventModel.cpp
     models/itemModel.cpp
+    models/itemArchiveModel.cpp
+    data/item.cpp
     resources.qrc)
 
 target_link_libraries(katalogue

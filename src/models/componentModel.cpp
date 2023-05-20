@@ -2,7 +2,7 @@
 #include "database.h"
 
 
-ComponentModel::ComponentModel(QString itemId, QObject *parent) :
+ComponentModel::ComponentModel(QObject *parent) :
     QSqlQueryModel(parent)
 {
     modelQuery = QString("SELECT id, %1, %2, %3, %4, %5, %6 FROM %7").arg(

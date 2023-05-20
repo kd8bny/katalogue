@@ -46,15 +46,14 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
                          // The license this code is released under.
                          KAboutLicense::GPL,
                          // Copyright Statement.
-                         i18n("(c) 2022"));
+                         i18n("(c) 2023"));
 
-    aboutData.addAuthor(i18nc("@info:credit", "AUTHOR"), i18nc("@info:credit", "Author Role"), QStringLiteral("kd8bny@gmail.com"), QStringLiteral("https://yourwebsite.com"));
+    aboutData.addAuthor(i18nc("@info:credit", "Daryl Bennett"), i18nc("@info:credit", "Developer"), QStringLiteral("kd8bny@gmail.com"));
     KAboutData::setApplicationData(aboutData);
 
     // Set Application Directories
     // QProcessEnvironment::systemEnvironment();
-    QString qPath = QProcessEnvironment::systemEnvironment().value(
-        "KATALOGUE_DATA", "");
+    QString qPath = QProcessEnvironment::systemEnvironment().value("KATALOGUE_DATA", "");
     if(qPath.length() == 0){
         qPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     }

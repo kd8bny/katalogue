@@ -28,18 +28,6 @@ Kirigami.ScrollablePage {
                 deleteDialog.open()
             }
         }
-        contextualActions: [
-            Kirigami.Action {
-                enabled: isEdit
-                text: (isArchived) ? i18n("Unarchive") : i18n("Archive")
-                // icon.name: "delete"
-                tooltip: i18n("Archive Item")
-                onTriggered: {
-                    isArchived = !isArchived
-                    Database.archiveItemEntry(ItemModel.getId(itemIndex), isArchived)
-                }
-            }
-        ]
     }
 
     Kirigami.PromptDialog {
@@ -61,7 +49,7 @@ Kirigami.ScrollablePage {
 
     Component.onCompleted: {
         if (isEdit) {
-            var recordData = ItemModel.getRecord(itemIndex)
+            var recordData = ItemModel.getRecordAsList(itemIndex)
 
             nameField.text = recordData[1]
             makeField.text = recordData[2]
@@ -71,6 +59,7 @@ Kirigami.ScrollablePage {
             typeBox.find(recordData[5])
 
             if (recordData[6]){
+                itemArchived.checked = recordData[6]
                 isArchived = true
             }
 
@@ -107,10 +96,10 @@ Kirigami.ScrollablePage {
         Controls.ComboBox {
             id: typeBox
             editable: true
-            Kirigami.FormData.label: i18nc("@label:textbox", "Item Type:")
+            Kirigami.FormData.label: i18nc("@label:textbox", "Type:")
             model: types
         }
-        Controls.CheckBox {
+        Controls.Switch {
             id: itemParentEnabled
             Kirigami.FormData.label: i18nc("@label:textbox", "Component of Item:")
         }
@@ -121,6 +110,11 @@ Kirigami.ScrollablePage {
             model: Database.getItemParents()
             Kirigami.FormData.label: i18nc("@label:textbox", "Component of:")
         }
+        Controls.Switch {
+            id: itemArchived
+            enabled: isEdit
+            Kirigami.FormData.label: i18nc("@label:textbox", (isArchived) ? i18n("Unarchive") : i18n("Archive"))
+        }
 
         Controls.Button {
             id: doneButton
@@ -128,43 +122,41 @@ Kirigami.ScrollablePage {
             text: (isEdit) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
             enabled: nameField.text.length > 0
             onClicked: {
+                var itemId = -1
+                if (isEdit) {
+                    var item = ItemModel.getId(itemIndex)
+                }
                 var type = ""
-                if (typeBox.find(typeBox.editText) === -1){
+                if (typeBox.find(typeBox.editText) === -1) {
                     type = typeBox.editText
-                }else{
+                } else {
                     type = typeBox.currentText
                 }
-
+                var archived = false
+                if (itemArchived.checked) {
+                    archived = true
+                }
                 var parentId = "NULL"
-                if (itemParentEnabled.checked){
+                if (itemParentEnabled.checked) {
                     parentId = ItemModel.getId(itemParentBox.currentIndex)
                 }
 
-                if(isEdit){
-                     Database.updateItemEntry(
-                        ItemModel.getId(itemIndex),
-                        nameField.text,
-                        makeField.text,
-                        modelField.text,
-                        yearField.text,
-                        type,
-                        parentId
-                    )
-                }
-                else{
-                    Database.insertItemEntry(
-                        nameField.text,
-                        makeField.text,
-                        modelField.text,
-                        yearField.text,
-                        type,
-                        parentId
-                    )
-                }
-                ItemModel.updateModel()
+                ItemModel.setRecord(
+                    itemId,
+                    nameField.text,
+                    makeField.text,
+                    modelField.text,
+                    parseInt(yearField.text),
+                    type,
+                    archived,
+                    parentId
+                )
+                // signal dataChanged()
+                //TODO check results of insert
                 pageStack.pop()
             }
         }
+
         Controls.Button {
             id: cancelButton
             Layout.fillWidth: true

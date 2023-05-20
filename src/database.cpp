@@ -5,6 +5,7 @@ Database::Database(QObject *parent)
 {
 
 }
+
 Database::~Database()
 {
 
@@ -111,8 +112,8 @@ QVariantList Database::getEventCategories()
     return categories;
 }
 
-bool Database::insertItemEntry(QString name, QString make, QString model,
-    QString year, QString type, QString parent)
+bool Database::insertItemEntry(Item item)
+    //QString name, QString make, QString model, QString year, QString type, QString parent)
 {
     bool isInsert = false;
     QSqlQuery query;
@@ -121,17 +122,18 @@ bool Database::insertItemEntry(QString name, QString make, QString model,
         "VALUES (:name, :make, :model, :year, :type, :archived, :parent)").arg(
             TABLE_ITEMS, NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, KEY_ITEM_ID));
 
-    query.bindValue(":name", name);
-    query.bindValue(":make", make);
-    query.bindValue(":model", model);
-    query.bindValue(":year", year.toInt());
-    query.bindValue(":type", type);
-    query.bindValue(":archived", 0);
-    if(parent != "NULL"){
-        query.bindValue(":parent", parent);
+    query.bindValue(":name", item.getName());
+    query.bindValue(":make", item.getMake());
+    query.bindValue(":model", item.getModel());
+    query.bindValue(":year", item.getYear());
+    query.bindValue(":type", item.getType());
+    query.bindValue(":archived", item.getArchived());
+    if(item.getParent() != -1){
+        query.bindValue(":parent", item.getParent());
     }
 
-    if(query.exec()){
+    if (query.exec())
+    {
         isInsert = true;
     } else {
         qDebug() << "Error inserting record " << query.lastError();
@@ -140,32 +142,36 @@ bool Database::insertItemEntry(QString name, QString make, QString model,
     return isInsert;
 }
 
-bool Database::updateItemEntry(QString itemID, QString name, QString make, QString model,
-    QString year, QString type, QString parent)
+bool Database::updateItemEntry(Item item)
+// bool Database::updateItemEntry(QString itemID, QString name, QString make, QString model,
+//     QString year, QString type, QString parent)
 {
     bool isUpdate = false;
     QSqlQuery query;
+    qDebug() << item.getMake();
 
-    query.prepare(QString("UPDATE %1 SET %2=:name, %3=:make, %4=:model, "
-        "%5=:year, %6=:type, %7=:parent WHERE id=:id").arg(
-            TABLE_ITEMS, NAME, MAKE, MODEL, YEAR, TYPE, KEY_ITEM_ID));
+    // TODO 
 
-    query.bindValue(":name", name);
-    query.bindValue(":make", make);
-    query.bindValue(":model", model);
-    query.bindValue(":year", year.toInt());
-    query.bindValue(":type", type);
-    if(parent != "NULL"){
-        query.bindValue(":parent", parent);
-    }
-    query.bindValue(":id", itemID);
+    // query.prepare(QString("UPDATE %1 SET %2=:name, %3=:make, %4=:model, "
+    //     "%5=:year, %6=:type, %7=:parent WHERE id=:id").arg(
+    //         TABLE_ITEMS, NAME, MAKE, MODEL, YEAR, TYPE, KEY_ITEM_ID));
 
-    if(query.exec()){
-        isUpdate = true;
-    } else {
-        qDebug() << "Error updating record " << query.lastError();
-        qDebug() << query.lastQuery();
-    }
+    // query.bindValue(":name", name);
+    // query.bindValue(":make", make);
+    // query.bindValue(":model", model);
+    // query.bindValue(":year", year.toInt());
+    // query.bindValue(":type", type);
+    // if(parent != "NULL"){
+    //     query.bindValue(":parent", parent);
+    // }
+    // query.bindValue(":id", itemID);
+
+    // if(query.exec()){
+    //     isUpdate = true;
+    // } else {
+    //     qDebug() << "Error updating record " << query.lastError();
+    //     qDebug() << query.lastQuery();
+    // }
 
     return isUpdate;
 }
@@ -446,7 +452,7 @@ bool Database::initializeSchema()
     // }
 
     // this->initializeDefaults();
-    this->initializeDemoEntry();
+    // this->initializeDemoEntry();
     isSchemaCreate = true;
 
     return isSchemaCreate;
@@ -469,14 +475,14 @@ bool Database::initializeSchema()
 //     }
 // }
 
-void Database::initializeDemoEntry()
-{
-    this->insertItemEntry(
-        "My Vehicle", "Ford", "Mustang", "2000", "Auto", "NULL");
+// void Database::initializeDemoEntry()
+// {
+//     this->insertItemEntry(
+//         "My Vehicle", "Ford", "Mustang", "2000", "Auto", "NULL");
 
-    this->insertAttributeEntry("1", "Engine", "4.6L V8", "Engine Specs");
-    this->insertEventEntry("1", "2022-05-22", "Idle Pulley", "100.00", "123456.7", "Auto",
-        "maintenance", "I fixed this thing");
-    this->insertEventEntry("1", "2022-06-22", "Check Oil", "0.00", "123456.7", "Auto",
-        "log", "Seems to be 2qt low");
-}
+//     this->insertAttributeEntry("1", "Engine", "4.6L V8", "Engine Specs");
+//     this->insertEventEntry("1", "2022-05-22", "Idle Pulley", "100.00", "123456.7", "Auto",
+//         "maintenance", "I fixed this thing");
+//     this->insertEventEntry("1", "2022-06-22", "Check Oil", "0.00", "123456.7", "Auto",
+//         "log", "Seems to be 2qt low");
+// }
