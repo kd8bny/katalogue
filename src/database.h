@@ -62,7 +62,6 @@ public:
 
     // Q_INVOKABLE bool updateItemEntry(QString itemID, QString name, QString make,
     //     QString model, QString year, QString type, QString parent);
-    Q_INVOKABLE bool archiveItemEntry(QString itemID, QString archived);
     bool deleteItemEntry(int itemId);
 
     Q_INVOKABLE bool insertAttributeEntry(QString itemId, QString label,

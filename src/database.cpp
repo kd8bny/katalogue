@@ -176,31 +176,6 @@ bool Database::updateItemEntry(Item item)
     return isUpdate;
 }
 
-bool Database::archiveItemEntry(QString itemId, QString archived)
-{
-    bool isSuccess = false;
-    int archivedInt = 0;
-    QSqlQuery query;
-
-    query.prepare(QString("UPDATE %1 SET %2=:archived WHERE id=:id").arg(
-            TABLE_ITEMS, ARCHIVED));
-
-    if (archived == "true"){
-        archivedInt = 1;
-    }
-
-    query.bindValue(":archived", archivedInt);
-    query.bindValue(":id", itemId);
-
-    if(query.exec()){
-        isSuccess = true;
-    } else {
-        qDebug() << "Error archiving record " << query.lastError();
-    }
-
-    return isSuccess;
-}
-
 bool Database::deleteItemEntry(int itemId)
 {
     bool isDelete = false;
