@@ -31,7 +31,7 @@ public:
     Item getRecord(int row);
     Q_INVOKABLE QVariantList getRecordAsList(int row);
     Q_INVOKABLE bool setRecord(int itemIndex, QString name, QString make,
-        QString model, int year, QString type, int archived, QString parent);
+        QString model, int year, QString type, int archived, int parent);
     Q_INVOKABLE bool deleteRecord(int itemId);
 
 protected:

@@ -60,7 +60,7 @@ Item ItemModel::getRecord(int row)
     item.setYear(this->data(this->index(row, 4), rYEAR).toInt());
     item.setType(this->data(this->index(row, 5), rTYPE).toString());
     item.setArchived(this->data(this->index(row, 6), rARCHIVED).toInt());
-    item.setParent(this->data(this->index(row, 7), rPARENT).toString());
+    item.setParent(this->data(this->index(row, 7), rPARENT).toInt());
 
     return item;
 }
@@ -73,7 +73,7 @@ QVariantList ItemModel::getRecordAsList(int row)
 }
 
 bool ItemModel::setRecord(int itemIndex, QString name, QString make,
-    QString model, int year, QString type, int archived, QString parent)
+    QString model, int year, QString type, int archived, int parent)
 {
     Database db;
     // itemIndex defaults to -1 for new entries.
