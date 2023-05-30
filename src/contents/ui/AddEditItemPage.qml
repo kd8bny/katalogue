@@ -14,7 +14,7 @@ Kirigami.ScrollablePage {
     property bool isEdit: false
     property bool isArchived: false
 
-    property var types: Database.getItemTypes()
+    // property var types: Database.getItemTypes()
 
     title: (isEdit) ? i18n("Edit Item") : i18n("Add Item")
 
@@ -96,7 +96,7 @@ Kirigami.ScrollablePage {
             id: typeBox
             editable: true
             Kirigami.FormData.label: i18nc("@label:textbox", "Type:")
-            model: types
+            model: ItemTypeModel
         }
         Controls.Switch {
             id: itemParentEnabled
