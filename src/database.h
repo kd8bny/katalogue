@@ -52,10 +52,8 @@ public:
     ~Database();
     bool connect(QString path);
 
-    Q_INVOKABLE QVariantList getItemTypes();
-    Q_INVOKABLE QVariantList getItemParents();
-    Q_INVOKABLE QVariantList getAttributeCategories();
-    Q_INVOKABLE QVariantList getEventCategories();
+    Q_INVOKABLE QVariantList getAttributeCategories();  //remove
+    Q_INVOKABLE QVariantList getEventCategories();  //remove
 
     bool insertItemEntry(Item item);
     bool updateItemEntry(Item item);

@@ -44,41 +44,7 @@ bool Database::connect(QString path)
     return isDBOpen;
 }
 
-QVariantList Database::getItemTypes()
-{
-    QSqlQuery query;
-    QVariantList itemTypes;
-    query.prepare(QString(
-        "SELECT DISTINCT %1 FROM %2").arg(TYPE, TABLE_ITEMS));
-
-    query.exec();
-
-    while(query.next())
-    {
-        itemTypes.append(query.record().value(0));
-    }
-
-    return itemTypes;
-}
-
-QVariantList Database::getItemParents()
-{
-    QSqlQuery query;
-    QVariantList itemParents;
-    query.prepare(QString(
-        "SELECT DISTINCT %1 FROM %2 WHERE %3 IS NULL").arg(NAME, TABLE_ITEMS,
-            KEY_ITEM_ID));
-
-    query.exec();
-    while(query.next())
-    {
-        itemParents.append(query.record().value(0));
-    }
-
-    return itemParents;
-}
-
-QVariantList Database::getAttributeCategories()
+QVariantList Database::getAttributeCategories() //remove
 {
     QSqlQuery query;
     QVariantList categories;
@@ -95,7 +61,7 @@ QVariantList Database::getAttributeCategories()
     return categories;
 }
 
-QVariantList Database::getEventCategories()
+QVariantList Database::getEventCategories()  //remove
 {
     QSqlQuery query;
     QVariantList categories;

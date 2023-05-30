@@ -12,6 +12,7 @@ add_executable(katalogue
     models/itemModel.cpp
     models/itemArchiveModel.cpp
     models/itemTypeModel.cpp
+    models/itemParentModel.cpp
     data/item.cpp
     resources.qrc)
 
