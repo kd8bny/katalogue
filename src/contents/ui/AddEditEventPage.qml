@@ -14,9 +14,6 @@ Kirigami.ScrollablePage {
     property bool isEdit: false
     property string eventIndex: ""
 
-    property var categories: Database.getEventCategories()
-    property var types: Database.getItemTypes()
-
     title: (isEdit) ? i18n("Edit Event") : i18n("Add Event")
 
     actions {
@@ -91,7 +88,7 @@ Kirigami.ScrollablePage {
             id: categoryBox
             Kirigami.FormData.label: i18nc("@label:textbox", "Category")
             editable: true
-            model: categories
+            model: EventCategoryModel
         }
         Controls.ComboBox {
             id: typeBox

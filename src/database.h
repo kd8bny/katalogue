@@ -53,7 +53,6 @@ public:
     bool connect(QString path);
 
     Q_INVOKABLE QVariantList getAttributeCategories();  //remove
-    Q_INVOKABLE QVariantList getEventCategories();  //remove
 
     bool insertItemEntry(Item item);
     bool updateItemEntry(Item item);

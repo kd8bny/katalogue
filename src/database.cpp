@@ -61,23 +61,6 @@ QVariantList Database::getAttributeCategories() //remove
     return categories;
 }
 
-QVariantList Database::getEventCategories()  //remove
-{
-    QSqlQuery query;
-    QVariantList categories;
-    query.prepare(QString(
-        "SELECT DISTINCT %1 FROM %2").arg(CATEGORY, TABLE_EVENTS));
-
-    query.exec();
-
-    while(query.next())
-    {
-        categories.append(query.value(0));
-    }
-
-    return categories;
-}
-
 bool Database::insertItemEntry(Item item)
 {
     bool isInsert = false;

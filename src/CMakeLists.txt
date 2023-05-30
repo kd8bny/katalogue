@@ -6,14 +6,16 @@ add_executable(katalogue
     about.cpp
     app.cpp
     database.cpp
+    data/item.cpp
+    # data/event.cpp
     models/attributeModel.cpp
     models/componentModel.cpp
     models/eventModel.cpp
+    models/eventCategoryModel.cpp
     models/itemModel.cpp
     models/itemArchiveModel.cpp
     models/itemTypeModel.cpp
     models/itemParentModel.cpp
-    data/item.cpp
     resources.qrc)
 
 target_link_libraries(katalogue
