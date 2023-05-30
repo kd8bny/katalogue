@@ -68,7 +68,7 @@ Kirigami.ScrollablePage {
             id: categoryBox
             editable: true
             Kirigami.FormData.label: i18nc("@label:textbox", "Category:")
-            model: categories
+            model: AttributeCategoryModel
         }
         Controls.Button {
             id: doneButton

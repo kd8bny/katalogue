@@ -44,23 +44,6 @@ bool Database::connect(QString path)
     return isDBOpen;
 }
 
-QVariantList Database::getAttributeCategories() //remove
-{
-    QSqlQuery query;
-    QVariantList categories;
-    query.prepare(QString(
-        "SELECT DISTINCT %1 FROM %2").arg(CATEGORY, TABLE_ATTRIBUTES));
-
-    query.exec();
-
-    while(query.next())
-    {
-        categories.append(query.value(0));
-    }
-
-    return categories;
-}
-
 bool Database::insertItemEntry(Item item)
 {
     bool isInsert = false;
