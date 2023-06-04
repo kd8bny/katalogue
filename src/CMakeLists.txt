@@ -10,11 +10,9 @@ add_executable(katalogue
     # data/event.cpp
     models/attributeModel.cpp
     models/attributeCategoryModel.cpp
-    models/componentModel.cpp
     models/eventModel.cpp
     models/eventCategoryModel.cpp
     models/itemModel.cpp
-    models/itemArchiveModel.cpp
     models/itemTypeModel.cpp
     models/itemParentModel.cpp
     resources.qrc)

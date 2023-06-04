@@ -64,6 +64,7 @@ Kirigami.ApplicationWindow {
                 onTriggered: {
                     pageStack.clear()
                     pageStack.push('qrc:Items.qml')
+                    ItemModel.filterItem()
                 }
             },
             Kirigami.Action {
@@ -72,7 +73,8 @@ Kirigami.ApplicationWindow {
                 icon.name: "add-files-to-archive-symbolic"
                 onTriggered: {
                     pageStack.clear()
-                    pageStack.push('qrc:Archive.qml')
+                    pageStack.push('qrc:Items.qml')
+                    ItemModel.filterArchive()
                 }
             },
             // Kirigami.Action {
@@ -106,10 +108,6 @@ Kirigami.ApplicationWindow {
 
     Items {
         id: itemsPage
-    }
-
-    Archive {
-        id: archivePage
     }
 
     AttributeInfoSheet {

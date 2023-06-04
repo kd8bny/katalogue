@@ -16,11 +16,9 @@
 #include "database.h"
 #include "models/attributeModel.h"
 #include "models/attributeCategoryModel.h"
-#include "models/componentModel.h"
 #include "models/eventModel.h"
 #include "models/eventCategoryModel.h"
 #include "models/itemModel.h"
-#include "models/itemArchiveModel.h"
 #include "models/itemTypeModel.h"
 #include "models/itemParentModel.h"
 #include "version-katalogue.h"
@@ -90,9 +88,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     AttributeCategoryModel attributeCategoryModel;
     qmlRegisterSingletonInstance<AttributeCategoryModel>("com.kd8bny.katalogue", 1, 0, "AttributeCategoryModel", &attributeCategoryModel);
 
-    ComponentModel componentModel;
-    qmlRegisterSingletonInstance<ComponentModel>("com.kd8bny.katalogue", 1, 0, "ComponentModel", &componentModel);
-
     EventModel eventModel;
     qmlRegisterSingletonInstance<EventModel>("com.kd8bny.katalogue", 1, 0, "EventModel", &eventModel);
 
@@ -101,9 +96,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     ItemModel itemModel;
     qmlRegisterSingletonInstance<ItemModel>("com.kd8bny.katalogue", 1, 0, "ItemModel", &itemModel);
-
-    ItemArchiveModel itemArchiveModel;
-    qmlRegisterSingletonInstance<ItemArchiveModel>("com.kd8bny.katalogue", 1, 0, "ItemArchiveModel", &itemArchiveModel);
 
     ItemTypeModel itemTypeModel;
     qmlRegisterSingletonInstance<ItemTypeModel>("com.kd8bny.katalogue", 1, 0, "ItemTypeModel", &itemTypeModel);

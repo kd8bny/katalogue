@@ -37,15 +37,35 @@ public:
 protected:
     QHash<int, QByteArray> roleNames() const override;
 
+    enum QueryFilter {
+        ITEM,
+        COMPONENT,
+        ARCHIVE
+    };
+
 signals:
+    void filterItem();
+    void filterArchive();
+    void filterComponent();
     void dataChanged();
 
 public slots:
+    void setItemQuery();
+    void setArchiveQuery();
+    void setComponentQuery();
     void refresh();
 
 private:
-    const QString modelQuery = QString(
-        "SELECT id, %1, %2, %3, %4, %5, %6 FROM %7 WHERE %8 IS NULL AND %6 IS 0"
-            ).arg(NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, TABLE_ITEMS, KEY_ITEM_ID);
+    const QString modelQueryBase = QString(
+        "SELECT id, %1, %2, %3, %4, %5, %6 FROM %7").arg(
+            NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, TABLE_ITEMS);
+    const QString modelQueryItem = QString(
+        " WHERE %1 IS NULL AND %2 IS 0").arg(KEY_ITEM_ID, ARCHIVED);
+    const QString modelQueryArchive = QString(
+        " WHERE %1 IS 1").arg(ARCHIVED);
+    const QString modelQueryComponent = QString(
+        " WHERE %1 IS NOT NULL AND %2 IS 0").arg(KEY_ITEM_ID, ARCHIVED);
+
+    QString modelQuery;
 
 };

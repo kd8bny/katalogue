@@ -75,7 +75,7 @@ Kirigami.ScrollablePage {
                         Controls.Label {
                             Layout.fillWidth: true
                             wrapMode: Text.WordWrap
-                            text: year + " " + model + " " + make
+                            text: i18n(year + " " + model + " " + make)
                         }
                         Kirigami.Separator {
                             Layout.fillWidth: true
@@ -101,7 +101,8 @@ Kirigami.ScrollablePage {
                     icon.name: "item"
 
                     onTriggered: {
-                        pageStack.push("qrc:Components.qml", {"parentName": name, "itemId": id})
+                        pageStack.push('qrc:Items.qml')
+                        ItemModel.filterComponent()
                     }
                 },
                 Kirigami.Action {
