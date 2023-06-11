@@ -11,16 +11,13 @@ Kirigami.ScrollablePage {
     id: addEditAttributePage
 
     required property string itemId
-    property bool isEdit: false
-    property string attributeIndex: ""
+    property int attributeIndex: -1
 
-    property var categories: Database.getAttributeCategories()
-
-    title: (isEdit) ? i18n("Edit Attribute") : i18n("Add Attribute")
+    title: (attributeIndex != -1) ? i18n("Edit Attribute") : i18n("Add Attribute")
 
     actions {
         main: Kirigami.Action {
-            enabled: isEdit
+            enabled: attributeIndex != -1
             text: i18n("Delete")
             icon.name: "delete"
             tooltip: i18n("Remove Attribute")
@@ -37,9 +34,8 @@ Kirigami.ScrollablePage {
         subtitle: i18n("Are you sure you want to delete: ")
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: {
-            Database.deleteAttributeEntry(AttributeModel.getId(attributeIndex))
+            AttributeModel.deleteRecord(AttributeModel.getId(attributeIndex))
             pageStack.pop()
-            AttributeModel.updateModel()
         }
         onRejected: {
             pageStack.pop()
@@ -47,8 +43,8 @@ Kirigami.ScrollablePage {
     }
 
     Component.onCompleted: {
-        if (isEdit) {
-            var recordData = AttributeModel.getRecord(attributeIndex)
+        if (attributeIndex != -1) {
+            var recordData = AttributeModel.getRecordAsList(attributeIndex)
             keyField.text = recordData[1]
             valueField.text = recordData[2]
             categoryBox.find(recordData[3])
@@ -73,7 +69,7 @@ Kirigami.ScrollablePage {
         Controls.Button {
             id: doneButton
             Layout.fillWidth: true
-            text: (isEdit) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
+            text: (attributeIndex != -1) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
             enabled: (keyField.text.length && valueField.text.length) > 0
             onClicked: {
                 var category = ""
@@ -83,25 +79,14 @@ Kirigami.ScrollablePage {
                     category = categoryBox.currentText
                 }
 
-                if(isEdit){
-                    Database.updateAttributeEntry(
-                        AttributeModel.getId(attributeIndex),
-                        keyField.text,
-                        valueField.text,
-                        category
-                    )
-                }
-                else{
-                    Database.insertAttributeEntry(
-                        itemId,
-                        keyField.text,
-                        valueField.text,
-                        category
-                    )
-                }
+                AttributeModel.setRecord(
+                    attributeIndex,
+                    keyField.text,
+                    valueField.text,
+                    category,
+                    itemId
+                )
 
-                AttributeModel.updateModel()
-                AttributeModel.setItemId(itemId)
                 pageStack.pop()
             }
         }

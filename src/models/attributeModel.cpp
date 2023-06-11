@@ -1,13 +1,12 @@
 #include "attributeModel.h"
-#include "database.h"
+
 
 AttributeModel::AttributeModel(QObject *parent) :
     QSqlQueryModel(parent)
 {
-    modelQuery = QString("SELECT id, %1, %2, %3, %4 FROM %5 ").arg(
-        KEY, VALUE, CATEGORY, KEY_ITEM_ID, TABLE_ATTRIBUTES);
+    QObject::connect(this, SIGNAL(dataChanged()), this, SLOT(refresh()));
 
-    this->updateModel();
+    this->refresh();
 }
 
 AttributeModel::~AttributeModel()
@@ -38,16 +37,19 @@ QHash<int, QByteArray> AttributeModel::roleNames() const {
     return roles;
 }
 
-void AttributeModel::updateModel()
+void AttributeModel::setItemId(QString itemId)
 {
+    this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(
+        KEY_ITEM_ID, itemId);
+
     this->setQuery(modelQuery);
+    emit dataChanged();
 }
 
-void AttributeModel::setItemId(QString item_id)
+void AttributeModel::refresh()
 {
-    QString modelQueryID = QString("%1 WHERE %2=%3").arg(modelQuery, KEY_ITEM_ID, item_id);
-    this->setQuery(modelQueryID);
-    qDebug() << this->lastError();
+    this->setQuery(this->modelQuery);
+    qDebug()<< this->modelQuery;
 }
 
 int AttributeModel::getId(int row)
@@ -55,17 +57,67 @@ int AttributeModel::getId(int row)
     return this->data(this->index(row, 0), rID).toInt();
 }
 
-QVariantList AttributeModel::getRecord(int row)
+Attribute AttributeModel::getRecord(int row)
 {
-    QVariantList recordData;
+    int id = this->data(this->index(row, 0), rID).toInt();
+    Attribute attribute(id);
 
-    recordData.append(this->data(this->index(row, 0), rID).toInt());
-    recordData.append(this->data(this->index(row, 1), rKey));
-    recordData.append(this->data(this->index(row, 2), rValue));
-    recordData.append(this->data(this->index(row, 3), rCategory));
+    attribute.setKey(this->data(this->index(row, 1), rKey).toString());
+    attribute.setValue(this->data(this->index(row, 2), rValue).toString());
+    attribute.setCategory(this->data(this->index(row, 3), rCategory).toString());
+    attribute.setItemId(this->data(this->index(row, 4), rItemID).toInt());
 
-    qDebug() << row;
-    qDebug() << recordData;
+    return attribute;
+}
 
-    return recordData;
+QVariantList AttributeModel::getRecordAsList(int row)
+{
+    Attribute attribute = this->getRecord(row);
+
+    return attribute.asList();
+}
+
+bool AttributeModel::setRecord(int attributeIndex, QString key, QString value,
+    QString category, int itemId)
+{
+    Database db;
+    // eventIndex defaults to -1 for new entries.
+    Attribute attribute(this->getId(attributeIndex));
+
+    bool success = false;
+
+    attribute.setKey(key);
+    attribute.setValue(value);
+    attribute.setCategory(category);
+    attribute.setItemId(itemId);
+
+    qDebug() << attribute.asList();
+
+    if (attributeIndex == -1) {
+        success = db.insertAttributeEntry(attribute);
+        qDebug() << "attributeModel | Inserting Entry | " << success;
+    } else {
+        success = db.updateAttributeEntry(attribute);
+        qDebug() << "attributeModel | Updating Entry | " << success;
+    }
+
+    if (success)
+        emit dataChanged();
+
+    return success;
+
+}
+
+bool AttributeModel::deleteRecord(int eventId)
+{
+    Database db;
+
+    bool success = false;
+
+    success = db.deleteAttributeEntry(eventId);
+
+    if (success)
+        emit dataChanged();
+
+    return success;
 }

@@ -6,6 +6,7 @@ add_executable(katalogue
     about.cpp
     app.cpp
     database.cpp
+    data/attribute.cpp
     data/event.cpp
     data/item.cpp
     models/attributeModel.cpp

@@ -23,7 +23,7 @@ Kirigami.OverlaySheet {
         Layout.fillWidth: true
         text: i18nc("@action:button", "Close")
         onClicked: {
-            eventInfoSheet.close()
+            attributeInfoSheet.close()
         }
     }
 

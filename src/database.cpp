@@ -122,7 +122,7 @@ bool Database::deleteItemEntry(int id)
     return isDelete;
 }
 
-bool Database::insertAttributeEntry(QString itemId, QString key, QString value, QString category)
+bool Database::insertAttributeEntry(Attribute attribute)
 {
     bool isInsert = false;
     QSqlQuery query;
@@ -131,10 +131,10 @@ bool Database::insertAttributeEntry(QString itemId, QString key, QString value, 
         "INSERT INTO %1 (%2, %3, %4, %5) VALUES (:key, :value, :category, :itemId)").arg(
             TABLE_ATTRIBUTES, KEY, VALUE, CATEGORY, KEY_ITEM_ID));
 
-    query.bindValue(":key", key);
-    query.bindValue(":value", value);
-    query.bindValue(":category", category);
-    query.bindValue(":itemId", itemId);
+    query.bindValue(":key", attribute.getKey());
+    query.bindValue(":value", attribute.getValue());
+    query.bindValue(":category", attribute.getCategory());
+    query.bindValue(":itemId", attribute.getItemId());
 
     if(query.exec()){
         isInsert = true;
@@ -146,7 +146,7 @@ bool Database::insertAttributeEntry(QString itemId, QString key, QString value, 
     return isInsert;
 }
 
-bool Database::updateAttributeEntry(QString attributeId, QString key, QString value, QString category)
+bool Database::updateAttributeEntry(Attribute attribute)
 {
     bool isUpdate = false;
     QSqlQuery query;
@@ -155,10 +155,12 @@ bool Database::updateAttributeEntry(QString attributeId, QString key, QString va
         "UPDATE %1 SET %2=:key, %3=:value, %4=:category WHERE id=:attributeId").arg(
             TABLE_ATTRIBUTES, KEY, VALUE, CATEGORY));
 
-    query.bindValue(":key", key);
-    query.bindValue(":value", value);
-    query.bindValue(":category", category);
-    query.bindValue(":attributeId", attributeId);
+    query.bindValue(":key", attribute.getKey());
+    query.bindValue(":value", attribute.getValue());
+    query.bindValue(":category", attribute.getCategory());
+    query.bindValue(":itemId", attribute.getItemId());
+
+    query.bindValue(":attributeId", attribute.getId());
 
     if(query.exec()){
         isUpdate = true;
@@ -170,14 +172,14 @@ bool Database::updateAttributeEntry(QString attributeId, QString key, QString va
     return isUpdate;
 }
 
-bool Database::deleteAttributeEntry(QString attributeId)
+bool Database::deleteAttributeEntry(int attributeId)
 {
     bool isDelete = false;
     QSqlQuery query;
 
     query.prepare(
         QString("DELETE FROM %1 WHERE id=:attributeId").arg(TABLE_ATTRIBUTES));
-    query.bindValue(":attributeId", attributeId.toInt());
+    query.bindValue(":attributeId", attributeId);
 
     if(query.exec()){
         isDelete = true;

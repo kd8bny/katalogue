@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <QUuid>
 
+#include "data/attribute.h"
 #include "data/event.h"
 #include "data/item.h"
 
@@ -57,11 +58,9 @@ public:
     bool updateItemEntry(Item item);
     bool deleteItemEntry(int id);
 
-    Q_INVOKABLE bool insertAttributeEntry(QString itemId, QString label,
-        QString key, QString value);
-    Q_INVOKABLE bool updateAttributeEntry(QString attributeId, QString key,
-        QString value, QString category);
-    Q_INVOKABLE bool deleteAttributeEntry(QString attributeId);
+    bool insertAttributeEntry(Attribute attribute);
+    bool updateAttributeEntry(Attribute attribute);
+    bool deleteAttributeEntry(int id);
 
     bool insertEventEntry(Event event);
     bool updateEventEntry(Event event);
