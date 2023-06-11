@@ -46,9 +46,8 @@ Kirigami.ScrollablePage {
         eventInfoSheet.event = recordData[2]
         eventInfoSheet.cost = recordData[3]
         eventInfoSheet.odometer = recordData[4]
-        eventInfoSheet.type = recordData[5]
-        eventInfoSheet.category = recordData[6]
-        eventInfoSheet.comment = recordData[7]
+        eventInfoSheet.category = recordData[5]
+        eventInfoSheet.comment = recordData[6]
 
         eventInfoSheet.open()
     }

@@ -15,7 +15,6 @@ Kirigami.OverlaySheet {
     property alias event: eventField.text
     property alias cost: costField.text
     property alias odometer: odometerField.text
-    property alias type: typeField.text
     property alias category: categoryField.text
     property alias comment: commentField.text
 
@@ -49,16 +48,12 @@ Kirigami.OverlaySheet {
             Kirigami.FormData.label: i18nc("@label:textbox", "Odometer:")
         }
         Controls.Label {
-            id: commentField
-            Kirigami.FormData.label: i18nc("@label:textbox", "Comment:")
-        }
-        Controls.Label {
             id: categoryField
             Kirigami.FormData.label: i18nc("@label:textbox", "Category:")
         }
         Controls.Label {
-            id: typeField
-            Kirigami.FormData.label: i18nc("@label:textbox", "Item Type:")
+            id: commentField
+            Kirigami.FormData.label: i18nc("@label:textbox", "Comment:")
         }
     }
 }
