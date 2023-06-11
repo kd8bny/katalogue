@@ -11,7 +11,7 @@ import com.kd8bny.katalogue 1.0
 Kirigami.ScrollablePage {
     id: page
 
-    required property string itemId
+    required property int itemId
     required property string itemName
 
     property int eventIndex
@@ -40,7 +40,7 @@ Kirigami.ScrollablePage {
     }
 
     function openInfoSheet(index = -1) {
-        var recordData = EventModel.getRecord(index)
+        var recordData = EventModel.getRecordAsList(index)
 
         eventInfoSheet.date = recordData[1]
         eventInfoSheet.event = recordData[2]
@@ -87,11 +87,7 @@ Kirigami.ScrollablePage {
                 Kirigami.Action {
                     icon.name: "edit-entry"
                     onTriggered: {
-                        pageStack.push("qrc:AddEditEventPage.qml", {
-                            "itemId": itemId,
-                            "isEdit": true,
-                            "eventIndex": index,
-                        })
+                        pageStack.push("qrc:AddEditEventPage.qml", {"eventIndex": index, "itemId": itemId})
                     }
                 }
             ]

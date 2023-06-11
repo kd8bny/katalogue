@@ -37,12 +37,6 @@ public:
 protected:
     QHash<int, QByteArray> roleNames() const override;
 
-    enum QueryFilter {
-        ITEM,
-        COMPONENT,
-        ARCHIVE
-    };
-
 signals:
     void filterItem();
     void filterArchive();

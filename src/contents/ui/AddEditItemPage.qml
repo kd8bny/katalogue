@@ -94,8 +94,8 @@ Kirigami.ScrollablePage {
         }
         Controls.ComboBox {
             id: typeBox
-            editable: true
             Kirigami.FormData.label: i18nc("@label:textbox", "Type:")
+            editable: true
             model: ItemTypeModel
         }
         Controls.Switch {

@@ -6,8 +6,8 @@ add_executable(katalogue
     about.cpp
     app.cpp
     database.cpp
+    data/event.cpp
     data/item.cpp
-    # data/event.cpp
     models/attributeModel.cpp
     models/attributeCategoryModel.cpp
     models/eventModel.cpp

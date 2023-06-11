@@ -41,6 +41,7 @@ Kirigami.ApplicationWindow {
         modal: false
         collapsible: true
         showHeaderWhenCollapsed: true
+        collapsed: true
 
         header: RowLayout {
             // Layout.fillWidth: true
@@ -50,16 +51,12 @@ Kirigami.ApplicationWindow {
                 checked: !globalDrawer.collapsed
                 onClicked: globalDrawer.collapsed = !globalDrawer.collapsed
             }
-            Kirigami.SearchField {
-                visible: !globalDrawer.collapsed
-                Layout.fillWidth: true
-            }
         }
 
         actions: [
             Kirigami.Action {
                 text: i18n("Items")
-                tooltip: i18n("Tracked Items")
+                tooltip: i18n("Katalouged Items")
                 icon.name: "file-catalog-symbolic"
                 onTriggered: {
                     pageStack.clear()
@@ -90,7 +87,7 @@ Kirigami.ApplicationWindow {
             // },
             Kirigami.Action {
                 text: i18n("About")
-                tooltip: i18n("About katalogue")
+                tooltip: i18n("About Katalogue")
                 icon.name: "help-about"
                 onTriggered: pageStack.layers.push('qrc:About.qml')
             },

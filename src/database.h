@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <QUuid>
 
+#include "data/event.h"
 #include "data/item.h"
 
 #ifndef DATABASE_H
@@ -62,19 +63,14 @@ public:
         QString value, QString category);
     Q_INVOKABLE bool deleteAttributeEntry(QString attributeId);
 
-    Q_INVOKABLE bool insertEventEntry(QString date, QString task, QString cost,
-        QString odometer, QString category, QString type, QString comment, QString itemId);
-    Q_INVOKABLE bool updateEventEntry(QString eventId, QString date, QString event, QString cost,
-        QString odometer, QString category, QString type, QString comment);
-    Q_INVOKABLE bool deleteEventEntry(QString eventId);
+    bool insertEventEntry(Event event);
+    bool updateEventEntry(Event event);
+    bool deleteEventEntry(int id);
 
 private:
     QSqlDatabase db;
 
     bool initializeSchema();
-    // void initializeDefaults();
-    void initializeDemoEntry();
-    // bool insertDefaultEntry(QString type, QString value);
 };
 
 #endif

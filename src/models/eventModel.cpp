@@ -1,14 +1,12 @@
 #include "eventModel.h"
-#include "database.h"
 
 
 EventModel::EventModel(QObject *parent) :
     QSqlQueryModel(parent)
 {
-    modelQuery = QString("SELECT id, %1, %2, %3, %4, %5, %6, %7 FROM %8").arg(
-        DATE, EVENT, COST, ODOMETER, TYPE, CATEGORY, COMMENT, TABLE_EVENTS);
+    QObject::connect(this, SIGNAL(dataChanged()), this, SLOT(refresh()));
 
-    this->updateModel();
+    this->refresh();
 }
 
 EventModel::~EventModel()
@@ -35,7 +33,6 @@ QHash<int, QByteArray> EventModel::roleNames() const {
     roles[rEvent] = EVENT;
     roles[rCost] = COST;
     roles[rOdometer] = ODOMETER;
-    roles[rType] = TYPE;
     roles[rCategory] = CATEGORY;
     roles[rComment] = COMMENT;
     roles[rItemID] = KEY_ITEM_ID;
@@ -43,16 +40,19 @@ QHash<int, QByteArray> EventModel::roleNames() const {
     return roles;
 }
 
-// The method updates the tables in the data model representation
-void EventModel::updateModel()
-{
-    this->setQuery(modelQuery);
-}
-
 void EventModel::setItemId(QString itemId)
 {
-    QString modelQueryID = QString("%1 WHERE %2=%3").arg(modelQuery, KEY_ITEM_ID, itemId);
-    this->setQuery(modelQueryID);
+    this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(
+        KEY_ITEM_ID, itemId);
+
+    this->setQuery(modelQuery);
+    emit dataChanged();
+}
+
+void EventModel::refresh()
+{
+    this->setQuery(this->modelQuery);
+    qDebug()<< this->modelQuery;
 }
 
 int EventModel::getId(int row)
@@ -60,20 +60,73 @@ int EventModel::getId(int row)
     return this->data(this->index(row, 0), rID).toInt();
 }
 
-QVariantList EventModel::getRecord(int row)
+Event EventModel::getRecord(int row)
 {
-    QVariantList recordData;
+    int id = this->data(this->index(row, 0), rID).toInt();
+    Event event(id);
 
-    recordData.append(this->data(this->index(row, 0), rID).toInt());
-    recordData.append(this->data(this->index(row, 1), rDate));
-    recordData.append(this->data(this->index(row, 2), rEvent));
-    recordData.append(this->data(this->index(row, 3), rCost));
-    recordData.append(this->data(this->index(row, 4), rOdometer));
-    recordData.append(this->data(this->index(row, 5), rType));
-    recordData.append(this->data(this->index(row, 6), rCategory));
-    recordData.append(this->data(this->index(row, 7), rComment));
+    event.setDate(this->data(this->index(row, 1), rDate).toString());
+    event.setEvent(this->data(this->index(row, 2), rEvent).toString());
+    event.setCost(this->data(this->index(row, 3), rCost).toFloat());
+    event.setOdometer(this->data(this->index(row, 4), rOdometer).toFloat());
+    event.setCategory(this->data(this->index(row, 5), rCategory).toString());
+    event.setComment(this->data(this->index(row, 6), rComment).toString());
+    event.setItemId(this->data(this->index(row, 7), rItemID).toInt());
 
-    qDebug() << recordData;
+    return event;
+}
 
-    return recordData;
+QVariantList EventModel::getRecordAsList(int row)
+{
+    Event event = this->getRecord(row);
+
+    return event.asList();
+}
+
+bool EventModel::setRecord(int eventIndex, QString date, QString eventName,
+    float cost, float odometer, QString category, QString comment, int itemId)
+{
+    Database db;
+    // eventIndex defaults to -1 for new entries.
+    Event event(this->getId(eventIndex));
+
+    bool success = false;
+
+    event.setDate(date);
+    event.setEvent(eventName);
+    event.setCost(cost);
+    event.setOdometer(odometer);
+    event.setCategory(category);
+    event.setComment(comment);
+    event.setItemId(itemId);
+
+    qDebug() << event.asList();
+
+    if (eventIndex == -1) {
+        success = db.insertEventEntry(event);
+        qDebug() << "eventModel | Inserting Entry | " << success;
+    } else {
+        success = db.updateEventEntry(event);
+        qDebug() << "eventModel | Updating Entry | " << success;
+    }
+
+    if (success)
+        emit dataChanged();
+
+    return success;
+
+}
+
+bool EventModel::deleteRecord(int eventId)
+{
+    Database db;
+
+    bool success = false;
+
+    success = db.deleteEventEntry(eventId);
+
+    if (success)
+        emit dataChanged();
+
+    return success;
 }

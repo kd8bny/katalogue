@@ -12,7 +12,6 @@ Kirigami.ScrollablePage {
     id: itemsPage
 
     Layout.fillWidth: true
-    property string itemId: ""
 
     title: i18n("Katalogued Items")
 
@@ -115,7 +114,6 @@ Kirigami.ScrollablePage {
                     onTriggered: {
                         pageStack.push("qrc:AddEditItemPage.qml", {
                             "itemId": id,
-                            "isEdit": true,
                             "itemIndex": index
                         })
                     }

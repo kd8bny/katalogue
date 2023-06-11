@@ -63,7 +63,6 @@ void ItemModel::setComponentQuery()
 
 void ItemModel::refresh()
 {
-    qDebug() << modelQuery;
     this->setQuery(this->modelQuery);
 }
 
