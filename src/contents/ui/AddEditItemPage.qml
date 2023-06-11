@@ -131,7 +131,7 @@ Kirigami.ScrollablePage {
                 if (itemArchived.checked) {
                     archived = true
                 }
-                var parentId = "NULL"
+                var parentId = -1
                 if (itemParentEnabled.checked) {
                     parentId = ItemModel.getId(itemParentBox.currentIndex)
                 }
