@@ -13,7 +13,7 @@
 
 #include "about.h"
 #include "app.h"
-#include "database.h"
+#include "data/database.h"
 #include "models/attributeModel.h"
 #include "models/attributeCategoryModel.h"
 #include "models/eventModel.h"

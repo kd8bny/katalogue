@@ -1,7 +1,7 @@
 #include <QObject>
 #include <QSqlQueryModel>
 
-#include "../database.h"
+#include "data/database.h"
 
 
 class ItemParentModel: public QSqlQueryModel

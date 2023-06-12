@@ -9,9 +9,9 @@
 #include <QDebug>
 #include <QUuid>
 
-#include "data/attribute.h"
-#include "data/event.h"
-#include "data/item.h"
+#include "attribute.h"
+#include "event.h"
+#include "item.h"
 
 #ifndef DATABASE_H
 #define DATABASE_H

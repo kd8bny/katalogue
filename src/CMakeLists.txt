@@ -5,7 +5,7 @@ add_executable(katalogue
     main.cpp
     about.cpp
     app.cpp
-    database.cpp
+    data/database.cpp
     data/attribute.cpp
     data/event.cpp
     data/item.cpp

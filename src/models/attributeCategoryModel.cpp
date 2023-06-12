@@ -1,5 +1,5 @@
 #include "attributeCategoryModel.h"
-#include "database.h"
+#include "data/database.h"
 
 
 AttributeCategoryModel::AttributeCategoryModel(QObject *parent) :

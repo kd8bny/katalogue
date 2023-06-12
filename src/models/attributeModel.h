@@ -1,7 +1,7 @@
 #include <QObject>
 #include <QSqlQueryModel>
 
-#include "../database.h"
+#include "data/database.h"
 #include "data/attribute.h"
 
 class AttributeModel: public QSqlQueryModel
