@@ -4,7 +4,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15 as Controls
 import QtQuick.Layouts 1.15
-import org.kde.kirigami 2.19 as Kirigami
+import org.kde.kirigami 2.20 as Kirigami
 import com.kd8bny.katalogue 1.0
 
 Kirigami.ApplicationWindow {
@@ -44,7 +44,7 @@ Kirigami.ApplicationWindow {
         collapsed: true
 
         header: RowLayout {
-            // Layout.fillWidth: true
+            Layout.fillWidth: true
             Controls.ToolButton {
                 icon.name: "application-menu"
                 visible: globalDrawer.collapsible
@@ -66,7 +66,7 @@ Kirigami.ApplicationWindow {
             },
             Kirigami.Action {
                 text: i18n("Archive")
-                tooltip: i18n("Archived Items")
+                tooltip: i18n("Show archived Items")
                 icon.name: "add-files-to-archive-symbolic"
                 onTriggered: {
                     pageStack.clear()
@@ -90,11 +90,6 @@ Kirigami.ApplicationWindow {
                 tooltip: i18n("About Katalogue")
                 icon.name: "help-about"
                 onTriggered: pageStack.layers.push('qrc:About.qml')
-            },
-            Kirigami.Action {
-                text: i18n("Quit")
-                icon.name: "application-exit"
-                onTriggered: Qt.quit()
             }
         ]
     }
@@ -115,5 +110,7 @@ Kirigami.ApplicationWindow {
         id: eventInfoSheet
     }
 
-    pageStack.initialPage: itemsPage;
+    pageStack.globalToolBar.style: Kirigami.ApplicationHeaderStyle.ToolBar
+    pageStack.initialPage: itemsPage
+
 }

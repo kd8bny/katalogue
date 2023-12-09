@@ -4,7 +4,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15 as Controls
 import QtQuick.Layouts 1.15
-import org.kde.kirigami 2.19 as Kirigami
+import org.kde.kirigami 2.20 as Kirigami
 import com.kd8bny.katalogue 1.0
 
 
@@ -20,24 +20,18 @@ Kirigami.ScrollablePage {
 
     title: i18n("Events")
 
-    actions {
-        main: Kirigami.Action {
+    actions.contextualActions: [
+        Kirigami.Action {
             text: i18n("Add")
             icon.name: "list-add"
             tooltip: i18n("Add new event")
             onTriggered: {
                 pageStack.push("qrc:AddEditEventPage.qml", {"itemId": itemId})
+                // pageStack.layers.push(Qt.resolvedUrl("AddEditEventPage.qml"), {"itemId": itemId}); //TODO
+
             }
-        }
-        contextualActions: [
-            Kirigami.Action {
-                text: i18n("Attributes")
-                icon.name: "item"
-                tooltip: i18n("Swap to Attributes")
-                onTriggered: pageStack.replace("qrc:Attributes.qml", {"itemName": itemName, "itemId": itemId})
-            }
-        ]
-    }
+        },
+    ]
 
     function openInfoSheet(index = -1) {
         var recordData = EventModel.getRecordAsList(index)

@@ -4,7 +4,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15 as Controls
 import QtQuick.Layouts 1.15
-import org.kde.kirigami 2.19 as Kirigami
+import org.kde.kirigami 2.20 as Kirigami
 import com.kd8bny.katalogue 1.0
 
 
@@ -15,14 +15,14 @@ Kirigami.ScrollablePage {
 
     title: i18n("Katalogued Items")
 
-    actions {
-        main: Kirigami.Action {
+    actions.contextualActions: [
+        Kirigami.Action {
             text: i18n("Add Item")
             icon.name: "list-add"
             tooltip: i18n("Add new item")
             onTriggered: pageStack.push("qrc:AddEditItemPage.qml")
         }
-    }
+    ]
 
     Kirigami.CardsListView {
         id: layout
@@ -46,6 +46,10 @@ Kirigami.ScrollablePage {
         id: itemsDelegate
 
         Kirigami.Card {
+            showClickFeedback: true
+            onClicked:  {
+                pageStack.push("qrc:Details.qml", {"itemName": name, "itemId": id})
+            }
 
             banner {
                 title: name
@@ -57,68 +61,70 @@ Kirigami.ScrollablePage {
                 // The setting below defines a component's preferred size based on its content
                 implicitWidth: delegateLayout.implicitWidth
                 implicitHeight: delegateLayout.implicitHeight
-
-                GridLayout {
-                    id: delegateLayout
-                    anchors {
-                        left: parent.left
-                        top: parent.top
-                        right: parent.right
-                    }
-                    rowSpacing: Kirigami.Units.largeSpacing
-                    columnSpacing: Kirigami.Units.largeSpacing
-                    columns: root.wideScreen ? 4 : 2
-
-                    ColumnLayout {
+                        ColumnLayout {
 
                         Controls.Label {
                             Layout.fillWidth: true
                             wrapMode: Text.WordWrap
-                            text: i18n(year + " " + model + " " + make)
+                            text: i18n(year + " " + make + " " + model)
                         }
                         Kirigami.Separator {
                             Layout.fillWidth: true
                         }
                     }
-                }
+                // GridLayout {
+                //     id: delegateLayout
+                //     anchors {
+                //         left: parent.left
+                //         top: parent.top
+                //         right: parent.right
+                //     }
+                //     rowSpacing: Kirigami.Units.largeSpacing
+                //     columnSpacing: Kirigami.Units.largeSpacing
+                //     columns: root.wideScreen ? 4 : 2
+
+
+                // }
             }
-            actions: [
-                  Kirigami.Action {
-                    text: i18n("Attributes")
-                    icon.name: "item"
+            // actions: [
+            //       Kirigami.Action {
+            //         text: i18n("Attributes")
+            //         icon.name: "item"
 
-                    onTriggered: pageStack.push("qrc:Attributes.qml", {"itemName": name, "itemId": id})
-                },
-                Kirigami.Action {
-                    text: i18n("Maintence")
-                    icon.name: "item"
+            //         onTriggered: pageStack.push("qrc:Attributes.qml", {"itemName": name, "itemId": id})
+            //     },
+            //     Kirigami.Action {
+            //         text: i18n("Events")
+            //         icon.name: "item"
 
-                    onTriggered: pageStack.push("qrc:Events.qml", {"itemName": name, "itemId": id})
-                },
-                Kirigami.Action {
-                    text: i18n("Components")
-                    icon.name: "item"
+            //         onTriggered: pageStack.push("qrc:Events.qml", {"itemName": name, "itemId": id})
 
-                    onTriggered: {
-                        pageStack.push('qrc:Items.qml')
-                        ItemModel.filterComponent()
-                    }
-                },
-                Kirigami.Action {
-                    Layout.alignment: Qt.AlignRight
-                    Layout.fillWidth: true
-                    text: i18n("Edit")
-                    icon.name: "entry-edit"
-                    tooltip: i18n("Edit item")
 
-                    onTriggered: {
-                        pageStack.push("qrc:AddEditItemPage.qml", {
-                            "itemId": id,
-                            "itemIndex": index
-                        })
-                    }
-                }
-            ]
+            //     },
+            //     Kirigami.Action {
+            //         text: i18n("Components")
+            //         icon.name: "item"
+
+            //         onTriggered: {
+            //             pageStack.push('qrc:Items.qml')
+            //             ItemModel.filterComponent()
+            //         }
+            //     },
+            //     Kirigami.Action {
+            //         Layout.alignment: Qt.AlignRight
+            //         Layout.fillWidth: true
+            //         text: i18n("Edit")
+            //         icon.name: "entry-edit"
+            //         tooltip: i18n("Edit item")
+
+            //         onTriggered: {
+            //             pageStack.push("qrc:AddEditItemPage.qml", {
+            //                 "itemId": id,
+            //                 "itemIndex": index
+            //             })
+            //         }
+            //     }
+            // ]
         }
     }
 }

@@ -4,7 +4,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15 as Controls
 import QtQuick.Layouts 1.15
-import org.kde.kirigami 2.19 as Kirigami
+import org.kde.kirigami 2.20 as Kirigami
 import com.kd8bny.katalogue 1.0
 
 
@@ -25,14 +25,6 @@ Kirigami.ScrollablePage {
                 pageStack.push("qrc:AddEditAttributePage.qml", {"itemId": itemId})
             }
         }
-        contextualActions: [
-            Kirigami.Action {
-                text: i18n("Events")
-                icon.name: "item"
-                tooltip: i18n("Swap to Events")
-                onTriggered: pageStack.replace("qrc:Events.qml", {"itemName": itemName, "itemId": itemId, "isEdit": true})
-            }
-        ]
     }
 
     function openInfoSheet(index = -1) {
@@ -55,8 +47,8 @@ Kirigami.ScrollablePage {
         section.delegate: sectionDelegate
         focus: true
 
-        // headerPositioning: ListView.OverlayHeader
-        // header: itemName
+        headerPositioning: ListView.OverlayHeader
+        header: itemName
 
         Kirigami.PlaceholderMessage {
             anchors.centerIn: layout

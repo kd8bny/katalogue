@@ -4,49 +4,80 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15 as Controls
 import QtQuick.Layouts 1.15
-import org.kde.kirigami 2.19 as Kirigami
+import org.kde.kirigami 2.20 as Kirigami
 import com.kd8bny.katalogue 1.0
 
 
 Kirigami.ScrollablePage {
     id: page
 
-    required property string item_id
+    required property int itemId
     required property string itemName
-
-    Layout.fillWidth: true
 
     title: i18n(itemName)
 
-    // actions {
-    //     main: Kirigami.Action {
-    //             text: i18n("Add")
-    //             icon.name: "list-add"
-    //             tooltip: i18n("Add new attribute")
-    //             onTriggered: addAttributeSheet.open()
-    //         }
-    //     left: Kirigami.Action {
-    //         text: i18n("Edit")
-    //         icon.name: "entry-edit"
-    //         tooltip: i18n("Edit item")
-    //         onTriggered: pageStack.push("qrc:EditItemPage.qml", {"item_id": item_id})
-    //     }
-    //     right: Kirigami.Action {
-    //         text: i18n("swap")
-    //         icon.name: "entry-edit"
-    //         tooltip: i18n("Edit item")
-    //         onTriggered: loader.source = "Events.qml"
-    //     }
-    // }
+    actions.contextualActions: [
+        Kirigami.Action {
+            text: i18n("Home")
+            icon.name: "go-home-symbolic"
+            tooltip: i18n("Go back to items page")
+            onTriggered: {
+                pageStack.clear()
+                pageStack.push("qrc:Items.qml")
+            }
+        },
+        Kirigami.Action {
+            text: i18n("Edit")
+            icon.name: "entry-edit"
+            tooltip: i18n("Edit item")
 
-    Loader{
-        id: loader
-        anchors.top: page.top
-        anchors.left: page.left
-        anchors.right: page.right
-        anchors.bottom: page.bottom
-        anchors.topMargin: 0
-        source: "Attributes.qml"
+            onTriggered: {
+                pageStack.push("qrc:AddEditItemPage.qml", {
+                    "itemId": itemId,
+                    "itemIndex": index
+                })
+            }
+        }
+    ]
+
+    ListModel {
+        id: menuModel
+        ListElement { name: "Attributes" }
+        ListElement { name: "Events" }
+        ListElement { name: "Components" }
+
+    }
+
+    ListView {
+        id: menuList
+
+        model: menuModel
+        // currentIndex: 0
+        delegate: itemDelegate
+
+        Component.onCompleted: {
+            pageStack.push("qrc:Attributes.qml", {"itemName": itemName, "itemId": itemId})
+        }
+    }
+
+    Component {
+        id: itemDelegate
+
+        Kirigami.BasicListItem {
+            label: i18n(name)
+
+            onClicked: {
+                var menuListIndex = menuList.currentIndex
+                if(menuListIndex == 0){
+                    pageStack.push("qrc:Attributes.qml", {"itemName": itemName, "itemId": itemId})
+                }else if(menuListIndex == 1){
+                    pageStack.push("qrc:Events.qml", {"itemName": itemName, "itemId": itemId})
+                }else if(menuListIndex == 2){
+                    pageStack.push('qrc:Items.qml')
+                    ItemModel.filterComponent()
+                }
+            }
+        }
     }
 
 }

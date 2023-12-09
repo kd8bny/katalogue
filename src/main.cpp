@@ -12,7 +12,7 @@
 #include <QProcessEnvironment>
 
 #include "about.h"
-#include "app.h"
+#include "katalogue.h"
 #include "data/database.h"
 #include "models/attributeModel.h"
 #include "models/attributeCategoryModel.h"
