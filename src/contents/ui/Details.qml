@@ -11,8 +11,9 @@ import com.kd8bny.katalogue 1.0
 Kirigami.ScrollablePage {
     id: page
 
-    required property int itemId
-    required property string itemName
+    required property int itemModelIndex  // Item Model index position
+    required property int itemId          // Item Id from Database
+    required property string itemName     // Item name field
 
     title: i18n(itemName)
 
@@ -45,14 +46,13 @@ Kirigami.ScrollablePage {
         ListElement { name: "Attributes" }
         ListElement { name: "Events" }
         ListElement { name: "Components" }
-
+        ListElement { name: "Details" }
     }
 
     ListView {
         id: menuList
 
         model: menuModel
-        // currentIndex: 0
         delegate: itemDelegate
 
         Component.onCompleted: {
@@ -75,6 +75,8 @@ Kirigami.ScrollablePage {
                 }else if(menuListIndex == 2){
                     pageStack.push('qrc:Items.qml')
                     ItemModel.filterComponent()
+                }else if(menuListIndex == 3){
+                    pageStack.push('qrc:ItemInfoPage.qml', {"itemModelIndex": itemModelIndex})
                 }
             }
         }

@@ -27,10 +27,8 @@ Kirigami.ScrollablePage {
             tooltip: i18n("Add new event")
             onTriggered: {
                 pageStack.push("qrc:AddEditEventPage.qml", {"itemId": itemId})
-                // pageStack.layers.push(Qt.resolvedUrl("AddEditEventPage.qml"), {"itemId": itemId}); //TODO
-
             }
-        },
+        }
     ]
 
     function openInfoSheet(index = -1) {

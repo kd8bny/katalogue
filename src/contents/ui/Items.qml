@@ -48,7 +48,7 @@ Kirigami.ScrollablePage {
         Kirigami.Card {
             showClickFeedback: true
             onClicked:  {
-                pageStack.push("qrc:Details.qml", {"itemName": name, "itemId": id})
+                pageStack.push("qrc:Details.qml", {"itemModelIndex": index, "itemId": id, "itemName": name})
             }
 
             banner {
