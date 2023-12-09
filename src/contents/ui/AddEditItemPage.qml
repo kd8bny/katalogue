@@ -10,7 +10,7 @@ import com.kd8bny.katalogue 1.0
 Kirigami.ScrollablePage {
     id: addEditItemPage
 
-    property int itemIndex: -1
+    property int itemModelIndex: -1
     property bool isEdit: false
     property bool isArchived: false
 
@@ -37,7 +37,7 @@ Kirigami.ScrollablePage {
         subtitle: i18n("Are you sure you want to delete Item")
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: {
-            ItemModel.deleteRecord(ItemModel.getId(itemIndex))
+            ItemModel.deleteRecord(ItemModel.getId(itemModelIndex))
             pageStack.clear()
             pageStack.push("qrc:Items.qml")
         }
@@ -48,8 +48,8 @@ Kirigami.ScrollablePage {
 
     Component.onCompleted: {
         if (isEdit) {
-            var recordData = ItemModel.getRecordAsList(itemIndex)
-
+            var recordData = ItemModel.getRecordAsList(itemModelIndex)
+// id here?
             nameField.text = recordData[1]
             makeField.text = recordData[2]
             modelField.text = recordData[3]

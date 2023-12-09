@@ -9,6 +9,7 @@ add_executable(katalogue
     data/attribute.cpp
     data/event.cpp
     data/item.cpp
+    data/note.cpp
     models/attributeModel.cpp
     models/attributeCategoryModel.cpp
     models/eventModel.cpp

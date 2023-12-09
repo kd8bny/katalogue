@@ -26,18 +26,6 @@ Kirigami.ScrollablePage {
                 pageStack.clear()
                 pageStack.push("qrc:Items.qml")
             }
-        },
-        Kirigami.Action {
-            text: i18n("Edit")
-            icon.name: "entry-edit"
-            tooltip: i18n("Edit item")
-
-            onTriggered: {
-                pageStack.push("qrc:AddEditItemPage.qml", {
-                    "itemId": itemId,
-                    "itemIndex": index
-                })
-            }
         }
     ]
 
@@ -46,6 +34,7 @@ Kirigami.ScrollablePage {
         ListElement { name: "Attributes" }
         ListElement { name: "Events" }
         ListElement { name: "Components" }
+        ListElement { name: "Notes" }
         ListElement { name: "Details" }
     }
 
@@ -76,6 +65,8 @@ Kirigami.ScrollablePage {
                     pageStack.push('qrc:Items.qml')
                     ItemModel.filterComponent()
                 }else if(menuListIndex == 3){
+                    //TODO notes model
+                }else if(menuListIndex == 4){
                     pageStack.push('qrc:ItemInfoPage.qml', {"itemModelIndex": itemModelIndex})
                 }
             }

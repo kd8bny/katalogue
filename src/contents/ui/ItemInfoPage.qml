@@ -14,6 +14,18 @@ Kirigami.ScrollablePage {  //TODO whole page layout
 
     title: "Details"
 
+    actions.contextualActions: [
+        Kirigami.Action {
+            text: i18n("Edit")
+            icon.name: "entry-edit"
+            tooltip: i18n("Edit item")
+
+            onTriggered: {
+                pageStack.push("qrc:AddEditItemPage.qml", {"itemId": itemId, "itemModelIndex": itemModelIndex})
+            }
+        }
+    ]
+
     Component.onCompleted: {
         var recordData = ItemModel.getRecordAsList(itemModelIndex)
 
