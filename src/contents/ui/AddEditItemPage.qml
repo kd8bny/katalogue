@@ -137,7 +137,7 @@ Kirigami.ScrollablePage {
                 }
 
                 ItemModel.setRecord(
-                    itemIndex,
+                    itemModelIndex,
                     nameField.text,
                     makeField.text,
                     modelField.text,

@@ -16,6 +16,7 @@ add_executable(katalogue
     models/eventModel.cpp
     models/eventCategoryModel.cpp
     models/itemModel.cpp
+    models/itemComponentModel.cpp
     models/itemTypeModel.cpp
     models/itemParentModel.cpp
     resources.qrc)

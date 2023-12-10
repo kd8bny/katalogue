@@ -19,6 +19,7 @@
 #include "models/eventModel.h"
 #include "models/eventCategoryModel.h"
 #include "models/itemModel.h"
+#include "models/itemComponentModel.h"
 #include "models/itemTypeModel.h"
 #include "models/itemParentModel.h"
 #include "version-katalogue.h"
@@ -28,6 +29,7 @@
 #include <KLocalizedString>
 
 #include "katalogueconfig.h"
+
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -96,6 +98,11 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     ItemModel itemModel;
     qmlRegisterSingletonInstance<ItemModel>("com.kd8bny.katalogue", 1, 0, "ItemModel", &itemModel);
+
+    // ItemModel itemComponentModel;
+    // qmlRegisterSingletonInstance<ItemModel>("com.kd8bny.katalogue", 1, 0, "ItemComponentModel", &itemComponentModel);
+    ItemComponentModel itemComponentModel;
+    qmlRegisterSingletonInstance<ItemComponentModel>("com.kd8bny.katalogue", 1, 0, "ItemComponentModel", &itemComponentModel);
 
     ItemTypeModel itemTypeModel;
     qmlRegisterSingletonInstance<ItemTypeModel>("com.kd8bny.katalogue", 1, 0, "ItemTypeModel", &itemTypeModel);

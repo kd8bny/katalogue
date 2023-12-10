@@ -65,16 +65,6 @@ Kirigami.ApplicationWindow {
                 }
             },
             Kirigami.Action {
-                text: i18n("Archive")
-                tooltip: i18n("Show archived Items")
-                icon.name: "backup"
-                onTriggered: {
-                    pageStack.clear()
-                    pageStack.push('qrc:Items.qml')
-                    ItemModel.filterArchive()
-                }
-            },
-            Kirigami.Action {
                 text: i18n("Todo")
                 icon.name: "view-task"
                 // onTriggered:
@@ -83,6 +73,16 @@ Kirigami.ApplicationWindow {
                 text: i18n("Notes")
                 icon.name: "note"
                 // onTriggered:
+            },
+            Kirigami.Action {
+                text: i18n("Archive")
+                tooltip: i18n("Show archived Items")
+                icon.name: "backup"
+                onTriggered: {
+                    pageStack.clear()
+                    pageStack.push('qrc:Items.qml')
+                    ItemModel.filterArchive()
+                }
             },
             Kirigami.Action {
                 text: i18n("About")

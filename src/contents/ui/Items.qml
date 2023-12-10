@@ -11,6 +11,8 @@ import com.kd8bny.katalogue 1.0
 Kirigami.ScrollablePage {
     id: itemsPage
 
+    property bool isComponentView: false
+
     Layout.fillWidth: true
 
     title: i18n("Katalogued Items")
@@ -24,8 +26,14 @@ Kirigami.ScrollablePage {
         }
     ]
 
+    Component.onCompleted: {
+        if(isComponentView){
+            itemsLayout.model=ItemComponentModel
+        }
+    }
+
     Kirigami.CardsListView {
-        id: layout
+        id: itemsLayout
         model: ItemModel
         delegate: itemsDelegate
 
@@ -38,17 +46,13 @@ Kirigami.ScrollablePage {
         }
     }
 
-    Component.onCompleted: {
-
-    }
-
     Component {
         id: itemsDelegate
 
         Kirigami.Card {
             showClickFeedback: true
             onClicked:  {
-                pageStack.push("qrc:Details.qml", {"itemModelIndex": index, "itemId": id, "itemName": name})
+                pageStack.push("qrc:Details.qml", {"itemModelIndex": index, "itemId": id, "itemName": name, "isComponentView": isComponentView})
             }
 
             banner {
@@ -72,59 +76,20 @@ Kirigami.ScrollablePage {
                             Layout.fillWidth: true
                         }
                     }
-                // GridLayout {
-                //     id: delegateLayout
-                //     anchors {
-                //         left: parent.left
-                //         top: parent.top
-                //         right: parent.right
-                //     }
-                //     rowSpacing: Kirigami.Units.largeSpacing
-                //     columnSpacing: Kirigami.Units.largeSpacing
-                //     columns: root.wideScreen ? 4 : 2
+                GridLayout {
+                    id: delegateLayout
+                    anchors {
+                        left: parent.left
+                        top: parent.top
+                        right: parent.right
+                    }
+                    rowSpacing: Kirigami.Units.largeSpacing
+                    columnSpacing: Kirigami.Units.largeSpacing
+                    columns: root.wideScreen ? 4 : 2
 
 
-                // }
+                }
             }
-            // actions: [
-            //       Kirigami.Action {
-            //         text: i18n("Attributes")
-            //         icon.name: "item"
-
-            //         onTriggered: pageStack.push("qrc:Attributes.qml", {"itemName": name, "itemId": id})
-            //     },
-            //     Kirigami.Action {
-            //         text: i18n("Events")
-            //         icon.name: "item"
-
-            //         onTriggered: pageStack.push("qrc:Events.qml", {"itemName": name, "itemId": id})
-
-
-            //     },
-            //     Kirigami.Action {
-            //         text: i18n("Components")
-            //         icon.name: "item"
-
-            //         onTriggered: {
-            //             pageStack.push('qrc:Items.qml')
-            //             ItemModel.filterComponent()
-            //         }
-            //     },
-            //     Kirigami.Action {
-            //         Layout.alignment: Qt.AlignRight
-            //         Layout.fillWidth: true
-            //         text: i18n("Edit")
-            //         icon.name: "entry-edit"
-            //         tooltip: i18n("Edit item")
-
-            //         onTriggered: {
-            //             pageStack.push("qrc:AddEditItemPage.qml", {
-            //                 "itemId": id,
-            //                 "itemIndex": index
-            //             })
-            //         }
-            //     }
-            // ]
         }
     }
 }

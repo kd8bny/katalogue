@@ -4,6 +4,9 @@
 #include "data/database.h"
 #include "data/item.h"
 
+#ifndef ITEM_MODEL_H
+#define ITEM_MODEL_H
+
 
 class ItemModel: public QSqlQueryModel
 {
@@ -63,3 +66,5 @@ private:
     QString modelQuery;
 
 };
+
+#endif

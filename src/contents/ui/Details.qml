@@ -14,6 +14,7 @@ Kirigami.ScrollablePage {
     required property int itemModelIndex  // Item Model index position
     required property int itemId          // Item Id from Database
     required property string itemName     // Item name field
+    property bool isComponentView
 
     title: i18n(itemName)
 
@@ -29,6 +30,16 @@ Kirigami.ScrollablePage {
         }
     ]
 
+    Component.onCompleted: {
+
+        console.log(isComponentView)
+
+        if(isComponentView){
+            menuModel.remove(2)  // Remove Components if Components
+        }
+        pageStack.push("qrc:Attributes.qml", {"itemName": itemName, "itemId": itemId})
+    }
+
     ListModel {
         id: menuModel
         ListElement { name: "Attributes" }
@@ -43,10 +54,6 @@ Kirigami.ScrollablePage {
 
         model: menuModel
         delegate: itemDelegate
-
-        Component.onCompleted: {
-            pageStack.push("qrc:Attributes.qml", {"itemName": itemName, "itemId": itemId})
-        }
     }
 
     Component {
@@ -56,17 +63,17 @@ Kirigami.ScrollablePage {
             label: i18n(name)
 
             onClicked: {
-                var menuListIndex = menuList.currentIndex
-                if(menuListIndex == 0){
+                if(name == "Attributes"){
                     pageStack.push("qrc:Attributes.qml", {"itemName": itemName, "itemId": itemId})
-                }else if(menuListIndex == 1){
+                }else if(name == "Events"){
                     pageStack.push("qrc:Events.qml", {"itemName": itemName, "itemId": itemId})
-                }else if(menuListIndex == 2){
-                    pageStack.push('qrc:Items.qml')
-                    ItemModel.filterComponent()
-                }else if(menuListIndex == 3){
+                }else if(name == "Components"){
+                    pageStack.push("qrc:Items.qml", {"isComponentView": true})
+                    ItemComponentModel.filterComponent()
+                    // TODO disable when compview
+                }else if(name == "Notes"){
                     //TODO notes model
-                }else if(menuListIndex == 4){
+                }else if(name == "Details"){
                     pageStack.push('qrc:ItemInfoPage.qml', {"itemModelIndex": itemModelIndex})
                 }
             }

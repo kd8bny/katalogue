@@ -12,6 +12,8 @@
 #include "attribute.h"
 #include "event.h"
 #include "item.h"
+#include "note.h"
+#include "todo.h"
 
 #ifndef DATABASE_H
 #define DATABASE_H
@@ -20,9 +22,11 @@
 #define DATABASE_NAME "katalogue.db"
 #define USER_VERSION 1
 
-#define TABLE_ITEMS "items"
-#define TABLE_EVENTS "events"
 #define TABLE_ATTRIBUTES "attributes"
+#define TABLE_EVENTS "events"
+#define TABLE_ITEMS "items"
+#define TABLE_NOTES "notes"
+#define TABLE_TODOS "todos"
 #define TABLE_DEFAULTS "defaults"
 
 #define KEY_ITEM_ID "fk_item_id"
@@ -43,6 +47,11 @@
 #define VALUE "value"
 #define YEAR "year"
 #define ODOMETER "odometer"
+
+#define TITLE "title"
+#define NOTE "note"
+#define DESCRIPTION "description"
+#define DUE_DATE "due_date"
 
 
 class Database : public QObject
@@ -65,6 +74,14 @@ public:
     bool insertEventEntry(Event event);
     bool updateEventEntry(Event event);
     bool deleteEventEntry(int id);
+
+    bool insertNoteEntry(Note note);
+    bool updateNoteEntry(Note note);
+    bool deleteNoteEntry(int id);
+
+    bool insertTodoEntry(Todo todo);
+    bool updateTodoEventEntry(Todo todo);
+    bool deleteTodoEntry(int id);
 
 private:
     QSqlDatabase db;

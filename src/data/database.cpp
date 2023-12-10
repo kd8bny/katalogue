@@ -304,6 +304,23 @@ bool Database::initializeSchema()
         "CONSTRAINT itemId FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
         "ON DELETE CASCADE ON UPDATE CASCADE)";
 
+    const QString queryNotes = "CREATE TABLE " TABLE_NOTES
+        " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        TITLE       " TEXT NOT NULL, "
+        NOTE        " VARCHAR(255), "
+        KEY_ITEM_ID " INT , "
+        "CONSTRAINT itemId FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
+        "ON DELETE CASCADE ON UPDATE CASCADE)";
+
+    const QString queryTodos = "CREATE TABLE " TABLE_TODOS
+        " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        DUE_DATE    " DATE NOT NULL, "
+        TITLE       " TEXT NOT NULL, "
+        DESCRIPTION " VARCHAR(255), "
+        KEY_ITEM_ID " INT , "
+        "CONSTRAINT itemId FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
+        "ON DELETE CASCADE ON UPDATE CASCADE)";
+
     if(!query.exec(queryItems)){
         qDebug() << query.lastError();
         return false;
@@ -315,6 +332,16 @@ bool Database::initializeSchema()
     }
 
     if(!query.exec(queryEvents)){
+        qDebug() << query.lastError();
+        return false;
+    }
+
+    if(!query.exec(queryNotes)){
+        qDebug() << query.lastError();
+        return false;
+    }
+
+    if(!query.exec(queryTodos)){
         qDebug() << query.lastError();
         return false;
     }
