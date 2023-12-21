@@ -13,7 +13,7 @@
 #include "event.h"
 #include "item.h"
 #include "note.h"
-#include "todo.h"
+#include "task.h"
 
 #ifndef DATABASE_H
 #define DATABASE_H
@@ -26,7 +26,7 @@
 #define TABLE_EVENTS "events"
 #define TABLE_ITEMS "items"
 #define TABLE_NOTES "notes"
-#define TABLE_TODOS "todos"
+#define TABLE_TASKS "tasks"
 #define TABLE_DEFAULTS "defaults"
 
 #define KEY_ITEM_ID "fk_item_id"
@@ -79,9 +79,9 @@ public:
     bool updateNoteEntry(Note note);
     bool deleteNoteEntry(int id);
 
-    bool insertTodoEntry(Todo todo);
-    bool updateTodoEventEntry(Todo todo);
-    bool deleteTodoEntry(int id);
+    bool insertTaskEntry(Task task);
+    bool updateTaskEntry(Task task);
+    bool deleteTaskEntry(int id);
 
 private:
     QSqlDatabase db;

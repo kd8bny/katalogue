@@ -266,6 +266,147 @@ bool Database::deleteEventEntry(int id)
     return isDelete;
 }
 
+bool Database::insertNoteEntry(Note note)
+{
+    bool isInsert = false;
+    QSqlQuery query;
+
+    query.prepare(QString(
+        "INSERT INTO %1 (%2, %3, %4) VALUES (:title, :note, :itemId)").arg(
+            TABLE_NOTES, TITLE, NOTE, KEY_ITEM_ID));
+
+    query.bindValue(":title", note.getTitle());
+    query.bindValue(":note", note.getNote());
+    query.bindValue(":itemId", note.getItemId());
+
+    if(query.exec()){
+        isInsert = true;
+    } else {
+        qDebug() << "Error inserting record " << TABLE_NOTES;
+        qDebug() << query.lastError();
+        qDebug() << query.lastQuery();
+    }
+
+    return isInsert;
+}
+
+bool Database::updateNoteEntry(Note note)
+{
+    bool isUpdate = false;
+    QSqlQuery query;
+
+    query.prepare(QString(
+        "UPDATE %1 SET %2=:title, %3=:note, %4=:itemId WHERE id=:noteId").arg(
+            TABLE_NOTES, TITLE, NOTE, KEY_ITEM_ID));
+
+    query.bindValue(":title", note.getTitle());
+    query.bindValue(":note", note.getNote());
+    query.bindValue(":itemId", note.getItemId());
+
+    query.bindValue(":eventId", note.getId());
+
+    if(query.exec()){
+        isUpdate = true;
+    } else {
+        qDebug() << "Error updating record " << TABLE_NOTES;
+        qDebug() << query.lastError();
+        qDebug() << query.lastQuery();
+    }
+
+    return isUpdate;
+}
+
+bool Database::deleteNoteEntry(int id)
+{
+    bool isDelete = false;
+    QSqlQuery query;
+
+    query.prepare(
+        QString("DELETE FROM %1 WHERE id=:noteId").arg(TABLE_NOTES));
+    query.bindValue(":noteId", id);
+
+    if(query.exec()){
+        isDelete = true;
+    } else {
+        qDebug() << "Error deleting record " << TABLE_NOTES;
+        qDebug() << "Error removing record " << query.lastError().text();
+    }
+
+    return isDelete;
+}
+
+bool Database::insertTaskEntry(Task task)
+{
+    bool isInsert = false;
+    QSqlQuery query;
+
+    query.prepare(QString(
+        "INSERT INTO %1 ( %2, %3, %4, %5, %6, %7, %8) VALUES "
+        "(:title, :desc, :duedate, :itemId)").arg(
+            TABLE_TASKS, TITLE, DESCRIPTION, DUE_DATE, KEY_ITEM_ID));
+
+    query.bindValue(":title", task.getTitle());
+    query.bindValue(":desc", task.getDescription());
+    query.bindValue(":duedate", task.getDueDate());
+    query.bindValue(":itemId", task.getItemId());
+
+    if(query.exec()){
+        isInsert = true;
+    } else {
+        qDebug() << "Error inserting record " << TABLE_TASKS;
+        qDebug() << query.lastError();
+        qDebug() << query.lastQuery();
+    }
+
+    return isInsert;
+}
+
+bool Database::updateTaskEntry(Task task)
+{
+    bool isUpdate = false;
+    QSqlQuery query;
+
+    query.prepare(QString(
+        "UPDATE %1 SET %2=:title, %3=:desc, %4=:duedate, %5=:itemId WHERE id=:taskId").arg(
+            TABLE_EVENTS, DATE, EVENT, COST, ODOMETER, CATEGORY, COMMENT));
+
+    query.bindValue(":title", task.getTitle());
+    query.bindValue(":desc", task.getDescription());
+    query.bindValue(":duedate", task.getDueDate());
+    query.bindValue(":itemId", task.getItemId());
+
+    query.bindValue(":taskId", task.getId());
+
+    if(query.exec()){
+        isUpdate = true;
+    } else {
+        qDebug() << "Error updating record " << TABLE_TASKS;
+        qDebug() << query.lastError();
+        qDebug() << query.lastQuery();
+    }
+
+    return isUpdate;
+}
+
+bool Database::deleteTaskEntry(int id)
+{
+    bool isDelete = false;
+    QSqlQuery query;
+
+    query.prepare(
+        QString("DELETE FROM %1 WHERE id=:taskId").arg(TABLE_TASKS));
+    query.bindValue(":taskId", id);
+
+    if(query.exec()){
+        isDelete = true;
+    } else {
+        qDebug() << "Error inserting record " << TABLE_TASKS;
+        qDebug() << "Error removing record " << query.lastError().text();
+    }
+
+    return isDelete;
+}
+
 bool Database::initializeSchema()
 {
     bool isSchemaCreate = false;
@@ -312,7 +453,7 @@ bool Database::initializeSchema()
         "CONSTRAINT itemId FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
         "ON DELETE CASCADE ON UPDATE CASCADE)";
 
-    const QString queryTodos = "CREATE TABLE " TABLE_TODOS
+    const QString queryTasks = "CREATE TABLE " TABLE_TASKS
         " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
         DUE_DATE    " DATE NOT NULL, "
         TITLE       " TEXT NOT NULL, "
@@ -341,7 +482,7 @@ bool Database::initializeSchema()
         return false;
     }
 
-    if(!query.exec(queryTodos)){
+    if(!query.exec(queryTasks)){
         qDebug() << query.lastError();
         return false;
     }

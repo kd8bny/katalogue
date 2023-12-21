@@ -14,7 +14,7 @@ Kirigami.ScrollablePage {
     required property int itemModelIndex  // Item Model index position
     required property int itemId          // Item Id from Database
     required property string itemName     // Item name field
-    property bool isComponentView
+    property bool isComponentView         // Component view or Item level view
 
     title: i18n(itemName)
 
@@ -31,9 +31,6 @@ Kirigami.ScrollablePage {
     ]
 
     Component.onCompleted: {
-
-        console.log(isComponentView)
-
         if(isComponentView){
             menuModel.remove(2)  // Remove Components if Components
         }
@@ -70,9 +67,8 @@ Kirigami.ScrollablePage {
                 }else if(name == "Components"){
                     pageStack.push("qrc:Items.qml", {"isComponentView": true})
                     ItemComponentModel.filterComponent()
-                    // TODO disable when compview
                 }else if(name == "Notes"){
-                    //TODO notes model
+                    pageStack.push("qrc:Notes.qml", {"itemName": itemName, "itemId": itemId})
                 }else if(name == "Details"){
                     pageStack.push('qrc:ItemInfoPage.qml', {"itemModelIndex": itemModelIndex})
                 }

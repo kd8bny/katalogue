@@ -1,16 +1,16 @@
 #include <QObject>
 #include <QDebug>
 
-#ifndef TODO_H
-#define TODO_H
+#ifndef TASK_H
+#define TASK_H
 
 
-class Todo
+class Task
 {
 
 public:
-    Todo(int id);
-    ~Todo();
+    Task(int id);
+    ~Task();
 
     int getId() const { return id; }
 
@@ -23,10 +23,14 @@ public:
     QString getDueDate() const { return dueDate; }
     void setDueDate(const QString &dueDate_) { dueDate = dueDate_; }
 
+    int getItemId() const { return itemId; }
+    void setItemId(int itemId_) { itemId = itemId_; }
+
     QVariantList asList();
 
 private:
     int id;
+    int itemId;
     QString title;
     QString description;
     QString dueDate;

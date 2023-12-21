@@ -10,7 +10,7 @@ add_executable(katalogue
     data/event.cpp
     data/item.cpp
     data/note.cpp
-    data/todo.cpp
+    data/task.cpp
     models/attributeModel.cpp
     models/attributeCategoryModel.cpp
     models/eventModel.cpp
@@ -19,6 +19,7 @@ add_executable(katalogue
     models/itemComponentModel.cpp
     models/itemTypeModel.cpp
     models/itemParentModel.cpp
+    models/noteModel.cpp
     resources.qrc)
 
 target_link_libraries(katalogue

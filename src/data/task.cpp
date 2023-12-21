@@ -1,16 +1,16 @@
-#include "todo.h"
+#include "task.h"
 
-Todo::Todo(int id_)
+Task::Task(int id_)
 {
     id = id_;
 }
 
-Todo::~Todo()
+Task::~Task()
 {
 
 }
 
-QVariantList Todo::asList()
+QVariantList Task::asList()
 {
     QVariantList list;
 
@@ -18,7 +18,7 @@ QVariantList Todo::asList()
     list.append(this->getTitle());
     list.append(this->getDescription());
     list.append(this->getDueDate());
+    list.append(this->getItemId());
 
-    QVariantList asList();
     return list;
 }

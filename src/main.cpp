@@ -22,6 +22,7 @@
 #include "models/itemComponentModel.h"
 #include "models/itemTypeModel.h"
 #include "models/itemParentModel.h"
+#include "models/noteModel.h"
 #include "version-katalogue.h"
 
 #include <KAboutData>
@@ -99,8 +100,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     ItemModel itemModel;
     qmlRegisterSingletonInstance<ItemModel>("com.kd8bny.katalogue", 1, 0, "ItemModel", &itemModel);
 
-    // ItemModel itemComponentModel;
-    // qmlRegisterSingletonInstance<ItemModel>("com.kd8bny.katalogue", 1, 0, "ItemComponentModel", &itemComponentModel);
     ItemComponentModel itemComponentModel;
     qmlRegisterSingletonInstance<ItemComponentModel>("com.kd8bny.katalogue", 1, 0, "ItemComponentModel", &itemComponentModel);
 
@@ -109,6 +108,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     ItemParentModel itemParentModel;
     qmlRegisterSingletonInstance<ItemParentModel>("com.kd8bny.katalogue", 1, 0, "ItemParentModel", &itemParentModel);
+
+    NoteModel noteModel;
+    qmlRegisterSingletonInstance<NoteModel>("com.kd8bny.katalogue", 1, 0, "NoteModel", &noteModel);
 
     engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));

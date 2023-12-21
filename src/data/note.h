@@ -20,10 +20,14 @@ public:
     QString getNote() const { return note; }
     void setNote(const QString &note_) { note = note_; }
 
+    int getItemId() const { return itemId; }
+    void setItemId(int itemId_) { itemId = itemId_; }
+
     QVariantList asList();
 
 private:
     int id;
+    int itemId;
     QString title;
     QString note;
 };

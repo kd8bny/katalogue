@@ -17,6 +17,7 @@ QVariantList Note::asList()
     list.append(this->getId());
     list.append(this->getTitle());
     list.append(this->getNote());
+    list.append(this->getItemId());
 
     return list;
 }
