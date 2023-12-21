@@ -65,7 +65,7 @@ Kirigami.ScrollablePage {
                 // The setting below defines a component's preferred size based on its content
                 implicitWidth: delegateLayout.implicitWidth
                 implicitHeight: delegateLayout.implicitHeight
-                        ColumnLayout {
+                    ColumnLayout {
 
                         Controls.Label {
                             Layout.fillWidth: true

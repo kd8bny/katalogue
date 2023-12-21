@@ -10,7 +10,7 @@ import com.kd8bny.katalogue 1.0
 Kirigami.ScrollablePage {
     id: addEditNotePage
 
-    required property int itemId
+    property int itemId: -1
     property int noteIndex: -1
 
     title: (noteIndex != -1) ? i18n("Edit Note") : i18n("Add Note")

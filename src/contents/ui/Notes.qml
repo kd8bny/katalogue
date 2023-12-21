@@ -4,8 +4,8 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15 as Controls
 import QtQuick.Layouts 1.15
-import org.kde.kirigami 2.20 as Kirigami
 import com.kd8bny.katalogue 1.0
+import org.kde.kirigami 2.20 as Kirigami
 
 
 Kirigami.ScrollablePage {
@@ -16,16 +16,16 @@ Kirigami.ScrollablePage {
 
     title: i18n("Notes")
 
-    // actions { //TODO
-    //     main: Kirigami.Action {
-    //         text: i18n("Add")
-    //         icon.name: "list-add"
-    //         tooltip: i18n("Add new attribute")
-    //         onTriggered: {
-    //             pageStack.push("qrc:AddEditAttributePage.qml", {"itemId": itemId})
-    //         }
-    //     }
-    // }
+    actions { //TODO
+        main: Kirigami.Action {
+            text: i18n("Add")
+            icon.name: "list-add"
+            tooltip: i18n("Add new note")
+            onTriggered: {
+                pageStack.push("qrc:AddEditNotePage.qml")
+            }
+        }
+    }
 
     // function openInfoSheet(index = -1) {
     //     var recordData = NoteModel.getRecordAsList(index)
@@ -50,7 +50,7 @@ Kirigami.ScrollablePage {
         // focus: true
 
         headerPositioning: ListView.OverlayHeader
-        header: itemName
+        // header: itemName
 
         Kirigami.PlaceholderMessage {
             anchors.centerIn: layout
@@ -64,13 +64,21 @@ Kirigami.ScrollablePage {
     Component {
         id: noteDelegate
 
-        Kirigami.AbstractCard {
+        Kirigami.Card {
             contentItem: Item {
-                implicitWidth: delegateLayout.implicitWidth
-                implicitHeight: delegateLayout.implicitHeight
-                GridLayout {
-                    id: delegateLayout
-                }
+                // implicitWidth: delegateLayout.implicitWidth
+                // implicitHeight: delegateLayout.implicitHeight
+                ColumnLayout {
+
+                        Controls.Label {
+                            Layout.fillWidth: true
+                            wrapMode: Text.WordWrap
+                            text: i18n(title + " " + note + " ")
+                        }
+                        Kirigami.Separator {
+                            Layout.fillWidth: true
+                        }
+                    }
             }
         }
     }

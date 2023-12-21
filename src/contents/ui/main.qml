@@ -72,7 +72,10 @@ Kirigami.ApplicationWindow {
             Kirigami.Action {
                 text: i18n("Notes")
                 icon.name: "note"
-                onTriggered: pageStack.push('qrc:Notes.qml')
+                onTriggered: {
+                    pageStack.clear()
+                    pageStack.push('qrc:Notes.qml')
+                }
             },
             Kirigami.Action {
                 text: i18n("Archive")

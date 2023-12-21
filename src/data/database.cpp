@@ -272,7 +272,7 @@ bool Database::insertNoteEntry(Note note)
     QSqlQuery query;
 
     query.prepare(QString(
-        "INSERT INTO %1 (%2, %3, %4) VALUES (:title, :note, :itemId)").arg(
+        "INSERT INTO %1 (%2, %3, %4) VALUES (:title, :noteContent, :itemId)").arg(
             TABLE_NOTES, TITLE, NOTE, KEY_ITEM_ID));
 
     query.bindValue(":title", note.getTitle());
@@ -449,8 +449,8 @@ bool Database::initializeSchema()
         " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
         TITLE       " TEXT NOT NULL, "
         NOTE        " VARCHAR(255), "
-        KEY_ITEM_ID " INT , "
-        "CONSTRAINT itemId FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
+        KEY_ITEM_ID " INT, "
+        "FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
         "ON DELETE CASCADE ON UPDATE CASCADE)";
 
     const QString queryTasks = "CREATE TABLE " TABLE_TASKS
@@ -458,8 +458,8 @@ bool Database::initializeSchema()
         DUE_DATE    " DATE NOT NULL, "
         TITLE       " TEXT NOT NULL, "
         DESCRIPTION " VARCHAR(255), "
-        KEY_ITEM_ID " INT , "
-        "CONSTRAINT itemId FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
+        KEY_ITEM_ID " INT, "
+        "FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
         "ON DELETE CASCADE ON UPDATE CASCADE)";
 
     if(!query.exec(queryItems)){

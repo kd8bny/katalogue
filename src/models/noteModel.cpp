@@ -47,8 +47,8 @@ void NoteModel::setItemId(QString itemId)
 
 void NoteModel::refresh()
 {
-    this->setQuery(this->modelQuery);
-    qDebug()<< this->modelQuery;
+    this->setQuery(this->modelQueryBase);
+    qDebug()<< this->modelQueryBase;
 }
 
 int NoteModel::getId(int row)

@@ -40,7 +40,7 @@ public slots:
     void refresh();
 
 private:
-    const QString modelQueryBase = QString("SELECT id, %1, %2, %3, %4 FROM %5 ").arg(
+    const QString modelQueryBase = QString("SELECT id, %1, %2, %3 FROM %5 ").arg(
         TITLE, NOTE, KEY_ITEM_ID, TABLE_NOTES);
 
     const QString modelQuerySetId = QString(" WHERE %1=%2");
