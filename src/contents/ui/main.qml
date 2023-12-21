@@ -65,14 +65,14 @@ Kirigami.ApplicationWindow {
                 }
             },
             Kirigami.Action {
-                text: i18n("Todo")
+                text: i18n("Tasks")
                 icon.name: "view-task"
                 // onTriggered:
             },
             Kirigami.Action {
                 text: i18n("Notes")
                 icon.name: "note"
-                // onTriggered:
+                onTriggered: pageStack.push('qrc:Notes.qml')
             },
             Kirigami.Action {
                 text: i18n("Archive")

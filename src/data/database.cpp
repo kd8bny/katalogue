@@ -276,7 +276,7 @@ bool Database::insertNoteEntry(Note note)
             TABLE_NOTES, TITLE, NOTE, KEY_ITEM_ID));
 
     query.bindValue(":title", note.getTitle());
-    query.bindValue(":note", note.getNote());
+    query.bindValue(":noteContent", note.getNoteContent());
     query.bindValue(":itemId", note.getItemId());
 
     if(query.exec()){
@@ -296,11 +296,11 @@ bool Database::updateNoteEntry(Note note)
     QSqlQuery query;
 
     query.prepare(QString(
-        "UPDATE %1 SET %2=:title, %3=:note, %4=:itemId WHERE id=:noteId").arg(
+        "UPDATE %1 SET %2=:title, %3=:noteContent, %4=:itemId WHERE id=:noteId").arg(
             TABLE_NOTES, TITLE, NOTE, KEY_ITEM_ID));
 
     query.bindValue(":title", note.getTitle());
-    query.bindValue(":note", note.getNote());
+    query.bindValue(":noteContent", note.getNoteContent());
     query.bindValue(":itemId", note.getItemId());
 
     query.bindValue(":eventId", note.getId());
