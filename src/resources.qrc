@@ -16,6 +16,7 @@
         <file alias="AddEditItemPage.qml">contents/ui/AddEditItemPage.qml</file>
         <file alias="AddEditAttributePage.qml">contents/ui/AddEditAttributePage.qml</file>
         <file alias="AddEditEventPage.qml">contents/ui/AddEditEventPage.qml</file>
+        <file alias="AddEditNotePage.qml">contents/ui/AddEditNotePage.qml</file>
         <file alias="EventInfoSheet.qml">contents/sheets/EventInfoSheet.qml</file>
         <file alias="AttributeInfoSheet.qml">contents/sheets/AttributeInfoSheet.qml</file>
     </qresource>
