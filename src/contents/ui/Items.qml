@@ -41,23 +41,18 @@ Kirigami.ScrollablePage {
             anchors.centerIn: parent
             width: parent.width - (Kirigami.Units.largeSpacing * 4)
 
-            visible: layout.count == 0
-            text: i18n("Select add to set an item")
+            visible: itemsLayout.count == 0
+            text: i18n("Select 'Add Item' to start your katalogue.")
         }
     }
 
     Component {
         id: itemsDelegate
 
-        Kirigami.Card {
+        Kirigami.AbstractCard {
             showClickFeedback: true
             onClicked:  {
                 pageStack.push("qrc:Details.qml", {"itemModelIndex": index, "itemId": id, "itemName": name, "isComponentView": isComponentView})
-            }
-
-            banner {
-                title: name
-                titleIcon: "car"
             }
 
             contentItem: Item {
@@ -65,29 +60,38 @@ Kirigami.ScrollablePage {
                 // The setting below defines a component's preferred size based on its content
                 implicitWidth: delegateLayout.implicitWidth
                 implicitHeight: delegateLayout.implicitHeight
-                    ColumnLayout {
-
-                        Controls.Label {
-                            Layout.fillWidth: true
-                            wrapMode: Text.WordWrap
-                            text: i18n(year + " " + make + " " + model)
-                        }
-                        Kirigami.Separator {
-                            Layout.fillWidth: true
-                        }
-                    }
                 GridLayout {
                     id: delegateLayout
                     anchors {
                         left: parent.left
                         top: parent.top
                         right: parent.right
+                        //IMPORTANT: never put the bottom margin
                     }
                     rowSpacing: Kirigami.Units.largeSpacing
                     columnSpacing: Kirigami.Units.largeSpacing
-                    columns: root.wideScreen ? 4 : 2
+                    columns: width > Kirigami.Units.gridUnit * 20 ? 4 : 2
+                    Kirigami.Icon {
+                        source: "file-catalog-symbolic"
+                        Layout.fillHeight: true
 
-
+                        Layout.fillWidth: false
+                        Layout.maximumHeight: Kirigami.Units.iconSizes.huge
+                        Layout.preferredWidth: height
+                        Layout.rowSpan: 2
+                    }
+                    ColumnLayout {
+                        Kirigami.Heading {
+                            level: 1
+                            text: name
+                        }
+                        Kirigami.Separator {
+                            Layout.fillWidth: true
+                        }
+                        Controls.Label {
+                            text: i18n("%1 %2 %3", year, make, model)
+                        }
+                    }
                 }
             }
         }
