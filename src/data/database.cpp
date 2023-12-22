@@ -277,7 +277,9 @@ bool Database::insertNoteEntry(Note note)
 
     query.bindValue(":title", note.getTitle());
     query.bindValue(":noteContent", note.getNoteContent());
-    query.bindValue(":itemId", note.getItemId());
+    if(note.getItemId() != -1){
+        query.bindValue(":itemId", note.getItemId());
+    }
 
     if(query.exec()){
         isInsert = true;
@@ -348,7 +350,9 @@ bool Database::insertTaskEntry(Task task)
     query.bindValue(":title", task.getTitle());
     query.bindValue(":desc", task.getDescription());
     query.bindValue(":duedate", task.getDueDate());
-    query.bindValue(":itemId", task.getItemId());
+    if(task.getItemId() != -1){
+        query.bindValue(":itemId", task.getItemId());
+    }
 
     if(query.exec()){
         isInsert = true;
