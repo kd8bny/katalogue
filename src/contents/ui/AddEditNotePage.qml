@@ -62,7 +62,7 @@ Kirigami.ScrollablePage {
             id: titleField
             Kirigami.FormData.label: i18nc("@label:textbox", "Title:")
         }
-        Controls.TextField {
+        Controls.TextArea {
             id: noteContentField
             Kirigami.FormData.label: i18nc("@label:textbox", "Note:")
         }

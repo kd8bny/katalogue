@@ -8,6 +8,7 @@
 #include <QDate>
 #include <QDebug>
 #include <QUuid>
+#include <QDateTime>
 
 #include "attribute.h"
 #include "event.h"
@@ -35,6 +36,7 @@
 #define CATEGORY "category"
 #define COMMENT "comment"
 #define COST "cost"
+#define CREATED "created"
 #define DATE "date"
 #define GROUP "item_group"
 #define KEY "key"
@@ -42,12 +44,12 @@
 #define EVENT "event"
 #define MAKE "make"
 #define MODEL "model"
+#define MODIFIED "modified"
 #define NAME "name"
 #define TYPE "type"
 #define VALUE "value"
 #define YEAR "year"
 #define ODOMETER "odometer"
-
 #define TITLE "title"
 #define NOTE "note"
 #define DESCRIPTION "description"
@@ -86,6 +88,7 @@ public:
 private:
     QSqlDatabase db;
 
+    QString getCurrentTime();
     bool initializeSchema();
 };
 

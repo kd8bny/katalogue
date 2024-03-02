@@ -60,67 +60,85 @@ Kirigami.ScrollablePage {
         }
     }
 
-    Kirigami.FormLayout {
-        Controls.TextField {
-            id: dateField
-            Kirigami.FormData.label: i18nc("@label:textbox", "Date:")
-        }
-        Controls.TextField {
-            id: eventField
-            Kirigami.FormData.label: i18nc("@label:textbox", "Event:")
-        }
-        Controls.TextField {
-            id: costField
-            Kirigami.FormData.label: i18nc("@label:textbox", "Cost:")
-        }
-        Controls.TextField {
-            id: odometerField
-            Kirigami.FormData.label: i18nc("@label:textbox", "Odometer:")
-        }
-        Controls.TextField {
-            id: commentField
-            Kirigami.FormData.label: i18nc("@label:textbox", "Comment:")
-        }
-        Controls.ComboBox {
-            id: categoryBox
-            Kirigami.FormData.label: i18nc("@label:textbox", "Category")
-            editable: true
-            model: EventCategoryModel
-        }
-        Controls.Button {
-            id: doneButton
-            Layout.fillWidth: true
-            text: (eventIndex != -1) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
-            // enabled: (keyField.text.length & valueField.text.length) > 0
-            onClicked: {
-                var category = ""
-                if (categoryBox.find(categoryBox.editText) === -1){
-                    category = categoryBox.editText
-                }else{
-                    category = categoryBox.currentText
+    ColumnLayout{
+        Kirigami.FormLayout {
+            Controls.TextField {
+                id: dateField
+                Kirigami.FormData.label: i18nc("@label:textbox", "Date:")
+            }
+            Controls.TextField {
+                id: eventField
+                Kirigami.FormData.label: i18nc("@label:textbox", "Event:")
+            }
+            Controls.TextField {
+                id: costField
+                Kirigami.FormData.label: i18nc("@label:textbox", "Cost:")
+            }
+            Controls.TextField {
+                id: odometerField
+                Kirigami.FormData.label: i18nc("@label:textbox", "Odometer:")
+            }
+            Controls.ComboBox {
+                id: categoryBox
+                Kirigami.FormData.label: i18nc("@label:textbox", "Category")
+                editable: true
+                model: EventCategoryModel
+            }
+
+            Controls.ScrollView {
+                id: view
+                Kirigami.FormData.label: i18nc("@label:textbox", "Category")
+                // anchors.fill: parent
+                // Layout.fillWidth: true
+                width: Kirigami.Units.gridUnit * 12
+                height: Kirigami.Units.gridUnit * 6
+                // Layout.minimumWidth: Kirigami.Units.gridUnit * 12
+                // Layout.minimumHeight: Kirigami.Units.gridUnit * 12
+                // ScrollBar.vertical.interactive: true
+                Controls.TextArea {
+                    Layout.fillWidth: true
+                    placeholderText: i18nc("Comment")
+                    // Layout.height: 6
+                    id: commentField
+
+                    // Layout.height: Kirigami.Units.gridUnit * 12
+                    wrapMode: Text.WordWrap
                 }
-
-                EventModel.setRecord(
-                    eventIndex,
-                    dateField.text,
-                    eventField.text,
-                    parseFloat(costField.text),
-                    parseFloat(odometerField.text),
-                    category,
-                    commentField.text,
-                    itemId)
-
-                //TODO check results of insert
-                pageStack.pop()
             }
-        }
-        Controls.Button {
-            id: cancelButton
-            Layout.fillWidth: true
-            text: i18nc("@action:button", "Cancel")
-            onClicked: {
-                pageStack.pop()
+            Controls.Button {
+                id: doneButton
+                Layout.fillWidth: true
+                text: (eventIndex != -1) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
+                // enabled: (keyField.text.length & valueField.text.length) > 0
+                onClicked: {
+                    var category = ""
+                    if (categoryBox.find(categoryBox.editText) === -1){
+                        category = categoryBox.editText
+                    }else{
+                        category = categoryBox.currentText
+                    }
+
+                    EventModel.setRecord(
+                        eventIndex,
+                        dateField.text,
+                        eventField.text,
+                        parseFloat(costField.text),
+                        parseFloat(odometerField.text),
+                        category,
+                        commentField.text,
+                        itemId)
+
+                    //TODO check results of insert
+                    pageStack.pop()
+                }
             }
-        }
+            Controls.Button {
+                id: cancelButton
+                Layout.fillWidth: true
+                text: i18nc("@action:button", "Cancel")
+                onClicked: {
+                    pageStack.pop()
+                }
+            }
     }
 }

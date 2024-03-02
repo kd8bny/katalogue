@@ -18,7 +18,7 @@ Kirigami.ScrollablePage {
 
     actions { //TODO
         main: Kirigami.Action {
-            text: i18n("Add")
+            text: i18n("Add Note")
             icon.name: "list-add"
             tooltip: i18n("Add new note")
             onTriggered: {
@@ -44,7 +44,7 @@ Kirigami.ScrollablePage {
     Kirigami.CardsListView {
         id: layout
         model: NoteModel
-        delegate: noteDelegate
+        delegate: notesDelegate
         // section.property: "category"
         // section.delegate: sectionDelegate
         // focus: true
@@ -57,28 +57,51 @@ Kirigami.ScrollablePage {
             width: layout.width - (Kirigami.Units.largeSpacing * 4)
 
             visible: layout.count == 0
-            text: i18n("Select add to add a general Note")
+            text: i18n("Select 'Add Note' to insert a new Note")
         }
     }
 
     Component {
-        id: noteDelegate
+        id: notesDelegate
 
         Kirigami.Card {
-            contentItem: Item {
-                // implicitWidth: delegateLayout.implicitWidth
-                // implicitHeight: delegateLayout.implicitHeight
-                ColumnLayout {
+            showClickFeedback: true
+            // onClicked:  {
+            //     pageStack.push("qrc:Details.qml", {"itemModelIndex": index, "itemId": id, "itemName": name, "isComponentView": isComponentView})
+            // }
 
-                        Controls.Label {
-                            Layout.fillWidth: true
-                            wrapMode: Text.WordWrap
-                            text: i18n(title + " " + note + " ")
-                        }
-                        Kirigami.Separator {
-                            Layout.fillWidth: true
-                        }
+            // TODO actions
+
+            banner {
+                // source: "../banner.jpg"
+                title: title
+                // The title can be positioned in the banner
+                titleAlignment: Qt.AlignLeft | Qt.AlignBottom
+            }
+
+
+            contentItem: Item {
+                // implicitWidth/Height define the natural width/height of an item if no width or height is specified.
+                // The setting below defines a component's preferred size based on its content
+                implicitWidth: delegateLayout.implicitWidth
+                implicitHeight: delegateLayout.implicitHeight
+
+                GridLayout {
+                    id: delegateLayout
+                    anchors {
+                        left: parent.left
+                        top: parent.top
+                        right: parent.right
+                        //IMPORTANT: never put the bottom margin
                     }
+                    rowSpacing: Kirigami.Units.largeSpacing
+                    columnSpacing: Kirigami.Units.largeSpacing
+                    columns: width > Kirigami.Units.gridUnit * 20 ? 4 : 2
+                    Controls.Text {
+                        wrapMode: TextEdit.Wrap
+                        text: note
+                    }
+                }
             }
         }
     }
