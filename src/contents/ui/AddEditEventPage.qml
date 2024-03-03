@@ -46,7 +46,7 @@ Kirigami.ScrollablePage {
         var locale = Qt.locale()
         var currentDate = new Date()
         var dateString = currentDate.toLocaleDateString(locale, Locale.ShortFormat);
-        dateField.text = dateString
+        dateField.text = Qt.formatDateTime(currentDate, Qt.ISODate)
 
         if (eventIndex != -1) {
             var recordData = EventModel.getRecordAsList(eventIndex)
@@ -141,4 +141,5 @@ Kirigami.ScrollablePage {
                 }
             }
     }
+}
 }

@@ -34,7 +34,7 @@ Kirigami.ScrollablePage {
     function openInfoSheet(index = -1) {
         var recordData = EventModel.getRecordAsList(index)
 
-        eventInfoSheet.date = recordData[1]
+        eventInfoSheet.date = recordData[1].split("T")[0]
         eventInfoSheet.event = recordData[2]
         eventInfoSheet.cost = recordData[3]
         eventInfoSheet.odometer = recordData[4]
@@ -88,7 +88,7 @@ Kirigami.ScrollablePage {
 
                 Controls.Label {
                     wrapMode: Text.WordWrap
-                    text: date
+                    text: date.split("T")[0]
                 }
                 Controls.Label {
                     Layout.fillWidth: true
