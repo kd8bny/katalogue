@@ -30,9 +30,9 @@ Kirigami.ScrollablePage {
     function openInfoSheet(index = -1) {
         var recordData = AttributeModel.getRecordAsList(index)
 
-        attributeInfoSheet.key = recordData[1]
-        attributeInfoSheet.value = recordData[2]
-        attributeInfoSheet.category = recordData[3]
+        attributeInfoSheet.key = recordData[3]
+        attributeInfoSheet.value = recordData[4]
+        attributeInfoSheet.category = recordData[5]
 
         attributeInfoSheet.open()
     }

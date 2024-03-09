@@ -14,7 +14,11 @@ public:
 
     int getId() const { return id; }
 
-    QVariantList asList();
+    QString getCreatedDate() const { return createdDate; }
+    void setCreatedDate(const QString &createdDate_) { createdDate = createdDate_; }
+
+    QString getModifiedDate() const { return modifiedDate; }
+    void setModifiedDate(const QString &modifiedDate_) { modifiedDate = modifiedDate_; }
 
     QString getKey() const { return key; }
     void setKey(const QString &key_) { key = key_; }
@@ -28,13 +32,16 @@ public:
     int getItemId() const { return itemId; }
     void setItemId(int itemId_) { itemId = itemId_; }
 
+    QVariantList asList();
+
 private:
     int id;
-    int itemId;
+    QString createdDate;
+    QString modifiedDate;
     QString key;
     QString value;
     QString category;
-
+    int itemId;
 };
 
 #endif

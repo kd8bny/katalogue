@@ -15,6 +15,8 @@ QVariantList Item::asList()
     QVariantList list;
 
     list.append(this->getId());
+    list.append(this->getCreatedDate());
+    list.append(this->getModifiedDate());
     list.append(this->getName());
     list.append(this->getMake());
     list.append(this->getModel());

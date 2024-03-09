@@ -14,6 +14,12 @@ public:
 
     int getId() const { return id; }
 
+    QString getCreatedDate() const { return createdDate; }
+    void setCreatedDate(const QString &createdDate_) { createdDate = createdDate_; }
+
+    QString getModifiedDate() const { return modifiedDate; }
+    void setModifiedDate(const QString &modifiedDate_) { modifiedDate = modifiedDate_; }
+
     QString getTitle() const { return title; }
     void setTitle(const QString &title_) { title = title_; }
 
@@ -30,10 +36,12 @@ public:
 
 private:
     int id;
-    int itemId;
+    QString createdDate;
+    QString modifiedDate;
     QString title;
     QString description;
     QString dueDate;
+    int itemId;
 };
 
 #endif

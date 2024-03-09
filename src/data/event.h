@@ -9,10 +9,16 @@ class Event
 {
 
 public:
-    Event(int id);
+    explicit Event(int id);
     ~Event();
 
     int getId() const { return id; }
+
+    QString getCreatedDate() const { return createdDate; }
+    void setCreatedDate(const QString &createdDate_) { createdDate = createdDate_; }
+
+    QString getModifiedDate() const { return modifiedDate; }
+    void setModifiedDate(const QString &modifiedDate_) { modifiedDate = modifiedDate_; }
 
     QString getDate() const { return date; }
     void setDate(const QString &date_) { date = date_; }
@@ -39,13 +45,15 @@ public:
 
 private:
     int id;
-    int itemId;
+    QString createdDate;
+    QString modifiedDate;
     QString date;
     QString event;
     float cost;
     float odometer;
     QString category;
     QString comment;
+    int itemId;
 };
 
 #endif

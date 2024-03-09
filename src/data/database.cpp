@@ -13,11 +13,6 @@ Database::~Database()
 
 QString Database::getCurrentTime()
 {
-    // auto currentTime = std::chrono::system_clock::now();
-    // std::time_t currentTime_t = std::chrono::system_clock::to_time_t(currentTime);
-    // std::tm* currentTime_tm = std::gmtime(&currentTime_t);
-    // qDebug() << std::asctime(currentTime_tm);
-
     QDateTime dt = QDateTime::currentDateTime();
     dt.setTimeSpec(Qt::UTC);
 

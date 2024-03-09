@@ -34,12 +34,12 @@ Kirigami.ScrollablePage {
     function openInfoSheet(index = -1) {
         var recordData = EventModel.getRecordAsList(index)
 
-        eventInfoSheet.date = recordData[1].split("T")[0]
-        eventInfoSheet.event = recordData[2]
-        eventInfoSheet.cost = recordData[3]
-        eventInfoSheet.odometer = recordData[4]
-        eventInfoSheet.category = recordData[5]
-        eventInfoSheet.comment = recordData[6]
+        eventInfoSheet.date = recordData[3].split("T")[0]
+        eventInfoSheet.event = recordData[4]
+        eventInfoSheet.cost = recordData[5]
+        eventInfoSheet.odometer = recordData[6]
+        eventInfoSheet.category = recordData[7]
+        eventInfoSheet.comment = recordData[8]
 
         eventInfoSheet.open()
     }

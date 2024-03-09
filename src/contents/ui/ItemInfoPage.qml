@@ -29,21 +29,22 @@ Kirigami.ScrollablePage {  //TODO whole page layout
     Component.onCompleted: {
         var recordData = ItemModel.getRecordAsList(itemModelIndex)
 
-        nameField.text = recordData[1]
-        makeField.text = recordData[2]
-        modelField.text = recordData[3]
-        yearField.text = recordData[4]
+        print(recordData)
+        nameField.text = recordData[3]
+        makeField.text = recordData[4]
+        modelField.text = recordData[5]
+        yearField.text = recordData[6]
 
-        typeBox.find(recordData[5])
+        typeBox.find(recordData[7])
 
-        if (recordData[6]){
-            itemArchived.checked = recordData[6]
+        if (recordData[8]){
+            itemArchived.checked = recordData[8]
             isArchived = true
         }
 
-        if (recordData[7]){
-            itemParentEnabled.checked = recordData[6]
-            itemParentBox.find(recordData[7])
+        if (recordData[9]){
+            itemParentEnabled.checked = recordData[9]
+            itemParentBox.find(recordData[9])
         }
     }
 

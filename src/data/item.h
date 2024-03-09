@@ -9,10 +9,16 @@ class Item
 {
 
 public:
-    Item(int id);
+    explicit Item(int id);
     ~Item();
 
     int getId() const { return id; }
+
+    QString getCreatedDate() const { return createdDate; }
+    void setCreatedDate(const QString &createdDate_) { createdDate = createdDate_; }
+
+    QString getModifiedDate() const { return modifiedDate; }
+    void setModifiedDate(const QString &modifiedDate_) { modifiedDate = modifiedDate_; }
 
     QString getName() const { return name; }
     void setName(const QString &name_) { name = name_; }
@@ -39,6 +45,8 @@ public:
 
 private:
     int id;
+    QString createdDate;
+    QString modifiedDate;
     QString name;
     QString make;
     QString model;
