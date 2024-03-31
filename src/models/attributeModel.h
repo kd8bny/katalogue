@@ -1,8 +1,11 @@
 #include <QObject>
 #include <QSqlQueryModel>
+#include <QSqlQuery>
 
 #include "data/database.h"
 #include "data/attribute.h"
+
+// #include "AttributeModel.moc"
 
 class AttributeModel: public QSqlQueryModel
 {
@@ -34,18 +37,19 @@ public:
 protected:
     QHash<int, QByteArray> roleNames() const override;
 
-
-signals:
-    void dataChanged();
-
 public slots:
     void refresh();
 
-private:
-    const QString modelQueryBase = QString("SELECT id, %1, %2, %3, %4 FROM %5 ").arg(
-        KEY, VALUE, CATEGORY, KEY_ITEM_ID, TABLE_ATTRIBUTES);
+// signals:
+//     void dataChanged();
 
-    const QString modelQuerySetId = QString(" WHERE %1=%2");
+// private:
+//     const QString modelQueryBase = QStringLiteral("SELECT id, %1, %2, %3, %4 FROM %5 ").arg(
+//         Database->KEY, VALUE, CATEGORY, KEY_ITEM_ID, TABLE_ATTRIBUTES);
 
-    QString modelQuery;
+//     const QString modelQuerySetId = QStringLiteral(" WHERE %1=%2");
+
+    // QString modelQuery;
 };
+
+

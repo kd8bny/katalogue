@@ -1,5 +1,6 @@
 #include <QObject>
 #include <QDebug>
+#include <QVariantList>
 
 #ifndef ATTRIBUTE_H
 #define ATTRIBUTE_H
@@ -9,7 +10,7 @@ class Attribute
 {
 
 public:
-    Attribute(int id);
+    explicit Attribute(int id);
     ~Attribute();
 
     int getId() const { return id; }

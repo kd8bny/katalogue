@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <QUuid>
 #include <QDateTime>
+#include <QString>
 
 #include "attribute.h"
 #include "event.h"
@@ -18,43 +19,6 @@
 
 #ifndef DATABASE_H
 #define DATABASE_H
-
-#define DATABASE_TYPE "QSQLITE"
-#define DATABASE_NAME "katalogue.db"
-#define USER_VERSION 1
-
-#define TABLE_ATTRIBUTES "attributes"
-#define TABLE_EVENTS "events"
-#define TABLE_ITEMS "items"
-#define TABLE_NOTES "notes"
-#define TABLE_TASKS "tasks"
-#define TABLE_DEFAULTS "defaults"
-
-#define KEY_ITEM_ID "fk_item_id"
-
-#define ARCHIVED "archived"
-#define CATEGORY "category"
-#define COMMENT "comment"
-#define COST "cost"
-#define CREATED "created"
-#define DATE "date"
-#define GROUP "item_group"
-#define KEY "key"
-#define LABEL "label"
-#define EVENT "event"
-#define MAKE "make"
-#define MODEL "model"
-#define MODIFIED "modified"
-#define NAME "name"
-#define TYPE "type"
-#define VALUE "value"
-#define YEAR "year"
-#define ODOMETER "odometer"
-#define TITLE "title"
-#define NOTE "note"
-#define DESCRIPTION "description"
-#define DUE_DATE "due_date"
-
 
 class Database : public QObject
 {
@@ -81,15 +45,52 @@ public:
     bool updateNoteEntry(Note note);
     bool deleteNoteEntry(int id);
 
-    bool insertTaskEntry(Task task);
+    bool insertTaskEntry(Task &task);
     bool updateTaskEntry(Task task);
     bool deleteTaskEntry(int id);
+    const QString KEY = QStringLiteral("key");
 
 private:
     QSqlDatabase db;
 
     QString getCurrentTime();
     bool initializeSchema();
+
+    int DATABASE_VERSION = 1;
+    const QString DATABASE_TYPE = QStringLiteral("QSQLITE");
+    const QString DATABASE_NAME = QStringLiteral("katalogue.db");
+
+    const QString TABLE_ATTRIBUTES = QStringLiteral("attributes");
+    const QString TABLE_EVENTS = QStringLiteral("events");
+    const QString TABLE_ITEMS = QStringLiteral("items");
+    const QString TABLE_NOTES = QStringLiteral("notes");
+    const QString TABLE_TASKS = QStringLiteral("tasks");
+    const QString TABLE_DEFAULTS = QStringLiteral("defaults");
+
+    const QString KEY_ITEM_ID = QStringLiteral("fk_item_id");
+
+    const QString ARCHIVED = QStringLiteral("archived");
+    const QString CATEGORY = QStringLiteral("category");
+    const QString COMMENT = QStringLiteral("comment");
+    const QString COST = QStringLiteral("cost");
+    const QString CREATED = QStringLiteral("created");
+    const QString DATE = QStringLiteral("date");
+    const QString GROUP = QStringLiteral("item_group");
+    const QString KEY2 = QStringLiteral("key");
+    const QString LABEL = QStringLiteral("label");
+    const QString EVENT = QStringLiteral("event");
+    const QString MAKE = QStringLiteral("make");
+    const QString MODEL = QStringLiteral("model");
+    const QString MODIFIED = QStringLiteral("modified");
+    const QString NAME = QStringLiteral("name");
+    const QString TYPE = QStringLiteral("type");
+    const QString VALUE = QStringLiteral("value");
+    const QString YEAR = QStringLiteral("year");
+    const QString ODOMETER = QStringLiteral("odometer");
+    const QString TITLE = QStringLiteral("title");
+    const QString NOTE = QStringLiteral("note");
+    const QString DESCRIPTION = QStringLiteral("description");
+    const QString DUE_DATE = QStringLiteral("due_date");
 };
 
 #endif

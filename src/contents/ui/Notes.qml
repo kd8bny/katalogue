@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2022 Daryl Bennett <kd8bny@gmail.com>
 
-import QtQuick 2.15
+import QtQuick 6.0
 import QtQuick.Controls 2.15 as Controls
 import QtQuick.Layouts 1.15
 import com.kd8bny.katalogue 1.0

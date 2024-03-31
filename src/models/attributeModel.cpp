@@ -4,9 +4,9 @@
 AttributeModel::AttributeModel(QObject *parent) :
     QSqlQueryModel(parent)
 {
-    QObject::connect(this, SIGNAL(dataChanged()), this, SLOT(refresh()));
+    // QObject::connect(this, SIGNAL(dataChanged()), this, SLOT(refresh()));
 
-    this->refresh();
+    // this->refresh();
 }
 
 AttributeModel::~AttributeModel()
@@ -39,8 +39,7 @@ QHash<int, QByteArray> AttributeModel::roleNames() const {
 
 void AttributeModel::setItemId(QString itemId)
 {
-    this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(
-        KEY_ITEM_ID, itemId);
+    this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(KEY_ITEM_ID, itemId);
 
     this->setQuery(modelQuery);
     emit dataChanged();

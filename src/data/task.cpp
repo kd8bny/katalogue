@@ -14,13 +14,13 @@ QVariantList Task::asList()
 {
     QVariantList list;
 
-    list.append(this->getId());
-    list.append(this->getCreatedDate());
-    list.append(this->getModifiedDate());
-    list.append(this->getTitle());
-    list.append(this->getDescription());
-    list.append(this->getDueDate());
-    list.append(this->getItemId());
+    list.append(QVariant(this->getId()));
+    list.append(QVariant(this->getCreatedDate()));
+    list.append(QVariant(this->getModifiedDate()));
+    list.append(QVariant(this->getTitle()));
+    list.append(QVariant(this->getDescription()));
+    list.append(QVariant(this->getDueDate()));
+    list.append(QVariant(this->getItemId()));
 
     return list;
 }

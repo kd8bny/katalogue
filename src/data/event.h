@@ -1,5 +1,6 @@
 #include <QObject>
 #include <QDebug>
+#include <QVariantList>
 
 #ifndef EVENT_H
 #define EVENT_H

@@ -20,7 +20,7 @@ public slots:
     void refresh();
 
 private:
-    const QString modelQuery = QString(
+    const QString modelQuery = QStringLiteral(
         "SELECT DISTINCT %1 FROM %2").arg(CATEGORY, TABLE_ATTRIBUTES);
 
 };

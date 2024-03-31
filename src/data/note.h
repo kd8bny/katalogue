@@ -1,5 +1,6 @@
 #include <QObject>
 #include <QDebug>
+#include <QVariantList>
 
 #ifndef NOTE_H
 #define NOTE_H
@@ -9,7 +10,7 @@ class Note
 {
 
 public:
-    Note(int id);
+    explicit Note(int id);
     ~Note();
 
     int getId() const { return id; }

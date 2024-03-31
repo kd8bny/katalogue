@@ -14,16 +14,16 @@ QVariantList Event::asList()
 {
     QVariantList list;
 
-    list.append(this->getId());
-    list.append(this->getCreatedDate());
-    list.append(this->getModifiedDate());
-    list.append(this->getDate());
-    list.append(this->getEvent());
-    list.append(this->getCost());
-    list.append(this->getOdometer());
-    list.append(this->getCategory());
-    list.append(this->getComment());
-    list.append(this->getItemId());
+    list.append(QVariant(this->getId()));
+    list.append(QVariant(this->getCreatedDate()));
+    list.append(QVariant(this->getModifiedDate()));
+    list.append(QVariant(this->getDate()));
+    list.append(QVariant(this->getEvent()));
+    list.append(QVariant(this->getCost()));
+    list.append(QVariant(this->getOdometer()));
+    list.append(QVariant(this->getCategory()));
+    list.append(QVariant(this->getComment()));
+    list.append(QVariant(this->getItemId()));
 
     return list;
 }

@@ -14,16 +14,16 @@ QVariantList Item::asList()
 {
     QVariantList list;
 
-    list.append(this->getId());
-    list.append(this->getCreatedDate());
-    list.append(this->getModifiedDate());
-    list.append(this->getName());
-    list.append(this->getMake());
-    list.append(this->getModel());
-    list.append(this->getYear());
-    list.append(this->getType());
-    list.append(this->getArchived());
-    list.append(this->getParent());
+    list.append(QVariant(this->getId()));
+    list.append(QVariant(this->getCreatedDate()));
+    list.append(QVariant(this->getModifiedDate()));
+    list.append(QVariant(this->getName()));
+    list.append(QVariant(this->getMake()));
+    list.append(QVariant(this->getModel()));
+    list.append(QVariant(this->getYear()));
+    list.append(QVariant(this->getType()));
+    list.append(QVariant(this->getArchived()));
+    list.append(QVariant(this->getParent()));
 
     return list;
 }

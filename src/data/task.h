@@ -1,5 +1,6 @@
 #include <QObject>
 #include <QDebug>
+#include <QVariantList>
 
 #ifndef TASK_H
 #define TASK_H

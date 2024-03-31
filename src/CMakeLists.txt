@@ -23,17 +23,18 @@ add_executable(katalogue
     resources.qrc)
 
 target_link_libraries(katalogue
-    Qt5::Core
-    Qt5::Gui
-    Qt5::Qml
-    Qt5::Quick
-    Qt5::QuickControls2
-    Qt5::Svg
-    Qt5::Sql
-    KF5::I18n
-    KF5::CoreAddons
-    KF5::ConfigCore
-    KF5::ConfigGui)
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Qml
+    Qt6::Quick
+    Qt6::QuickControls2
+    Qt6::Svg
+    Qt6::Sql
+    Qt6::Widgets
+    KF6::I18n
+    KF6::CoreAddons
+    KF6::ConfigCore
+    KF6::ConfigGui)
 
 kconfig_add_kcfg_files(katalogue GENERATE_MOC katalogueconfig.kcfgc)
 target_compile_options(katalogue PUBLIC)

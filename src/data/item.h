@@ -1,5 +1,6 @@
 #include <QObject>
 #include <QDebug>
+#include <QVariantList>
 
 #ifndef ITEM_H
 #define ITEM_H
