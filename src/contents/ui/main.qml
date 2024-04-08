@@ -101,19 +101,19 @@ Kirigami.ApplicationWindow {
         id: contextDrawer
     }
 
-    // Items {
-    //     id: itemsPage
-    // }
+    Items {
+        id: itemsPage
+    }
 
-    // AttributeInfoSheet {
-    //     id: attributeInfoSheet
-    // }
+    AttributeInfoSheet {
+        id: attributeInfoSheet
+    }
 
-    // EventInfoSheet {
-    //     id: eventInfoSheet
-    // }
+    EventInfoSheet {
+        id: eventInfoSheet
+    }
 
-    // pageStack.globalToolBar.style: Kirigami.ApplicationHeaderStyle.ToolBar
-    // pageStack.initialPage: itemsPage
+    pageStack.globalToolBar.style: Kirigami.ApplicationHeaderStyle.ToolBar
+    pageStack.initialPage: itemsPage
 
 }
