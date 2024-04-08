@@ -13,14 +13,14 @@ public:
     explicit ItemTypeModel(QObject *parent = nullptr);
     ~ItemTypeModel();
 
-signals:
+private:
+    const QString modelQuery = QStringLiteral("SELECT DISTINCT %1 FROM %2").arg(
+        Database::TYPE, Database::TABLE_ITEMS);
+
+Q_SIGNALS:
     void dataChanged();
 
-public slots:
+public Q_SLOTS:
     void refresh();
-
-private:
-    const QString modelQuery = QString(
-        "SELECT DISTINCT %1 FROM %2").arg(TYPE, TABLE_ITEMS);
 
 };

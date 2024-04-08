@@ -9,7 +9,7 @@ ItemModel::ItemModel(QObject *parent) :
     QObject::connect(this, SIGNAL(filterComponent()), this, SLOT(setComponentQuery()));
     QObject::connect(this, SIGNAL(dataChanged()), this, SLOT(refresh()));
 
-    emit setItemQuery();
+    Q_EMIT setItemQuery();
     this->refresh();
 }
 
@@ -32,13 +32,13 @@ QHash<int, QByteArray> ItemModel::roleNames() const {
 
     QHash<int, QByteArray> roles;
     roles[rID] = "id";
-    roles[rNAME] = NAME;
-    roles[rMAKE] = MAKE;
-    roles[rMODEL] = MODEL;
-    roles[rYEAR] = YEAR;
-    roles[rTYPE] = TYPE;
-    roles[rARCHIVED] = ARCHIVED;
-    roles[rPARENT] = KEY_ITEM_ID;
+    roles[rNAME] = Database::NAME.toUtf8();
+    roles[rMAKE] = Database::MAKE.toUtf8();
+    roles[rMODEL] = Database::MODEL.toUtf8();
+    roles[rYEAR] = Database::YEAR.toUtf8();
+    roles[rTYPE] = Database::TYPE.toUtf8();
+    roles[rARCHIVED] = Database::ARCHIVED.toUtf8();
+    roles[rPARENT] = Database::KEY_ITEM_ID.toUtf8();
 
     return roles;
 }
@@ -46,19 +46,19 @@ QHash<int, QByteArray> ItemModel::roleNames() const {
 void ItemModel::setItemQuery()
 {
     modelQuery = this->modelQueryBase + this->modelQueryItem;
-    emit dataChanged();
+    Q_EMIT dataChanged();
 }
 
 void ItemModel::setArchiveQuery()
 {
     modelQuery = this->modelQueryBase + this->modelQueryArchive;
-    emit dataChanged();
+    Q_EMIT dataChanged();
 }
 
 void ItemModel::setComponentQuery()
 {
     modelQuery = this->modelQueryBase + this->modelQueryComponent;
-    emit dataChanged();
+    Q_EMIT dataChanged();
 }
 
 void ItemModel::refresh()
@@ -120,7 +120,7 @@ bool ItemModel::setRecord(int itemIndex, QString name, QString make,
     }
 
     if (success)
-        emit dataChanged();
+        Q_EMIT dataChanged();
 
     return success;
 
@@ -135,7 +135,7 @@ bool ItemModel::deleteRecord(int itemId)
     success = db.deleteItemEntry(itemId);
 
     if (success)
-        emit dataChanged();
+        Q_EMIT dataChanged();
 
     return success;
 }

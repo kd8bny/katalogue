@@ -40,31 +40,30 @@ public:
 protected:
     QHash<int, QByteArray> roleNames() const override;
 
-signals:
+private:
+    const QString modelQueryBase = QStringLiteral(
+        "SELECT id, %1, %2, %3, %4, %5, %6 FROM %7").arg(
+            Database::NAME, Database::MAKE, Database::MODEL, Database::YEAR, Database::TYPE, Database::ARCHIVED, Database::TABLE_ITEMS);
+    const QString modelQueryItem = QStringLiteral(
+        " WHERE %1 IS NULL AND %2 IS 0").arg(Database::KEY_ITEM_ID, Database::ARCHIVED);
+    const QString modelQueryArchive = QStringLiteral(
+        " WHERE %1 IS 1").arg(Database::ARCHIVED);
+    const QString modelQueryComponent = QStringLiteral(
+        " WHERE %1 IS NOT NULL AND %2 IS 0").arg(Database::KEY_ITEM_ID, Database::ARCHIVED);
+
+    QString modelQuery;
+
+Q_SIGNALS:
     void filterItem();
     void filterArchive();
     void filterComponent();
     void dataChanged();
 
-public slots:
+public Q_SLOTS:
     void setItemQuery();
     void setArchiveQuery();
     void setComponentQuery();
     void refresh();
-
-private:
-    const QString modelQueryBase = QString(
-        "SELECT id, %1, %2, %3, %4, %5, %6 FROM %7").arg(
-            NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, TABLE_ITEMS);
-    const QString modelQueryItem = QString(
-        " WHERE %1 IS NULL AND %2 IS 0").arg(KEY_ITEM_ID, ARCHIVED);
-    const QString modelQueryArchive = QString(
-        " WHERE %1 IS 1").arg(ARCHIVED);
-    const QString modelQueryComponent = QString(
-        " WHERE %1 IS NOT NULL AND %2 IS 0").arg(KEY_ITEM_ID, ARCHIVED);
-
-    QString modelQuery;
-
 };
 
 #endif

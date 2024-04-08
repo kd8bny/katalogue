@@ -13,14 +13,14 @@ public:
     explicit AttributeCategoryModel(QObject *parent = nullptr);
     ~AttributeCategoryModel();
 
-signals:
-    void dataChanged();
-
-public slots:
-    void refresh();
-
 private:
     const QString modelQuery = QStringLiteral(
-        "SELECT DISTINCT %1 FROM %2").arg(CATEGORY, TABLE_ATTRIBUTES);
+        "SELECT DISTINCT %1 FROM %2").arg(Database::CATEGORY, Database::TABLE_ATTRIBUTES);
+
+Q_SIGNALS:
+    void dataChanged();
+
+public Q_SLOTS:
+    void refresh();
 
 };

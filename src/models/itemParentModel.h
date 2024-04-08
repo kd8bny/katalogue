@@ -13,15 +13,15 @@ public:
     explicit ItemParentModel(QObject *parent = nullptr);
     ~ItemParentModel();
 
-signals:
+private:
+    const QString modelQuery = QStringLiteral(
+        "SELECT DISTINCT %1 FROM %2 WHERE %3 IS NULL").arg(
+            Database::NAME, Database::TABLE_ITEMS, Database::KEY_ITEM_ID);
+
+Q_SIGNALS:
     void dataChanged();
 
-public slots:
+public Q_SLOTS:
     void refresh();
-
-private:
-    const QString modelQuery = QString(
-        "SELECT DISTINCT %1 FROM %2 WHERE %3 IS NULL").arg(
-            NAME, TABLE_ITEMS, KEY_ITEM_ID);
 
 };

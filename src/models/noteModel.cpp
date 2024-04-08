@@ -29,9 +29,9 @@ QHash<int, QByteArray> NoteModel::roleNames() const {
 
     QHash<int, QByteArray> roles;
     roles[rID] = "id";
-    roles[rTitle] = TITLE;
-    roles[rNote] = NOTE;
-    roles[rItemID] = KEY_ITEM_ID;
+    roles[rTitle] = Database::TITLE.toUtf8();
+    roles[rNote] = Database::NOTE.toUtf8();
+    roles[rItemID] = Database::KEY_ITEM_ID.toUtf8();
 
     return roles;
 }
@@ -39,10 +39,10 @@ QHash<int, QByteArray> NoteModel::roleNames() const {
 void NoteModel::setItemId(QString itemId)
 {
     this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(
-        KEY_ITEM_ID, itemId);
+        Database::KEY_ITEM_ID, itemId);
 
     this->setQuery(modelQuery);
-    emit dataChanged();
+    Q_EMIT dataChanged();
 }
 
 void NoteModel::refresh()
@@ -98,7 +98,7 @@ bool NoteModel::setRecord(int noteIndex, QString title, QString noteContent, int
     }
 
     if (success)
-        emit dataChanged();
+        Q_EMIT dataChanged();
 
     return success;
 
@@ -113,7 +113,7 @@ bool NoteModel::deleteRecord(int noteId)
     success = db.deleteNoteEntry(noteId);
 
     if (success)
-        emit dataChanged();
+        Q_EMIT dataChanged();
 
     return success;
 }

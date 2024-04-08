@@ -29,13 +29,13 @@ QHash<int, QByteArray> EventModel::roleNames() const {
 
     QHash<int, QByteArray> roles;
     roles[rID] = "id";
-    roles[rDate] = DATE;
-    roles[rEvent] = EVENT;
-    roles[rCost] = COST;
-    roles[rOdometer] = ODOMETER;
-    roles[rCategory] = CATEGORY;
-    roles[rComment] = COMMENT;
-    roles[rItemID] = KEY_ITEM_ID;
+    roles[rDate] = Database::DATE.toUtf8();
+    roles[rEvent] = Database::EVENT.toUtf8();
+    roles[rCost] = Database::COST.toUtf8();
+    roles[rOdometer] = Database::ODOMETER.toUtf8();
+    roles[rCategory] = Database::CATEGORY.toUtf8();
+    roles[rComment] = Database::COMMENT.toUtf8();
+    roles[rItemID] = Database::KEY_ITEM_ID.toUtf8();
 
     return roles;
 }
@@ -43,10 +43,10 @@ QHash<int, QByteArray> EventModel::roleNames() const {
 void EventModel::setItemId(QString itemId)
 {
     this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(
-        KEY_ITEM_ID, itemId);
+        Database::KEY_ITEM_ID, itemId);
 
     this->setQuery(modelQuery);
-    emit dataChanged();
+    Q_EMIT dataChanged();
 }
 
 void EventModel::refresh()
@@ -111,7 +111,7 @@ bool EventModel::setRecord(int eventIndex, QString date, QString eventName,
     }
 
     if (success)
-        emit dataChanged();
+        Q_EMIT dataChanged();
 
     return success;
 
@@ -126,7 +126,7 @@ bool EventModel::deleteRecord(int eventId)
     success = db.deleteEventEntry(eventId);
 
     if (success)
-        emit dataChanged();
+        Q_EMIT dataChanged();
 
     return success;
 }

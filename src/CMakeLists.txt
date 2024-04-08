@@ -5,6 +5,8 @@ add_executable(katalogue
     main.cpp
     about.cpp
     katalogue.cpp
+    resources.qrc
+
     data/database.cpp
     data/attribute.cpp
     data/event.cpp
@@ -20,7 +22,7 @@ add_executable(katalogue
     models/itemTypeModel.cpp
     models/itemParentModel.cpp
     models/noteModel.cpp
-    resources.qrc)
+    )
 
 target_link_libraries(katalogue
     Qt6::Core

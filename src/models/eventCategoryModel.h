@@ -13,14 +13,14 @@ public:
     explicit EventCategoryModel(QObject *parent = nullptr);
     ~EventCategoryModel();
 
-signals:
+private:
+    const QString modelQuery = QStringLiteral("SELECT DISTINCT %1 FROM %2").arg(
+        Database::CATEGORY, Database::TABLE_EVENTS);
+
+Q_SIGNALS:
     void dataChanged();
 
-public slots:
+public Q_SLOTS:
     void refresh();
-
-private:
-    const QString modelQuery = QString(
-        "SELECT DISTINCT %1 FROM %2").arg(CATEGORY, TABLE_EVENTS);
 
 };

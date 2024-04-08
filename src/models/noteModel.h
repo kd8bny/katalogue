@@ -32,18 +32,18 @@ public:
 protected:
     QHash<int, QByteArray> roleNames() const override;
 
-
-signals:
-    void dataChanged();
-
-public slots:
-    void refresh();
-
 private:
-    const QString modelQueryBase = QString("SELECT id, %1, %2, %3 FROM %5 ").arg(
-        TITLE, NOTE, KEY_ITEM_ID, TABLE_NOTES);
+    const QString modelQueryBase = QStringLiteral("SELECT id, %1, %2, %3 FROM %5 ").arg(
+        Database::TITLE, Database::NOTE, Database::KEY_ITEM_ID, Database::TABLE_NOTES);
 
-    const QString modelQuerySetId = QString(" WHERE %1=%2");
+    const QString modelQuerySetId = QStringLiteral(" WHERE %1=%2");
 
     QString modelQuery;
+
+Q_SIGNALS:
+    void dataChanged();
+
+public Q_SLOTS:
+    void refresh();
+
 };

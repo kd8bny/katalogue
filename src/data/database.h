@@ -90,10 +90,6 @@ private:
     const int DATABASE_VERSION = 1;
     const QString DATABASE_TYPE = QStringLiteral("QSQLITE");
     const QString DATABASE_NAME = QStringLiteral("katalogue.db");
-
-
 };
-
-
 
 #endif

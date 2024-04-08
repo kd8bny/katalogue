@@ -1,16 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-// SPDX-FileCopyrightText: 2022 Daryl Bennett <kd8bny@gmail.com>
-
+// SPDX-FileCopyrightText: 2024 Daryl Bennett <kd8bny@gmail.com>
 
 import QtQuick
-import QtQuick.Controls as QQC2
+import QtQuick.Controls as Controls
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 
-// import QtQuick
-// import QtQuick.Controls 2.15 as Controls
-// import QtQuick.Layouts 1.15
-// import org.kde.kirigami 2.20 as Kirigami
 import com.kd8bny.katalogue
 
 Kirigami.ApplicationWindow {
@@ -106,19 +101,19 @@ Kirigami.ApplicationWindow {
         id: contextDrawer
     }
 
-    Items {
-        id: itemsPage
-    }
+    // Items {
+    //     id: itemsPage
+    // }
 
-    AttributeInfoSheet {
-        id: attributeInfoSheet
-    }
+    // AttributeInfoSheet {
+    //     id: attributeInfoSheet
+    // }
 
-    EventInfoSheet {
-        id: eventInfoSheet
-    }
+    // EventInfoSheet {
+    //     id: eventInfoSheet
+    // }
 
-    pageStack.globalToolBar.style: Kirigami.ApplicationHeaderStyle.ToolBar
-    pageStack.initialPage: itemsPage
+    // pageStack.globalToolBar.style: Kirigami.ApplicationHeaderStyle.ToolBar
+    // pageStack.initialPage: itemsPage
 
 }

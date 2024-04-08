@@ -15,15 +15,15 @@
 #include "about.h"
 #include "katalogue.h"
 #include "data/database.h"
-// #include "models/attributeModel.h"
-// #include "models/attributeCategoryModel.h"
-// #include "models/eventModel.h"
-// #include "models/eventCategoryModel.h"
-// #include "models/itemModel.h"
-// #include "models/itemComponentModel.h"
-// #include "models/itemTypeModel.h"
-// #include "models/itemParentModel.h"
-// #include "models/noteModel.h"
+#include "models/attributeModel.h"
+#include "models/attributeCategoryModel.h"
+#include "models/eventModel.h"
+#include "models/eventCategoryModel.h"
+#include "models/itemModel.h"
+#include "models/itemComponentModel.h"
+#include "models/itemTypeModel.h"
+#include "models/itemParentModel.h"
+#include "models/noteModel.h"
 #include "version-katalogue.h"
 
 #include <KAboutData>
@@ -84,32 +84,32 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     database.connect(qPath);
     qmlRegisterSingletonInstance<Database>("com.kd8bny.katalogue", 1, 0, "Database", &database);
 
-    // AttributeModel attributeModel;
-    // qmlRegisterSingletonInstance<AttributeModel>("com.kd8bny.katalogue", 1, 0, "AttributeModel", &attributeModel);
+    AttributeModel attributeModel;
+    qmlRegisterSingletonInstance<AttributeModel>("com.kd8bny.katalogue", 1, 0, "AttributeModel", &attributeModel);
 
-    // AttributeCategoryModel attributeCategoryModel;
-    // qmlRegisterSingletonInstance<AttributeCategoryModel>("com.kd8bny.katalogue", 1, 0, "AttributeCategoryModel", &attributeCategoryModel);
+    AttributeCategoryModel attributeCategoryModel;
+    qmlRegisterSingletonInstance<AttributeCategoryModel>("com.kd8bny.katalogue", 1, 0, "AttributeCategoryModel", &attributeCategoryModel);
 
-    // EventModel eventModel;
-    // qmlRegisterSingletonInstance<EventModel>("com.kd8bny.katalogue", 1, 0, "EventModel", &eventModel);
+    EventModel eventModel;
+    qmlRegisterSingletonInstance<EventModel>("com.kd8bny.katalogue", 1, 0, "EventModel", &eventModel);
 
-    // EventCategoryModel eventCategoryModel;
-    // qmlRegisterSingletonInstance<EventCategoryModel>("com.kd8bny.katalogue", 1, 0, "EventCategoryModel", &eventCategoryModel);
+    EventCategoryModel eventCategoryModel;
+    qmlRegisterSingletonInstance<EventCategoryModel>("com.kd8bny.katalogue", 1, 0, "EventCategoryModel", &eventCategoryModel);
 
-    // ItemModel itemModel;
-    // qmlRegisterSingletonInstance<ItemModel>("com.kd8bny.katalogue", 1, 0, "ItemModel", &itemModel);
+    ItemModel itemModel;
+    qmlRegisterSingletonInstance<ItemModel>("com.kd8bny.katalogue", 1, 0, "ItemModel", &itemModel);
 
-    // ItemComponentModel itemComponentModel;
-    // qmlRegisterSingletonInstance<ItemComponentModel>("com.kd8bny.katalogue", 1, 0, "ItemComponentModel", &itemComponentModel);
+    ItemComponentModel itemComponentModel;
+    qmlRegisterSingletonInstance<ItemComponentModel>("com.kd8bny.katalogue", 1, 0, "ItemComponentModel", &itemComponentModel);
 
-    // ItemTypeModel itemTypeModel;
-    // qmlRegisterSingletonInstance<ItemTypeModel>("com.kd8bny.katalogue", 1, 0, "ItemTypeModel", &itemTypeModel);
+    ItemTypeModel itemTypeModel;
+    qmlRegisterSingletonInstance<ItemTypeModel>("com.kd8bny.katalogue", 1, 0, "ItemTypeModel", &itemTypeModel);
 
-    // ItemParentModel itemParentModel;
-    // qmlRegisterSingletonInstance<ItemParentModel>("com.kd8bny.katalogue", 1, 0, "ItemParentModel", &itemParentModel);
+    ItemParentModel itemParentModel;
+    qmlRegisterSingletonInstance<ItemParentModel>("com.kd8bny.katalogue", 1, 0, "ItemParentModel", &itemParentModel);
 
-    // NoteModel noteModel;
-    // qmlRegisterSingletonInstance<NoteModel>("com.kd8bny.katalogue", 1, 0, "NoteModel", &noteModel);
+    NoteModel noteModel;
+    qmlRegisterSingletonInstance<NoteModel>("com.kd8bny.katalogue", 1, 0, "NoteModel", &noteModel);
 
     engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));

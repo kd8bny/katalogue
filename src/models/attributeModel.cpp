@@ -29,20 +29,20 @@ QHash<int, QByteArray> AttributeModel::roleNames() const {
 
     QHash<int, QByteArray> roles;
     roles[rID] = "id";
-    roles[rKey] = KEY;
-    roles[rValue] = VALUE;
-    roles[rCategory] = CATEGORY;
-    roles[rItemID] = KEY_ITEM_ID;
+    roles[rKey] = Database::KEY.toUtf8();
+    roles[rValue] = Database::VALUE.toUtf8();
+    roles[rCategory] = Database::CATEGORY.toUtf8();
+    roles[rItemID] = Database::KEY_ITEM_ID.toUtf8();
 
     return roles;
 }
 
 void AttributeModel::setItemId(QString itemId)
 {
-    this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(KEY_ITEM_ID, itemId);
+    this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(Database::KEY_ITEM_ID, itemId);
 
     this->setQuery(modelQuery);
-    emit dataChanged();
+    Q_EMIT dataChanged();
 }
 
 void AttributeModel::refresh()
@@ -101,7 +101,7 @@ bool AttributeModel::setRecord(int attributeIndex, QString key, QString value,
     }
 
     if (success)
-        emit dataChanged();
+        Q_EMIT dataChanged();
 
     return success;
 
@@ -116,7 +116,7 @@ bool AttributeModel::deleteRecord(int eventId)
     success = db.deleteAttributeEntry(eventId);
 
     if (success)
-        emit dataChanged();
+        Q_EMIT dataChanged();
 
     return success;
 }

@@ -1,37 +1,36 @@
 #include "database.h"
 
+const QString Database::TABLE_ATTRIBUTES = QStringLiteral("attributes");
+const QString Database::TABLE_EVENTS = QStringLiteral("events");
+const QString Database::TABLE_ITEMS = QStringLiteral("items");
+const QString Database::TABLE_NOTES = QStringLiteral("notes");
+const QString Database::TABLE_TASKS = QStringLiteral("tasks");
+const QString Database::TABLE_DEFAULTS = QStringLiteral("defaults");
 
-const static QString TABLE_ATTRIBUTES = QStringLiteral("attributes");
-const static QString TABLE_EVENTS = QStringLiteral("events");
-const static QString TABLE_ITEMS = QStringLiteral("items");
-const static QString TABLE_NOTES = QStringLiteral("notes");
-const static QString TABLE_TASKS = QStringLiteral("tasks");
-const static QString TABLE_DEFAULTS = QStringLiteral("defaults");
+const QString Database::ARCHIVED = QStringLiteral("archived");
+const QString Database::CATEGORY = QStringLiteral("category");
+const QString Database::COMMENT = QStringLiteral("comment");
+const QString Database::COST = QStringLiteral("cost");
+const QString Database::CREATED = QStringLiteral("created");
+const QString Database::DATE = QStringLiteral("date");
+const QString Database::GROUP = QStringLiteral("item_group");
+const QString Database::KEY = QStringLiteral("key");
+const QString Database::LABEL = QStringLiteral("label");
+const QString Database::EVENT = QStringLiteral("event");
+const QString Database::MAKE = QStringLiteral("make");
+const QString Database::MODEL = QStringLiteral("model");
+const QString Database::MODIFIED = QStringLiteral("modified");
+const QString Database::NAME = QStringLiteral("name");
+const QString Database::TYPE = QStringLiteral("type");
+const QString Database::VALUE = QStringLiteral("value");
+const QString Database::YEAR = QStringLiteral("year");
+const QString Database::ODOMETER = QStringLiteral("odometer");
+const QString Database::TITLE = QStringLiteral("title");
+const QString Database::NOTE = QStringLiteral("note");
+const QString Database::DESCRIPTION = QStringLiteral("description");
+const QString Database::DUE_DATE = QStringLiteral("due_date");
 
-const static QString ARCHIVED = QStringLiteral("archived");
-const static QString CATEGORY = QStringLiteral("category");
-const static QString COMMENT = QStringLiteral("comment");
-const static QString COST = QStringLiteral("cost");
-const static QString CREATED = QStringLiteral("created");
-const static QString DATE = QStringLiteral("date");
-const static QString GROUP = QStringLiteral("item_group");
-const static QString KEY = QStringLiteral("key");
-const static QString LABEL = QStringLiteral("label");
-const static QString EVENT = QStringLiteral("event");
-const static QString MAKE = QStringLiteral("make");
-const static QString MODEL = QStringLiteral("model");
-const static QString MODIFIED = QStringLiteral("modified");
-const static QString NAME = QStringLiteral("name");
-const static QString TYPE = QStringLiteral("type");
-const static QString VALUE = QStringLiteral("value");
-const static QString YEAR = QStringLiteral("year");
-const static QString ODOMETER = QStringLiteral("odometer");
-const static QString TITLE = QStringLiteral("title");
-const static QString NOTE = QStringLiteral("note");
-const static QString DESCRIPTION = QStringLiteral("description");
-const static QString DUE_DATE = QStringLiteral("due_date");
-
-const static QString KEY_ITEM_ID = QStringLiteral("fk_item_id");
+const QString Database::KEY_ITEM_ID = QStringLiteral("fk_item_id");
 
 
 Database::Database(QObject *parent)
@@ -96,7 +95,7 @@ bool Database::insertItemEntry(Item item)
 
     query.prepare(QStringLiteral("INSERT INTO %1 (%2, %3, %4, %5, %6, %7, %8, %9, %10) "
         "VALUES (:created, :modified, :name, :make, :model, :year, :type, :archived, :parent)").arg(
-            ::TABLE_ITEMS, ::CREATED, ::MODIFIED, ::NAME, ::MAKE, ::MODEL, ::YEAR, ::TYPE, ::ARCHIVED, ::KEY_ITEM_ID));
+            TABLE_ITEMS, CREATED, MODIFIED, NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, KEY_ITEM_ID));
 
     QString currentTime = this->getCurrentTime();
 
@@ -130,7 +129,7 @@ bool Database::updateItemEntry(Item item)
 
     query.prepare(QStringLiteral("UPDATE %1 SET %2=:modified, %3=:name, %4=:make, %5=:model, "
         "%6=:year, %7=:type, %8=:archived, %9=:parent WHERE id=:id").arg(
-            ::TABLE_ITEMS, ::MODIFIED, ::NAME, ::MAKE, ::MODEL, ::YEAR, ::TYPE, ::ARCHIVED, ::KEY_ITEM_ID));
+            TABLE_ITEMS, MODIFIED, NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, KEY_ITEM_ID));
 
     QString currentTime = this->getCurrentTime();
 
@@ -164,7 +163,7 @@ bool Database::deleteItemEntry(int id)
     bool isDelete = false;
     QSqlQuery query;
 
-    query.prepare(QStringLiteral("DELETE FROM %1 WHERE id=:itemId").arg(::TABLE_ITEMS));
+    query.prepare(QStringLiteral("DELETE FROM %1 WHERE id=:itemId").arg(TABLE_ITEMS));
     query.bindValue(QStringLiteral(":itemId"), id);
 
     if(query.exec()){
@@ -183,7 +182,7 @@ bool Database::insertAttributeEntry(Attribute attribute)
 
     query.prepare(QStringLiteral(
         "INSERT INTO %1 (%2, %3, %4, %5, %6, %7) VALUES (:created, :modified, :key, :value, :category, :itemId)").arg(
-            ::TABLE_ATTRIBUTES, ::CREATED, ::MODIFIED, ::KEY, ::VALUE, ::CATEGORY, ::KEY_ITEM_ID));
+            TABLE_ATTRIBUTES, CREATED, MODIFIED, KEY, VALUE, CATEGORY, KEY_ITEM_ID));
 
     QString currentTime = this->getCurrentTime();
 
@@ -198,7 +197,7 @@ bool Database::insertAttributeEntry(Attribute attribute)
     if(query.exec()){
         isInsert = true;
     } else {
-        qDebug() << "Error inserting record " << ::TABLE_ATTRIBUTES;
+        qDebug() << "Error inserting record " << TABLE_ATTRIBUTES;
         qDebug() << query.lastError();
     }
 
@@ -212,7 +211,7 @@ bool Database::updateAttributeEntry(Attribute attribute)
 
     query.prepare(QStringLiteral(
         "UPDATE %1 SET %2=:modified, %3=:key, %4=:value, %5=:category WHERE id=:attributeId").arg(
-            ::TABLE_ATTRIBUTES, ::MODIFIED, ::KEY, ::VALUE, ::CATEGORY));
+            TABLE_ATTRIBUTES, MODIFIED, KEY, VALUE, CATEGORY));
 
     QString currentTime = this->getCurrentTime();
 
@@ -228,7 +227,7 @@ bool Database::updateAttributeEntry(Attribute attribute)
     if(query.exec()){
         isUpdate = true;
     } else {
-        qDebug() << "Error updating record " << ::TABLE_ATTRIBUTES;
+        qDebug() << "Error updating record " << TABLE_ATTRIBUTES;
         qDebug() << query.lastError();
     }
 
@@ -241,7 +240,7 @@ bool Database::deleteAttributeEntry(int attributeId)
     QSqlQuery query;
 
     query.prepare(
-        QStringLiteral("DELETE FROM %1 WHERE id=:attributeId").arg(::TABLE_ATTRIBUTES));
+        QStringLiteral("DELETE FROM %1 WHERE id=:attributeId").arg(TABLE_ATTRIBUTES));
     query.bindValue(QStringLiteral(":attributeId"), attributeId);
 
     if(query.exec()){
@@ -261,7 +260,7 @@ bool Database::insertEventEntry(Event event)
     query.prepare(QStringLiteral(
         "INSERT INTO %1 ( %2, %3, %4, %5, %6, %7, %8, %9, %10) VALUES "
         "(:created, :modified, :date, :event, :cost, :odometer, :category, :comment, :itemId)").arg(
-            ::TABLE_EVENTS, ::CREATED, ::MODIFIED, ::DATE, ::EVENT, ::COST, ::ODOMETER, ::CATEGORY, ::COMMENT, ::KEY_ITEM_ID));
+            TABLE_EVENTS, CREATED, MODIFIED, DATE, EVENT, COST, ODOMETER, CATEGORY, COMMENT, KEY_ITEM_ID));
 
     QString currentTime = this->getCurrentTime();
 
@@ -279,7 +278,7 @@ bool Database::insertEventEntry(Event event)
     if(query.exec()){
         isInsert = true;
     } else {
-        qDebug() << "Error inserting record " << ::TABLE_EVENTS;
+        qDebug() << "Error inserting record " << TABLE_EVENTS;
         qDebug() << query.lastError();
         qDebug() << query.lastQuery();
     }
@@ -295,7 +294,7 @@ bool Database::updateEventEntry(Event event)
     query.prepare(QStringLiteral(
         "UPDATE %1 SET %2=:modified, %3=:date, %4=:event, %5=:cost, %6=:odometer, %7=:category, %8=:comment"
         "WHERE id=:eventId").arg(
-            ::TABLE_EVENTS, ::MODIFIED, ::DATE, ::EVENT, ::COST, ::ODOMETER, ::CATEGORY, ::COMMENT));
+            TABLE_EVENTS, MODIFIED, DATE, EVENT, COST, ODOMETER, CATEGORY, COMMENT));
 
     QString currentTime = this->getCurrentTime();
 
@@ -313,7 +312,7 @@ bool Database::updateEventEntry(Event event)
     if(query.exec()){
         isUpdate = true;
     } else {
-        qDebug() << "Error updating record " << ::TABLE_EVENTS;
+        qDebug() << "Error updating record " << TABLE_EVENTS;
         qDebug() << query.lastError();
         qDebug() << query.lastQuery();
     }
@@ -327,7 +326,7 @@ bool Database::deleteEventEntry(int id)
     QSqlQuery query;
 
     query.prepare(
-        QStringLiteral("DELETE FROM %1 WHERE id=:eventId").arg(::TABLE_EVENTS));
+        QStringLiteral("DELETE FROM %1 WHERE id=:eventId").arg(TABLE_EVENTS));
     query.bindValue(QStringLiteral(":eventId"), id);
 
     if(query.exec()){
@@ -346,7 +345,7 @@ bool Database::insertNoteEntry(Note note)
 
     query.prepare(QStringLiteral(
         "INSERT INTO %1 (%2, %3, %4, %5, %6) VALUES (:created, :modified, :title, :noteContent, :itemId)").arg(
-            ::TABLE_NOTES, ::CREATED, ::MODIFIED, ::TITLE, ::NOTE, ::KEY_ITEM_ID));
+            TABLE_NOTES, CREATED, MODIFIED, TITLE, NOTE, KEY_ITEM_ID));
 
     QString currentTime = this->getCurrentTime();
 
@@ -362,7 +361,7 @@ bool Database::insertNoteEntry(Note note)
     if(query.exec()){
         isInsert = true;
     } else {
-        qDebug() << "Error inserting record " << ::TABLE_NOTES;
+        qDebug() << "Error inserting record " << TABLE_NOTES;
         qDebug() << query.lastError();
         qDebug() << query.lastQuery();
     }
@@ -377,7 +376,7 @@ bool Database::updateNoteEntry(Note note)
 
     query.prepare(QStringLiteral(
         "UPDATE %1 SET %2=:modified, %3=:title, %4=:noteContent, %5=:itemId WHERE id=:noteId").arg(
-            ::TABLE_NOTES, ::MODIFIED, ::TITLE, ::NOTE, ::KEY_ITEM_ID));
+            TABLE_NOTES, MODIFIED, TITLE, NOTE, KEY_ITEM_ID));
 
 
     query.bindValue(QStringLiteral(":title"), note.getTitle());
@@ -389,7 +388,7 @@ bool Database::updateNoteEntry(Note note)
     if(query.exec()){
         isUpdate = true;
     } else {
-        qDebug() << "Error updating record " << ::TABLE_NOTES;
+        qDebug() << "Error updating record " << TABLE_NOTES;
         qDebug() << query.lastError();
         qDebug() << query.lastQuery();
     }
@@ -403,13 +402,13 @@ bool Database::deleteNoteEntry(int id)
     QSqlQuery query;
 
     query.prepare(
-        QStringLiteral("DELETE FROM %1 WHERE id=:noteId").arg(::TABLE_NOTES));
+        QStringLiteral("DELETE FROM %1 WHERE id=:noteId").arg(TABLE_NOTES));
     query.bindValue(QStringLiteral(":noteId"), id);
 
     if(query.exec()){
         isDelete = true;
     } else {
-        qDebug() << "Error deleting record " << ::TABLE_NOTES;
+        qDebug() << "Error deleting record " << TABLE_NOTES;
         qDebug() << "Error removing record " << query.lastError().text();
     }
 
@@ -424,7 +423,7 @@ bool Database::insertTaskEntry(Task &task)
     query.prepare(QStringLiteral(
         "INSERT INTO %1 ( %2, %3, %4, %5, %6, %7, %8, %9, %10) VALUES "
         "(:created, :modified, :title, :desc, :dueDate, :itemId)").arg(
-            ::TABLE_TASKS, ::CREATED, ::MODIFIED, ::TITLE, ::DESCRIPTION, ::DUE_DATE, ::KEY_ITEM_ID));
+            TABLE_TASKS, CREATED, MODIFIED, TITLE, DESCRIPTION, DUE_DATE, KEY_ITEM_ID));
 
     QString currentTime = this->getCurrentTime();
 
@@ -441,7 +440,7 @@ bool Database::insertTaskEntry(Task &task)
     if(query.exec()){
         isInsert = true;
     } else {
-        qDebug() << "Error inserting record " << ::TABLE_TASKS;
+        qDebug() << "Error inserting record " << TABLE_TASKS;
         qDebug() << query.lastError();
         qDebug() << query.lastQuery();
     }
@@ -456,7 +455,7 @@ bool Database::updateTaskEntry(Task task)
 
     query.prepare(QStringLiteral(
         "UPDATE %1 SET %2=:modified, %3=:title, %4=:desc, %5=:dueDate, %6=:itemId WHERE id=:taskId").arg(
-            ::TABLE_TASKS, ::MODIFIED, ::TITLE, ::DESCRIPTION, ::DUE_DATE, ::KEY_ITEM_ID));
+            TABLE_TASKS, MODIFIED, TITLE, DESCRIPTION, DUE_DATE, KEY_ITEM_ID));
 
     QString currentTime = this->getCurrentTime();
 
@@ -472,7 +471,7 @@ bool Database::updateTaskEntry(Task task)
     if(query.exec()){
         isUpdate = true;
     } else {
-        qDebug() << "Error updating record " << ::TABLE_TASKS;
+        qDebug() << "Error updating record " << TABLE_TASKS;
         qDebug() << query.lastError();
         qDebug() << query.lastQuery();
     }
@@ -486,13 +485,13 @@ bool Database::deleteTaskEntry(int id)
     QSqlQuery query;
 
     query.prepare(
-        QStringLiteral("DELETE FROM %1 WHERE id=:taskId").arg(::TABLE_TASKS));
+        QStringLiteral("DELETE FROM %1 WHERE id=:taskId").arg(TABLE_TASKS));
     query.bindValue(QStringLiteral(":taskId"), id);
 
     if(query.exec()){
         isDelete = true;
     } else {
-        qDebug() << "Error inserting record " << ::TABLE_TASKS;
+        qDebug() << "Error inserting record " << TABLE_TASKS;
         qDebug() << "Error removing record " << query.lastError().text();
     }
 
@@ -504,7 +503,7 @@ bool Database::initializeSchema()
     bool isSchemaCreate = false;
     QSqlQuery query;
 
-    // const QString queryItems = QStringLiteral("CREATE TABLE " ::TABLE_ITEMS
+    // const QString queryItems = QStringLiteral("CREATE TABLE " TABLE_ITEMS
     //     " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
     //     CREATED     " DATE NOT NULL, "
     //     MODIFIED    " DATE NOT NULL, "
@@ -515,7 +514,7 @@ bool Database::initializeSchema()
     //     TYPE        " TEXT NOT NULL, "
     //     ARCHIVED    " BOOLEAN NOT NULL CHECK (" ARCHIVED " IN (0, 1)), "
     //     KEY_ITEM_ID " INT, "
-    //     "FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " ::TABLE_ITEMS "(id) "
+    //     "FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
     //     "ON DELETE CASCADE ON UPDATE CASCADE)");
 
     const QString queryItems = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -530,10 +529,10 @@ bool Database::initializeSchema()
         "%10 INT, "
         "FOREIGN KEY (%10) REFERENCES %1 (id) "
         "ON DELETE CASCADE ON UPDATE CASCADE)").arg(
-            ::TABLE_ITEMS, ::CREATED, ::MODIFIED, ::NAME, ::MAKE, ::MODEL,
-            ::YEAR, ::TYPE, ::ARCHIVED, ::KEY_ITEM_ID);
+            TABLE_ITEMS, CREATED, MODIFIED, NAME, MAKE, MODEL,
+            YEAR, TYPE, ARCHIVED, KEY_ITEM_ID);
 
-    // const QString queryAttributes = QStringLiteral("CREATE TABLE " ::TABLE_ATTRIBUTES
+    // const QString queryAttributes = QStringLiteral("CREATE TABLE " TABLE_ATTRIBUTES
     //     " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
     //     CREATED     " DATE NOT NULL, "
     //     MODIFIED    " DATE NOT NULL, "
@@ -541,7 +540,7 @@ bool Database::initializeSchema()
     //     VALUE         " TEXT NOT NULL, "
     //     CATEGORY      " TEXT, "
     //     KEY_ITEM_ID   " INT NOT NULL, "
-    //     "CONSTRAINT itemId FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " ::TABLE_ITEMS "(id) "
+    //     "CONSTRAINT itemId FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
     //     "ON DELETE CASCADE ON UPDATE CASCADE)");
 
     const QString queryAttributes = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -553,9 +552,9 @@ bool Database::initializeSchema()
         "%7 INT NOT NULL, "
         "CONSTRAINT itemId FOREIGN KEY (%7) REFERENCES %1 (id) "
         "ON DELETE CASCADE ON UPDATE CASCADE)").arg(
-            ::TABLE_ATTRIBUTES, ::CREATED, ::MODIFIED, ::KEY, ::VALUE, ::CATEGORY, ::KEY_ITEM_ID);
+            TABLE_ATTRIBUTES, CREATED, MODIFIED, KEY, VALUE, CATEGORY, KEY_ITEM_ID);
 
-    // const QString queryEvents = QStringLiteral("CREATE TABLE " ::TABLE_EVENTS
+    // const QString queryEvents = QStringLiteral("CREATE TABLE " TABLE_EVENTS
     //     " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
     //     CREATED     " DATE NOT NULL, "
     //     MODIFIED    " DATE NOT NULL, "
@@ -566,7 +565,7 @@ bool Database::initializeSchema()
     //     CATEGORY    " TEXT, "
     //     COMMENT     " VARCHAR(255), "
     //     KEY_ITEM_ID " INT NOT NULL, "
-    //     "CONSTRAINT itemId FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " ::TABLE_ITEMS "(id) "
+    //     "CONSTRAINT itemId FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
     //     "ON DELETE CASCADE ON UPDATE CASCADE)");
 
     const QString queryEvents = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -581,17 +580,17 @@ bool Database::initializeSchema()
         "%10 INT NOT NULL, "
         "CONSTRAINT itemId FOREIGN KEY (%10) REFERENCES %1 (id) "
         "ON DELETE CASCADE ON UPDATE CASCADE)").arg(
-            ::TABLE_EVENTS, ::CREATED, ::MODIFIED, ::DATE, ::EVENT, ::COST,
-            ::ODOMETER, ::CATEGORY, ::COMMENT, ::KEY_ITEM_ID);
+            TABLE_EVENTS, CREATED, MODIFIED, DATE, EVENT, COST,
+            ODOMETER, CATEGORY, COMMENT, KEY_ITEM_ID);
 
-    // const QString queryNotes = QStringLiteral("CREATE TABLE " ::TABLE_NOTES
+    // const QString queryNotes = QStringLiteral("CREATE TABLE " TABLE_NOTES
     //     " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
     //     CREATED     " DATE NOT NULL, "
     //     MODIFIED    " DATE NOT NULL, "
     //     TITLE       " TEXT NOT NULL, "
     //     NOTE        " VARCHAR(255), "
     //     KEY_ITEM_ID " INT, "
-    //     "FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " ::TABLE_ITEMS "(id) "
+    //     "FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
     //     "ON DELETE CASCADE ON UPDATE CASCADE)");
 
     const QString queryNotes = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -602,9 +601,9 @@ bool Database::initializeSchema()
         "%6 INT, "
         "FOREIGN KEY (%6) REFERENCES %1 (id) "
         "ON DELETE CASCADE ON UPDATE CASCADE)").arg(
-            ::TABLE_NOTES, ::CREATED, ::MODIFIED, ::TITLE, ::NOTE, ::KEY_ITEM_ID);
+            TABLE_NOTES, CREATED, MODIFIED, TITLE, NOTE, KEY_ITEM_ID);
 
-    // const QString queryTasks = QStringLiteral("CREATE TABLE " ::TABLE_TASKS
+    // const QString queryTasks = QStringLiteral("CREATE TABLE " TABLE_TASKS
     //     " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
     //     CREATED     " DATE NOT NULL, "
     //     MODIFIED    " DATE NOT NULL, "
@@ -612,7 +611,7 @@ bool Database::initializeSchema()
     //     TITLE       " TEXT NOT NULL, "
     //     DESCRIPTION " VARCHAR(255), "
     //     KEY_ITEM_ID " INT, "
-    //     "FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " ::TABLE_ITEMS "(id) "
+    //     "FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
     //     "ON DELETE CASCADE ON UPDATE CASCADE)");
 
     const QString queryTasks = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -624,7 +623,7 @@ bool Database::initializeSchema()
         "%7 INT, "
         "FOREIGN KEY (%7) REFERENCES %1 (id) "
         "ON DELETE CASCADE ON UPDATE CASCADE)").arg(
-            ::TABLE_TASKS, ::CREATED, ::MODIFIED, ::DUE_DATE, ::TITLE, ::DESCRIPTION, ::KEY_ITEM_ID);
+            TABLE_TASKS, CREATED, MODIFIED, DUE_DATE, TITLE, DESCRIPTION, KEY_ITEM_ID);
 
     if(!query.exec(queryItems)){
         qDebug() << query.lastError();
