@@ -15,8 +15,8 @@ Kirigami.ScrollablePage {
 
     title: (attributeIndex != -1) ? i18n("Edit Attribute") : i18n("Add Attribute")
 
-    actions {
-        main: Kirigami.Action {
+    actions : [
+        Kirigami.Action {
             enabled: attributeIndex != -1
             text: i18n("Delete")
             icon.name: "delete"
@@ -25,7 +25,7 @@ Kirigami.ScrollablePage {
                 deleteDialog.open()
             }
         }
-    }
+    ]
 
     Kirigami.PromptDialog {
         id: deleteDialog

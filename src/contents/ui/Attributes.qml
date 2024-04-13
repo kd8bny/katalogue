@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2022 Daryl Bennett <kd8bny@gmail.com>
 
-import QtQuick 6.0
-import QtQuick.Controls 2.15 as Controls
-import QtQuick.Layouts 1.15
-import org.kde.kirigami 2.20 as Kirigami
-import com.kd8bny.katalogue 1.0
+import QtQuick
+import QtQuick.Controls as Controls
+import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
+import com.kd8bny.katalogue
 
 
 Kirigami.ScrollablePage {
@@ -16,8 +16,8 @@ Kirigami.ScrollablePage {
 
     title: i18n(itemName + " Attributes")
 
-    actions {
-        main: Kirigami.Action {
+    actions: [
+        Kirigami.Action {
             text: i18n("Add")
             icon.name: "list-add"
             tooltip: i18n("Add new attribute")
@@ -25,7 +25,7 @@ Kirigami.ScrollablePage {
                 pageStack.push("qrc:AddEditAttributePage.qml", {"itemId": itemId})
             }
         }
-    }
+    ]
 
     function openInfoSheet(index = -1) {
         var recordData = AttributeModel.getRecordAsList(index)
@@ -62,45 +62,54 @@ Kirigami.ScrollablePage {
     Component {
         id: sectionDelegate
         Kirigami.ListSectionHeader {
-            label: section
+            Kirigami.IconTitleSubtitle {
+                Layout.fillWidth: true
+                title: section
+                // icon: icon.fromControlsIcon(subtitleDelegate.icon)
+            }
         }
     }
 
     Component {
         id: attributeDelegate
 
-        Kirigami.SwipeListItem {
-            separatorVisible: true
+        Kirigami.SubtitleDelegate {
+            id: subtitleDelegate
+            Layout.fillWidth: true
 
-            actions: [
-                Kirigami.Action {
+            text: key
+            subtitle: value
+
+            contentItem: RowLayout {
+                Rectangle {
+                    radius: height
+                    Layout.preferredWidth: Kirigami.Units.largeSpacing
+                    Layout.preferredHeight: Kirigami.Units.largeSpacing
+                    color: Kirigami.Theme.neutralTextColor
+                }
+                Kirigami.IconTitleSubtitle {
+                    Layout.fillWidth: true
+                    title: subtitleDelegate.text
+                    subtitle: subtitleDelegate.subtitle
+                    icon: icon.fromControlsIcon(subtitleDelegate.icon)
+                }
+                Controls.Button {
+                    Layout.rightMargin: Kirigami.Units.gridUnit
                     icon.name: "kdocumentinfo"
-                    onTriggered: {
+                    onClicked: {
                         openInfoSheet(index)
                     }
-                },
-                Kirigami.Action {
+                }
+                Controls.Button {
+                    Layout.rightMargin: Kirigami.Units.gridUnit
                     icon.name: "edit-entry"
-                    onTriggered: {
+                    onClicked: {
                         pageStack.push("qrc:AddEditAttributePage.qml", {
                             "itemId": itemId,
                             "isEdit": true,
                             "attributeIndex": index
                         })
                     }
-                }
-            ]
-
-            RowLayout {
-                id: delegateLayout
-                Controls.Label {
-                    wrapMode: Text.WordWrap
-                    text: key + ": "
-                }
-                Controls.Label {
-                    Layout.fillWidth: true
-                    wrapMode: Text.WordWrap
-                    text: value
                 }
             }
         }

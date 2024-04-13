@@ -17,14 +17,14 @@ Kirigami.ScrollablePage {
 
     title: i18n("Katalogued Items")
 
-    // actions.contextualActions: [
+    actions: [
         Kirigami.Action {
             text: i18n("Add Item")
             icon.name: "list-add"
             tooltip: i18n("Add new item")
             onTriggered: pageStack.push("qrc:AddEditItemPage.qml")
         }
-    // ]
+    ]
 
     Component.onCompleted: {
         if(isComponentView){
@@ -89,7 +89,7 @@ Kirigami.ScrollablePage {
                             Layout.fillWidth: true
                         }
                         Controls.Label {
-                            text: i18n("%1 %2 %3", year, make, model)
+                            text: `${year} ${make} ${model}`
                         }
                     }
                 }

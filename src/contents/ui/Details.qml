@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2022 Daryl Bennett <kd8bny@gmail.com>
 
-import QtQuick 6.0
-import QtQuick.Controls 2.15 as Controls
-import QtQuick.Layouts 1.15
-import org.kde.kirigami 2.20 as Kirigami
-import com.kd8bny.katalogue 1.0
+import QtQuick
+import QtQuick.Controls as Controls
+import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
+import com.kd8bny.katalogue
 
 
 Kirigami.ScrollablePage {
@@ -18,7 +18,7 @@ Kirigami.ScrollablePage {
 
     title: i18n(itemName)
 
-    actions.contextualActions: [
+    actions: [
         Kirigami.Action {
             text: i18n("Home")
             icon.name: "go-home-symbolic"
@@ -31,49 +31,49 @@ Kirigami.ScrollablePage {
     ]
 
     Component.onCompleted: {
-        if(isComponentView){
-            menuModel.remove(2)  // Remove Components if Components
+        // TODO enable and or fix?
+        // pageStack.push("qrc:Attributes.qml", {"itemName": itemName, "itemId": itemId})
+    }
+
+    ColumnLayout {
+        Kirigami.SubtitleDelegate {
+            Layout.fillWidth: true
+
+            icon.name: "view-list-details"
+            text: i18n("Attributes")
+            onClicked: pageStack.push("qrc:Attributes.qml", {"itemName": itemName, "itemId": itemId})
         }
-        pageStack.push("qrc:Attributes.qml", {"itemName": itemName, "itemId": itemId})
-    }
+        Kirigami.SubtitleDelegate {
+            Layout.fillWidth: true
 
-    ListModel {
-        id: menuModel
-        ListElement { name: "Attributes" }
-        ListElement { name: "Events" }
-        ListElement { name: "Components" }
-        ListElement { name: "Notes" }
-        ListElement { name: "Details" }
-    }
+            icon.name: "view-calendar-agenda"
+            text: i18n("Events")
+            onClicked: pageStack.push("qrc:Events.qml", {"itemName": itemName, "itemId": itemId})
+        }
+        Kirigami.SubtitleDelegate {
+            Layout.fillWidth: true
 
-    ListView {
-        id: menuList
-
-        model: menuModel
-        delegate: itemDelegate
-    }
-
-    Component {
-        id: itemDelegate
-
-        Kirigami.BasicListItem {
-            label: i18n(name)
-
+            icon.name: "view-list-details"
+            text: i18n("Components")
+            enabled: isComponentView
             onClicked: {
-                if(name == "Attributes"){
-                    pageStack.push("qrc:Attributes.qml", {"itemName": itemName, "itemId": itemId})
-                }else if(name == "Events"){
-                    pageStack.push("qrc:Events.qml", {"itemName": itemName, "itemId": itemId})
-                }else if(name == "Components"){
-                    pageStack.push("qrc:Items.qml", {"isComponentView": true})
-                    ItemComponentModel.filterComponent()
-                }else if(name == "Notes"){
-                    pageStack.push("qrc:Notes.qml", {"itemName": itemName, "itemId": itemId})
-                }else if(name == "Details"){
-                    pageStack.push('qrc:ItemInfoPage.qml', {"itemModelIndex": itemModelIndex})
-                }
+                pageStack.push("qrc:Items.qml", {"isComponentView": true})
+                ItemComponentModel.filterComponent()
             }
         }
-    }
+        Kirigami.SubtitleDelegate {
+            Layout.fillWidth: true
 
+            icon.name: "view-list-details"
+            text: i18n("Notes")
+            onClicked: pageStack.push("qrc:Notes.qml", {"itemName": itemName, "itemId": itemId})
+        }
+        Kirigami.SubtitleDelegate {
+            Layout.fillWidth: true
+
+            icon.name: "view-list-details"
+            text: i18n("Details")
+            onClicked: pageStack.push('qrc:ItemInfoPage.qml', {"itemModelIndex": itemModelIndex})
+        }
+    }
 }
