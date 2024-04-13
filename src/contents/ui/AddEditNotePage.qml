@@ -15,8 +15,8 @@ Kirigami.ScrollablePage {
 
     title: (noteIndex != -1) ? i18n("Edit Note") : i18n("Add Note")
 
-    actions {
-        main: Kirigami.Action {
+    actions: [
+        Kirigami.Action {
             enabled: noteIndex != -1
             text: i18n("Delete")
             icon.name: "delete"
@@ -25,7 +25,7 @@ Kirigami.ScrollablePage {
                 deleteDialog.open()
             }
         }
-    }
+    ]
 
     Kirigami.PromptDialog {
         id: deleteDialog
