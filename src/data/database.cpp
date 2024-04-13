@@ -354,9 +354,7 @@ bool Database::insertNoteEntry(Note note)
 
     query.bindValue(QStringLiteral(":title"), note.getTitle());
     query.bindValue(QStringLiteral(":noteContent"), note.getNoteContent());
-    if(note.getItemId() != -1){
-        query.bindValue(QStringLiteral(":itemId"), note.getItemId());
-    }
+    query.bindValue(QStringLiteral(":itemId"), note.getItemId());
 
     if(query.exec()){
         isInsert = true;
@@ -503,20 +501,6 @@ bool Database::initializeSchema()
     bool isSchemaCreate = false;
     QSqlQuery query;
 
-    // const QString queryItems = QStringLiteral("CREATE TABLE " TABLE_ITEMS
-    //     " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-    //     CREATED     " DATE NOT NULL, "
-    //     MODIFIED    " DATE NOT NULL, "
-    //     NAME        " TEXT NOT NULL, "
-    //     MAKE        " TEXT, "
-    //     MODEL       " TEXT, "
-    //     YEAR        " INT, "
-    //     TYPE        " TEXT NOT NULL, "
-    //     ARCHIVED    " BOOLEAN NOT NULL CHECK (" ARCHIVED " IN (0, 1)), "
-    //     KEY_ITEM_ID " INT, "
-    //     "FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
-    //     "ON DELETE CASCADE ON UPDATE CASCADE)");
-
     const QString queryItems = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
         "%2 DATE NOT NULL, "
         "%3 DATE NOT NULL, "
@@ -529,19 +513,7 @@ bool Database::initializeSchema()
         "%10 INT, "
         "FOREIGN KEY (%10) REFERENCES %1 (id) "
         "ON DELETE CASCADE ON UPDATE CASCADE)").arg(
-            TABLE_ITEMS, CREATED, MODIFIED, NAME, MAKE, MODEL,
-            YEAR, TYPE, ARCHIVED, KEY_ITEM_ID);
-
-    // const QString queryAttributes = QStringLiteral("CREATE TABLE " TABLE_ATTRIBUTES
-    //     " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-    //     CREATED     " DATE NOT NULL, "
-    //     MODIFIED    " DATE NOT NULL, "
-    //     KEY           " TEXT NOT NULL, "
-    //     VALUE         " TEXT NOT NULL, "
-    //     CATEGORY      " TEXT, "
-    //     KEY_ITEM_ID   " INT NOT NULL, "
-    //     "CONSTRAINT itemId FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
-    //     "ON DELETE CASCADE ON UPDATE CASCADE)");
+            TABLE_ITEMS, CREATED, MODIFIED, NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, KEY_ITEM_ID);
 
     const QString queryAttributes = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
         "%2 DATE NOT NULL, "
@@ -550,23 +522,9 @@ bool Database::initializeSchema()
         "%5 TEXT NOT NULL, "
         "%6 TEXT, "
         "%7 INT NOT NULL, "
-        "CONSTRAINT itemId FOREIGN KEY (%7) REFERENCES %1 (id) "
+        "CONSTRAINT %7 FOREIGN KEY (%7) REFERENCES %8 (id) "
         "ON DELETE CASCADE ON UPDATE CASCADE)").arg(
-            TABLE_ATTRIBUTES, CREATED, MODIFIED, KEY, VALUE, CATEGORY, KEY_ITEM_ID);
-
-    // const QString queryEvents = QStringLiteral("CREATE TABLE " TABLE_EVENTS
-    //     " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-    //     CREATED     " DATE NOT NULL, "
-    //     MODIFIED    " DATE NOT NULL, "
-    //     DATE        " DATE NOT NULL, "
-    //     EVENT       " TEXT NOT NULL, "
-    //     COST        " REAL, "
-    //     ODOMETER    " REAL, "
-    //     CATEGORY    " TEXT, "
-    //     COMMENT     " VARCHAR(255), "
-    //     KEY_ITEM_ID " INT NOT NULL, "
-    //     "CONSTRAINT itemId FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
-    //     "ON DELETE CASCADE ON UPDATE CASCADE)");
+            TABLE_ATTRIBUTES, CREATED, MODIFIED, KEY, VALUE, CATEGORY, KEY_ITEM_ID, TABLE_ITEMS);
 
     const QString queryEvents = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
         "%2 DATE NOT NULL, "
@@ -578,20 +536,9 @@ bool Database::initializeSchema()
         "%8 TEXT, "
         "%9 VARCHAR(255), "
         "%10 INT NOT NULL, "
-        "CONSTRAINT itemId FOREIGN KEY (%10) REFERENCES %1 (id) "
+        "CONSTRAINT %10 FOREIGN KEY (%10) REFERENCES %11 (id) "
         "ON DELETE CASCADE ON UPDATE CASCADE)").arg(
-            TABLE_EVENTS, CREATED, MODIFIED, DATE, EVENT, COST,
-            ODOMETER, CATEGORY, COMMENT, KEY_ITEM_ID);
-
-    // const QString queryNotes = QStringLiteral("CREATE TABLE " TABLE_NOTES
-    //     " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-    //     CREATED     " DATE NOT NULL, "
-    //     MODIFIED    " DATE NOT NULL, "
-    //     TITLE       " TEXT NOT NULL, "
-    //     NOTE        " VARCHAR(255), "
-    //     KEY_ITEM_ID " INT, "
-    //     "FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
-    //     "ON DELETE CASCADE ON UPDATE CASCADE)");
+            TABLE_EVENTS, CREATED, MODIFIED, DATE, EVENT, COST, ODOMETER, CATEGORY, COMMENT, KEY_ITEM_ID, TABLE_ITEMS);
 
     const QString queryNotes = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
         "%2 DATE NOT NULL, "
@@ -599,20 +546,9 @@ bool Database::initializeSchema()
         "%4 TEXT NOT NULL, "
         "%5 VARCHAR(255), "
         "%6 INT, "
-        "FOREIGN KEY (%6) REFERENCES %1 (id) "
+        "CONSTRAINT %6 FOREIGN KEY (%6) REFERENCES %7 (id) "
         "ON DELETE CASCADE ON UPDATE CASCADE)").arg(
-            TABLE_NOTES, CREATED, MODIFIED, TITLE, NOTE, KEY_ITEM_ID);
-
-    // const QString queryTasks = QStringLiteral("CREATE TABLE " TABLE_TASKS
-    //     " (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-    //     CREATED     " DATE NOT NULL, "
-    //     MODIFIED    " DATE NOT NULL, "
-    //     DUE_DATE    " DATE NOT NULL, "
-    //     TITLE       " TEXT NOT NULL, "
-    //     DESCRIPTION " VARCHAR(255), "
-    //     KEY_ITEM_ID " INT, "
-    //     "FOREIGN KEY (" KEY_ITEM_ID ") REFERENCES " TABLE_ITEMS "(id) "
-    //     "ON DELETE CASCADE ON UPDATE CASCADE)");
+            TABLE_NOTES, CREATED, MODIFIED, TITLE, NOTE, KEY_ITEM_ID, TABLE_ITEMS);
 
     const QString queryTasks = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
         "%2 DATE NOT NULL, "
@@ -621,9 +557,9 @@ bool Database::initializeSchema()
         "%5 TEXT NOT NULL, "
         "%6 VARCHAR(255), "
         "%7 INT, "
-        "FOREIGN KEY (%7) REFERENCES %1 (id) "
+        "CONSTRAINT %7 FOREIGN KEY (%7) REFERENCES %8 (id) "
         "ON DELETE CASCADE ON UPDATE CASCADE)").arg(
-            TABLE_TASKS, CREATED, MODIFIED, DUE_DATE, TITLE, DESCRIPTION, KEY_ITEM_ID);
+            TABLE_TASKS, CREATED, MODIFIED, DUE_DATE, TITLE, DESCRIPTION, KEY_ITEM_ID, TABLE_ITEMS);
 
     if(!query.exec(queryItems)){
         qDebug() << query.lastError();
