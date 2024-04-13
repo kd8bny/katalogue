@@ -55,7 +55,7 @@ Kirigami.ScrollablePage {
 
             icon.name: "view-list-details"
             text: i18n("Components")
-            enabled: isComponentView
+            // TODO enabled: isComponentView
             onClicked: {
                 pageStack.push("qrc:Items.qml", {"isComponentView": true})
                 ItemComponentModel.filterComponent()
@@ -67,6 +67,13 @@ Kirigami.ScrollablePage {
             icon.name: "view-list-details"
             text: i18n("Notes")
             onClicked: pageStack.push("qrc:Notes.qml", {"itemName": itemName, "itemId": itemId})
+        }
+        Kirigami.SubtitleDelegate {
+            Layout.fillWidth: true
+
+            icon.name: "view-task"
+            text: i18n("Tasks")
+            // TODO onClicked: pageStack.push("qrc:Notes.qml", {"itemName": itemName, "itemId": itemId})
         }
         Kirigami.SubtitleDelegate {
             Layout.fillWidth: true

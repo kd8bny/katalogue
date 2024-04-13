@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2022 Daryl Bennett <kd8bny@gmail.com>
 
-import QtQuick 6.0
-import QtQuick.Controls 2.15 as Controls
-import QtQuick.Layouts 1.15
-import org.kde.kirigami 2.20 as Kirigami
-import com.kd8bny.katalogue 1.0
+import QtQuick
+import QtQuick.Controls as Controls
+import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
+
+import com.kd8bny.katalogue
 
 Kirigami.ScrollablePage {  //TODO whole page layout
     id: addEditItemPage
@@ -14,7 +15,7 @@ Kirigami.ScrollablePage {  //TODO whole page layout
 
     title: "Details"
 
-    actions.contextualActions: [
+    actions: [
         Kirigami.Action {
             text: i18n("Edit")
             icon.name: "entry-edit"

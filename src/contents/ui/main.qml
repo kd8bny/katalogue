@@ -68,7 +68,7 @@ Kirigami.ApplicationWindow {
             Kirigami.Action {
                 text: i18n("Tasks")
                 icon.name: "view-task"
-                // onTriggered:
+                //TODO onTriggered:
             },
             Kirigami.Action {
                 text: i18n("Notes")
