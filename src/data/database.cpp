@@ -419,9 +419,9 @@ bool Database::insertTaskEntry(Task &task)
     QSqlQuery query;
 
     query.prepare(QStringLiteral(
-        "INSERT INTO %1 ( %2, %3, %4, %5, %6, %7, %8, %9, %10) VALUES "
-        "(:created, :modified, :title, :desc, :dueDate, :itemId)").arg(
-            TABLE_TASKS, CREATED, MODIFIED, TITLE, DESCRIPTION, DUE_DATE, KEY_ITEM_ID));
+        "INSERT INTO %1 ( %2, %3, %4, %5, %6, %7) VALUES "
+        "(:created, :modified, :dueDate, :title, :description, :itemId)").arg(
+            TABLE_TASKS, CREATED, MODIFIED, DUE_DATE, TITLE, DESCRIPTION, KEY_ITEM_ID));
 
     QString currentTime = this->getCurrentTime();
 
@@ -429,11 +429,8 @@ bool Database::insertTaskEntry(Task &task)
     query.bindValue(QStringLiteral(":modified"), currentTime);
 
     query.bindValue(QStringLiteral(":title"), task.getTitle());
-    query.bindValue(QStringLiteral(":desc"), task.getDescription());
+    query.bindValue(QStringLiteral(":description"), task.getDescription());
     query.bindValue(QStringLiteral(":dueDate"), task.getDueDate());
-    if(task.getItemId() != -1){
-        query.bindValue(QStringLiteral(":itemId"), task.getItemId());
-    }
 
     if(query.exec()){
         isInsert = true;
