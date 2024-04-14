@@ -12,6 +12,7 @@ public:
     enum Roles {
         rID = Qt::UserRole + 1,
         rDueDate,
+        rStatus,
         rTitle,
         rDescription,
         rItemID,
@@ -27,15 +28,15 @@ public:
     Q_INVOKABLE int getId(int row);
     Task getRecord(int row);
     Q_INVOKABLE QVariantList getRecordAsList(int row);
-    Q_INVOKABLE bool setRecord(int taskIndex, QString dueDate, QString title, QString description, int itemId);
+    Q_INVOKABLE bool setRecord(int taskIndex, QString dueDate, QString status, QString title, QString description, int itemId);
     Q_INVOKABLE bool deleteRecord(int eventId);
 
 protected:
     QHash<int, QByteArray> roleNames() const override;
 
 private:
-    const QString modelQueryBase = QStringLiteral("SELECT id, %1, %2, %3, %4 FROM %5 ").arg(
-        Database::DUE_DATE, Database::TITLE, Database::DESCRIPTION, Database::KEY_ITEM_ID, Database::TABLE_TASKS);
+    const QString modelQueryBase = QStringLiteral("SELECT id, %1, %2, %3, %4, %5 FROM %6 ").arg(
+        Database::DUE_DATE, Database::STATUS, Database::TITLE, Database::DESCRIPTION, Database::KEY_ITEM_ID, Database::TABLE_TASKS);
 
     const QString modelQuerySetId = QStringLiteral(" WHERE %1=%2");
 

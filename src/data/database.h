@@ -26,27 +26,27 @@ class Database : public QObject
 
 public:
     explicit Database(QObject *parent = nullptr);
-    ~Database();
+    ~Database() final;
     bool connect(QString path);
 
-    bool insertItemEntry(Item item);
-    bool updateItemEntry(Item item);
+    bool insertItemEntry(const Item &item);
+    bool updateItemEntry(const Item &item);
     bool deleteItemEntry(int id);
 
-    bool insertAttributeEntry(Attribute attribute);
-    bool updateAttributeEntry(Attribute attribute);
+    bool insertAttributeEntry(const Attribute &attribute);
+    bool updateAttributeEntry(const Attribute &attribute);
     bool deleteAttributeEntry(int id);
 
-    bool insertEventEntry(Event event);
-    bool updateEventEntry(Event event);
+    bool insertEventEntry(const Event &event);
+    bool updateEventEntry(const Event &event);
     bool deleteEventEntry(int id);
 
-    bool insertNoteEntry(Note note);
-    bool updateNoteEntry(Note note);
+    bool insertNoteEntry(const Note &note);
+    bool updateNoteEntry(const Note &note);
     bool deleteNoteEntry(int id);
 
-    bool insertTaskEntry(Task &task);
-    bool updateTaskEntry(Task task);
+    bool insertTaskEntry(const Task &task);
+    bool updateTaskEntry(const Task &task);
     bool deleteTaskEntry(int id);
 
     const static QString TABLE_ATTRIBUTES;
@@ -78,6 +78,7 @@ public:
     const static QString NOTE;
     const static QString DESCRIPTION;
     const static QString DUE_DATE;
+    const static QString STATUS;
 
     const static QString KEY_ITEM_ID;
 

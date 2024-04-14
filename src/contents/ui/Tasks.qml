@@ -83,6 +83,10 @@ Kirigami.ScrollablePage {
                         wrapMode: TextEdit.Wrap
                         text: description
                     }
+                    Controls.Label {
+                        wrapMode: TextEdit.Wrap
+                        text: status
+                    }
                 }
             }
         }

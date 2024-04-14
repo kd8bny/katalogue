@@ -24,6 +24,9 @@ public:
     QString getDueDate() const { return dueDate; }
     void setDueDate(const QString &dueDate_) { dueDate = dueDate_; }
 
+    QString getStatus() const { return status; }
+    void setStatus(const QString &status_) { status = status_; }
+
     QString getTitle() const { return title; }
     void setTitle(const QString &title_) { title = title_; }
 
@@ -40,6 +43,7 @@ private:
     QString createdDate;
     QString modifiedDate;
     QString dueDate;
+    QString status;
     QString title;
     QString description;
     int itemId;
