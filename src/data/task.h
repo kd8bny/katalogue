@@ -21,14 +21,14 @@ public:
     QString getModifiedDate() const { return modifiedDate; }
     void setModifiedDate(const QString &modifiedDate_) { modifiedDate = modifiedDate_; }
 
+    QString getDueDate() const { return dueDate; }
+    void setDueDate(const QString &dueDate_) { dueDate = dueDate_; }
+
     QString getTitle() const { return title; }
     void setTitle(const QString &title_) { title = title_; }
 
     QString getDescription() const { return description; }
     void setDescription(const QString &description_) { description = description_; }
-
-    QString getDueDate() const { return dueDate; }
-    void setDueDate(const QString &dueDate_) { dueDate = dueDate_; }
 
     int getItemId() const { return itemId; }
     void setItemId(int itemId_) { itemId = itemId_; }
@@ -39,9 +39,9 @@ private:
     int id;
     QString createdDate;
     QString modifiedDate;
+    QString dueDate;
     QString title;
     QString description;
-    QString dueDate;
     int itemId;
 };
 
