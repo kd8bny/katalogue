@@ -137,13 +137,14 @@ Kirigami.ScrollablePage {
         Controls.ComboBox {
             id: itemParentBox
             editable: false
-            enabled: itemParentEnabled.checked
+            visible: itemParentEnabled.checked
             model: ItemParentModel
             Kirigami.FormData.label: i18nc("@label:textbox", "Component of:")
         }
         Controls.Switch {
             id: itemArchived
             enabled: isEdit
+            visible: isEdit
             Kirigami.FormData.label: i18nc("@label:textbox", i18n("Archive"))
         }
 
