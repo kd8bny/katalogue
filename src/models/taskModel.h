@@ -36,7 +36,8 @@ protected:
 
 private:
     const QString modelQueryBase = QStringLiteral("SELECT id, %1, %2, %3, %4, %5 FROM %6 ").arg(
-        Database::DUE_DATE, Database::STATUS, Database::TITLE, Database::DESCRIPTION, Database::KEY_ITEM_ID, Database::TABLE_TASKS);
+        Database::DUE_DATE, Database::STATUS, Database::TITLE, Database::DESCRIPTION,
+        Database::KEY_ITEM_ID, Database::TABLE_TASKS);
 
     const QString modelQuerySetId = QStringLiteral(" WHERE %1=%2");
 
