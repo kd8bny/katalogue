@@ -13,6 +13,7 @@ add_executable(katalogue
     data/item.cpp
     data/note.cpp
     data/task.cpp
+
     models/attributeModel.cpp
     models/attributeCategoryModel.cpp
     models/eventModel.cpp
@@ -22,6 +23,7 @@ add_executable(katalogue
     models/itemTypeModel.cpp
     models/itemParentModel.cpp
     models/noteModel.cpp
+    models/taskModel.cpp
     )
 
 target_link_libraries(katalogue

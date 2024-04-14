@@ -24,6 +24,7 @@
 #include "models/itemTypeModel.h"
 #include "models/itemParentModel.h"
 #include "models/noteModel.h"
+#include "models/taskModel.h"
 #include "version-katalogue.h"
 
 #include <KAboutData>
@@ -110,6 +111,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     NoteModel noteModel;
     qmlRegisterSingletonInstance<NoteModel>("com.kd8bny.katalogue", 1, 0, "NoteModel", &noteModel);
+
+    TaskModel taskModel;
+    qmlRegisterSingletonInstance<TaskModel>("com.kd8bny.katalogue", 1, 0, "TaskModel", &taskModel);
 
     engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
