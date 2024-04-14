@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2022 Daryl Bennett <kd8bny@gmail.com>
 
-import QtQuick 6.0
-import QtQuick.Controls 2.15 as Controls
-import QtQuick.Layouts 1.15
-import org.kde.kirigami 2.20 as Kirigami
-import com.kd8bny.katalogue 1.0
+import QtQuick
+import QtQuick.Controls as Controls
+import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
+
+import com.kd8bny.katalogue
 
 Kirigami.ScrollablePage {
     id: addEditItemPage
@@ -14,21 +15,19 @@ Kirigami.ScrollablePage {
     property bool isEdit: false
     property bool isArchived: false
 
-    // property var types: Database.getItemTypes()
-
     title: (isEdit) ? i18n("Edit Item") : i18n("Add Item")
 
-    actions {
-        main: Kirigami.Action {
+    actions: [
+        Kirigami.Action {
             enabled: isEdit
             text: i18n("Delete")
             icon.name: "delete"
-            tooltip: i18n("Remove Item")
+            tooltip: i18n("Remove item from Katalogue")
             onTriggered: {
                 deleteDialog.open()
             }
         }
-    }
+    ]
 
     Kirigami.PromptDialog {
         id: deleteDialog
@@ -46,25 +45,58 @@ Kirigami.ScrollablePage {
         }
     }
 
+    function insertUpdateItem() {
+        var typeText = ""
+        if (typeBox.find(typeBox.editText) === -1) {
+            typeText = typeBox.editText
+        } else {
+            typeText = typeBox.currentText
+        }
+        var archived = false
+        if (itemArchived.checked) {
+            archived = true
+        }
+        var parentId = -1
+        if (itemParentEnabled.checked) {
+            parentId = ItemModel.getId(itemParentBox.currentIndex)
+        }
+
+        var success = ItemModel.setRecord(
+            itemModelIndex,
+            nameField.text,
+            makeField.text,
+            modelField.text,
+            parseInt(yearField.text),
+            typeText,
+            archived,
+            parentId
+        )
+
+        if (success) {
+            ItemTypeModel.refresh()
+        }
+
+        return success
+    }
+
     Component.onCompleted: {
         if (isEdit) {
             var recordData = ItemModel.getRecordAsList(itemModelIndex)
-// id here?
-            nameField.text = recordData[1]
-            makeField.text = recordData[2]
-            modelField.text = recordData[3]
-            yearField.text = recordData[4]
 
-            typeBox.find(recordData[5])
+            nameField.text = recordData[3]
+            makeField.text = recordData[4]
+            modelField.text = recordData[5]
+            yearField.text = recordData[6]
+            typeBox.currentIndex = typeBox.find(recordData[7])
 
-            if (recordData[6]){
-                itemArchived.checked = recordData[6]
+            if (recordData[8]){
+                itemArchived.checked = recordData[8]
                 isArchived = true
             }
 
-            if (recordData[7]){
+            if (recordData[9]){
                 itemParentEnabled.checked = recordData[6]
-                itemParentBox.find(recordData[7])
+                itemParentBox.find(recordData[9])
             }
         }
     }
@@ -96,23 +128,23 @@ Kirigami.ScrollablePage {
             id: typeBox
             Kirigami.FormData.label: i18nc("@label:textbox", "Type:")
             editable: true
-            model: ItemTypeModel
+            model: ItemTypeModel //TODO hide archived items
         }
         Controls.Switch {
             id: itemParentEnabled
-            Kirigami.FormData.label: i18nc("@label:textbox", "Child Item:")
+            Kirigami.FormData.label: i18nc("@label:textbox", "Item is a component")
         }
         Controls.ComboBox {
             id: itemParentBox
             editable: false
             enabled: itemParentEnabled.checked
             model: ItemParentModel
-            Kirigami.FormData.label: i18nc("@label:textbox", "Parent Item")
+            Kirigami.FormData.label: i18nc("@label:textbox", "Component of:")
         }
         Controls.Switch {
             id: itemArchived
             enabled: isEdit
-            Kirigami.FormData.label: i18nc("@label:textbox", (isArchived) ? i18n("Unarchive") : i18n("Archive"))
+            Kirigami.FormData.label: i18nc("@label:textbox", i18n("Archive"))
         }
 
         Controls.Button {
@@ -121,34 +153,14 @@ Kirigami.ScrollablePage {
             text: (isEdit) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
             enabled: nameField.text.length > 0
             onClicked: {
-                var type = ""
-                if (typeBox.find(typeBox.editText) === -1) {
-                    type = typeBox.editText
-                } else {
-                    type = typeBox.currentText
-                }
-                var archived = false
-                if (itemArchived.checked) {
-                    archived = true
-                }
-                var parentId = -1
-                if (itemParentEnabled.checked) {
-                    parentId = ItemModel.getId(itemParentBox.currentIndex)
-                }
+                var success = insertUpdateItem()
+                success = false
 
-                ItemModel.setRecord(
-                    itemModelIndex,
-                    nameField.text,
-                    makeField.text,
-                    modelField.text,
-                    parseInt(yearField.text),
-                    type,
-                    archived,
-                    parentId
-                )
-
-                //TODO check results of insert
-                pageStack.pop()
+                if (success) {
+                    pageStack.pop()
+                }else {
+                    // TODO msg something failed
+                }
             }
         }
 

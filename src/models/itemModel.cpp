@@ -94,8 +94,8 @@ QVariantList ItemModel::getRecordAsList(int row)
     return item.asList();
 }
 
-bool ItemModel::setRecord(int itemIndex, QString name, QString make,
-    QString model, int year, QString type, int archived, int parent)
+bool ItemModel::setRecord(
+    int itemIndex, QString name, QString make, QString model, int year, QString type, int archived, int parent)
 {
     Database db;
     // itemIndex defaults to -1 for new entries.
@@ -123,7 +123,6 @@ bool ItemModel::setRecord(int itemIndex, QString name, QString make,
         Q_EMIT dataChanged();
 
     return success;
-
 }
 
 bool ItemModel::deleteRecord(int itemId)
