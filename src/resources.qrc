@@ -11,6 +11,7 @@
         <file alias="Events.qml">contents/ui/Events.qml</file>
         <file alias="Items.qml">contents/ui/Items.qml</file>
         <file alias="Notes.qml">contents/ui/Notes.qml</file>
+        <file alias="Notes.qml">contents/ui/Tasks.qml</file>
 
         <file alias="ItemInfoPage.qml">contents/ui/ItemInfoPage.qml</file>
         <file alias="AddEditItemPage.qml">contents/ui/AddEditItemPage.qml</file>
