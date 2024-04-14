@@ -154,12 +154,11 @@ Kirigami.ScrollablePage {
             enabled: nameField.text.length > 0
             onClicked: {
                 var success = insertUpdateItem()
-                success = false
 
                 if (success) {
                     pageStack.pop()
                 }else {
-                    // TODO msg something failed
+                    msgInsertUpdateError.visible= true
                 }
             }
         }
@@ -173,4 +172,11 @@ Kirigami.ScrollablePage {
             }
         }
     }
+
+    Kirigami.InlineMessage {
+            id: msgInsertUpdateError
+            type: Kirigami.MessageType.Error
+            text: "Failed to update Item"
+            visible: false
+        }
 }
