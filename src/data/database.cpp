@@ -380,7 +380,6 @@ bool Database::updateNoteEntry(Note note)
     query.bindValue(QStringLiteral(":title"), note.getTitle());
     query.bindValue(QStringLiteral(":noteContent"), note.getNoteContent());
     query.bindValue(QStringLiteral(":itemId"), note.getItemId());
-
     query.bindValue(QStringLiteral(":eventId"), note.getId());
 
     if(query.exec()){
@@ -427,10 +426,11 @@ bool Database::insertTaskEntry(Task &task)
 
     query.bindValue(QStringLiteral(":created"), currentTime);
     query.bindValue(QStringLiteral(":modified"), currentTime);
-
+    query.bindValue(QStringLiteral(":dueDate"), task.getDueDate());
     query.bindValue(QStringLiteral(":title"), task.getTitle());
     query.bindValue(QStringLiteral(":description"), task.getDescription());
-    query.bindValue(QStringLiteral(":dueDate"), task.getDueDate());
+    query.bindValue(QStringLiteral(":itemId"), task.getItemId());
+
 
     if(query.exec()){
         isInsert = true;

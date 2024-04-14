@@ -73,7 +73,7 @@ Kirigami.ScrollablePage {
 
             icon.name: "view-task"
             text: i18n("Tasks")
-            // TODO onClicked: pageStack.push("qrc:Notes.qml", {"itemName": itemName, "itemId": itemId})
+            onClicked: pageStack.push("qrc:Tasks.qml", {"itemName": itemName, "itemId": itemId})
         }
         Kirigami.SubtitleDelegate {
             Layout.fillWidth: true
