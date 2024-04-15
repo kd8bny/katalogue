@@ -68,12 +68,13 @@ void ItemModel::refresh()
 
 int ItemModel::getId(int row)
 {
-    return this->data(this->index(row, 0), rID).toInt();
+    return this->record(row).value(rID).toInt();
 }
 
 Item ItemModel::getRecord(int row)
 {
     int id = this->data(this->index(row, 0), rID).toInt();
+    qDebug() << "id get " << id;
     Item item(id);
 
     item.setName(this->data(this->index(row, 1), rNAME).toString());

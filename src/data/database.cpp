@@ -107,6 +107,7 @@ bool Database::insertItemEntry(const Item &item)
     query.bindValue(QStringLiteral(":type"), item.getType());
     query.bindValue(QStringLiteral(":archived"), item.getArchived());
     if(item.getParent() != -1){
+        qDebug() << "Item is a Component id: " << item.getParent();
         query.bindValue(QStringLiteral(":parent"), item.getParent());
     }
 

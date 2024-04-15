@@ -58,7 +58,7 @@ Kirigami.ScrollablePage {
         }
         var parentId = -1
         if (itemParentEnabled.checked) {
-            parentId = ItemModel.getId(itemParentBox.currentIndex)
+            parentId = ItemParentModel.getId(itemParentBox.currentIndex)
         }
 
         var success = ItemModel.setRecord(
