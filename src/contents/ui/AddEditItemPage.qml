@@ -128,7 +128,7 @@ Kirigami.ScrollablePage {
             id: typeBox
             Kirigami.FormData.label: i18nc("@label:textbox", "Type:")
             editable: true
-            model: ItemTypeModel //TODO hide archived items
+            model: ItemTypeModel
         }
         Controls.Switch {
             id: itemParentEnabled
