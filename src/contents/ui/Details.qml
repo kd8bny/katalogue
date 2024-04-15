@@ -10,6 +10,7 @@ import com.kd8bny.katalogue
 
 Kirigami.ScrollablePage {
     id: page
+    //TODO, not edits page
 
     required property int itemModelIndex  // Item Model index position
     required property int itemId          // Item Id from Database

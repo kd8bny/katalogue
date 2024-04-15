@@ -36,16 +36,21 @@ Kirigami.ScrollablePage {
         subtitle: i18n("Are you sure you want to delete Item")
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: {
-            ItemModel.deleteRecord(ItemModel.getId(itemModelIndex))
-            pageStack.clear()
-            pageStack.push("qrc:Items.qml")
+            var success = ItemModel.deleteRecord(ItemModel.getId(itemModelIndex))
+
+            if (success) {
+                pageStack.clear()
+                pageStack.push("qrc:Items.qml")
+            } else {
+                msgDeleteError.visible = true
+            }
         }
         onRejected: {
             pageStack.pop()
         }
     }
 
-    function insertUpdateItem() {
+    function insertUpdate() {
         var typeText = ""
         if (typeBox.find(typeBox.editText) === -1) {
             typeText = typeBox.editText
@@ -147,14 +152,13 @@ Kirigami.ScrollablePage {
             visible: isEdit
             Kirigami.FormData.label: i18nc("@label:textbox", i18n("Archive"))
         }
-
         Controls.Button {
             id: doneButton
             Layout.fillWidth: true
             text: (isEdit) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
             enabled: nameField.text.length > 0
             onClicked: {
-                var success = insertUpdateItem()
+                var success = insertUpdate()
 
                 if (success) {
                     pageStack.pop()
@@ -163,7 +167,6 @@ Kirigami.ScrollablePage {
                 }
             }
         }
-
         Controls.Button {
             id: cancelButton
             Layout.fillWidth: true
@@ -175,9 +178,16 @@ Kirigami.ScrollablePage {
     }
 
     Kirigami.InlineMessage {
-            id: msgInsertUpdateError
-            type: Kirigami.MessageType.Error
-            text: "Failed to update Item"
-            visible: false
-        }
+        id: msgInsertUpdateError
+        type: Kirigami.MessageType.Error
+        text: "Failed to update Item"
+        visible: false
+    }
+
+    Kirigami.InlineMessage {
+        id: msgDeleteError
+        type: Kirigami.MessageType.Error
+        text: "Failed to delete Item"
+        visible: false
+    }
 }

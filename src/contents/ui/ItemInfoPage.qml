@@ -8,8 +8,8 @@ import org.kde.kirigami as Kirigami
 
 import com.kd8bny.katalogue
 
-Kirigami.ScrollablePage {  //TODO whole page layout
-    id: addEditItemPage
+Kirigami.ScrollablePage {
+    id: itemInfoPage
 
     required property int itemModelIndex  // Item Model index position
 
@@ -22,7 +22,7 @@ Kirigami.ScrollablePage {  //TODO whole page layout
             tooltip: i18n("Edit item")
 
             onTriggered: {
-                pageStack.push("qrc:AddEditItemPage.qml", {"itemId": itemId, "itemModelIndex": itemModelIndex})
+                pageStack.push("qrc:AddEditItemPage.qml", {"isEdit": true, "itemModelIndex": itemModelIndex})
             }
         }
     ]
@@ -36,58 +36,38 @@ Kirigami.ScrollablePage {  //TODO whole page layout
         modelField.text = recordData[5]
         yearField.text = recordData[6]
 
-        typeBox.find(recordData[7])
+        typeBox.text = recordData[7]
+        itemParentBox.text = recordData[9]  //TODO name not number
 
-        if (recordData[8]){
-            itemArchived.checked = recordData[8]
-            isArchived = true
-        }
-
-        if (recordData[9]){
-            itemParentEnabled.checked = recordData[9]
-            itemParentBox.find(recordData[9])
-        }
     }
 
     Kirigami.FormLayout {
         id: form
 
-        Controls.TextField {
+        Controls.Label {
             id: nameField
             Kirigami.FormData.label: i18nc("@label:textbox", "Name:")
-            placeholderText: i18n("Required")
         }
-        Controls.TextField {
+        Controls.Label {
             id: makeField
             Kirigami.FormData.label: i18nc("@label:textbox", "Make:")
         }
-        Controls.TextField {
+        Controls.Label {
             id: modelField
             Kirigami.FormData.label: i18nc("@label:textbox", "Model:")
         }
-        Controls.TextField {
+        Controls.Label {
             id: yearField
             Kirigami.FormData.label: i18nc("@label:textbox", "Year:")
-            placeholderText: i18n("YYYY")
-            inputMask: "9999"
-            text: "2000"
         }
-        Controls.ComboBox {
+        Controls.Label {
             id: typeBox
             Kirigami.FormData.label: i18nc("@label:textbox", "Type:")
-            editable: true
-            model: ItemTypeModel
         }
-        Controls.Switch {
-            id: itemParentEnabled
-            Kirigami.FormData.label: i18nc("@label:textbox", "Child Item:")
-        }
-        Controls.ComboBox {
+        Controls.Label {
             id: itemParentBox
-            editable: false
-            enabled: itemParentEnabled.checked
-            model: ItemParentModel
-            Kirigami.FormData.label: i18nc("@label:textbox", "Parent Item")
+            Kirigami.FormData.label: i18nc("@label:textbox", "Parent Item:")
+            // TODO visable
         }
     }
 }

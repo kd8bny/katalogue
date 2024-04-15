@@ -11,13 +11,14 @@ Kirigami.ScrollablePage {
     id: addEditEventPage
 
     required property int itemId
-    property int eventIndex: -1
+    property int eventModelIndex: -1
+    property bool isEdit: false
 
-    title: (eventIndex != -1) ? i18n("Edit Event") : i18n("Add Event")
+    title: (eventModelIndex != -1) ? i18n("Edit Event") : i18n("Add Event")
 
     actions: [
         Kirigami.Action {
-            enabled: eventIndex != -1
+            enabled: eventModelIndex != -1
             text: i18n("Delete")
             icon.name: "delete"
             tooltip: i18n("Remove Attribute")
@@ -34,7 +35,7 @@ Kirigami.ScrollablePage {
         subtitle: i18n("Are you sure you want to delete: ")
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: {
-            EventModel.deleteRecord(EventModel.getId(eventIndex))
+            EventModel.deleteRecord(EventModel.getId(eventModelIndex))
             pageStack.pop()
         }
         onRejected: {
@@ -48,8 +49,8 @@ Kirigami.ScrollablePage {
         var dateString = currentDate.toLocaleDateString(locale, Locale.ShortFormat);
         dateField.text = Qt.formatDateTime(currentDate, Qt.ISODate)
 
-        if (eventIndex != -1) {
-            var recordData = EventModel.getRecordAsList(eventIndex)
+        if (eventModelIndex != -1) {
+            var recordData = EventModel.getRecordAsList(eventModelIndex)
 
             dateField.text = recordData[1]
             eventField.text = recordData[2]
@@ -108,7 +109,7 @@ Kirigami.ScrollablePage {
             Controls.Button {
                 id: doneButton
                 Layout.fillWidth: true
-                text: (eventIndex != -1) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
+                text: (eventModelIndex != -1) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
                 // enabled: (keyField.text.length & valueField.text.length) > 0
                 onClicked: {
                     var category = ""
@@ -119,7 +120,7 @@ Kirigami.ScrollablePage {
                     }
 
                     EventModel.setRecord(
-                        eventIndex,
+                        eventModelIndex,
                         dateField.text,
                         eventField.text,
                         parseFloat(costField.text),
