@@ -298,7 +298,7 @@ bool Database::updateEventEntry(const Event &event)
     QSqlQuery query;
 
     query.prepare(QStringLiteral(
-        "UPDATE %1 SET %2=:modified, %3=:date, %4=:event, %5=:cost, %6=:odometer, %7=:category, %8=:comment"
+        "UPDATE %1 SET %2=:modified, %3=:date, %4=:event, %5=:cost, %6=:odometer, %7=:category, %8=:comment "
         "WHERE id=:eventId").arg(TABLE_EVENTS, MODIFIED, DATE, EVENT, COST, ODOMETER, CATEGORY, COMMENT));
 
     QString currentTime = this->getCurrentTime();
