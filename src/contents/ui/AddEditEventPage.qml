@@ -87,8 +87,8 @@ Kirigami.ScrollablePage {
 
             dateField.text = recordData[3]
             eventField.text = recordData[4]
-            costField.text = recordData[5]
-            odometerField.text = recordData[6]
+            costField.text = `${recordData[5]}`
+            odometerField.text = `${recordData[6]}`
             categoryBox.currentIndex = categoryBox.find(recordData[7])
             commentField.text = recordData[8]
         }
