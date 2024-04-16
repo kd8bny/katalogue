@@ -74,8 +74,6 @@ Kirigami.ScrollablePage {
         if (isEdit) {
             var recordData = AttributeModel.getRecordAsList(attributeModelIndex)
 
-            console.log(recordData)
-
             keyField.text = recordData[3]
             valueField.text = recordData[4]
             categoryBox.currentIndex = categoryBox.find(recordData[5])
@@ -109,7 +107,7 @@ Kirigami.ScrollablePage {
                 if (success) {
                     pageStack.pop()
                 }else {
-                    msgInsertUpdateError.visible= true
+                    msgInsertUpdateError.visible = true
                 }
             }
         }

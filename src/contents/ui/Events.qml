@@ -99,43 +99,14 @@ Kirigami.ScrollablePage {
                     Layout.rightMargin: Kirigami.Units.gridUnit
                     icon.name: "edit-entry"
                     onClicked: {
-                        pageStack.push("qrc:AddEditEventPage.qml",
-                            {"eventIndex": index, "itemId": itemId})
+                        pageStack.push("qrc:AddEditEventPage.qml", {
+                            "itemId": itemId,
+                            "eventModelIndex": index,
+                            "isEdit": true,
+                        })
                     }
                 }
             }
         }
-        // Kirigami.SwipeListItem {
-        //     separatorVisible: true
-
-        //     actions: [
-        //         Kirigami.Action {
-        //             icon.name: "kdocumentinfo"
-        //             onTriggered: {
-        //                 openInfoSheet(index)
-        //             }
-        //         },
-        //         Kirigami.Action {
-        //             icon.name: "edit-entry"
-        //             onTriggered: {
-        //                 pageStack.push("qrc:AddEditEventPage.qml", {"eventIndex": index, "itemId": itemId})
-        //             }
-        //         }
-        //     ]
-
-        //     RowLayout {
-        //         id: delegateLayout
-
-        //         Controls.Label {
-        //             wrapMode: Text.WordWrap
-        //             text: date.split("T")[0]
-        //         }
-        //         Controls.Label {
-        //             Layout.fillWidth: true
-        //             wrapMode: Text.WordWrap
-        //             text: event
-        //         }
-        //     }
-        // }
     }
 }

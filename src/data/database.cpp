@@ -162,11 +162,18 @@ bool Database::deleteItemEntry(int id)
     bool isDelete = false;
     QSqlQuery query;
 
-    query.prepare(QStringLiteral("DELETE FROM %1 WHERE id=:itemId").arg(TABLE_ITEMS));
+    query.prepare(
+        QStringLiteral("DELETE FROM %1 WHERE id=:itemId").arg(TABLE_ITEMS));
+    qDebug() << QStringLiteral("DELETE FROM %1 WHERE id=:itemId").arg(TABLE_ITEMS);
+
     query.bindValue(QStringLiteral(":itemId"), id);
+
+    qDebug() << query.lastQuery();
+    qDebug() << id;
 
     if(query.exec()){
         isDelete = true;
+        qDebug() << query.lastQuery();
     } else {
         qDebug() << "Error removing record " << query.lastError().text();
     }
@@ -292,8 +299,7 @@ bool Database::updateEventEntry(const Event &event)
 
     query.prepare(QStringLiteral(
         "UPDATE %1 SET %2=:modified, %3=:date, %4=:event, %5=:cost, %6=:odometer, %7=:category, %8=:comment"
-        "WHERE id=:eventId").arg(
-            TABLE_EVENTS, MODIFIED, DATE, EVENT, COST, ODOMETER, CATEGORY, COMMENT));
+        "WHERE id=:eventId").arg(TABLE_EVENTS, MODIFIED, DATE, EVENT, COST, ODOMETER, CATEGORY, COMMENT));
 
     QString currentTime = this->getCurrentTime();
 
