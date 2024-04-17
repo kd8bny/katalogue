@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2022 Daryl Bennett <kd8bny@gmail.com>
 
-import QtQuick 6.0
-import QtQuick.Controls 2.15 as Controls
-import QtQuick.Layouts 1.15
-import org.kde.kirigami 2.20 as Kirigami
-import com.kd8bny.katalogue 1.0
+import QtQuick
+import QtQuick.Controls as Controls
+import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
+
+import com.kd8bny.katalogue
 
 
 Kirigami.OverlaySheet {
@@ -18,9 +19,7 @@ Kirigami.OverlaySheet {
     property alias category: categoryField.text
     property alias comment: commentField.text
 
-    header: Kirigami.Heading {
-        text: "Event"
-    }
+    title:  "Event"
 
     footer: Controls.Button {
         Layout.fillWidth: true
@@ -31,6 +30,12 @@ Kirigami.OverlaySheet {
     }
 
     Kirigami.FormLayout {
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+
+        Layout.preferredWidth: Kirigami.Units.gridUnit * 25
+        Layout.preferredHeight: Kirigami.Units.gridUnit * 10
+
         Controls.Label {
             id: dateField
             Kirigami.FormData.label: i18nc("@label:textbox", "Date:")
