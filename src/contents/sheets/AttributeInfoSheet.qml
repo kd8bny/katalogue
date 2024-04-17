@@ -1,23 +1,22 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2022 Daryl Bennett <kd8bny@gmail.com>
 
-import QtQuick 6.0
-import QtQuick.Controls 2.15 as Controls
-import QtQuick.Layouts 1.15
-import org.kde.kirigami 2.20 as Kirigami
-import com.kd8bny.katalogue 1.0
+import QtQuick
+import QtQuick.Controls as Controls
+import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
+
+import com.kd8bny.katalogue
 
 
 Kirigami.OverlaySheet {
     id: attributeInfoSheet
 
-    property alias category: categoryField.text
+    property string category
     property alias key: keyField.text
     property alias value: valueField.text
 
-    header: Kirigami.Heading {
-        id: categoryField
-    }
+    title: category
 
     footer: Controls.Button {
         Layout.fillWidth: true
@@ -28,13 +27,22 @@ Kirigami.OverlaySheet {
     }
 
     Kirigami.FormLayout {
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+
+        Layout.preferredWidth: Kirigami.Units.gridUnit * 25
+        Layout.preferredHeight: Kirigami.Units.gridUnit * 5
+
         Controls.Label {
             id: keyField
+            text: key
+
             Kirigami.FormData.label: i18nc("@label:textbox", "Name:")
         }
         Controls.Label {
             id: valueField
             Kirigami.FormData.label: i18nc("@label:textbox", "Value:")
+            text: value
         }
     }
 }
