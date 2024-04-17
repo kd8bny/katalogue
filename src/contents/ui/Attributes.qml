@@ -49,7 +49,6 @@ Kirigami.ScrollablePage {
         focus: true
 
         headerPositioning: ListView.OverlayHeader
-        header: itemName
 
         Kirigami.PlaceholderMessage {
             anchors.centerIn: layout
@@ -66,7 +65,7 @@ Kirigami.ScrollablePage {
             Kirigami.IconTitleSubtitle {
                 Layout.fillWidth: true
                 title: section
-                // icon: icon.fromControlsIcon(subtitleDelegate.icon)
+                // TODO icon: icon.fromControlsIcon(subtitleDelegate.icon)
             }
         }
     }
