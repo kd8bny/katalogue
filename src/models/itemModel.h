@@ -37,21 +37,21 @@ public:
         QString model, int year, QString type, int archived, int parent);
     Q_INVOKABLE bool deleteRecord(int itemId);
 
+    QString modelQuery;
+
 protected:
     QHash<int, QByteArray> roleNames() const override;
 
 private:
     const QString modelQueryBase = QStringLiteral(
-        "SELECT id, %1, %2, %3, %4, %5, %6 FROM %7").arg(
-            Database::NAME, Database::MAKE, Database::MODEL, Database::YEAR, Database::TYPE, Database::ARCHIVED, Database::TABLE_ITEMS);
-    const QString modelQueryItem = QStringLiteral(
+        "SELECT id, %1, %2, %3, %4, %5, %6 FROM %7").arg(Database::NAME, Database::MAKE, Database::MODEL,
+            Database::YEAR, Database::TYPE, Database::ARCHIVED, Database::TABLE_ITEMS);
+    const QString modelQueryParentItem = QStringLiteral(
         " WHERE %1 IS NULL AND %2 IS 0").arg(Database::KEY_ITEM_ID, Database::ARCHIVED);
+    const QString modelQueryIncludeComponents = QStringLiteral(
+        " WHERE %2 IS 0").arg(Database::ARCHIVED);
     const QString modelQueryArchive = QStringLiteral(
         " WHERE %1 IS 1").arg(Database::ARCHIVED);
-    const QString modelQueryComponent = QStringLiteral(
-        " WHERE %1 IS NOT NULL AND %2 IS 0").arg(Database::KEY_ITEM_ID, Database::ARCHIVED);
-
-    QString modelQuery;
 
 Q_SIGNALS:
     void filterItem();

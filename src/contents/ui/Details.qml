@@ -10,8 +10,6 @@ import com.kd8bny.katalogue
 
 Kirigami.ScrollablePage {
     id: page
-    //TODO, not edits page
-
     required property int itemModelIndex  // Item Model index position
     required property int itemId          // Item Id from Database
     required property string itemName     // Item name field
@@ -54,12 +52,12 @@ Kirigami.ScrollablePage {
         Kirigami.SubtitleDelegate {
             Layout.fillWidth: true
 
-            icon.name: "view-list-details"
+            icon.name: "extension-symbolic"
             text: i18n("Components")
-            // TODO enabled: isComponentView
+            visible: !isComponentView
             onClicked: {
                 pageStack.push("qrc:Items.qml", {"isComponentView": true})
-                ItemComponentModel.filterComponent()
+                ItemComponentModel.filterParentItemId(itemId)
             }
         }
         Kirigami.SubtitleDelegate {

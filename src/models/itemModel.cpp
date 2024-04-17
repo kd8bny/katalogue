@@ -4,10 +4,10 @@
 ItemModel::ItemModel(QObject *parent) :
     QSqlQueryModel(parent)
 {
-    QObject::connect(this, SIGNAL(filterItem()), this, SLOT(setItemQuery()));
-    QObject::connect(this, SIGNAL(filterArchive()), this, SLOT(setArchiveQuery()));
-    QObject::connect(this, SIGNAL(filterComponent()), this, SLOT(setComponentQuery()));
-    QObject::connect(this, SIGNAL(dataChanged()), this, SLOT(refresh()));
+    QObject::connect(this, &ItemModel::filterItem, this, &ItemModel::setItemQuery);
+    QObject::connect(this, &ItemModel::filterArchive, this, &ItemModel::setArchiveQuery);
+    QObject::connect(this, &ItemModel::filterComponent, this, &ItemModel::setComponentQuery);
+    QObject::connect(this, &ItemModel::dataChanged, this, &ItemModel::refresh);
 
     Q_EMIT setItemQuery();
     this->refresh();
@@ -45,7 +45,7 @@ QHash<int, QByteArray> ItemModel::roleNames() const {
 
 void ItemModel::setItemQuery()
 {
-    modelQuery = this->modelQueryBase + this->modelQueryItem;
+    modelQuery = this->modelQueryBase + this->modelQueryParentItem;
     Q_EMIT dataChanged();
 }
 
@@ -57,7 +57,7 @@ void ItemModel::setArchiveQuery()
 
 void ItemModel::setComponentQuery()
 {
-    modelQuery = this->modelQueryBase + this->modelQueryComponent;
+    modelQuery = this->modelQueryBase + this->modelQueryIncludeComponents;
     Q_EMIT dataChanged();
 }
 

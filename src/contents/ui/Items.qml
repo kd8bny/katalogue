@@ -5,6 +5,7 @@ import QtQuick
 import QtQuick.Controls as Controls
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
+
 import com.kd8bny.katalogue
 
 
@@ -23,12 +24,21 @@ Kirigami.ScrollablePage {
             icon.name: "list-add"
             tooltip: i18n("Add new item")
             onTriggered: pageStack.push("qrc:AddEditItemPage.qml")
+        },
+        Kirigami.Action {  //TODO radio button and undo
+            text: i18n("Include Components")
+            icon.name: "extension-symbolic"
+            tooltip: i18n("Include Components")
+            onTriggered: {
+                ItemModel.filterComponent()  //TODO better name
+            }
         }
     ]
 
     Component.onCompleted: {
         if(isComponentView){
             itemsLayout.model=ItemComponentModel
+
         }
     }
 
