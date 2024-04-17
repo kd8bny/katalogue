@@ -82,9 +82,6 @@ Kirigami.ScrollablePage {
         if (isEdit) {
             var recordData = EventModel.getRecordAsList(eventModelIndex)
 
-            console.log(recordData)
-
-
             dateField.text = recordData[3]
             eventField.text = recordData[4]
             costField.text = `${recordData[5]}`
