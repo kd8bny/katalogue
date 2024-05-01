@@ -12,9 +12,8 @@ import com.kd8bny.katalogue
 Kirigami.ScrollablePage {
     id: page
 
-    required property string itemId
-    required property string itemName
-    property bool isEdit: false
+    property string itemId
+    property string itemName
 
     title: i18n("Tasks")
 
@@ -30,7 +29,9 @@ Kirigami.ScrollablePage {
     ]
 
     Component.onCompleted: {
-        TaskModel.setItemId(itemId)
+        if(itemId){
+            TaskModel.setItemId(itemId)
+        }
     }
 
     Kirigami.CardsListView {

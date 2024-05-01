@@ -6,6 +6,7 @@ TaskModel::TaskModel(QObject *parent) :
 {
     QObject::connect(this, SIGNAL(dataChanged()), this, SLOT(refresh()));
 
+    this->modelQuery = this->modelQueryBase;
     this->refresh();
 }
 

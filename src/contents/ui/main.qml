@@ -67,6 +67,7 @@ Kirigami.ApplicationWindow {
             },
             Kirigami.Action {
                 text: i18n("Tasks")
+                tooltip: i18n("View Tasks")
                 icon.name: "view-task"
                 onTriggered: {
                     pageStack.clear()
@@ -75,6 +76,7 @@ Kirigami.ApplicationWindow {
             },
             Kirigami.Action {
                 text: i18n("Notes")
+                tooltip: i18n("View Notes")
                 icon.name: "note"
                 onTriggered: {
                     pageStack.clear()
@@ -83,7 +85,7 @@ Kirigami.ApplicationWindow {
             },
             Kirigami.Action {
                 text: i18n("Archive")
-                tooltip: i18n("Show archived Items")
+                tooltip: i18n("View Archived Items")
                 icon.name: "backup"
                 onTriggered: {
                     pageStack.clear()

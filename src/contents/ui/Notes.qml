@@ -11,8 +11,8 @@ import com.kd8bny.katalogue
 Kirigami.ScrollablePage {
     id: page
 
-    required property string itemId
-    required property string itemName
+    property string itemId
+    property string itemName
 
     title: i18n("Notes")
 
@@ -28,7 +28,9 @@ Kirigami.ScrollablePage {
     ]
 
     Component.onCompleted: {
-        NoteModel.setItemId(itemId)
+        if(itemId){
+            NoteModel.setItemId(itemId)
+        }
     }
 
     Kirigami.CardsListView {
