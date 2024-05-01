@@ -49,8 +49,8 @@ void TaskModel::setItemId(QString itemId)
 
 void TaskModel::refresh()
 {
-    this->setQuery(this->modelQueryBase);
-    qDebug()<< this->modelQueryBase;
+    this->setQuery(this->modelQuery);
+    qDebug()<< this->modelQuery;
 }
 
 int TaskModel::getId(int row)

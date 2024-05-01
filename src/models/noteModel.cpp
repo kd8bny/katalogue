@@ -38,8 +38,7 @@ QHash<int, QByteArray> NoteModel::roleNames() const {
 
 void NoteModel::setItemId(QString itemId)
 {
-    this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(
-        Database::KEY_ITEM_ID, itemId);
+    this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(Database::KEY_ITEM_ID, itemId);
 
     this->setQuery(modelQuery);
     Q_EMIT dataChanged();
@@ -47,8 +46,8 @@ void NoteModel::setItemId(QString itemId)
 
 void NoteModel::refresh()
 {
-    this->setQuery(this->modelQueryBase);
-    qDebug()<< this->modelQueryBase;
+    this->setQuery(this->modelQuery);
+    qDebug()<< this->modelQuery;
 }
 
 int NoteModel::getId(int row)
