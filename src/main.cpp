@@ -82,7 +82,10 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterSingletonInstance("org.kde.katalogue", 1, 0, "App", &application);
 
     Database database;
-    database.connect(qPath);
+    if(!database.connect(qPath)){
+        return -1;
+    }
+
     qmlRegisterSingletonInstance<Database>("com.kd8bny.katalogue", 1, 0, "Database", &database);
 
     AttributeModel attributeModel;

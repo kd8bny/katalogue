@@ -75,7 +75,7 @@ public:
     const static QString YEAR;
     const static QString ODOMETER;
     const static QString TITLE;
-    const static QString NOTE;
+    const static QString NOTE_CONTENT;
     const static QString DESCRIPTION;
     const static QString DUE_DATE;
     const static QString STATUS;
@@ -85,7 +85,7 @@ public:
 private:
     QSqlDatabase db;
 
-    QString getCurrentTime();
+    const QString getCurrentTime();
     bool initializeSchema();
 
     const int DATABASE_VERSION = 1;

@@ -30,7 +30,7 @@ QHash<int, QByteArray> NoteModel::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[rID] = "id";
     roles[rTitle] = Database::TITLE.toUtf8();
-    roles[rNote] = Database::NOTE.toUtf8();
+    roles[rNote] = Database::NOTE_CONTENT.toUtf8();
     roles[rItemID] = Database::KEY_ITEM_ID.toUtf8();
 
     return roles;

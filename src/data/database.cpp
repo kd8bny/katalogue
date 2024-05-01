@@ -26,7 +26,7 @@ const QString Database::VALUE = QStringLiteral("value");
 const QString Database::YEAR = QStringLiteral("year");
 const QString Database::ODOMETER = QStringLiteral("odometer");
 const QString Database::TITLE = QStringLiteral("title");
-const QString Database::NOTE = QStringLiteral("note");
+const QString Database::NOTE_CONTENT = QStringLiteral("note_content");
 const QString Database::DESCRIPTION = QStringLiteral("description");
 const QString Database::DUE_DATE = QStringLiteral("due_date");
 const QString Database::STATUS = QStringLiteral("status");
@@ -42,7 +42,7 @@ Database::Database(QObject *parent)
 
 Database::~Database() = default;
 
-QString Database::getCurrentTime()
+const QString Database::getCurrentTime()
 {
     QDateTime dt = QDateTime::currentDateTime();
     dt.setTimeSpec(Qt::UTC);
@@ -55,10 +55,8 @@ QString Database::getCurrentTime()
 
 bool Database::connect(QString path)
 {
-    bool isDBOpen = false;
-
     db = QSqlDatabase::addDatabase(DATABASE_TYPE);
-    db.setDatabaseName(QStringLiteral("%1/%2").arg(path, this -> DATABASE_NAME));
+    db.setDatabaseName(QStringLiteral("%1/%2").arg(path, this->DATABASE_NAME));
 
     if(db.open()){
         QSqlQuery query;
@@ -72,18 +70,24 @@ bool Database::connect(QString path)
         if(db_version == 0){
             qDebug() << "New database, creating tables";
 
-            query.exec(QStringLiteral("PRAGMA user_version = %1").arg(this -> DATABASE_VERSION));
-            this->initializeSchema();
-        }else if(db_version > this -> DATABASE_VERSION){
-            qDebug() << "Database is newer than application";
-        }else{
-            // Enable ON CASCADE
+            if(!this->initializeSchema()){
+                qDebug() << "Failed to initialize database schema";
+                return false;
+            }
+
+            query.exec(QStringLiteral("PRAGMA user_version = %1").arg(this->DATABASE_VERSION));
             query.exec(QStringLiteral("PRAGMA foreign_keys = ON;"));
-            isDBOpen = true;
+
+        }else if(db_version > this->DATABASE_VERSION){
+            qDebug() << "Database is newer than application";
+            //TODO Implement upgrade when needed
         }
+
+        // Enable ON CASCADE each time db is open with foreign_key
+        query.exec(QStringLiteral("PRAGMA foreign_keys = ON;"));
     }
 
-    return isDBOpen;
+    return true;
 }
 
 bool Database::insertItemEntry(const Item &item)
@@ -350,7 +354,7 @@ bool Database::insertNoteEntry(const Note &note)
 
     query.prepare(QStringLiteral(
         "INSERT INTO %1 (%2, %3, %4, %5, %6) VALUES (:created, :modified, :title, :noteContent, :itemId)").arg(
-            TABLE_NOTES, CREATED, MODIFIED, TITLE, NOTE, KEY_ITEM_ID));
+            TABLE_NOTES, CREATED, MODIFIED, TITLE, NOTE_CONTENT, KEY_ITEM_ID));
 
     QString currentTime = this->getCurrentTime();
 
@@ -359,7 +363,9 @@ bool Database::insertNoteEntry(const Note &note)
 
     query.bindValue(QStringLiteral(":title"), note.getTitle());
     query.bindValue(QStringLiteral(":noteContent"), note.getNoteContent());
-    query.bindValue(QStringLiteral(":itemId"), note.getItemId());
+    if(note.getItemId()!=-1){
+        query.bindValue(QStringLiteral(":itemId"), note.getItemId());
+    }
 
     if(query.exec()){
         isInsert = true;
@@ -379,7 +385,7 @@ bool Database::updateNoteEntry(const Note &note)
 
     query.prepare(QStringLiteral(
         "UPDATE %1 SET %2=:modified, %3=:title, %4=:noteContent, %5=:itemId WHERE id=:noteId").arg(
-            TABLE_NOTES, MODIFIED, TITLE, NOTE, KEY_ITEM_ID));
+            TABLE_NOTES, MODIFIED, TITLE, NOTE_CONTENT, KEY_ITEM_ID));
 
 
     query.bindValue(QStringLiteral(":title"), note.getTitle());
@@ -435,7 +441,9 @@ bool Database::insertTaskEntry(const Task &task)
     query.bindValue(QStringLiteral(":status"), task.getStatus());
     query.bindValue(QStringLiteral(":title"), task.getTitle());
     query.bindValue(QStringLiteral(":description"), task.getDescription());
-    query.bindValue(QStringLiteral(":itemId"), task.getItemId());
+    if(task.getItemId()!=-1){
+        query.bindValue(QStringLiteral(":itemId"), task.getItemId());
+    }
 
 
     if(query.exec()){
@@ -545,14 +553,14 @@ bool Database::initializeSchema()
             TABLE_EVENTS, CREATED, MODIFIED, DATE, EVENT, COST, ODOMETER, CATEGORY, COMMENT, KEY_ITEM_ID, TABLE_ITEMS);
 
     const QString queryNotes = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-        "%2 DATE NOT NULL, "
-        "%3 DATE NOT NULL, "
-        "%4 TEXT NOT NULL, "
-        "%5 VARCHAR(255), "
-        "%6 INT, "
-        "CONSTRAINT %6 FOREIGN KEY (%6) REFERENCES %7 (id) "
+        "%2 DATE NOT NULL, "    //CREATED
+        "%3 DATE NOT NULL, "    //MODIFIED
+        "%4 TEXT NOT NULL, "    //TITLE
+        "%5 VARCHAR(255), "     //Note Content
+        "%6 INT, "              //FK
+        "FOREIGN KEY (%6) REFERENCES %7 (id) "  //Notes and tasks do not need to belong to item
         "ON DELETE CASCADE ON UPDATE CASCADE)").arg(
-            TABLE_NOTES, CREATED, MODIFIED, TITLE, NOTE, KEY_ITEM_ID, TABLE_ITEMS);
+            TABLE_NOTES, CREATED, MODIFIED, TITLE, NOTE_CONTENT, KEY_ITEM_ID, TABLE_ITEMS);
 
     const QString queryTasks = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
         "%2 DATE NOT NULL, "    //CREATED
@@ -562,31 +570,37 @@ bool Database::initializeSchema()
         "%5 TEXT NOT NULL, "    //TITLE
         "%6 VARCHAR(255), "     //DESCRIPTION
         "%8 INT, "              //FK
-        "CONSTRAINT %8 FOREIGN KEY (%8) REFERENCES %9 (id) "
+        "FOREIGN KEY (%8) REFERENCES %9 (id) "  //Notes and tasks do not need to belong to item
         "ON DELETE CASCADE ON UPDATE CASCADE)").arg(
             TABLE_TASKS, CREATED, MODIFIED, DUE_DATE, STATUS, TITLE, DESCRIPTION, KEY_ITEM_ID, TABLE_ITEMS);
 
     if(!query.exec(queryItems)){
+        qDebug() << "Failed to create table: " << TABLE_ITEMS;
         qDebug() << query.lastError();
         return false;
     }
 
     if(!query.exec(queryAttributes)){
+        qDebug() << "Failed to create table: " << TABLE_ATTRIBUTES;
         qDebug() << query.lastError();
         return false;
     }
 
     if(!query.exec(queryEvents)){
+        qDebug() << "Failed to create table: " << TABLE_EVENTS;
         qDebug() << query.lastError();
         return false;
     }
 
     if(!query.exec(queryNotes)){
+        qDebug() << "Failed to create table: " << TABLE_NOTES;
+        qDebug() << query.lastQuery();
         qDebug() << query.lastError();
         return false;
     }
 
     if(!query.exec(queryTasks)){
+        qDebug() << "Failed to create table: " << TABLE_TASKS;
         qDebug() << query.lastError();
         return false;
     }
