@@ -68,7 +68,10 @@ Kirigami.ApplicationWindow {
             Kirigami.Action {
                 text: i18n("Tasks")
                 icon.name: "view-task"
-                //TODO onTriggered:
+                onTriggered: {
+                    pageStack.clear()
+                    pageStack.push('qrc:Tasks.qml')
+                }
             },
             Kirigami.Action {
                 text: i18n("Notes")

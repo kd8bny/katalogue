@@ -19,7 +19,7 @@ Kirigami.ScrollablePage {
 
     actions: [
         Kirigami.Action {
-            enabled: isEdit
+            visible: isEdit
             text: i18n("Delete")
             icon.name: "delete"
             tooltip: i18n("Remove item from Katalogue")

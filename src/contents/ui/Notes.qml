@@ -84,6 +84,9 @@ Kirigami.ScrollablePage {
                     }
                 }
             }
+            onClicked: {
+                pageStack.push("qrc:AddEditNotePage.qml", {"itemId": id, "noteModelIndex": index, "isEdit": true})
+            }
         }
     }
 }

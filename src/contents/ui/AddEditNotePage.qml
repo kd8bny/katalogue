@@ -1,23 +1,25 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 // SPDX-FileCopyrightText: 2022 Daryl Bennett <kd8bny@gmail.com>
 
-import QtQuick 6.0
-import QtQuick.Controls 2.15 as Controls
-import QtQuick.Layouts 1.15
-import org.kde.kirigami 2.20 as Kirigami
-import com.kd8bny.katalogue 1.0
+import QtQuick
+import QtQuick.Controls as Controls
+import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
+
+import com.kd8bny.katalogue
 
 Kirigami.ScrollablePage {
     id: addEditNotePage
 
     property int itemId: -1
-    property int noteIndex: -1
+    property int noteModelIndex: -1
+    property bool isEdit: false
 
-    title: (noteIndex != -1) ? i18n("Edit Note") : i18n("Add Note")
+    title: (noteModelIndex != -1) ? i18n("Edit Note") : i18n("Add Note")
 
     actions: [
         Kirigami.Action {
-            enabled: noteIndex != -1
+            visible: isEdit
             text: i18n("Delete")
             icon.name: "delete"
             tooltip: i18n("Remove note")
@@ -34,26 +36,40 @@ Kirigami.ScrollablePage {
         subtitle: i18n("Are you sure you want to delete: ")
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: {
-            NoteModel.deleteRecord(NoteModel.getId(noteIndex))
-            pageStack.pop()
-        }
+            var success = NoteModel.deleteRecord(NoteModel.getId(noteModelIndex))
+            if (success) {
+                pageStack.pop()
+            } else {
+                msgDeleteError.visible = true
+            }}
         onRejected: {
             pageStack.pop()
         }
     }
 
+    function insertUpdate() {
+        var success = NoteModel.setRecord(
+            noteModelIndex,
+            titleField.text,
+            noteContentField.text,
+            itemId)
+
+        if (success) {
+            NoteModel.refresh()
+        }
+
+        return success
+    }
+
     Component.onCompleted: {
-        var locale = Qt.locale()
-        var currentDate = new Date()
-        var dateString = currentDate.toLocaleDateString(locale, Locale.ShortFormat);
-        // dateField.text = dateString
 
-        if (noteIndex != -1) {
-            var recordData = NoteModel.getRecordAsList(noteIndex)
 
-            // dateField.text = recordData[1]
-            titleField.text = recordData[1]
-            noteContentField.text = recordData[2]
+        if (isEdit) {
+            var recordData = NoteModel.getRecordAsList(noteModelIndex)
+
+            console.log(recordData)
+            titleField.text = recordData[3]
+            noteContentField.text = recordData[4]
         }
     }
 
@@ -64,22 +80,21 @@ Kirigami.ScrollablePage {
         }
         Controls.TextArea {
             id: noteContentField
+            Layout.fillWidth: true  //TODO scrollview entry
             Kirigami.FormData.label: i18nc("@label:textbox", "Note:")
         }
         Controls.Button {
             id: doneButton
             Layout.fillWidth: true
-            text: (noteIndex != -1) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
+            text: (noteModelIndex != -1) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
             onClicked: {
+                var success = insertUpdate()
 
-                NoteModel.setRecord(
-                    noteIndex,
-                    titleField.text,
-                    noteContentField.text,
-                    itemId)
-
-                //TODO check results of insert
-                pageStack.pop()
+                if (success) {
+                    pageStack.pop()
+                }else {
+                    msgInsertUpdateError.visible = true
+                }
             }
         }
         Controls.Button {
@@ -90,5 +105,19 @@ Kirigami.ScrollablePage {
                 pageStack.pop()
             }
         }
+    }
+
+    Kirigami.InlineMessage {
+        id: msgInsertUpdateError
+        type: Kirigami.MessageType.Error
+        text: "Failed to update Note"
+        visible: false
+    }
+
+    Kirigami.InlineMessage {
+        id: msgDeleteError
+        type: Kirigami.MessageType.Error
+        text: "Failed to delete Note"
+        visible: false
     }
 }

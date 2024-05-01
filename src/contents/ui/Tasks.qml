@@ -5,6 +5,7 @@ import QtQuick
 import QtQuick.Controls as Controls
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
+
 import com.kd8bny.katalogue
 
 
@@ -13,6 +14,7 @@ Kirigami.ScrollablePage {
 
     required property string itemId
     required property string itemName
+    property bool isEdit: false
 
     title: i18n("Tasks")
 
@@ -22,8 +24,7 @@ Kirigami.ScrollablePage {
             icon.name: "list-add"
             tooltip: i18n("Add new task")
             onTriggered: {
-                // TODO
-                // pageStack.push("qrc:AddEditTaskPage.qml")
+                pageStack.push("qrc:AddEditTaskPage.qml")
             }
         }
     ]
@@ -88,6 +89,10 @@ Kirigami.ScrollablePage {
                         text: status
                     }
                 }
+            }
+            onClicked: {
+                pageStack.push("qrc:AddEditTaskPage.qml",
+                    {"itemId": id, "taskModelIndex": index, "isEdit": true})
             }
         }
     }

@@ -38,7 +38,6 @@ Kirigami.ScrollablePage {
     Component.onCompleted: {
         if(isComponentView){
             itemsLayout.model=ItemComponentModel
-
         }
     }
 
