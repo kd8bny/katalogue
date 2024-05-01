@@ -80,7 +80,7 @@ Kirigami.ScrollablePage {
                     columns: width > Kirigami.Units.gridUnit * 20 ? 4 : 2
                     Controls.Label {
                         wrapMode: TextEdit.Wrap
-                        text: note
+                        text: note_content
                     }
                 }
             }
