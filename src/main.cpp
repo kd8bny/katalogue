@@ -2,8 +2,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
     SPDX-FileCopyrightText: 2024 Daryl Bennett <kd8bny@gmail.com>
 */
-#define TRANSLATION_DOMAIN "katalogue"
-
 #include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QUrl>
@@ -14,6 +12,8 @@
 
 #include "about.h"
 #include "katalogue.h"
+#include "version-katalogue.h"
+#include "constants/defaults.h"
 #include "data/database.h"
 #include "models/attributeModel.h"
 #include "models/attributeCategoryModel.h"
@@ -25,7 +25,6 @@
 #include "models/itemParentModel.h"
 #include "models/noteModel.h"
 #include "models/taskModel.h"
-#include "version-katalogue.h"
 
 #include <KAboutData>
 #include <KLocalizedContext>
@@ -93,6 +92,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     AttributeCategoryModel attributeCategoryModel;
     qmlRegisterSingletonInstance<AttributeCategoryModel>("com.kd8bny.katalogue", 1, 0, "AttributeCategoryModel", &attributeCategoryModel);
+
+    Defaults defaults;
+    qmlRegisterSingletonInstance<Defaults>("com.kd8bny.katalogue", 1, 0, "Defaults", &defaults);
 
     EventModel eventModel;
     qmlRegisterSingletonInstance<EventModel>("com.kd8bny.katalogue", 1, 0, "EventModel", &eventModel);

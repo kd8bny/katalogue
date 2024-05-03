@@ -7,6 +7,8 @@ add_executable(katalogue
     katalogue.cpp
     resources.qrc
 
+    constants/defaults.cpp
+
     data/database.cpp
     data/attribute.cpp
     data/event.cpp
