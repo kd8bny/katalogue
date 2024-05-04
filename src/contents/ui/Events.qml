@@ -74,30 +74,28 @@ Kirigami.ScrollablePage {
             subtitle: date.split("T")[0]
 
             contentItem: RowLayout {
+                Layout.fillWidth: true
                 Rectangle {
+                    Layout.fillWidth: true
                     radius: height
                     Layout.preferredWidth: Kirigami.Units.largeSpacing
                     Layout.preferredHeight: Kirigami.Units.largeSpacing
                     color: Kirigami.Theme.neutralTextColor
                 }
-
                 Kirigami.IconTitleSubtitle {
                     Layout.fillWidth: true
+                    Layout.preferredWidth: Kirigami.Units.largeSpacing * 30
                     title: subtitleDelegate.text
                     subtitle: subtitleDelegate.subtitle
                     icon: icon.fromControlsIcon(subtitleDelegate.icon)
                 }
-
                 Controls.Button {
-                    Layout.rightMargin: Kirigami.Units.gridUnit
                     icon.name: "kdocumentinfo"
                     onClicked: {
                         openInfoSheet(index)
                     }
                 }
-
                 Controls.Button {
-                    Layout.rightMargin: Kirigami.Units.gridUnit
                     icon.name: "edit-entry"
                     onClicked: {
                         pageStack.push("qrc:AddEditEventPage.qml", {
