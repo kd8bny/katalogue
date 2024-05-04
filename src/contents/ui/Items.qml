@@ -36,7 +36,7 @@ Kirigami.ScrollablePage {
     KTM.KSortFilterProxyModel {
         id: filteredModel
         sourceModel: ItemModel
-        filterRoleName: "year"
+        filterRoleName: "name"
         filterRegularExpression: {
             if (searchField.text === "") return new RegExp()
             return new RegExp("%1".arg(searchField.text), "i")
