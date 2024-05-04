@@ -5,6 +5,7 @@ import QtQuick
 import QtQuick.Controls as Controls
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
+import org.kde.kitemmodels as KTM
 
 import com.kd8bny.katalogue
 
@@ -17,6 +18,30 @@ Kirigami.ScrollablePage {
     Layout.fillWidth: true
 
     title: i18n("Katalogued Items")
+
+    header: Controls.ToolBar {
+        id: toolbar
+        RowLayout {
+            anchors.fill: parent
+            Kirigami.SearchField {
+                id: searchField
+
+                Layout.alignment: Qt.AlignHCenter
+                Layout.fillWidth: true
+                Layout.maximumWidth: Kirigami.Units.gridUnit*30
+            }
+        }
+    }
+
+    KTM.KSortFilterProxyModel {
+        id: filteredModel
+        sourceModel: ItemModel
+        filterRoleName: "year"
+        filterRegularExpression: {
+            if (searchField.text === "") return new RegExp()
+            return new RegExp("%1".arg(searchField.text), "i")
+        }
+    }
 
     actions: [
         Kirigami.Action {
@@ -43,7 +68,7 @@ Kirigami.ScrollablePage {
 
     Kirigami.CardsListView {
         id: itemsLayout
-        model: ItemModel
+        model: filteredModel
         delegate: itemsDelegate
 
         Kirigami.PlaceholderMessage {
@@ -60,7 +85,7 @@ Kirigami.ScrollablePage {
 
         Kirigami.AbstractCard {
             showClickFeedback: true
-            onClicked:  {
+            onClicked: {
                 pageStack.push("qrc:Details.qml", {"itemModelIndex": index, "itemId": id, "itemName": name, "isComponentView": isComponentView})
             }
 
@@ -69,6 +94,7 @@ Kirigami.ScrollablePage {
                 // The setting below defines a component's preferred size based on its content
                 implicitWidth: delegateLayout.implicitWidth
                 implicitHeight: delegateLayout.implicitHeight
+
                 GridLayout {
                     id: delegateLayout
                     anchors {
@@ -80,6 +106,7 @@ Kirigami.ScrollablePage {
                     rowSpacing: Kirigami.Units.largeSpacing
                     columnSpacing: Kirigami.Units.largeSpacing
                     columns: width > Kirigami.Units.gridUnit * 20 ? 4 : 2
+
                     Kirigami.Icon {
                         source: "file-catalog-symbolic"
                         Layout.fillHeight: true
@@ -89,6 +116,7 @@ Kirigami.ScrollablePage {
                         Layout.preferredWidth: height
                         Layout.rowSpan: 2
                     }
+
                     ColumnLayout {
                         Kirigami.Heading {
                             level: 1
