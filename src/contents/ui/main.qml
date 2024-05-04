@@ -77,7 +77,7 @@ Kirigami.ApplicationWindow {
             Kirigami.Action {
                 text: i18n("Notes")
                 tooltip: i18n("View Notes")
-                icon.name: "note"
+                icon.name: "backgroundtool-symbolic"
                 onTriggered: {
                     pageStack.clear()
                     pageStack.push('qrc:Notes.qml')
@@ -86,7 +86,7 @@ Kirigami.ApplicationWindow {
             Kirigami.Action {
                 text: i18n("Archive")
                 tooltip: i18n("View Archived Items")
-                icon.name: "backup"
+                icon.name: "folder-tar-symbolic"
                 onTriggered: {
                     pageStack.clear()
                     pageStack.push('qrc:Items.qml')

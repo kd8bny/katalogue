@@ -13,6 +13,7 @@ Kirigami.ScrollablePage {
     required property int itemModelIndex  // Item Model index position
     required property int itemId          // Item Id from Database
     required property string itemName     // Item name field
+
     property bool isComponentView         // Component view or Item level view
 
     title: i18n(itemName)
@@ -45,10 +46,27 @@ Kirigami.ScrollablePage {
         Kirigami.SubtitleDelegate {
             Layout.fillWidth: true
 
-            icon.name: "view-calendar-agenda"
+            icon.name: "tag-events-symbolic"
             text: i18n("Events")
             onClicked: pageStack.push("qrc:Events.qml", {"itemName": itemName, "itemId": itemId})
         }
+
+        Kirigami.SubtitleDelegate {
+            Layout.fillWidth: true
+
+            icon.name: "backgroundtool-symbolic"
+            text: i18n("Notes")
+            onClicked: pageStack.push("qrc:Notes.qml", {"itemName": itemName, "itemId": itemId})
+        }
+
+        Kirigami.SubtitleDelegate {
+            Layout.fillWidth: true
+
+            icon.name: "view-task"
+            text: i18n("Tasks")
+            onClicked: pageStack.push("qrc:Tasks.qml", {"itemName": itemName, "itemId": itemId})
+        }
+
         Kirigami.SubtitleDelegate {
             Layout.fillWidth: true
 
@@ -60,24 +78,11 @@ Kirigami.ScrollablePage {
                 ItemComponentModel.filterParentItemId(itemId)
             }
         }
+
         Kirigami.SubtitleDelegate {
             Layout.fillWidth: true
 
-            icon.name: "view-list-details"
-            text: i18n("Notes")
-            onClicked: pageStack.push("qrc:Notes.qml", {"itemName": itemName, "itemId": itemId})
-        }
-        Kirigami.SubtitleDelegate {
-            Layout.fillWidth: true
-
-            icon.name: "view-task"
-            text: i18n("Tasks")
-            onClicked: pageStack.push("qrc:Tasks.qml", {"itemName": itemName, "itemId": itemId})
-        }
-        Kirigami.SubtitleDelegate {
-            Layout.fillWidth: true
-
-            icon.name: "view-list-details"
+            icon.name: "file-catalog-symbolic"
             text: i18n("Details")
             onClicked: pageStack.push('qrc:ItemInfoPage.qml', {"itemModelIndex": itemModelIndex})
         }
