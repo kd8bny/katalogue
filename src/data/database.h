@@ -26,7 +26,7 @@ class Database : public QObject
 
 public:
     explicit Database(QObject *parent = nullptr);
-    ~Database() final;
+    ~Database();
     bool connect(QString path);
 
     bool insertItemEntry(const Item &item);

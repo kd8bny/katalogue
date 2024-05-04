@@ -40,7 +40,10 @@ Database::Database(QObject *parent)
 
 }
 
-Database::~Database() = default;
+Database::~Database()
+{
+
+}
 
 const QString Database::getCurrentTime()
 {
@@ -445,7 +448,6 @@ bool Database::insertTaskEntry(const Task &task)
         query.bindValue(QStringLiteral(":itemId"), task.getItemId());
     }
 
-
     if(query.exec()){
         isInsert = true;
     } else {
@@ -463,7 +465,7 @@ bool Database::updateTaskEntry(const Task &task)
     QSqlQuery query;
 
     query.prepare(QStringLiteral(
-        "UPDATE %1 SET %2=:modified, %3=:dueDate, %4=:status, %5=:title, %6=:desc, %7=:itemId WHERE id=:taskId").arg(
+        "UPDATE %1 SET %2=:modified, %3=:dueDate, %4=:status, %5=:title, %6=:description, %7=:itemId WHERE id=:taskId").arg(
             TABLE_TASKS, MODIFIED, DUE_DATE, STATUS, TITLE, DESCRIPTION, KEY_ITEM_ID));
 
     QString currentTime = this->getCurrentTime();
@@ -471,9 +473,9 @@ bool Database::updateTaskEntry(const Task &task)
     query.bindValue(QStringLiteral(":modified"), currentTime);
 
     query.bindValue(QStringLiteral(":dueDate"), task.getDueDate());
-    query.bindValue(QStringLiteral(":title"), task.getTitle());
-    query.bindValue(QStringLiteral(":desc"), task.getDescription());
     query.bindValue(QStringLiteral(":status"), task.getStatus());
+    query.bindValue(QStringLiteral(":title"), task.getTitle());
+    query.bindValue(QStringLiteral(":description"), task.getDescription());
     query.bindValue(QStringLiteral(":itemId"), task.getItemId());
 
     query.bindValue(QStringLiteral(":taskId"), task.getId());

@@ -63,10 +63,10 @@ Task TaskModel::getRecord(int row)
 {
     int id = this->data(this->index(row, 0), rID).toInt();
     Task task(id);
-    task.setDueDate(this->data(this->index(row, 1), rTitle).toString());
-    task.setStatus(this->data(this->index(row, 2), rTitle).toString());
+    task.setDueDate(this->data(this->index(row, 1), rDueDate).toString());
+    task.setStatus(this->data(this->index(row, 2), rStatus).toString());
     task.setTitle(this->data(this->index(row, 3), rTitle).toString());
-    task.setDescription(this->data(this->index(row, 4), rTitle).toString());
+    task.setDescription(this->data(this->index(row, 4), rDescription).toString());
     task.setItemId(this->data(this->index(row, 5), rItemID).toInt());
 
     return task;

@@ -50,8 +50,10 @@ Kirigami.ScrollablePage {
     function insertUpdate() {
         var success = TaskModel.setRecord(
             taskModelIndex,
+            dateField.text,
+            statusBox.currentText,
             titleField.text,
-            taskContentField.text,
+            descriptionField.text,
             itemId)
 
         if (success) {
@@ -68,13 +70,10 @@ Kirigami.ScrollablePage {
 
         if (isEdit) {
             var recordData = TaskModel.getRecordAsList(taskModelIndex)
-
-            console.log(recordData)
-
-
-            dateField.text = recordData[2]
-            titleField.text = recordData[3]
-            taskContentField.text = recordData[4]
+            dateField.text = recordData[3]
+            statusBox.currentIndex = statusBox.find(recordData[4])
+            titleField.text = recordData[5]
+            descriptionField.text = recordData[6]
         }
     }
 
@@ -83,14 +82,19 @@ Kirigami.ScrollablePage {
             id: dateField
             Kirigami.FormData.label: i18nc("@label:textbox", "Date:")
         }
+        Controls.ComboBox {
+            id: statusBox
+            Kirigami.FormData.label: i18nc("@label:textbox", "Status:")
+            model: Defaults.getValidTaskStatus()
+        }
         Controls.TextField {
             id: titleField
             Kirigami.FormData.label: i18nc("@label:textbox", "Title:")
         }
         Controls.TextArea {
-            id: taskContentField
+            id: descriptionField
             Layout.fillWidth: true  //TODO scrollview entry
-            Kirigami.FormData.label: i18nc("@label:textbox", "Task:")
+            Kirigami.FormData.label: i18nc("@label:textbox", "Description:")
         }
         Controls.Button {
             id: doneButton
