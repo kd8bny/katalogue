@@ -77,7 +77,7 @@ Kirigami.ScrollablePage {
         var locale = Qt.locale()
         var currentDate = new Date()
         var dateString = currentDate.toLocaleDateString(locale, Locale.ShortFormat);
-        dateField.text = Qt.formatDateTime(currentDate, Qt.ISODate)
+        dateField.text = Qt.formatDateTime(currentDate, Qt.ISODate).split("T")[0]
 
         if (isEdit) {
             var recordData = EventModel.getRecordAsList(eventModelIndex)
@@ -116,6 +116,7 @@ Kirigami.ScrollablePage {
         }
         Controls.TextArea {
             id: commentField
+            Layout.fillWidth: true
             Kirigami.FormData.label: i18nc("@label:textbox", "Comment")
         }
         Controls.Button {

@@ -87,6 +87,7 @@ Kirigami.ScrollablePage {
         }
         Controls.TextField {
             id: valueField
+            Layout.fillWidth: true
             Kirigami.FormData.label: i18nc("@label:textbox", "Value:")
         }
         Controls.ComboBox {

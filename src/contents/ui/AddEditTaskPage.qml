@@ -66,7 +66,7 @@ Kirigami.ScrollablePage {
     Component.onCompleted: {
         var locale = Qt.locale()
         var currentDate = new Date()
-        var dateString = currentDate.toLocaleDateString(locale, Locale.ShortFormat);
+        var dateString = currentDate.toLocaleDateString(locale, Locale.ShortFormat).split("T")[0]
 
         if (isEdit) {
             var recordData = TaskModel.getRecordAsList(taskModelIndex)
