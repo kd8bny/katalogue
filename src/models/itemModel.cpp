@@ -38,6 +38,7 @@ QHash<int, QByteArray> ItemModel::roleNames() const {
     roles[rYEAR] = Database::YEAR.toUtf8();
     roles[rTYPE] = Database::TYPE.toUtf8();
     roles[rARCHIVED] = Database::ARCHIVED.toUtf8();
+    roles[rUSER_ORDER] = Database::USER_ORDER.toUtf8();
     roles[rPARENT] = Database::KEY_ITEM_ID.toUtf8();
 
     return roles;
@@ -45,19 +46,20 @@ QHash<int, QByteArray> ItemModel::roleNames() const {
 
 void ItemModel::setItemQuery()
 {
-    modelQuery = this->modelQueryBase + this->modelQueryParentItem;
+    modelQuery = this->modelQueryBase + this->modelQueryParentItem + this->modelQuerySortUser;
+    qDebug() << modelQuery;
     Q_EMIT dataChanged();
 }
 
 void ItemModel::setArchiveQuery()
 {
-    modelQuery = this->modelQueryBase + this->modelQueryArchive;
+    modelQuery = this->modelQueryBase + this->modelQueryArchive + this->modelQuerySortUser;
     Q_EMIT dataChanged();
 }
 
 void ItemModel::setComponentQuery()
 {
-    modelQuery = this->modelQueryBase + this->modelQueryIncludeComponents;
+    modelQuery = this->modelQueryBase + this->modelQueryIncludeComponents + this->modelQuerySortUser;
     Q_EMIT dataChanged();
 }
 
@@ -84,7 +86,8 @@ Item ItemModel::getRecord(int row)
     item.setYear(this->data(this->index(row, 4), rYEAR).toInt());
     item.setType(this->data(this->index(row, 5), rTYPE).toString());
     item.setArchived(this->data(this->index(row, 6), rARCHIVED).toInt());
-    item.setParent(this->data(this->index(row, 7), rPARENT).toInt());
+    item.setUserOrder(this->data(this->index(row, 7), rUSER_ORDER).toInt());
+    item.setParent(this->data(this->index(row, 8), rPARENT).toInt());
 
     return item;
 }

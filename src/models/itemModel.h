@@ -21,6 +21,7 @@ public:
         rYEAR,
         rTYPE,
         rARCHIVED,
+        rUSER_ORDER,
         rPARENT
     };
 
@@ -46,12 +47,16 @@ private:
     const QString modelQueryBase = QStringLiteral(
         "SELECT id, %1, %2, %3, %4, %5, %6 FROM %7").arg(Database::NAME, Database::MAKE, Database::MODEL,
             Database::YEAR, Database::TYPE, Database::ARCHIVED, Database::TABLE_ITEMS);
+
     const QString modelQueryParentItem = QStringLiteral(
         " WHERE %1 IS NULL AND %2 IS 0").arg(Database::KEY_ITEM_ID, Database::ARCHIVED);
     const QString modelQueryIncludeComponents = QStringLiteral(
         " WHERE %2 IS 0").arg(Database::ARCHIVED);
     const QString modelQueryArchive = QStringLiteral(
         " WHERE %1 IS 1").arg(Database::ARCHIVED);
+
+    const QString modelQuerySortUser = QStringLiteral(
+        " ORDER BY %1 DESC NULLS LAST").arg(Database::USER_ORDER);
 
 Q_SIGNALS:
     void filterItem();

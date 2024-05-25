@@ -71,6 +71,7 @@ public:
     const static QString MODIFIED;
     const static QString NAME;
     const static QString TYPE;
+    const static QString USER_ORDER;
     const static QString VALUE;
     const static QString YEAR;
     const static QString ODOMETER;

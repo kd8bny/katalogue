@@ -39,6 +39,9 @@ public:
     bool getArchived() const { return archived; }
     void setArchived(const bool &archived_) { archived = archived_; }
 
+    int getUserOrder() const { return userOrder; }
+    void setUserOrder(const int &userOrder_) { userOrder = userOrder_; }
+
     int getParent() const { return parent; }
     void setParent(const int &parent_) { parent = parent_; }
 
@@ -54,6 +57,7 @@ private:
     int year;
     QString type;
     bool archived;
+    int userOrder;
     int parent;
 };
 

@@ -23,6 +23,7 @@ QVariantList Item::asList()
     list.append(QVariant(this->getYear()));
     list.append(QVariant(this->getType()));
     list.append(QVariant(this->getArchived()));
+    list.append(QVariant(this->getUserOrder()));
     list.append(QVariant(this->getParent()));
 
     return list;

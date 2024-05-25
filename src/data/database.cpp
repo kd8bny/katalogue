@@ -21,6 +21,7 @@ const QString Database::MAKE = QStringLiteral("make");
 const QString Database::MODEL = QStringLiteral("model");
 const QString Database::MODIFIED = QStringLiteral("modified");
 const QString Database::NAME = QStringLiteral("name");
+const QString Database::USER_ORDER = QStringLiteral("user_order");
 const QString Database::TYPE = QStringLiteral("type");
 const QString Database::VALUE = QStringLiteral("value");
 const QString Database::YEAR = QStringLiteral("year");
@@ -98,9 +99,9 @@ bool Database::insertItemEntry(const Item &item)
     bool isInsert = false;
     QSqlQuery query;
 
-    query.prepare(QStringLiteral("INSERT INTO %1 (%2, %3, %4, %5, %6, %7, %8, %9, %10) "
-        "VALUES (:created, :modified, :name, :make, :model, :year, :type, :archived, :parent)").arg(
-            TABLE_ITEMS, CREATED, MODIFIED, NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, KEY_ITEM_ID));
+    query.prepare(QStringLiteral("INSERT INTO %1 (%2, %3, %4, %5, %6, %7, %8, %9, %10, %11) "
+        "VALUES (:created, :modified, :name, :make, :model, :year, :type, :archived, :user_order, :parent)").arg(
+            TABLE_ITEMS, CREATED, MODIFIED, NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, USER_ORDER, KEY_ITEM_ID));
 
     QString currentTime = this->getCurrentTime();
 
@@ -112,6 +113,7 @@ bool Database::insertItemEntry(const Item &item)
     query.bindValue(QStringLiteral(":model"), item.getModel());
     query.bindValue(QStringLiteral(":year"), item.getYear());
     query.bindValue(QStringLiteral(":type"), item.getType());
+    query.bindValue(QStringLiteral(":user_order"), item.getUserOrder());
     query.bindValue(QStringLiteral(":archived"), item.getArchived());
     if(item.getParent() != -1){
         qDebug() << "Item is a Component id: " << item.getParent();
@@ -516,18 +518,19 @@ bool Database::initializeSchema()
     QSqlQuery query;
 
     const QString queryItems = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-        "%2 DATE NOT NULL, "
-        "%3 DATE NOT NULL, "
-        "%4 TEXT NOT NULL, "
-        "%5 TEXT, "
-        "%6 TEXT, "
-        "%7 INT, "
-        "%8 TEXT NOT NULL, "
-        "%9 BOOLEAN NOT NULL CHECK ( %9 IN (0, 1)), "
-        "%10 INT, "
-        "FOREIGN KEY (%10) REFERENCES %1 (id) "
+        "%2 DATE NOT NULL, "    //CREATED
+        "%3 DATE NOT NULL, "    //MODIFIED
+        "%4 TEXT NOT NULL, "    //NAME
+        "%5 TEXT, "             //MAKE
+        "%6 TEXT, "             //MODEL
+        "%7 INT, "              //YEAR
+        "%8 TEXT NOT NULL, "    //TYPE
+        "%9 BOOLEAN NOT NULL CHECK ( %9 IN (0, 1)), "   //ARCHIVED
+        "%10 INT, "             //USER_ORDER
+        "%11 INT, "             //FK
+        "FOREIGN KEY (%11) REFERENCES %1 (id) "
         "ON DELETE CASCADE ON UPDATE CASCADE)").arg(
-            TABLE_ITEMS, CREATED, MODIFIED, NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, KEY_ITEM_ID);
+            TABLE_ITEMS, CREATED, MODIFIED, NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, USER_ORDER, KEY_ITEM_ID);
 
     const QString queryAttributes = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
         "%2 DATE NOT NULL, "
