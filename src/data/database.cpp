@@ -198,7 +198,6 @@ bool Database::updateItemUserOrder(const int id, const int user_order)
         "UPDATE %1 SET %2=:modified, %3=:user_order WHERE id=:id").arg(TABLE_ITEMS, MODIFIED, USER_ORDER));
 
     QString currentTime = this->getCurrentTime();
-    qDebug() <<  id << user_order;
 
     query.bindValue(QStringLiteral(":modified"), currentTime);
     query.bindValue(QStringLiteral(":user_order"), user_order);
