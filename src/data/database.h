@@ -36,6 +36,7 @@ public:
     bool insertAttributeEntry(const Attribute &attribute);
     bool updateAttributeEntry(const Attribute &attribute);
     bool deleteAttributeEntry(int id);
+    bool updateItemUserOrder(const int id, const int user_order);
 
     bool insertEventEntry(const Event &event);
     bool updateEventEntry(const Event &event);

@@ -63,6 +63,34 @@ void ItemModel::setComponentQuery()
     Q_EMIT dataChanged();
 }
 
+void ItemModel::setItemPosition(const int index, const int direction)
+{
+    Database db;
+
+    for (int i=0; i < this->rowCount(); i++)
+    {
+        int id = this->data(this->index(index, 0), rID).toInt();
+        if (direction == 1) {
+            // Move down in list by increasing value
+            db.updateItemUserOrder(id, index + 1);
+
+            //Move affected following Item
+            int pid = this->data(this->index(index + 1, 0), rID).toInt();
+            db.updateItemUserOrder(pid, index - 1);
+
+        } else if (direction == -1) {
+            // Move up in list by increasing value
+            db.updateItemUserOrder(id, index);
+
+            //Move affected preceding Item
+            int pid = this->data(this->index(index - 1, 0), rID).toInt();
+            db.updateItemUserOrder(pid, index + 1);
+        }
+    }
+
+    Q_EMIT dataChanged();
+}
+
 void ItemModel::refresh()
 {
     this->setQuery(this->modelQuery);

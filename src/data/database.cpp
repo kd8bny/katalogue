@@ -99,9 +99,9 @@ bool Database::insertItemEntry(const Item &item)
     bool isInsert = false;
     QSqlQuery query;
 
-    query.prepare(QStringLiteral("INSERT INTO %1 (%2, %3, %4, %5, %6, %7, %8, %9, %10, %11) "
-        "VALUES (:created, :modified, :name, :make, :model, :year, :type, :archived, :user_order, :parent)").arg(
-            TABLE_ITEMS, CREATED, MODIFIED, NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, USER_ORDER, KEY_ITEM_ID));
+    query.prepare(QStringLiteral("INSERT INTO %1 (%2, %3, %4, %5, %6, %7, %8, %9, %10) "
+        "VALUES (:created, :modified, :name, :make, :model, :year, :type, :archived, :parent)").arg(
+            TABLE_ITEMS, CREATED, MODIFIED, NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, KEY_ITEM_ID));
 
     QString currentTime = this->getCurrentTime();
 
@@ -113,7 +113,6 @@ bool Database::insertItemEntry(const Item &item)
     query.bindValue(QStringLiteral(":model"), item.getModel());
     query.bindValue(QStringLiteral(":year"), item.getYear());
     query.bindValue(QStringLiteral(":type"), item.getType());
-    query.bindValue(QStringLiteral(":user_order"), item.getUserOrder());
     query.bindValue(QStringLiteral(":archived"), item.getArchived());
     if(item.getParent() != -1){
         qDebug() << "Item is a Component id: " << item.getParent();
@@ -188,6 +187,31 @@ bool Database::deleteItemEntry(int id)
     }
 
     return isDelete;
+}
+
+bool Database::updateItemUserOrder(const int id, const int user_order)
+{
+    bool isUpdate = false;
+    QSqlQuery query;
+
+    query.prepare(QStringLiteral(
+        "UPDATE %1 SET %2=:modified, %3=:user_order WHERE id=:id").arg(TABLE_ITEMS, MODIFIED, USER_ORDER));
+
+    QString currentTime = this->getCurrentTime();
+    qDebug() <<  id << user_order;
+
+    query.bindValue(QStringLiteral(":modified"), currentTime);
+    query.bindValue(QStringLiteral(":user_order"), user_order);
+    query.bindValue(QStringLiteral(":id"), id);
+
+    if (query.exec()) {
+        isUpdate = true;
+    } else {
+        qDebug() << "Error updating record " << query.lastError();
+        qDebug() << query.lastQuery();
+    }
+
+    return isUpdate;
 }
 
 bool Database::insertAttributeEntry(const Attribute &attribute)

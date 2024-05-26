@@ -37,6 +37,7 @@ public:
     Q_INVOKABLE bool setRecord(int itemIndex, QString name, QString make,
         QString model, int year, QString type, int archived, int parent);
     Q_INVOKABLE bool deleteRecord(int itemId);
+    Q_INVOKABLE void setItemPosition(const int index, const int direction);
 
     QString modelQuery;
 
@@ -45,8 +46,8 @@ protected:
 
 private:
     const QString modelQueryBase = QStringLiteral(
-        "SELECT id, %1, %2, %3, %4, %5, %6 FROM %7").arg(Database::NAME, Database::MAKE, Database::MODEL,
-            Database::YEAR, Database::TYPE, Database::ARCHIVED, Database::TABLE_ITEMS);
+        "SELECT id, %1, %2, %3, %4, %5, %6, %7 FROM %8").arg(Database::NAME, Database::MAKE, Database::MODEL,
+            Database::YEAR, Database::TYPE, Database::ARCHIVED, Database::USER_ORDER, Database::TABLE_ITEMS);
 
     const QString modelQueryParentItem = QStringLiteral(
         " WHERE %1 IS NULL AND %2 IS 0").arg(Database::KEY_ITEM_ID, Database::ARCHIVED);
@@ -56,7 +57,7 @@ private:
         " WHERE %1 IS 1").arg(Database::ARCHIVED);
 
     const QString modelQuerySortUser = QStringLiteral(
-        " ORDER BY %1 DESC NULLS LAST").arg(Database::USER_ORDER);
+        " ORDER BY %1 ASC NULLS LAST").arg(Database::USER_ORDER);
 
 Q_SIGNALS:
     void filterItem();

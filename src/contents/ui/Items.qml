@@ -62,7 +62,7 @@ Kirigami.ScrollablePage {
 
     Component.onCompleted: {
         if(isComponentView){
-            itemsLayout.model=ItemComponentModel
+            itemsLayout.model = ItemComponentModel
         }
     }
 
@@ -127,6 +127,23 @@ Kirigami.ScrollablePage {
                         }
                         Controls.Label {
                             text: `${year} ${make} ${model}`
+                        }
+                    }
+
+                    RowLayout {
+                        Controls.Button {
+                            icon.name: "arrow-up-symbolic"
+                            visible: index == 0 ? false : true
+                            onClicked: {
+                                ItemModel.setItemPosition(index, -1)
+                            }
+                        }
+                        Controls.Button {
+                            icon.name: "arrow-down-symbolic"
+                            visible: index == (ItemModel.rowCount() - 1) ? false : true
+                            onClicked: {
+                                ItemModel.setItemPosition(index, 1)
+                            }
                         }
                     }
                 }
