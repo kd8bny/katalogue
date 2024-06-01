@@ -31,15 +31,12 @@ ecm_setup_version(${PROJECT_VERSION}
 
 find_package(Qt6 ${QT6_MIN_VERSION} REQUIRED COMPONENTS Core Gui Qml QuickControls2 Svg Sql Quick Widgets)
 find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Kirigami CoreAddons Config I18n)
-# find_package(Catch2 3 REQUIRED)
+find_package(Catch2 3 REQUIRED)
 
 add_subdirectory(src)
+add_subdirectory(test)
 
 install(PROGRAMS org.kde.katalogue.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 install(FILES org.kde.katalogue.metainfo.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
-
-# # These tests can use the Catch2-provided main
-# add_executable(tests tests/databaseTest.cpp)
-# target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)

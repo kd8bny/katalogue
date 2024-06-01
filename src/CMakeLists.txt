@@ -26,7 +26,7 @@ add_executable(katalogue
     models/itemParentModel.cpp
     models/noteModel.cpp
     models/taskModel.cpp
-    )
+)
 
 target_link_libraries(katalogue
     Qt6::Core
@@ -40,7 +40,8 @@ target_link_libraries(katalogue
     KF6::I18n
     KF6::CoreAddons
     KF6::ConfigCore
-    KF6::ConfigGui)
+    KF6::ConfigGui
+)
 
 kconfig_add_kcfg_files(katalogue GENERATE_MOC katalogueconfig.kcfgc)
 target_compile_options(katalogue PUBLIC)
