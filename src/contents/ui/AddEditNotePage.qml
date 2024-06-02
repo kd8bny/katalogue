@@ -62,8 +62,6 @@ Kirigami.ScrollablePage {
     }
 
     Component.onCompleted: {
-
-
         if (isEdit) {
             var recordData = NoteModel.getRecordAsList(noteModelIndex)
 
@@ -71,6 +69,7 @@ Kirigami.ScrollablePage {
             titleField.text = recordData[3]
             noteContentField.text = recordData[4]
         }
+        console.log(itemId)
     }
 
     Kirigami.FormLayout {

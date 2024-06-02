@@ -22,7 +22,7 @@ Kirigami.ScrollablePage {
             icon.name: "list-add"
             tooltip: i18n("Add new note")
             onTriggered: {
-                pageStack.push("qrc:AddEditNotePage.qml")
+                pageStack.push("qrc:AddEditNotePage.qml", {"itemId": itemId})
             }
         }
     ]

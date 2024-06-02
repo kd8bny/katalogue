@@ -23,7 +23,7 @@ Kirigami.ScrollablePage {
             icon.name: "list-add"
             tooltip: i18n("Add new task")
             onTriggered: {
-                pageStack.push("qrc:AddEditTaskPage.qml")
+                pageStack.push("qrc:AddEditTaskPage.qml", {"itemId": itemId})
             }
         }
     ]
