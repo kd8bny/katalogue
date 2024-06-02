@@ -70,15 +70,17 @@ Kirigami.ApplicationWindow {
                 tooltip: i18n("View Tasks")
                 icon.name: "view-task"
                 onTriggered: {
+                    TaskModel.resetItemId()
                     pageStack.clear()
                     pageStack.push('qrc:Tasks.qml')
                 }
             },
-            Kirigami.Action {
+            Kirigami.Action { //TODO reset filter when cliekd
                 text: i18n("Notes")
                 tooltip: i18n("View Notes")
                 icon.name: "backgroundtool-symbolic"
                 onTriggered: {
+                    NoteModel.resetItemId()
                     pageStack.clear()
                     pageStack.push('qrc:Notes.qml')
                 }

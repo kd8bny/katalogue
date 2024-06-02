@@ -39,6 +39,11 @@ QHash<int, QByteArray> TaskModel::roleNames() const {
     return roles;
 }
 
+void TaskModel::resetItemId(){
+    this->modelQuery = this->modelQueryBase;
+    Q_EMIT dataChanged();
+}
+
 void TaskModel::setItemId(QString itemId)
 {
     this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(

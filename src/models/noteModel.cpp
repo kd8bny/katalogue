@@ -6,8 +6,8 @@ NoteModel::NoteModel(QObject *parent) :
 {
     QObject::connect(this, SIGNAL(dataChanged()), this, SLOT(refresh()));
 
-    this->modelQuery = this->modelQueryBase;
-    this->refresh();
+
+    this->resetItemId();
 }
 
 NoteModel::~NoteModel()
@@ -35,6 +35,11 @@ QHash<int, QByteArray> NoteModel::roleNames() const {
     roles[rItemID] = Database::KEY_ITEM_ID.toUtf8();
 
     return roles;
+}
+
+void NoteModel::resetItemId(){
+    this->modelQuery = this->modelQueryBase;
+    Q_EMIT dataChanged();
 }
 
 void NoteModel::setItemId(QString itemId)

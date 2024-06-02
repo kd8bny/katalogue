@@ -22,6 +22,7 @@ public:
     // Override the method that will return the data
     QVariant data(const QModelIndex &index, int role) const override;
 
+    Q_INVOKABLE void resetItemId();
     Q_INVOKABLE void setItemId(QString itemId);
     Q_INVOKABLE int getId(int row);
     Note getRecord(int row);
