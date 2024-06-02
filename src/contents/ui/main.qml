@@ -75,7 +75,7 @@ Kirigami.ApplicationWindow {
                     pageStack.push('qrc:Tasks.qml')
                 }
             },
-            Kirigami.Action { //TODO reset filter when cliekd
+            Kirigami.Action {
                 text: i18n("Notes")
                 tooltip: i18n("View Notes")
                 icon.name: "backgroundtool-symbolic"
