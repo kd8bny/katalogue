@@ -1,8 +1,9 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # SPDX-FileCopyrightText: 2022 Daryl Bennett <kd8bny@gmail.com>
+find_package(Qt6 ${QT_MIN_VERSION} REQUIRED COMPONENTS Test)
 
-add_executable(tests
-    main.cpp
+
+add_executable(katalogueTests
     databaseTest.cpp
 
     ../src/constants/defaults.cpp
@@ -14,7 +15,7 @@ add_executable(tests
     ../src/data/task.cpp
 )
 
-target_link_libraries(tests PRIVATE Catch2::Catch2WithMain
+target_link_libraries(katalogueTests PRIVATE Qt::Test
     Qt6::Core
     Qt6::Gui
     Qt6::Qml
@@ -23,8 +24,11 @@ target_link_libraries(tests PRIVATE Catch2::Catch2WithMain
     Qt6::Svg
     Qt6::Sql
     Qt6::Widgets
+    Qt6::Test
     KF6::I18n
     KF6::CoreAddons
     KF6::ConfigCore
     KF6::ConfigGui
 )
+
+add_test(NAME databaseTest COMMAND katalogueTests)

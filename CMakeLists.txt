@@ -23,6 +23,7 @@ include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMSetupVersion)
 include(ECMGenerateHeaders)
 include(ECMPoQmTools)
+include(ECMAddTests)
 
 ecm_setup_version(${PROJECT_VERSION}
     VARIABLE_PREFIX KATALOGUE
@@ -34,7 +35,10 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Kirigami CoreAddons Conf
 find_package(Catch2 3 REQUIRED)
 
 add_subdirectory(src)
-add_subdirectory(test)
+
+if(BUILD_TESTING)
+    add_subdirectory(tests)
+endif()
 
 install(PROGRAMS org.kde.katalogue.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 install(FILES org.kde.katalogue.metainfo.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
