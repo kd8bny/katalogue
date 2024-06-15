@@ -39,7 +39,6 @@ Kirigami.ScrollablePage {
     Component.onCompleted: {
         if (isEdit) {
             var recordData = ItemModel.getRecordAsList(itemModelIndex);
-            console.log(recordData);
             nameField.text = recordData[3];
             makeField.text = recordData[4];
             modelField.text = recordData[5];
