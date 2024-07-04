@@ -4,7 +4,8 @@ find_package(Qt6 ${QT_MIN_VERSION} REQUIRED COMPONENTS Test)
 
 
 add_executable(katalogueTests
-    databaseTest.cpp
+    databaseItemTest.cpp
+    # databaseAttributeTest.cpp
 
     ../src/constants/defaults.cpp
     ../src/data/database.cpp
@@ -31,4 +32,4 @@ target_link_libraries(katalogueTests PRIVATE Qt::Test
     KF6::ConfigGui
 )
 
-add_test(NAME databaseTest COMMAND katalogueTests)
+add_test(NAME databaseItemTest COMMAND katalogueTests)

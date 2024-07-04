@@ -27,16 +27,17 @@ class Database : public QObject
 public:
     explicit Database(QObject *parent = nullptr);
     ~Database();
-    bool connect(QString path);
+    bool connectKatalogueDb(QString path);
 
-    bool insertItemEntry(const Item &item);
-    bool updateItemEntry(const Item &item);
-    bool deleteItemEntry(int id);
+    bool insertItemEntry(const Item &item) const;
+    bool updateItemEntry(const Item &item) const;
+    bool deleteItemEntry(int id) const;
+    bool updateItemArchived(const int id, const bool archived) const;
+    bool updateItemUserOrder(const int id, const int user_order) const;
 
     bool insertAttributeEntry(const Attribute &attribute);
     bool updateAttributeEntry(const Attribute &attribute);
     bool deleteAttributeEntry(int id);
-    bool updateItemUserOrder(const int id, const int user_order);
 
     bool insertEventEntry(const Event &event);
     bool updateEventEntry(const Event &event);
@@ -87,7 +88,7 @@ public:
 private:
     QSqlDatabase db;
 
-    const QString getCurrentTime();
+    QString getCurrentTime() const;
     bool initializeSchema();
 
     const int DATABASE_VERSION = 1;

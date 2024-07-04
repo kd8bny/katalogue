@@ -4,7 +4,7 @@
 class DatabaseTest : public QObject
 {
     Q_OBJECT
-    const QString testDBPath = QStringLiteral("./tests/");
+    const QString testDBPath = QStringLiteral("../tests/");
     const QString DATABASE_NAME = QStringLiteral("katalogue.db");
 
 private Q_SLOTS:
@@ -12,14 +12,22 @@ private Q_SLOTS:
     void insertItemEntry() const;
     void insertItemComponentEntry() const;
     void updateItemEntry() const;
-    void databasePurged() const;
 };
 
 void DatabaseTest::databaseConnected() const
 {
+    /*Clean up Database from previous Tests*/
+    QFile file(this->testDBPath + this->DATABASE_NAME);
+    qDebug() << "Database location" << this->testDBPath + this->DATABASE_NAME << "exists " << file.exists();
+    if (file.exists())
+    {
+        file.remove();
+        QVERIFY(file.exists() == false);
+    }
+
     /*Test Database creation*/
     Database katalogue_db;
-    bool DB_OPEN = katalogue_db.connect(this->testDBPath);
+    bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
 
     QVERIFY(DB_OPEN == true);
 
@@ -35,7 +43,7 @@ void DatabaseTest::databaseConnected() const
     // qDebug() << "here" << query.value(0);
     QVERIFY(query.value(0).toInt() == 1);
 
-    QFile file(this->testDBPath + this->DATABASE_NAME);
+    /*Remove Database File*/
     qDebug() << "Database location" << this->testDBPath + this->DATABASE_NAME << "exists " << file.exists();
     file.remove();
     QVERIFY(file.exists() == false);
@@ -45,7 +53,7 @@ void DatabaseTest::insertItemEntry() const
 {
     /*Test Item Insert*/
     Database katalogue_db;
-    bool DB_OPEN = katalogue_db.connect(this->testDBPath);
+    bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
     qDebug() << "db open" << DB_OPEN;
 
     QVERIFY(DB_OPEN == true);
@@ -56,14 +64,14 @@ void DatabaseTest::insertItemEntry() const
     // Normal
     items.append(QVariantList({QStringLiteral("testVehicleName"), QStringLiteral("testVehicleMake"),
                                QStringLiteral("testVehicleModel"), 2000, QStringLiteral("testVehicleType"),
-                               false, -1, -1}));
+                               false, -1, 0}));
     // Archived
     items.append(QVariantList({QStringLiteral("testVehicleArchivedName"), QStringLiteral("testVehicleArchivedMake"),
                                QStringLiteral("testVehicleArchivedModel"), 1000,
-                               QStringLiteral("testVehicleArchivedType"), true, -1, -1}));
+                               QStringLiteral("testVehicleArchivedType"), true, -1, 0}));
     // Minimum input
     items.append(QVariantList({QStringLiteral(""), QStringLiteral(""), QStringLiteral(""), 0, QStringLiteral(""),
-                               false, -1, -1}));
+                               false, -1, 0}));
     // qDebug() << items;
 
     // Inserts correctly
@@ -84,7 +92,7 @@ void DatabaseTest::insertItemEntry() const
         item.setParent(itemAsList.value(7).toInt());
 
         itemInserted = katalogue_db.insertItemEntry(item);
-        // qDebug() << "itemInserted: " << itemInserted;
+        qDebug() << "itemInserted" << i << "/3: " << itemInserted;
         QVERIFY(itemInserted == true);
     }
 
@@ -119,7 +127,7 @@ void DatabaseTest::insertItemComponentEntry() const
 {
     /*Test Item Insert*/
     Database katalogue_db;
-    bool DB_OPEN = katalogue_db.connect(this->testDBPath);
+    bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
     qDebug() << "db open" << DB_OPEN;
 
     QVERIFY(DB_OPEN == true);
@@ -130,7 +138,7 @@ void DatabaseTest::insertItemComponentEntry() const
     // Normal
     items.append(QVariantList({QStringLiteral("testComponentParent"), QStringLiteral("testComponentMake"),
                                QStringLiteral("testComponentModel"), 2000, QStringLiteral("testComponentType"),
-                               false, -1, -1}));
+                               false, -1, 0}));
     // Components
     items.append(QVariantList({QStringLiteral("testComponent1"), QStringLiteral("testComponent1Make"),
                                QStringLiteral("testComponent1Model"), 2022, QStringLiteral("testComponent1Type"),
@@ -201,11 +209,109 @@ void DatabaseTest::insertItemComponentEntry() const
     }
 }
 
-// TODO check model queries component,archive, parents... etc
+void DatabaseTest::updateItemEntry() const
+{
+    /*Test Item Insert*/
+    Database katalogue_db;
+    bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
+    qDebug() << "db open" << DB_OPEN;
+    QVERIFY(DB_OPEN == true);
 
-// void DatabaseTest::updateItemEntry() const
-// {
-// }
+    QVariantList itemFields = {
+        QStringLiteral("updatedName"), QStringLiteral("updatedMake"), QStringLiteral("updatedModel"), 2001,
+        QStringLiteral("updatedType"), true, 2, 2};
+
+    // Get Data from Record 3
+    const QString record3Query = QStringLiteral(
+                                     "SELECT %1, %2, %3, %4, %5, %6, %7, %8 FROM %9 WHERE id=3")
+                                     .arg(Database::NAME, Database::MAKE, Database::MODEL, Database::YEAR,
+                                          Database::TYPE, Database::ARCHIVED, Database::USER_ORDER,
+                                          Database::KEY_ITEM_ID, Database::TABLE_ITEMS);
+    QSqlQuery query;
+    query.exec(record3Query);
+    query.next();
+    // qDebug() << query.record();
+
+    // Build item 3
+    Item item3(3);
+    item3.setName(query.value(0).toString());
+    item3.setMake(query.value(2).toString());
+    item3.setModel(query.value(2).toString());
+    item3.setYear(query.value(3).toInt());
+    item3.setType(query.value(4).toString());
+    item3.setArchived(query.value(5).toBool());
+    // Ignore user order and set as null
+    item3.setParent(query.value(7).toInt());
+
+    qDebug() << item3.asList();
+
+    // Start Test
+    // Update Name
+    item3.setName(itemFields.value(0).toString());
+    QVERIFY(katalogue_db.updateItemEntry(item3) == true);
+
+    query.exec(record3Query);
+    query.next();
+    QVERIFY(query.value(0).toString() == itemFields.value(0).toString());
+
+    // Update Make
+    item3.setMake(itemFields.value(1).toString());
+    QVERIFY(katalogue_db.updateItemEntry(item3) == true);
+
+    query.exec(record3Query);
+    query.next();
+    QVERIFY(query.value(1).toString() == itemFields.value(1).toString());
+
+    // Update Model
+    item3.setModel(itemFields.value(2).toString());
+    QVERIFY(katalogue_db.updateItemEntry(item3) == true);
+
+    query.exec(record3Query);
+    query.next();
+    QVERIFY(query.value(2).toString() == itemFields.value(2).toString());
+
+    // Update Year
+    item3.setYear(itemFields.value(3).toInt());
+    QVERIFY(katalogue_db.updateItemEntry(item3) == true);
+
+    query.exec(record3Query);
+    query.next();
+    QVERIFY(query.value(3).toInt() == itemFields.value(3).toInt());
+
+    // Update Type
+    item3.setType(itemFields.value(4).toString());
+    QVERIFY(katalogue_db.updateItemEntry(item3) == true);
+
+    query.exec(record3Query);
+    query.next();
+    QVERIFY(query.value(4).toString() == itemFields.value(4).toString());
+
+    // Update Parent
+    item3.setParent(itemFields.value(7).toInt());
+    QVERIFY(katalogue_db.updateItemEntry(item3) == true);
+
+    query.exec(record3Query);
+    query.next();
+    QVERIFY(query.value(7).toInt() == itemFields.value(7).toInt());
+
+    // Update Archived
+    // Uses updateItemArchived
+    QVERIFY(katalogue_db.updateItemArchived(3, itemFields.value(5).toBool()) == true);
+
+    query.exec(record3Query);
+    query.next();
+    QVERIFY2(query.value(5).toBool() == itemFields.value(5).toBool(), "Update Archived");
+
+    // Update User Order
+    // Uses updateItemUserOrder
+    QVERIFY(katalogue_db.updateItemUserOrder(3, itemFields.value(6).toInt()) == true);
+
+    query.exec(record3Query);
+    query.next();
+    QVERIFY(query.value(6).toInt() == itemFields.value(6).toInt());
+}
+
+// TODO check model queries component,archive, parents... etc
 
 // TODO addedit tests
 
@@ -218,15 +324,6 @@ void DatabaseTest::insertItemComponentEntry() const
 // this->tasks.append(QVariantList({QStringLiteral("2024-09-19T00:00:00.000-05:00"), QStringLiteral("In Progress"), QStringLiteral("testtask"), QStringLiteral("deets"), 2}));
 // // Test notes without parent
 // this->tasks.append(QVariantList({QStringLiteral("2024-09-19T00:00:00.000-05:00"), QStringLiteral("In Progress"), QStringLiteral("thetask"), QStringLiteral("deets"), -1}));
-
-void DatabaseTest::databasePurged() const
-{
-    /*Clean up Database from Tests*/
-    QFile file(this->testDBPath + this->DATABASE_NAME);
-    qDebug() << "Database location" << this->testDBPath + this->DATABASE_NAME << "exists " << file.exists();
-    file.remove();
-    QVERIFY(file.exists() == false);
-}
 
 QTEST_MAIN(DatabaseTest)
 #include "databaseTest.moc"

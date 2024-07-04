@@ -41,8 +41,11 @@ Database::Database(QObject *parent)
 
 Database::~Database() = default;
 
-const QString Database::getCurrentTime()
+QString Database::getCurrentTime() const
 {
+    /*
+     * Utility for created and modified timestamps
+     */
     QDateTime dt = QDateTime::currentDateTime();
     dt.setTimeSpec(Qt::UTC);
 
@@ -52,12 +55,21 @@ const QString Database::getCurrentTime()
     return date;
 }
 
-bool Database::connect(QString path)
+bool Database::connectKatalogueDb(QString path)
 {
+    /*
+     * Connect to the katalogue SQLite database and configure the schema, pragma, etc
+     */
     db = QSqlDatabase::addDatabase(DATABASE_TYPE);
     db.setDatabaseName(QStringLiteral("%1/%2").arg(path, this->DATABASE_NAME));
+    qDebug() << db.databaseName();
 
-    if (db.open())
+    if (!db.open())
+    {
+        qDebug() << "Database failed to open: " << db.lastError();
+        return false;
+    }
+    else
     {
         QSqlQuery query;
 
@@ -93,9 +105,12 @@ bool Database::connect(QString path)
     return true;
 }
 
-bool Database::insertItemEntry(const Item &item)
+bool Database::insertItemEntry(const Item &item) const
 {
-    bool isInsert = false;
+    /*
+     * Insert Item.
+     * Components will have a Null foreign key
+     */
     QSqlQuery query;
 
     query.prepare(
@@ -104,6 +119,7 @@ bool Database::insertItemEntry(const Item &item)
             .arg(TABLE_ITEMS, CREATED, MODIFIED, NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, KEY_ITEM_ID));
 
     QString currentTime = this->getCurrentTime();
+    qDebug() << item.getParent();
 
     query.bindValue(QStringLiteral(":created"), currentTime);
     query.bindValue(QStringLiteral(":modified"), currentTime);
@@ -114,68 +130,62 @@ bool Database::insertItemEntry(const Item &item)
     query.bindValue(QStringLiteral(":year"), item.getYear());
     query.bindValue(QStringLiteral(":type"), item.getType());
     query.bindValue(QStringLiteral(":archived"), item.getArchived());
-    if (item.getParent() != -1)
+    if (item.getParent() != 0)
     {
-        qDebug() << "Item is a Component id: " << item.getParent();
         query.bindValue(QStringLiteral(":parent"), item.getParent());
     }
 
-    if (query.exec())
-    {
-        isInsert = true;
-    }
-    else
+    if (!query.exec())
     {
         qDebug() << "Error inserting record " << query.lastError();
+        return false;
     }
 
-    return isInsert;
+    return true;
 }
 
-bool Database::updateItemEntry(const Item &item)
+bool Database::updateItemEntry(const Item &item) const
 {
-    bool isUpdate = false;
+    /*
+     * Update Item.
+     */
     QSqlQuery query;
 
     query.prepare(
         QStringLiteral("UPDATE %1 SET %2=:modified, %3=:name, %4=:make, %5=:model, "
-                       "%6=:year, %7=:type, %8=:archived, %9=:parent WHERE id=:id")
-            .arg(TABLE_ITEMS, MODIFIED, NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, KEY_ITEM_ID));
+                       "%6=:year, %7=:type, %8=:parent WHERE id=:id")
+            .arg(TABLE_ITEMS, MODIFIED, NAME, MAKE, MODEL, YEAR, TYPE, KEY_ITEM_ID));
 
     QString currentTime = this->getCurrentTime();
 
     query.bindValue(QStringLiteral(":modified"), currentTime);
 
+    query.bindValue(QStringLiteral(":id"), item.getId());
     query.bindValue(QStringLiteral(":name"), item.getName());
     query.bindValue(QStringLiteral(":make"), item.getMake());
     query.bindValue(QStringLiteral(":model"), item.getModel());
     query.bindValue(QStringLiteral(":year"), item.getYear());
     query.bindValue(QStringLiteral(":type"), item.getType());
-    query.bindValue(QStringLiteral(":archived"), item.getArchived());
-
-    if (item.getParent() != -1)
+    if (item.getParent() != 0)
     {
         query.bindValue(QStringLiteral(":parent"), item.getParent());
     }
 
-    query.bindValue(QStringLiteral(":id"), item.getId());
-
-    if (query.exec())
-    {
-        isUpdate = true;
-    }
-    else
+    if (!query.exec())
     {
         qDebug() << "Error updating record " << query.lastError();
         qDebug() << query.lastQuery();
+        return false;
     }
 
-    return isUpdate;
+    return true;
 }
 
-bool Database::deleteItemEntry(int id)
+bool Database::deleteItemEntry(int id) const
 {
-    bool isDelete = false;
+    /*
+     * Delete Item.
+     */
     QSqlQuery query;
 
     query.prepare(
@@ -184,29 +194,44 @@ bool Database::deleteItemEntry(int id)
 
     query.bindValue(QStringLiteral(":itemId"), id);
 
-    qDebug() << query.lastQuery();
-    qDebug() << id;
-
-    if (query.exec())
+    if (!query.exec())
     {
-        isDelete = true;
-        qDebug() << query.lastQuery();
-    }
-    else
-    {
-        qDebug() << "Error removing record " << query.lastError().text();
+        qDebug() << "Error removing record " << query.lastError();
+        return false;
     }
 
-    return isDelete;
+    return true;
 }
 
-bool Database::updateItemUserOrder(const int id, const int user_order)
+bool Database::updateItemArchived(const int id, const bool archived) const
 {
-    bool isUpdate = false;
     QSqlQuery query;
 
-    query.prepare(QStringLiteral(
-                      "UPDATE %1 SET %2=:modified, %3=:user_order WHERE id=:id")
+    query.prepare(QStringLiteral("UPDATE %1 SET %2=:modified, %3=:archived WHERE id=:id")
+                      .arg(TABLE_ITEMS, MODIFIED, ARCHIVED));
+
+    QString currentTime = this->getCurrentTime();
+
+    query.bindValue(QStringLiteral(":modified"), currentTime);
+    query.bindValue(QStringLiteral(":archived"), true);
+    query.bindValue(QStringLiteral(":id"), id);
+
+    if (!query.exec())
+    {
+        qDebug() << "Error updating record archived " << query.lastError();
+        qDebug() << query.lastQuery();
+        return false;
+    }
+    qDebug() << query.lastQuery();
+
+    return true;
+}
+
+bool Database::updateItemUserOrder(const int id, const int user_order) const
+{
+    QSqlQuery query;
+
+    query.prepare(QStringLiteral("UPDATE %1 SET %2=:modified, %3=:user_order WHERE id=:id")
                       .arg(TABLE_ITEMS, MODIFIED, USER_ORDER));
 
     QString currentTime = this->getCurrentTime();
@@ -215,17 +240,14 @@ bool Database::updateItemUserOrder(const int id, const int user_order)
     query.bindValue(QStringLiteral(":user_order"), user_order);
     query.bindValue(QStringLiteral(":id"), id);
 
-    if (query.exec())
+    if (!query.exec())
     {
-        isUpdate = true;
-    }
-    else
-    {
-        qDebug() << "Error updating record " << query.lastError();
+        qDebug() << "Error updating record order " << query.lastError();
         qDebug() << query.lastQuery();
+        return false;
     }
 
-    return isUpdate;
+    return true;
 }
 
 bool Database::insertAttributeEntry(const Attribute &attribute)
@@ -234,9 +256,9 @@ bool Database::insertAttributeEntry(const Attribute &attribute)
     QSqlQuery query;
 
     query.prepare(QStringLiteral(
-                      "INSERT INTO %1 (%2, %3, %4, %5, %6, %7) VALUES (:created, :modified, :key, :value, :category, :itemId)")
-                      .arg(
-                          TABLE_ATTRIBUTES, CREATED, MODIFIED, KEY, VALUE, CATEGORY, KEY_ITEM_ID));
+                      "INSERT INTO %1 (%2, %3, %4, %5, %6, %7)"
+                      "VALUES (:created, :modified, :key, :value, :category, :itemId)")
+                      .arg(TABLE_ATTRIBUTES, CREATED, MODIFIED, KEY, VALUE, CATEGORY, KEY_ITEM_ID));
 
     QString currentTime = this->getCurrentTime();
 
@@ -613,8 +635,7 @@ bool Database::initializeSchema()
                                               "%11 INT, "                                   // FK
                                               "FOREIGN KEY (%11) REFERENCES %1 (id) "
                                               "ON DELETE CASCADE ON UPDATE CASCADE)")
-                                   .arg(
-                                       TABLE_ITEMS, CREATED, MODIFIED, NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, USER_ORDER, KEY_ITEM_ID);
+                                   .arg(TABLE_ITEMS, CREATED, MODIFIED, NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, USER_ORDER, KEY_ITEM_ID);
 
     const QString queryAttributes = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
                                                    "%2 DATE NOT NULL, "
