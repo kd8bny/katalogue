@@ -213,7 +213,7 @@ bool Database::updateItemArchived(const int id, const bool archived) const
     QString currentTime = this->getCurrentTime();
 
     query.bindValue(QStringLiteral(":modified"), currentTime);
-    query.bindValue(QStringLiteral(":archived"), true);
+    query.bindValue(QStringLiteral(":archived"), archived);
     query.bindValue(QStringLiteral(":id"), id);
 
     if (!query.exec())
