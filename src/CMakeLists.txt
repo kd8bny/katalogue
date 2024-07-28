@@ -1,6 +1,34 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # SPDX-FileCopyrightText: 2022 Daryl Bennett <kd8bny@gmail.com>
 
+set(katalogue_data_src
+    data/database.cpp
+    data/attribute.cpp
+    data/event.cpp
+    data/item.cpp
+    data/note.cpp
+    data/task.cpp
+)
+
+add_library(katalogue_data SHARED
+    ${katalogue_data_src}
+)
+
+target_link_libraries(katalogue_data
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Qml
+    Qt6::Quick
+    Qt6::QuickControls2
+    Qt6::Svg
+    Qt6::Sql
+    Qt6::Widgets
+    KF6::I18n
+    KF6::CoreAddons
+    KF6::ConfigCore
+    KF6::ConfigGui
+)
+
 add_executable(katalogue
     main.cpp
     about.cpp
@@ -9,12 +37,7 @@ add_executable(katalogue
 
     constants/defaults.cpp
 
-    data/database.cpp
-    data/attribute.cpp
-    data/event.cpp
-    data/item.cpp
-    data/note.cpp
-    data/task.cpp
+    ${katalogue_data_src}
 
     models/attributeModel.cpp
     models/attributeCategoryModel.cpp
@@ -29,18 +52,7 @@ add_executable(katalogue
 )
 
 target_link_libraries(katalogue
-    Qt6::Core
-    Qt6::Gui
-    Qt6::Qml
-    Qt6::Quick
-    Qt6::QuickControls2
-    Qt6::Svg
-    Qt6::Sql
-    Qt6::Widgets
-    KF6::I18n
-    KF6::CoreAddons
-    KF6::ConfigCore
-    KF6::ConfigGui
+    katalogue_data
 )
 
 kconfig_add_kcfg_files(katalogue GENERATE_MOC katalogueconfig.kcfgc)

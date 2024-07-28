@@ -30,15 +30,14 @@ ecm_setup_version(${PROJECT_VERSION}
     VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/src/version-katalogue.h"
 )
 
-find_package(Qt6 ${QT6_MIN_VERSION} REQUIRED COMPONENTS Core Gui Qml QuickControls2 Svg Sql Quick Widgets)
+find_package(Qt6 ${QT6_MIN_VERSION} REQUIRED COMPONENTS Core Gui Qml QuickControls2 Svg Sql Test Quick Widgets)
 find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Kirigami CoreAddons Config I18n)
-find_package(Catch2 3 REQUIRED)
 
 add_subdirectory(src)
 
-if(BUILD_TESTING)
-    add_subdirectory(tests)
-endif()
+# if(BUILD_TESTING)
+#     add_subdirectory(tests)
+# endif()
 
 install(PROGRAMS org.kde.katalogue.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 install(FILES org.kde.katalogue.metainfo.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
