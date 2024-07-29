@@ -10,23 +10,13 @@ set(katalogue_data_src
     data/task.cpp
 )
 
-add_library(katalogue_data SHARED
+add_library(katalogue_data STATIC
     ${katalogue_data_src}
 )
 
 target_link_libraries(katalogue_data
     Qt6::Core
-    Qt6::Gui
-    Qt6::Qml
-    Qt6::Quick
-    Qt6::QuickControls2
-    Qt6::Svg
     Qt6::Sql
-    Qt6::Widgets
-    KF6::I18n
-    KF6::CoreAddons
-    KF6::ConfigCore
-    KF6::ConfigGui
 )
 
 add_executable(katalogue
@@ -53,6 +43,16 @@ add_executable(katalogue
 
 target_link_libraries(katalogue
     katalogue_data
+    Qt6::Gui
+    Qt6::Qml
+    Qt6::Quick
+    Qt6::QuickControls2
+    Qt6::Widgets
+    Qt6::Svg
+    KF6::I18n
+    KF6::CoreAddons
+    KF6::ConfigCore
+    KF6::ConfigGui
 )
 
 kconfig_add_kcfg_files(katalogue GENERATE_MOC katalogueconfig.kcfgc)

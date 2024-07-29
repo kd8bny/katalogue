@@ -1,5 +1,6 @@
 #include <QtTest>
-#include "../src/data/database.h"
+
+#include "data/database.h"
 
 class DatabaseItemTest : public QObject
 {
@@ -13,7 +14,6 @@ private Q_SLOTS:
     void insertItemComponentEntry() const;
     void updateItemEntry() const;
     void deleteItemEntry() const;
-    void itemModelQueries() const;
 };
 
 void DatabaseItemTest::databaseConnected() const
@@ -83,7 +83,6 @@ void DatabaseItemTest::insertItemEntry() const
     // Inserts correctly
     for (int i = 0; i < items.length(); i++)
     {
-        bool itemInserted;
         QVariantList itemAsList;
         itemAsList = items.value(i);
 
@@ -97,9 +96,7 @@ void DatabaseItemTest::insertItemEntry() const
         // Ignore user order and set as null
         item.setParent(itemAsList.value(7).toInt());
 
-        itemInserted = katalogue_db.insertItemEntry(item);
-        qDebug() << "itemInserted" << i << "/3: " << itemInserted;
-        QVERIFY(itemInserted == true);
+        QVERIFY(katalogue_db.insertItemEntry(item) == true);
     }
 
     // Validate data
@@ -134,7 +131,7 @@ void DatabaseItemTest::insertItemComponentEntry() const
     /*Test Item Insert*/
     Database katalogue_db;
     bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
-    QVERIFY2(DB_OPEN == true, "db open: " + DB_OPEN);
+    QVERIFY2(DB_OPEN == true, "db open");
 
     QList<QVariantList> items;
 
@@ -323,4 +320,5 @@ void DatabaseItemTest::deleteItemEntry() const
 }
 
 QTEST_MAIN(DatabaseItemTest)
+
 #include "databaseItemTest.moc"
