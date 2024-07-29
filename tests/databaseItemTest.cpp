@@ -224,12 +224,12 @@ void DatabaseItemTest::updateItemEntry() const
     QSqlQuery query;
     query.exec(record3Query);
     query.next();
-    // qDebug() << query.record();
+    qDebug() << query.record();
 
     // Build item 3
     Item item3(3);
     item3.setName(query.value(0).toString());
-    item3.setMake(query.value(2).toString());
+    item3.setMake(query.value(1).toString());
     item3.setModel(query.value(2).toString());
     item3.setYear(query.value(3).toInt());
     item3.setType(query.value(4).toString());
