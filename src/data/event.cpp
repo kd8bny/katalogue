@@ -7,7 +7,6 @@ Event::Event(int id_)
 
 Event::~Event()
 {
-
 }
 
 QVariantList Event::asList()
@@ -20,7 +19,7 @@ QVariantList Event::asList()
     list.append(QVariant(this->getDate()));
     list.append(QVariant(this->getEvent()));
     list.append(QVariant(this->getCost()));
-    list.append(QVariant(this->getOdometer()));
+    list.append(QVariant(this->getIncrement()));
     list.append(QVariant(this->getCategory()));
     list.append(QVariant(this->getComment()));
     list.append(QVariant(this->getItemId()));

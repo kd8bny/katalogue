@@ -76,7 +76,7 @@ public:
     const static QString USER_ORDER;
     const static QString VALUE;
     const static QString YEAR;
-    const static QString ODOMETER;
+    const static QString INCREMENT;
     const static QString TITLE;
     const static QString NOTE_CONTENT;
     const static QString DESCRIPTION;

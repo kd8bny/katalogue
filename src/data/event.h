@@ -5,7 +5,6 @@
 #ifndef EVENT_H
 #define EVENT_H
 
-
 class Event
 {
 
@@ -30,8 +29,8 @@ public:
     float getCost() const { return cost; }
     void setCost(float cost_) { cost = cost_; }
 
-    float getOdometer() const { return odometer; }
-    void setOdometer(float odometer_) { odometer = odometer_; }
+    float getIncrement() const { return increment; }
+    void setIncrement(float increment_) { increment = increment_; }
 
     QString getCategory() const { return category; }
     void setCategory(const QString &category_) { category = category_; }
@@ -51,7 +50,7 @@ private:
     QString date;
     QString event;
     float cost;
-    float odometer;
+    float increment;
     QString category;
     QString comment;
     int itemId;

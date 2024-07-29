@@ -331,9 +331,9 @@ bool Database::insertEventEntry(const Event &event) const
 
     query.prepare(QStringLiteral(
                       "INSERT INTO %1 ( %2, %3, %4, %5, %6, %7, %8, %9, %10) VALUES "
-                      "(:created, :modified, :date, :event, :cost, :odometer, :category, :comment, :itemId)")
-                      .arg(
-                          TABLE_EVENTS, CREATED, MODIFIED, DATE, EVENT, COST, ODOMETER, CATEGORY, COMMENT, KEY_ITEM_ID));
+                      "(:created, :modified, :date, :event, :cost, :increment, :category, :comment, :itemId)")
+                      .arg(TABLE_EVENTS, CREATED, MODIFIED, DATE, EVENT, COST, INCREMENT, CATEGORY, COMMENT,
+                           KEY_ITEM_ID));
 
     QString currentTime = this->getCurrentTime();
 
@@ -343,7 +343,7 @@ bool Database::insertEventEntry(const Event &event) const
     query.bindValue(QStringLiteral(":date"), event.getDate());
     query.bindValue(QStringLiteral(":event"), event.getEvent());
     query.bindValue(QStringLiteral(":cost"), event.getCost());
-    query.bindValue(QStringLiteral(":odometer"), event.getOdometer());
+    query.bindValue(QStringLiteral(":increment"), event.getIncrement());
     query.bindValue(QStringLiteral(":category"), event.getCategory());
     query.bindValue(QStringLiteral(":comment"), event.getComment());
     query.bindValue(QStringLiteral(":itemId"), event.getItemId());
@@ -363,9 +363,9 @@ bool Database::updateEventEntry(const Event &event) const
     QSqlQuery query;
 
     query.prepare(QStringLiteral(
-                      "UPDATE %1 SET %2=:modified, %3=:date, %4=:event, %5=:cost, %6=:odometer, %7=:category, %8=:comment "
+                      "UPDATE %1 SET %2=:modified, %3=:date, %4=:event, %5=:cost, %6=:increment, %7=:category, %8=:comment "
                       "WHERE id=:eventId")
-                      .arg(TABLE_EVENTS, MODIFIED, DATE, EVENT, COST, ODOMETER, CATEGORY, COMMENT));
+                      .arg(TABLE_EVENTS, MODIFIED, DATE, EVENT, COST, INCREMENT, CATEGORY, COMMENT));
 
     QString currentTime = this->getCurrentTime();
 
@@ -374,7 +374,7 @@ bool Database::updateEventEntry(const Event &event) const
     query.bindValue(QStringLiteral(":date"), event.getDate());
     query.bindValue(QStringLiteral(":event"), event.getEvent());
     query.bindValue(QStringLiteral(":cost"), event.getCost());
-    query.bindValue(QStringLiteral(":odometer"), event.getOdometer());
+    query.bindValue(QStringLiteral(":odometer"), event.getIncrement());
     query.bindValue(QStringLiteral(":category"), event.getCategory());
     query.bindValue(QStringLiteral(":comment"), event.getComment());
 
@@ -630,13 +630,13 @@ bool Database::initializeSchema() const
                                                "%4 DATE NOT NULL, " // DATE
                                                "%5 TEXT NOT NULL, " // EVENT
                                                "%6 REAL, "          // COST
-                                               "%7 REAL, "          // ODOMETER
+                                               "%7 REAL, "          // INCREMENT
                                                "%8 TEXT, "          // CATEGORY
                                                "%9 VARCHAR(255), "  // COMMENT
                                                "%10 INT NOT NULL, " // FK
                                                "CONSTRAINT %10 FOREIGN KEY (%10) REFERENCES %11 (id) "
                                                "ON DELETE CASCADE ON UPDATE CASCADE)")
-                                    .arg(TABLE_EVENTS, CREATED, MODIFIED, DATE, EVENT, COST, ODOMETER, CATEGORY,
+                                    .arg(TABLE_EVENTS, CREATED, MODIFIED, DATE, EVENT, COST, INCREMENT, CATEGORY,
                                          COMMENT, KEY_ITEM_ID, TABLE_ITEMS);
 
     const QString queryNotes = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
