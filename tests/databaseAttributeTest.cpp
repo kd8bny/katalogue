@@ -10,7 +10,7 @@ class DatabaseAttributeTest : public QObject
 
 private Q_SLOTS:
     void insertAttributeEntry() const;
-    // void updateAttributeEntry() const;
+    void updateAttributeEntry() const;
     // void deleteAttributeEntry() const;
 };
 
@@ -53,7 +53,8 @@ void DatabaseAttributeTest::insertAttributeEntry() const
 
     // Validate data
     const QString modelQueryBase = QStringLiteral("SELECT id, %1, %2, %3, %4 FROM %5 ")
-                                       .arg(Database::KEY, Database::VALUE, Database::CATEGORY, Database::KEY_ITEM_ID, Database::TABLE_ATTRIBUTES);
+                                       .arg(Database::KEY, Database::VALUE, Database::CATEGORY, Database::KEY_ITEM_ID,
+                                            Database::TABLE_ATTRIBUTES);
 
     QSqlQuery query;
     query.exec(modelQueryBase);
@@ -62,7 +63,7 @@ void DatabaseAttributeTest::insertAttributeEntry() const
         int attributeId = i + 1;
 
         query.next();
-        qDebug() << query.record();
+        // qDebug() << query.record();
 
         QVERIFY(query.value(0).toInt() == attributeId);                     // id
         QVERIFY(query.value(1).toString() == attributes.value(i).value(0)); // Key
@@ -72,183 +73,70 @@ void DatabaseAttributeTest::insertAttributeEntry() const
     }
 }
 
-// void DatabaseAttributeTest::insertAttributeComponentEntry() const
-// {
-//     /*Test Attribute Insert*/
-//     Database katalogue_db;
-//     bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
-//     QVERIFY2(DB_OPEN == true, "db open: " + DB_OPEN);
+void DatabaseAttributeTest::updateAttributeEntry() const
+{
+    /*Test Attribute Insert*/
+    Database katalogue_db;
+    bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
+    qDebug() << "db open" << DB_OPEN;
+    QVERIFY(DB_OPEN == true);
 
-//     QList<QVariantList> Attributes;
+    Attribute refAttribute(-1);
+    refAttribute.setKey(QStringLiteral("refKey"));
+    refAttribute.setValue(QStringLiteral("refValue"));
+    refAttribute.setCategory(QStringLiteral("refCat"));
+    refAttribute.setItemId(1);
 
-//     // QVariantList({id, name, make, model, year, type, archived, user_order, parent}));
-//     // Normal
-//     Attributes.append(QVariantList({QStringLiteral("testComponentParent"), QStringLiteral("testComponentMake"),
-//                                QStringLiteral("testComponentModel"), 2000, QStringLiteral("testComponentType"),
-//                                false, -1, 0}));
-//     // Components
-//     Attributes.append(QVariantList({QStringLiteral("testComponent1"), QStringLiteral("testComponent1Make"),
-//                                QStringLiteral("testComponent1Model"), 2022, QStringLiteral("testComponent1Type"),
-//                                false, -1, 4}));
-//     Attributes.append(QVariantList({QStringLiteral("testComponent2"), QStringLiteral("testComponent2Make"),
-//                                QStringLiteral("testComponent2Model"), 2026, QStringLiteral("testComponent2Type"),
-//                                false, -1, 4}));
+    QVERIFY2(katalogue_db.insertAttributeEntry(refAttribute) == true, "Reference Attribute added");
 
-//     // Inserts correctly
-//     for (int i = 0; i < Attributes.length(); i++)
-//     {
-//         QVariantList AttributeAsList;
-//         AttributeAsList = Attributes.value(i);
+    QVariantList attributeFields = {
+        QStringLiteral("refKeyUpdated"),
+        QStringLiteral("refValueUpdated"),
+        QStringLiteral("refCatUpdated"),
+        4,
+    };
 
-//         Attribute Attribute(-1); // (AttributeAsList.value(0).toInt())
-//         Attribute.setName(AttributeAsList.value(0).toString());
-//         Attribute.setMake(AttributeAsList.value(1).toString());
-//         Attribute.setModel(AttributeAsList.value(2).toString());
-//         Attribute.setYear(AttributeAsList.value(3).toInt());
-//         Attribute.setType(AttributeAsList.value(4).toString());
-//         Attribute.setArchived(AttributeAsList.value(5).toBool());
-//         // Ignore user order and set as null
-//         Attribute.setParent(AttributeAsList.value(7).toInt());
+    // Query for reference attribute id 3
+    const QString record3Query = QStringLiteral("SELECT %1, %2, %3, %4 FROM %5 WHERE id=3")
+                                     .arg(Database::KEY, Database::VALUE, Database::CATEGORY,
+                                          Database::KEY_ITEM_ID, Database::TABLE_ATTRIBUTES);
+    QSqlQuery query;
+    query.exec(record3Query);
+    query.next();
+    // qDebug() << query.record();
 
-//         // qDebug() << "AttributeInserted: " << AttributeInserted;
-//         QVERIFY2(katalogue_db.insertAttributeEntry(Attribute) == true, "Attribute inserted");
-//     }
+    // Build Attribute 3
+    Attribute attribute3(3);
+    attribute3.setKey(query.value(0).toString());
+    attribute3.setValue(query.value(1).toString());
+    attribute3.setCategory(query.value(2).toString());
+    attribute3.setItemId(query.value(3).toInt());
 
-//     // Validate data
-//     const QString modelQueryBase = QStringLiteral(
-//                                        "SELECT id, %1, %2, %3, %4, %5, %6, %7, %8 FROM %9")
-//                                        .arg(Database::NAME, Database::MAKE, Database::MODEL, Database::YEAR,
-//                                             Database::TYPE, Database::ARCHIVED, Database::USER_ORDER,
-//                                             Database::KEY_Attribute_ID, Database::TABLE_AttributeS);
-//     QSqlQuery query;
-//     query.exec(modelQueryBase);
-//     query.seek(2); // Seek to component Attribute in sql results
+    // Start Test
+    // Update Key
+    attribute3.setKey(attributeFields.value(0).toString());
+    QVERIFY(katalogue_db.updateAttributeEntry(attribute3) == true);
 
-//     for (int i = 0; i < Attributes.length(); i++)
-//     {
-//         int AttributeId = i + 4;
-//         query.next();
-//         // qDebug() << query.record();
+    query.exec(record3Query);
+    query.next();
+    QVERIFY(query.value(0).toString() == attributeFields.value(0).toString());
 
-//         QVERIFY(query.value(0).toInt() == AttributeId);                     // id
-//         QVERIFY(query.value(1).toString() == Attributes.value(i).value(0)); // Name
-//         QVERIFY(query.value(2).toString() == Attributes.value(i).value(1)); // Make
-//         QVERIFY(query.value(3).toString() == Attributes.value(i).value(2)); // Model
-//         QVERIFY(query.value(4).toInt() == Attributes.value(i).value(3));    // Year
-//         QVERIFY(query.value(5).toString() == Attributes.value(i).value(4)); // Type
-//         QVERIFY(query.value(6).toBool() == Attributes.value(i).value(5));   // Archived
-//         QVERIFY(query.value(7).isNull() == true);                      // User Order
-//         if (AttributeId == 4)
-//         {
-//             QVERIFY(query.value(8).isNull() == true); // parent
-//         }
-//         else
-//         {
-//             QVERIFY(query.value(8).toInt() == 4); // parent
-//         }
-//     }
-// }
+    // Update Value
+    attribute3.setValue(attributeFields.value(1).toString());
+    QVERIFY(katalogue_db.updateAttributeEntry(attribute3) == true);
 
-// void DatabaseAttributeTest::updateAttributeEntry() const
-// {
-//     /*Test Attribute Insert*/
-//     Database katalogue_db;
-//     bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
-//     qDebug() << "db open" << DB_OPEN;
-//     QVERIFY(DB_OPEN == true);
+    query.exec(record3Query);
+    query.next();
+    QVERIFY(query.value(1).toString() == attributeFields.value(1).toString());
 
-//     QVariantList AttributeFields = {
-//         QStringLiteral("updatedName"), QStringLiteral("updatedMake"), QStringLiteral("updatedModel"), 2001,
-//         QStringLiteral("updatedType"), true, 2, 2};
+    // Update Category
+    attribute3.setCategory(attributeFields.value(2).toString());
+    QVERIFY(katalogue_db.updateAttributeEntry(attribute3) == true);
 
-//     // Get Data from Record 3
-//     const QString record3Query = QStringLiteral(
-//                                      "SELECT %1, %2, %3, %4, %5, %6, %7, %8 FROM %9 WHERE id=3")
-//                                      .arg(Database::NAME, Database::MAKE, Database::MODEL, Database::YEAR,
-//                                           Database::TYPE, Database::ARCHIVED, Database::USER_ORDER,
-//                                           Database::KEY_Attribute_ID, Database::TABLE_AttributeS);
-//     QSqlQuery query;
-//     query.exec(record3Query);
-//     query.next();
-//     // qDebug() << query.record();
-
-//     // Build Attribute 3
-//     Attribute Attribute3(3);
-//     Attribute3.setName(query.value(0).toString());
-//     Attribute3.setMake(query.value(2).toString());
-//     Attribute3.setModel(query.value(2).toString());
-//     Attribute3.setYear(query.value(3).toInt());
-//     Attribute3.setType(query.value(4).toString());
-//     Attribute3.setArchived(query.value(5).toBool());
-//     // Ignore user order and set as null
-//     Attribute3.setParent(query.value(7).toInt());
-
-//     qDebug() << Attribute3.asList();
-
-//     // Start Test
-//     // Update Name
-//     Attribute3.setName(AttributeFields.value(0).toString());
-//     QVERIFY(katalogue_db.updateAttributeEntry(Attribute3) == true);
-
-//     query.exec(record3Query);
-//     query.next();
-//     QVERIFY(query.value(0).toString() == AttributeFields.value(0).toString());
-
-//     // Update Make
-//     Attribute3.setMake(AttributeFields.value(1).toString());
-//     QVERIFY(katalogue_db.updateAttributeEntry(Attribute3) == true);
-
-//     query.exec(record3Query);
-//     query.next();
-//     QVERIFY(query.value(1).toString() == AttributeFields.value(1).toString());
-
-//     // Update Model
-//     Attribute3.setModel(AttributeFields.value(2).toString());
-//     QVERIFY(katalogue_db.updateAttributeEntry(Attribute3) == true);
-
-//     query.exec(record3Query);
-//     query.next();
-//     QVERIFY(query.value(2).toString() == AttributeFields.value(2).toString());
-
-//     // Update Year
-//     Attribute3.setYear(AttributeFields.value(3).toInt());
-//     QVERIFY(katalogue_db.updateAttributeEntry(Attribute3) == true);
-
-//     query.exec(record3Query);
-//     query.next();
-//     QVERIFY(query.value(3).toInt() == AttributeFields.value(3).toInt());
-
-//     // Update Type
-//     Attribute3.setType(AttributeFields.value(4).toString());
-//     QVERIFY(katalogue_db.updateAttributeEntry(Attribute3) == true);
-
-//     query.exec(record3Query);
-//     query.next();
-//     QVERIFY(query.value(4).toString() == AttributeFields.value(4).toString());
-
-//     // Update Parent
-//     Attribute3.setParent(AttributeFields.value(7).toInt());
-//     QVERIFY(katalogue_db.updateAttributeEntry(Attribute3) == true);
-
-//     query.exec(record3Query);
-//     query.next();
-//     QVERIFY(query.value(7).toInt() == AttributeFields.value(7).toInt());
-//     // Update User Order
-//     // Uses updateAttributeUserOrder
-//     QVERIFY(katalogue_db.updateAttributeUserOrder(3, AttributeFields.value(6).toInt()) == true);
-
-//     query.exec(record3Query);
-//     query.next();
-//     QVERIFY(query.value(6).toInt() == AttributeFields.value(6).toInt());
-
-//     // Update Archived
-//     // Uses updateAttributeArchived
-//     QVERIFY(katalogue_db.updateAttributeArchived(3, AttributeFields.value(5).toBool()) == true);
-
-//     query.exec(record3Query);
-//     query.next();
-//     QVERIFY2(query.value(5).toBool() == AttributeFields.value(5).toBool(), "Update Archived");
-// }
+    query.exec(record3Query);
+    query.next();
+    QVERIFY(query.value(2).toString() == attributeFields.value(2).toString());
+}
 
 // void DatabaseAttributeTest::deleteAttributeEntry() const
 // {

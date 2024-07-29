@@ -35,9 +35,9 @@ public:
     bool updateItemArchived(const int id, const bool archived) const;
     bool updateItemUserOrder(const int id, const int user_order) const;
 
-    bool insertAttributeEntry(const Attribute &attribute);
-    bool updateAttributeEntry(const Attribute &attribute);
-    bool deleteAttributeEntry(int id);
+    bool insertAttributeEntry(const Attribute &attribute) const;
+    bool updateAttributeEntry(const Attribute &attribute) const;
+    bool deleteAttributeEntry(int id) const;
 
     bool insertEventEntry(const Event &event);
     bool updateEventEntry(const Event &event);

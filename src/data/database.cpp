@@ -50,7 +50,6 @@ QString Database::getCurrentTime() const
     dt.setTimeSpec(Qt::UTC);
 
     QString date = QDateTime::currentDateTime().toString(Qt::ISODate);
-    qDebug() << "getCurrentTime:" << date;
 
     return date;
 }
@@ -219,10 +218,10 @@ bool Database::updateItemArchived(const int id, const bool archived) const
     if (!query.exec())
     {
         qDebug() << "Error updating record archived " << query.lastError();
-        qDebug() << query.lastQuery();
+        qDebug() << query.lastQuery() << query.lastError();
         return false;
     }
-    qDebug() << query.lastQuery();
+    qDebug() << query.lastQuery() << query.lastError();
 
     return true;
 }
@@ -243,20 +242,19 @@ bool Database::updateItemUserOrder(const int id, const int user_order) const
     if (!query.exec())
     {
         qDebug() << "Error updating record order " << query.lastError();
-        qDebug() << query.lastQuery();
+        qDebug() << query.lastQuery() << query.lastError();
         return false;
     }
 
     return true;
 }
 
-bool Database::insertAttributeEntry(const Attribute &attribute)
+bool Database::insertAttributeEntry(const Attribute &attribute) const
 {
-    bool isInsert = false;
     QSqlQuery query;
 
     query.prepare(QStringLiteral(
-                      "INSERT INTO %1 (%2, %3, %4, %5, %6, %7)"
+                      "INSERT INTO %1 (%2, %3, %4, %5, %6, %7) "
                       "VALUES (:created, :modified, :key, :value, :category, :itemId)")
                       .arg(TABLE_ATTRIBUTES, CREATED, MODIFIED, KEY, VALUE, CATEGORY, KEY_ITEM_ID));
 
@@ -270,28 +268,23 @@ bool Database::insertAttributeEntry(const Attribute &attribute)
     query.bindValue(QStringLiteral(":category"), attribute.getCategory());
     query.bindValue(QStringLiteral(":itemId"), attribute.getItemId());
 
-    if (query.exec())
+    if (!query.exec())
     {
-        isInsert = true;
-    }
-    else
-    {
+
         qDebug() << "Error inserting record " << TABLE_ATTRIBUTES;
-        qDebug() << query.lastError();
+        qDebug() << query.lastQuery() << query.lastError();
+        return false;
     }
 
-    return isInsert;
+    return true;
 }
 
-bool Database::updateAttributeEntry(const Attribute &attribute)
+bool Database::updateAttributeEntry(const Attribute &attribute) const
 {
-    bool isUpdate = false;
     QSqlQuery query;
 
-    query.prepare(QStringLiteral(
-                      "UPDATE %1 SET %2=:modified, %3=:key, %4=:value, %5=:category WHERE id=:attributeId")
-                      .arg(
-                          TABLE_ATTRIBUTES, MODIFIED, KEY, VALUE, CATEGORY));
+    query.prepare(QStringLiteral("UPDATE %1 SET %2=:modified, %3=:key, %4=:value, %5=:category WHERE id=:attributeId")
+                      .arg(TABLE_ATTRIBUTES, MODIFIED, KEY, VALUE, CATEGORY));
 
     QString currentTime = this->getCurrentTime();
 
@@ -304,38 +297,32 @@ bool Database::updateAttributeEntry(const Attribute &attribute)
 
     query.bindValue(QStringLiteral(":attributeId"), attribute.getId());
 
-    if (query.exec())
-    {
-        isUpdate = true;
-    }
-    else
+    if (!query.exec())
     {
         qDebug() << "Error updating record " << TABLE_ATTRIBUTES;
-        qDebug() << query.lastError();
+        qDebug() << query.lastQuery() << query.lastError();
+        return false;
     }
-
-    return isUpdate;
+    return true;
 }
 
-bool Database::deleteAttributeEntry(int attributeId)
+bool Database::deleteAttributeEntry(int attributeId) const
 {
-    bool isDelete = false;
     QSqlQuery query;
 
-    query.prepare(
-        QStringLiteral("DELETE FROM %1 WHERE id=:attributeId").arg(TABLE_ATTRIBUTES));
+    query.prepare(QStringLiteral("DELETE FROM %1 WHERE id=:attributeId")
+                      .arg(TABLE_ATTRIBUTES));
+
     query.bindValue(QStringLiteral(":attributeId"), attributeId);
 
-    if (query.exec())
+    if (!query.exec())
     {
-        isDelete = true;
-    }
-    else
-    {
-        qDebug() << "Error removing record " << query.lastError().text();
+        qDebug() << "Error removing record" << TABLE_ATTRIBUTES;
+        qDebug() << query.lastQuery() << query.lastError();
+        return false;
     }
 
-    return isDelete;
+    return true;
 }
 
 bool Database::insertEventEntry(const Event &event)
@@ -370,7 +357,7 @@ bool Database::insertEventEntry(const Event &event)
     {
         qDebug() << "Error inserting record " << TABLE_EVENTS;
         qDebug() << query.lastError();
-        qDebug() << query.lastQuery();
+        qDebug() << query.lastQuery() << query.lastError();
     }
 
     return isInsert;
