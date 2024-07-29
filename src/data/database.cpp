@@ -25,7 +25,7 @@ const QString Database::USER_ORDER = QStringLiteral("user_order");
 const QString Database::TYPE = QStringLiteral("type");
 const QString Database::VALUE = QStringLiteral("value");
 const QString Database::YEAR = QStringLiteral("year");
-const QString Database::ODOMETER = QStringLiteral("odometer");
+const QString Database::INCREMENT = QStringLiteral("increment");
 const QString Database::TITLE = QStringLiteral("title");
 const QString Database::NOTE_CONTENT = QStringLiteral("note_content");
 const QString Database::DESCRIPTION = QStringLiteral("description");
@@ -392,7 +392,6 @@ bool Database::updateEventEntry(const Event &event) const
 
 bool Database::deleteEventEntry(int id) const
 {
-    bool isDelete = false;
     QSqlQuery query;
 
     query.prepare(

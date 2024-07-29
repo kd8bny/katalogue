@@ -4,17 +4,18 @@
 #include "data/database.h"
 #include "data/event.h"
 
-class EventModel: public QSqlQueryModel
+class EventModel : public QSqlQueryModel
 {
     Q_OBJECT
 
 public:
-    enum Roles {
+    enum Roles
+    {
         rID = Qt::UserRole + 1,
         rDate,
         rEvent,
         rCost,
-        rOdometer,
+        rIncrement,
         rCategory,
         rComment,
         rItemID,
@@ -31,17 +32,16 @@ public:
     Event getRecord(int row);
     Q_INVOKABLE QVariantList getRecordAsList(int row);
     Q_INVOKABLE bool setRecord(int eventIndex, QString date, QString eventName,
-        float cost, float odometer, QString category, QString comment, int itemId);
+                               float cost, float odometer, QString category, QString comment, int itemId);
     Q_INVOKABLE bool deleteRecord(int eventId);
 
 protected:
     QHash<int, QByteArray> roleNames() const override;
 
 private:
-    const QString modelQueryBase = QStringLiteral(
-        "SELECT id, %1, %2, %3, %4, %5, %6 FROM %7").arg(
-            Database::DATE, Database::EVENT, Database::COST, Database::ODOMETER,
-            Database::CATEGORY, Database::COMMENT, Database::TABLE_EVENTS);
+    const QString modelQueryBase = QStringLiteral("SELECT id, %1, %2, %3, %4, %5, %6 FROM %7")
+                                       .arg(Database::DATE, Database::EVENT, Database::COST, Database::INCREMENT,
+                                            Database::CATEGORY, Database::COMMENT, Database::TABLE_EVENTS);
 
     const QString modelQuerySetId = QStringLiteral(" WHERE %1=%2");
 
@@ -52,5 +52,4 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void refresh();
-
 };
