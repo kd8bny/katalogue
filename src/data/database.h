@@ -39,9 +39,9 @@ public:
     bool updateAttributeEntry(const Attribute &attribute) const;
     bool deleteAttributeEntry(int id) const;
 
-    bool insertEventEntry(const Event &event);
-    bool updateEventEntry(const Event &event);
-    bool deleteEventEntry(int id);
+    bool insertEventEntry(const Event &event) const;
+    bool updateEventEntry(const Event &event) const;
+    bool deleteEventEntry(int id) const;
 
     bool insertNoteEntry(const Note &note);
     bool updateNoteEntry(const Note &note);
@@ -89,7 +89,7 @@ private:
     QSqlDatabase db;
 
     QString getCurrentTime() const;
-    bool initializeSchema();
+    bool initializeSchema() const;
 
     const int DATABASE_VERSION = 1;
     const QString DATABASE_TYPE = QStringLiteral("QSQLITE");

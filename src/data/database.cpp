@@ -325,9 +325,8 @@ bool Database::deleteAttributeEntry(int attributeId) const
     return true;
 }
 
-bool Database::insertEventEntry(const Event &event)
+bool Database::insertEventEntry(const Event &event) const
 {
-    bool isInsert = false;
     QSqlQuery query;
 
     query.prepare(QStringLiteral(
@@ -349,23 +348,18 @@ bool Database::insertEventEntry(const Event &event)
     query.bindValue(QStringLiteral(":comment"), event.getComment());
     query.bindValue(QStringLiteral(":itemId"), event.getItemId());
 
-    if (query.exec())
-    {
-        isInsert = true;
-    }
-    else
+    if (!query.exec())
     {
         qDebug() << "Error inserting record " << TABLE_EVENTS;
-        qDebug() << query.lastError();
         qDebug() << query.lastQuery() << query.lastError();
+        return false;
     }
 
-    return isInsert;
+    return true;
 }
 
-bool Database::updateEventEntry(const Event &event)
+bool Database::updateEventEntry(const Event &event) const
 {
-    bool isUpdate = false;
     QSqlQuery query;
 
     query.prepare(QStringLiteral(
@@ -386,21 +380,17 @@ bool Database::updateEventEntry(const Event &event)
 
     query.bindValue(QStringLiteral(":eventId"), event.getId());
 
-    if (query.exec())
-    {
-        isUpdate = true;
-    }
-    else
+    if (!query.exec())
     {
         qDebug() << "Error updating record " << TABLE_EVENTS;
-        qDebug() << query.lastError();
-        qDebug() << query.lastQuery();
+        qDebug() << query.lastQuery() << query.lastError();
+        return false;
     }
 
-    return isUpdate;
+    return true;
 }
 
-bool Database::deleteEventEntry(int id)
+bool Database::deleteEventEntry(int id) const
 {
     bool isDelete = false;
     QSqlQuery query;
@@ -409,16 +399,14 @@ bool Database::deleteEventEntry(int id)
         QStringLiteral("DELETE FROM %1 WHERE id=:eventId").arg(TABLE_EVENTS));
     query.bindValue(QStringLiteral(":eventId"), id);
 
-    if (query.exec())
+    if (!query.exec())
     {
-        isDelete = true;
-    }
-    else
-    {
-        qDebug() << "Error removing record " << query.lastError().text();
+        qDebug() << "Error removing record " << TABLE_EVENTS;
+        qDebug() << query.lastQuery() << query.lastError();
+        return false;
     }
 
-    return isDelete;
+    return true;
 }
 
 bool Database::insertNoteEntry(const Note &note)
@@ -604,9 +592,8 @@ bool Database::deleteTaskEntry(int id)
     return isDelete;
 }
 
-bool Database::initializeSchema()
+bool Database::initializeSchema() const
 {
-    bool isSchemaCreate = false;
     QSqlQuery query;
 
     const QString queryItems = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -622,34 +609,35 @@ bool Database::initializeSchema()
                                               "%11 INT, "                                   // FK
                                               "FOREIGN KEY (%11) REFERENCES %1 (id) "
                                               "ON DELETE CASCADE ON UPDATE CASCADE)")
-                                   .arg(TABLE_ITEMS, CREATED, MODIFIED, NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED, USER_ORDER, KEY_ITEM_ID);
+                                   .arg(TABLE_ITEMS, CREATED, MODIFIED, NAME, MAKE, MODEL, YEAR, TYPE, ARCHIVED,
+                                        USER_ORDER, KEY_ITEM_ID);
 
     const QString queryAttributes = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                                                   "%2 DATE NOT NULL, "
-                                                   "%3 DATE NOT NULL, "
-                                                   "%4 TEXT NOT NULL, "
-                                                   "%5 TEXT NOT NULL, "
-                                                   "%6 TEXT, "
-                                                   "%7 INT NOT NULL, "
+                                                   "%2 DATE NOT NULL, " // CREATED
+                                                   "%3 DATE NOT NULL, " // Modified
+                                                   "%4 TEXT NOT NULL, " // KEY
+                                                   "%5 TEXT NOT NULL, " // VALUE
+                                                   "%6 TEXT, "          // CATEGORY
+                                                   "%7 INT NOT NULL, "  // FK
                                                    "CONSTRAINT %7 FOREIGN KEY (%7) REFERENCES %8 (id) "
                                                    "ON DELETE CASCADE ON UPDATE CASCADE)")
-                                        .arg(
-                                            TABLE_ATTRIBUTES, CREATED, MODIFIED, KEY, VALUE, CATEGORY, KEY_ITEM_ID, TABLE_ITEMS);
+                                        .arg(TABLE_ATTRIBUTES, CREATED, MODIFIED, KEY, VALUE, CATEGORY, KEY_ITEM_ID,
+                                             TABLE_ITEMS);
 
     const QString queryEvents = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                                               "%2 DATE NOT NULL, "
-                                               "%3 DATE NOT NULL, "
-                                               "%4 DATE NOT NULL, "
-                                               "%5 TEXT NOT NULL, "
-                                               "%6 REAL, "
-                                               "%7 REAL, "
-                                               "%8 TEXT, "
-                                               "%9 VARCHAR(255), "
-                                               "%10 INT NOT NULL, "
+                                               "%2 DATE NOT NULL, " // CREATED
+                                               "%3 DATE NOT NULL, " // MODIFIED
+                                               "%4 DATE NOT NULL, " // DATE
+                                               "%5 TEXT NOT NULL, " // EVENT
+                                               "%6 REAL, "          // COST
+                                               "%7 REAL, "          // ODOMETER
+                                               "%8 TEXT, "          // CATEGORY
+                                               "%9 VARCHAR(255), "  // COMMENT
+                                               "%10 INT NOT NULL, " // FK
                                                "CONSTRAINT %10 FOREIGN KEY (%10) REFERENCES %11 (id) "
                                                "ON DELETE CASCADE ON UPDATE CASCADE)")
-                                    .arg(
-                                        TABLE_EVENTS, CREATED, MODIFIED, DATE, EVENT, COST, ODOMETER, CATEGORY, COMMENT, KEY_ITEM_ID, TABLE_ITEMS);
+                                    .arg(TABLE_EVENTS, CREATED, MODIFIED, DATE, EVENT, COST, ODOMETER, CATEGORY,
+                                         COMMENT, KEY_ITEM_ID, TABLE_ITEMS);
 
     const QString queryNotes = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
                                               "%2 DATE NOT NULL, "                   // CREATED
@@ -659,8 +647,7 @@ bool Database::initializeSchema()
                                               "%6 INT, "                             // FK
                                               "FOREIGN KEY (%6) REFERENCES %7 (id) " // Notes and tasks do not need to belong to item
                                               "ON DELETE CASCADE ON UPDATE CASCADE)")
-                                   .arg(
-                                       TABLE_NOTES, CREATED, MODIFIED, TITLE, NOTE_CONTENT, KEY_ITEM_ID, TABLE_ITEMS);
+                                   .arg(TABLE_NOTES, CREATED, MODIFIED, TITLE, NOTE_CONTENT, KEY_ITEM_ID, TABLE_ITEMS);
 
     const QString queryTasks = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
                                               "%2 DATE NOT NULL, "                   // CREATED
@@ -672,8 +659,8 @@ bool Database::initializeSchema()
                                               "%8 INT, "                             // FK
                                               "FOREIGN KEY (%8) REFERENCES %9 (id) " // Notes and tasks do not need to belong to item
                                               "ON DELETE CASCADE ON UPDATE CASCADE)")
-                                   .arg(
-                                       TABLE_TASKS, CREATED, MODIFIED, DUE_DATE, STATUS, TITLE, DESCRIPTION, KEY_ITEM_ID, TABLE_ITEMS);
+                                   .arg(TABLE_TASKS, CREATED, MODIFIED, DUE_DATE, STATUS, TITLE, DESCRIPTION,
+                                        KEY_ITEM_ID, TABLE_ITEMS);
 
     if (!query.exec(queryItems))
     {
@@ -711,7 +698,5 @@ bool Database::initializeSchema()
         return false;
     }
 
-    isSchemaCreate = true;
-
-    return isSchemaCreate;
+    return true;
 }
