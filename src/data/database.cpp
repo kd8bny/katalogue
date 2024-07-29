@@ -628,8 +628,8 @@ bool Database::initializeSchema() const
                                                "%3 DATE NOT NULL, " // MODIFIED
                                                "%4 DATE NOT NULL, " // DATE
                                                "%5 TEXT NOT NULL, " // EVENT
-                                               "%6 REAL, "          // COST
-                                               "%7 REAL, "          // INCREMENT
+                                               "%6 REAL NOT NULL, " // COST
+                                               "%7 REAL NOT NULL, " // INCREMENT
                                                "%8 TEXT, "          // CATEGORY
                                                "%9 VARCHAR(255), "  // COMMENT
                                                "%10 INT NOT NULL, " // FK
