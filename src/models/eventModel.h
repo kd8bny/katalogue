@@ -32,7 +32,7 @@ public:
     Event getRecord(int row);
     Q_INVOKABLE QVariantList getRecordAsList(int row);
     Q_INVOKABLE bool setRecord(int eventIndex, QString date, QString eventName,
-                               float cost, float odometer, QString category, QString comment, int itemId);
+                               float cost, float increment, QString category, QString comment, int itemId);
     Q_INVOKABLE bool deleteRecord(int eventId);
 
 protected:

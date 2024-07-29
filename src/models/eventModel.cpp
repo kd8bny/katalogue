@@ -31,7 +31,7 @@ QHash<int, QByteArray> EventModel::roleNames() const
     roles[rDate] = Database::DATE.toUtf8();
     roles[rEvent] = Database::EVENT.toUtf8();
     roles[rCost] = Database::COST.toUtf8();
-    roles[rOdometer] = Database::INCREMENT.toUtf8();
+    roles[rIncrement] = Database::INCREMENT.toUtf8();
     roles[rCategory] = Database::CATEGORY.toUtf8();
     roles[rComment] = Database::COMMENT.toUtf8();
     roles[rItemID] = Database::KEY_ITEM_ID.toUtf8();
@@ -41,8 +41,7 @@ QHash<int, QByteArray> EventModel::roleNames() const
 
 void EventModel::setItemId(QString itemId)
 {
-    this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(
-                                                  Database::KEY_ITEM_ID, itemId);
+    this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(Database::KEY_ITEM_ID, itemId);
 
     this->setQuery(modelQuery);
     Q_EMIT dataChanged();
@@ -83,7 +82,7 @@ QVariantList EventModel::getRecordAsList(int row)
 }
 
 bool EventModel::setRecord(int eventIndex, QString date, QString eventName,
-                           float cost, float odometer, QString category, QString comment, int itemId)
+                           float cost, float increment, QString category, QString comment, int itemId)
 {
     Database db;
     // eventIndex defaults to -1 for new entries.
@@ -94,7 +93,7 @@ bool EventModel::setRecord(int eventIndex, QString date, QString eventName,
     event.setDate(date);
     event.setEvent(eventName);
     event.setCost(cost);
-    event.setOdometer(odometer);
+    event.setIncrement(increment);
     event.setCategory(category);
     event.setComment(comment);
     event.setItemId(itemId);
