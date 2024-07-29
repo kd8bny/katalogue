@@ -11,7 +11,7 @@ class DatabaseAttributeTest : public QObject
 private Q_SLOTS:
     void insertAttributeEntry() const;
     void updateAttributeEntry() const;
-    // void deleteAttributeEntry() const;
+    void deleteAttributeEntry() const;
 };
 
 /*
@@ -138,20 +138,21 @@ void DatabaseAttributeTest::updateAttributeEntry() const
     QVERIFY(query.value(2).toString() == attributeFields.value(2).toString());
 }
 
-// void DatabaseAttributeTest::deleteAttributeEntry() const
-// {
-//     Database katalogue_db;
-//     // Get Data from Record 3
-//     const QString record3Query = QStringLiteral("SELECT %1 FROM %2 WHERE id=3")
-//                                      .arg(Database::NAME, Database::TABLE_AttributeS);
+void DatabaseAttributeTest::deleteAttributeEntry() const
+{
+    Database katalogue_db;
+    // Get Data from Record 3
+    // Check if KEY is null after delete
+    const QString record3Query = QStringLiteral("SELECT %1 FROM %2 WHERE id=3")
+                                     .arg(Database::KEY, Database::TABLE_ATTRIBUTES);
 
-//     QVERIFY2(katalogue_db.deleteAttributeEntry(3) == true, "Attribute 3 deleted");
+    QVERIFY2(katalogue_db.deleteAttributeEntry(3) == true, "Attribute 3 deleted");
 
-//     QSqlQuery query;
-//     query.exec(record3Query);
-//     query.next();
-//     QVERIFY(query.record().value(0) == QStringLiteral(""));
-// }
+    QSqlQuery query;
+    query.exec(record3Query);
+    query.next();
+    QVERIFY(query.record().value(0) == QStringLiteral(""));
+}
 
 QTEST_MAIN(DatabaseAttributeTest)
 #include "databaseAttributeTest.moc"
