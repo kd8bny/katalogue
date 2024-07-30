@@ -374,7 +374,7 @@ bool Database::updateEventEntry(const Event &event) const
     query.bindValue(QStringLiteral(":date"), event.getDate());
     query.bindValue(QStringLiteral(":event"), event.getEvent());
     query.bindValue(QStringLiteral(":cost"), event.getCost());
-    query.bindValue(QStringLiteral(":odometer"), event.getIncrement());
+    query.bindValue(QStringLiteral(":increment"), event.getIncrement());
     query.bindValue(QStringLiteral(":category"), event.getCategory());
     query.bindValue(QStringLiteral(":comment"), event.getComment());
 
