@@ -11,7 +11,7 @@ class DatabaseEventTest : public QObject
 private Q_SLOTS:
     void insertEventEntry() const;
     void updateEventEntry() const;
-    // void deleteEventEntry() const;
+    void deleteEventEntry() const;
 };
 
 /*
@@ -113,7 +113,6 @@ void DatabaseEventTest::updateEventEntry() const
     QSqlQuery query;
     query.exec(record3Query);
     query.next();
-    qDebug() << query.record();
 
     // Build Event 3
     Event event3(3);
@@ -175,21 +174,21 @@ void DatabaseEventTest::updateEventEntry() const
     QVERIFY(query.value(5).toString() == eventFields.value(5).toString());
 }
 
-// void DatabaseEventTest::deleteEventEntry() const
-// {
-//     Database katalogue_db;
-//     // Get Data from Record 3
-//     // Check if KEY is null after delete
-//     const QString record3Query = QStringLiteral("SELECT %1 FROM %2 WHERE id=3")
-//                                      .arg(Database::KEY, Database::TABLE_ATTRIBUTES);
+void DatabaseEventTest::deleteEventEntry() const
+{
+    Database katalogue_db;
+    // Get Data from Record 3
+    // Check if KEY is null after delete
+    const QString record3Query = QStringLiteral("SELECT %1 FROM %2 WHERE id=3")
+                                     .arg(Database::DATE, Database::TABLE_EVENTS);
 
-//     QVERIFY2(katalogue_db.deleteEventEntry(3) == true, "Event 3 deleted");
+    QVERIFY2(katalogue_db.deleteEventEntry(3) == true, "Event 3 deleted");
 
-//     QSqlQuery query;
-//     query.exec(record3Query);
-//     query.next();
-//     QVERIFY(query.record().value(0) == QStringLiteral(""));
-// }
+    QSqlQuery query;
+    query.exec(record3Query);
+    query.next();
+    QVERIFY(query.record().value(0) == QStringLiteral(""));
+}
 
 QTEST_MAIN(DatabaseEventTest)
 #include "databaseEventTest.moc"
