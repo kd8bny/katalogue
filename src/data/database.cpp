@@ -94,7 +94,6 @@ bool Database::connectKatalogueDb(QString path)
         else if (db_version > this->DATABASE_VERSION)
         {
             qDebug() << "Database is newer than application";
-            // TODO Implement upgrade when needed
         }
 
         // Enable ON CASCADE each time db is open with foreign_key
@@ -408,15 +407,13 @@ bool Database::deleteEventEntry(int id) const
     return true;
 }
 
-bool Database::insertNoteEntry(const Note &note)
+bool Database::insertNoteEntry(const Note &note) const
 {
-    bool isInsert = false;
     QSqlQuery query;
 
-    query.prepare(QStringLiteral(
-                      "INSERT INTO %1 (%2, %3, %4, %5, %6) VALUES (:created, :modified, :title, :noteContent, :itemId)")
-                      .arg(
-                          TABLE_NOTES, CREATED, MODIFIED, TITLE, NOTE_CONTENT, KEY_ITEM_ID));
+    query.prepare(QStringLiteral("INSERT INTO %1 (%2, %3, %4, %5, %6) "
+                                 "VALUES (:created, :modified, :title, :noteContent, :itemId)")
+                      .arg(TABLE_NOTES, CREATED, MODIFIED, TITLE, NOTE_CONTENT, KEY_ITEM_ID));
 
     QString currentTime = this->getCurrentTime();
 
@@ -430,81 +427,63 @@ bool Database::insertNoteEntry(const Note &note)
         query.bindValue(QStringLiteral(":itemId"), note.getItemId());
     }
 
-    if (query.exec())
-    {
-        isInsert = true;
-    }
-    else
+    if (!query.exec())
     {
         qDebug() << "Error inserting record " << TABLE_NOTES;
-        qDebug() << query.lastError();
-        qDebug() << query.lastQuery();
+        qDebug() << query.lastQuery() << query.lastError();
+        return false;
     }
 
-    return isInsert;
+    return true;
 }
 
-bool Database::updateNoteEntry(const Note &note)
+bool Database::updateNoteEntry(const Note &note) const
 {
-    bool isUpdate = false;
     QSqlQuery query;
 
-    query.prepare(QStringLiteral(
-                      "UPDATE %1 SET %2=:modified, %3=:title, %4=:noteContent, %5=:itemId WHERE id=:noteId")
-                      .arg(
-                          TABLE_NOTES, MODIFIED, TITLE, NOTE_CONTENT, KEY_ITEM_ID));
+    query.prepare(QStringLiteral("UPDATE %1 SET %2=:modified, %3=:title, %4=:noteContent, %5=:itemId WHERE id=:noteId")
+                      .arg(TABLE_NOTES, MODIFIED, TITLE, NOTE_CONTENT, KEY_ITEM_ID));
 
     query.bindValue(QStringLiteral(":title"), note.getTitle());
     query.bindValue(QStringLiteral(":noteContent"), note.getNoteContent());
     query.bindValue(QStringLiteral(":itemId"), note.getItemId());
     query.bindValue(QStringLiteral(":eventId"), note.getId());
 
-    if (query.exec())
-    {
-        isUpdate = true;
-    }
-    else
+    if (!query.exec())
     {
         qDebug() << "Error updating record " << TABLE_NOTES;
-        qDebug() << query.lastError();
-        qDebug() << query.lastQuery();
+        qDebug() << query.lastQuery() << query.lastError();
+        return false;
     }
 
-    return isUpdate;
+    return true;
 }
 
-bool Database::deleteNoteEntry(int id)
+bool Database::deleteNoteEntry(int id) const
 {
-    bool isDelete = false;
     QSqlQuery query;
 
     query.prepare(
         QStringLiteral("DELETE FROM %1 WHERE id=:noteId").arg(TABLE_NOTES));
     query.bindValue(QStringLiteral(":noteId"), id);
 
-    if (query.exec())
-    {
-        isDelete = true;
-    }
-    else
+    if (!query.exec())
     {
         qDebug() << "Error deleting record " << TABLE_NOTES;
-        qDebug() << "Error removing record " << query.lastError().text();
+        qDebug() << query.lastQuery() << query.lastError();
+        return false;
     }
 
-    return isDelete;
+    return true;
 }
 
-bool Database::insertTaskEntry(const Task &task)
+bool Database::insertTaskEntry(const Task &task) const
 {
-    bool isInsert = false;
     QSqlQuery query;
 
-    query.prepare(QStringLiteral(
-                      "INSERT INTO %1 ( %2, %3, %4, %5, %6, %7, %8) VALUES "
-                      "(:created, :modified, :dueDate, :status, :title, :description, :itemId)")
-                      .arg(
-                          TABLE_TASKS, CREATED, MODIFIED, DUE_DATE, STATUS, TITLE, DESCRIPTION, KEY_ITEM_ID));
+    query.prepare(QStringLiteral("INSERT INTO %1 ( %2, %3, %4, %5, %6, %7, %8) VALUES "
+                                 "(:created, :modified, :dueDate, :status, :title, :description, :itemId)")
+                      .arg(TABLE_TASKS, CREATED, MODIFIED, DUE_DATE, STATUS, TITLE, DESCRIPTION, KEY_ITEM_ID));
 
     QString currentTime = this->getCurrentTime();
 
@@ -519,29 +498,23 @@ bool Database::insertTaskEntry(const Task &task)
         query.bindValue(QStringLiteral(":itemId"), task.getItemId());
     }
 
-    if (query.exec())
-    {
-        isInsert = true;
-    }
-    else
+    if (!query.exec())
     {
         qDebug() << "Error inserting record " << TABLE_TASKS;
-        qDebug() << query.lastError();
-        qDebug() << query.lastQuery();
+        qDebug() << query.lastQuery() << query.lastError();
+        return false;
     }
 
-    return isInsert;
+    return true;
 }
 
-bool Database::updateTaskEntry(const Task &task)
+bool Database::updateTaskEntry(const Task &task) const
 {
-    bool isUpdate = false;
     QSqlQuery query;
 
     query.prepare(QStringLiteral(
                       "UPDATE %1 SET %2=:modified, %3=:dueDate, %4=:status, %5=:title, %6=:description, %7=:itemId WHERE id=:taskId")
-                      .arg(
-                          TABLE_TASKS, MODIFIED, DUE_DATE, STATUS, TITLE, DESCRIPTION, KEY_ITEM_ID));
+                      .arg(TABLE, MODIFIED, DUE_DATE, STATUS, TITLE, DESCRIPTION, KEY_ITEM_ID));
 
     QString currentTime = this->getCurrentTime();
 
@@ -555,40 +528,31 @@ bool Database::updateTaskEntry(const Task &task)
 
     query.bindValue(QStringLiteral(":taskId"), task.getId());
 
-    if (query.exec())
-    {
-        isUpdate = true;
-    }
-    else
+    if (!query.exec())
     {
         qDebug() << "Error updating record " << TABLE_TASKS;
-        qDebug() << query.lastError();
-        qDebug() << query.lastQuery();
+        qDebug() << query.lastQuery() << query.lastError();
+        return false;
     }
 
-    return isUpdate;
+    return true;
 }
 
-bool Database::deleteTaskEntry(int id)
+bool Database::deleteTaskEntry(int id) const
 {
-    bool isDelete = false;
     QSqlQuery query;
 
-    query.prepare(
-        QStringLiteral("DELETE FROM %1 WHERE id=:taskId").arg(TABLE_TASKS));
+    query.prepare(QStringLiteral("DELETE FROM %1 WHERE id=:taskId").arg(TABLE_TASKS));
     query.bindValue(QStringLiteral(":taskId"), id);
 
-    if (query.exec())
-    {
-        isDelete = true;
-    }
-    else
+    if (!query.exec())
     {
         qDebug() << "Error inserting record " << TABLE_TASKS;
-        qDebug() << "Error removing record " << query.lastError().text();
+        qDebug() << query.lastQuery() << query.lastError();
+        return false;
     }
 
-    return isDelete;
+    return true;
 }
 
 bool Database::initializeSchema() const

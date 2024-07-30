@@ -43,13 +43,13 @@ public:
     bool updateEventEntry(const Event &event) const;
     bool deleteEventEntry(int id) const;
 
-    bool insertNoteEntry(const Note &note);
-    bool updateNoteEntry(const Note &note);
-    bool deleteNoteEntry(int id);
+    bool insertNoteEntry(const Note &note) const;
+    bool updateNoteEntry(const Note &note) const;
+    bool deleteNoteEntry(int id) const;
 
-    bool insertTaskEntry(const Task &task);
-    bool updateTaskEntry(const Task &task);
-    bool deleteTaskEntry(int id);
+    bool insertTaskEntry(const Task &task) const;
+    bool updateTaskEntry(const Task &task) const;
+    bool deleteTaskEntry(int id) const;
 
     const static QString TABLE_ATTRIBUTES;
     const static QString TABLE_EVENTS;
