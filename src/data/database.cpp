@@ -422,7 +422,7 @@ bool Database::insertNoteEntry(const Note &note) const
 
     query.bindValue(QStringLiteral(":title"), note.getTitle());
     query.bindValue(QStringLiteral(":noteContent"), note.getNoteContent());
-    if (note.getItemId() != -1)
+    if (note.getItemId() != 0)
     {
         query.bindValue(QStringLiteral(":itemId"), note.getItemId());
     }
@@ -493,7 +493,7 @@ bool Database::insertTaskEntry(const Task &task) const
     query.bindValue(QStringLiteral(":status"), task.getStatus());
     query.bindValue(QStringLiteral(":title"), task.getTitle());
     query.bindValue(QStringLiteral(":description"), task.getDescription());
-    if (task.getItemId() != -1)
+    if (task.getItemId() != 0)
     {
         query.bindValue(QStringLiteral(":itemId"), task.getItemId());
     }
@@ -513,8 +513,9 @@ bool Database::updateTaskEntry(const Task &task) const
     QSqlQuery query;
 
     query.prepare(QStringLiteral(
-                      "UPDATE %1 SET %2=:modified, %3=:dueDate, %4=:status, %5=:title, %6=:description, %7=:itemId WHERE id=:taskId")
-                      .arg(TABLE, MODIFIED, DUE_DATE, STATUS, TITLE, DESCRIPTION, KEY_ITEM_ID));
+                      "UPDATE %1 SET %2=:modified, %3=:dueDate, %4=:status, %5=:title, %6=:description, %7=:itemId "
+                      "WHERE id=:taskId")
+                      .arg(TABLE_TASKS, MODIFIED, DUE_DATE, STATUS, TITLE, DESCRIPTION, KEY_ITEM_ID));
 
     QString currentTime = this->getCurrentTime();
 
