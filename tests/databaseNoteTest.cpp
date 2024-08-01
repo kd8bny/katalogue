@@ -11,7 +11,7 @@ class DatabaseNoteTest : public QObject
 private Q_SLOTS:
     void insertNoteEntry() const;
     void updateNoteEntry() const;
-    // void deleteNoteEntry() const;
+    void deleteNoteEntry() const;
 };
 
 /*
@@ -124,21 +124,21 @@ void DatabaseNoteTest::updateNoteEntry() const
     QVERIFY(query.value(1).toString() == noteFields.value(1).toString());
 }
 
-// void DatabaseNoteTest::deleteNoteEntry() const
-// {
-//     Database katalogue_db;
-//     // Get Data from Record 3
-//     // Check if KEY is null after delete
-//     const QString record3Query = QStringLiteral("SELECT %1 FROM %2 WHERE id=3")
-//                                      .arg(Database::KEY, Database::TABLE_ATTRIBUTES);
+void DatabaseNoteTest::deleteNoteEntry() const
+{
+    Database katalogue_db;
+    // Get Data from Record 3
+    // Check if Title is null after delete
+    const QString record3Query = QStringLiteral("SELECT %1 FROM %2 WHERE id=3")
+                                     .arg(Database::TITLE, Database::TABLE_NOTES);
 
-//     QVERIFY2(katalogue_db.deleteNoteEntry(3) == true, "Note 3 deleted");
+    QVERIFY2(katalogue_db.deleteNoteEntry(3) == true, "Note 3 deleted");
 
-//     QSqlQuery query;
-//     query.exec(record3Query);
-//     query.next();
-//     QVERIFY(query.record().value(0) == QStringLiteral(""));
-// }
+    QSqlQuery query;
+    query.exec(record3Query);
+    query.next();
+    QVERIFY(query.record().value(0) == QStringLiteral(""));
+}
 
 QTEST_MAIN(DatabaseNoteTest)
 #include "databaseNoteTest.moc"
