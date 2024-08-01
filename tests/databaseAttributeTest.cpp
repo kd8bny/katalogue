@@ -69,7 +69,7 @@ void DatabaseAttributeTest::insertAttributeEntry() const
         QVERIFY(query.value(1).toString() == attributes.value(i).value(0)); // Key
         QVERIFY(query.value(2).toString() == attributes.value(i).value(1)); // Value
         QVERIFY(query.value(3).toString() == attributes.value(i).value(2)); // Category
-        QVERIFY(query.value(4).toInt() == 1);                               // parent
+        QVERIFY(query.value(4).toInt() == attributes.value(i).value(3));    // parent
     }
 }
 
