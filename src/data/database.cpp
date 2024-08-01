@@ -467,8 +467,9 @@ bool Database::deleteNoteEntry(int id) const
 {
     QSqlQuery query;
 
-    query.prepare(
-        QStringLiteral("DELETE FROM %1 WHERE id=:noteId").arg(TABLE_NOTES));
+    query.prepare(QStringLiteral("DELETE FROM %1 WHERE id=:noteId")
+                      .arg(TABLE_NOTES));
+
     query.bindValue(QStringLiteral(":noteId"), id);
 
     if (!query.exec())
