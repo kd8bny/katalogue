@@ -35,7 +35,9 @@ protected:
     QHash<int, QByteArray> roleNames() const override;
 
 private:
-    const QString modelQueryBase = QStringLiteral("SELECT id, %1, %2, %3 FROM %4").arg(Database::TITLE, Database::NOTE_CONTENT, Database::KEY_ITEM_ID, Database::TABLE_NOTES);
+    const QString modelQueryBase = QStringLiteral("SELECT id, %1, %2, %3 FROM %4")
+                                       .arg(Database::TITLE, Database::NOTE_CONTENT, Database::KEY_ITEM_ID,
+                                            Database::TABLE_NOTES);
 
     const QString modelQuerySetId = QStringLiteral(" WHERE %1=%2");
 

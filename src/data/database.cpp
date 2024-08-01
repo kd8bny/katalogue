@@ -361,9 +361,8 @@ bool Database::updateEventEntry(const Event &event) const
 {
     QSqlQuery query;
 
-    query.prepare(QStringLiteral(
-                      "UPDATE %1 SET %2=:modified, %3=:date, %4=:event, %5=:cost, %6=:increment, %7=:category, %8=:comment "
-                      "WHERE id=:eventId")
+    query.prepare(QStringLiteral("UPDATE %1 SET %2=:modified, %3=:date, %4=:event, %5=:cost, %6=:increment, "
+                                 "%7=:category, %8=:comment WHERE id=:eventId")
                       .arg(TABLE_EVENTS, MODIFIED, DATE, EVENT, COST, INCREMENT, CATEGORY, COMMENT));
 
     QString currentTime = this->getCurrentTime();
@@ -444,10 +443,15 @@ bool Database::updateNoteEntry(const Note &note) const
     query.prepare(QStringLiteral("UPDATE %1 SET %2=:modified, %3=:title, %4=:noteContent, %5=:itemId WHERE id=:noteId")
                       .arg(TABLE_NOTES, MODIFIED, TITLE, NOTE_CONTENT, KEY_ITEM_ID));
 
+    QString currentTime = this->getCurrentTime();
+
+    query.bindValue(QStringLiteral(":modified"), currentTime);
+
     query.bindValue(QStringLiteral(":title"), note.getTitle());
     query.bindValue(QStringLiteral(":noteContent"), note.getNoteContent());
     query.bindValue(QStringLiteral(":itemId"), note.getItemId());
-    query.bindValue(QStringLiteral(":eventId"), note.getId());
+
+    query.bindValue(QStringLiteral(":noteId"), note.getId());
 
     if (!query.exec())
     {
@@ -593,8 +597,8 @@ bool Database::initializeSchema() const
                                                "%3 DATE NOT NULL, " // MODIFIED
                                                "%4 DATE NOT NULL, " // DATE
                                                "%5 TEXT NOT NULL, " // EVENT
-                                               "%6 REAL NOT NULL, " // COST
-                                               "%7 REAL NOT NULL, " // INCREMENT
+                                               "%6 REAL NOT NULL, " // COST //TODO default 0
+                                               "%7 REAL NOT NULL, " // INCREMENT //TODO default 0
                                                "%8 TEXT, "          // CATEGORY
                                                "%9 VARCHAR(255), "  // COMMENT
                                                "%10 INT NOT NULL, " // FK

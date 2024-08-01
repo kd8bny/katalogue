@@ -10,7 +10,7 @@ class DatabaseNoteTest : public QObject
 
 private Q_SLOTS:
     void insertNoteEntry() const;
-    // void updateNoteEntry() const;
+    void updateNoteEntry() const;
     // void deleteNoteEntry() const;
 };
 
@@ -65,75 +65,64 @@ void DatabaseNoteTest::insertNoteEntry() const
         QVERIFY(query.value(0).toInt() == noteId);                     // id
         QVERIFY(query.value(1).toString() == notes.value(i).value(0)); // Title
         QVERIFY(query.value(2).toString() == notes.value(i).value(1)); // Content
-        qDebug() << notes.value(i).value(2);
-        QVERIFY(query.value(3).toInt() == notes.value(i).value(2)); // parent
+        QVERIFY(query.value(3).toInt() == notes.value(i).value(2));    // parent
     }
 }
 
-// void DatabaseNoteTest::updateNoteEntry() const
-// {
-//     /*Test Note Insert*/
-//     Database katalogue_db;
-//     bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
-//     qDebug() << "db open" << DB_OPEN;
-//     QVERIFY(DB_OPEN == true);
+void DatabaseNoteTest::updateNoteEntry() const
+{
+    /*Test Note Insert*/
+    Database katalogue_db;
+    bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
+    qDebug() << "db open" << DB_OPEN;
+    QVERIFY(DB_OPEN == true);
 
-//     Note refNote(-1);
-//     refNote.setKey(QStringLiteral("refKey"));
-//     refNote.setValue(QStringLiteral("refValue"));
-//     refNote.setCategory(QStringLiteral("refCat"));
-//     refNote.setItemId(1);
+    Note refNote(-1);
+    refNote.setTitle(QStringLiteral("refTitle"));
+    refNote.setNoteContent(QStringLiteral("refContent"));
+    refNote.setItemId(1);
 
-//     QVERIFY2(katalogue_db.insertNoteEntry(refNote) == true, "Reference Note added");
+    QVERIFY2(katalogue_db.insertNoteEntry(refNote) == true, "Reference Note added");
 
-//     QVariantList noteFields = {
-//         QStringLiteral("refKeyUpdated"),
-//         QStringLiteral("refValueUpdated"),
-//         QStringLiteral("refCatUpdated"),
-//         4,
-//     };
+    QVariantList noteFields = {
+        QStringLiteral("refTitleUpdated"),
+        QStringLiteral("refContentUpdated"),
+        4,
+    };
 
-//     // Query for reference note id 3
-//     const QString record3Query = QStringLiteral("SELECT %1, %2, %3, %4 FROM %5 WHERE id=3")
-//                                      .arg(Database::KEY, Database::VALUE, Database::CATEGORY,
-//                                           Database::KEY_ITEM_ID, Database::TABLE_ATTRIBUTES);
-//     QSqlQuery query;
-//     query.exec(record3Query);
-//     query.next();
-//     // qDebug() << query.record();
+    // Query for reference note id 3
+    const QString record3Query = QStringLiteral("SELECT %1, %2, %3 FROM %4 WHERE id=3")
+                                     .arg(Database::TITLE, Database::NOTE_CONTENT, Database::KEY_ITEM_ID,
+                                          Database::TABLE_NOTES);
 
-//     // Build Note 3
-//     Note note3(3);
-//     note3.setKey(query.value(0).toString());
-//     note3.setValue(query.value(1).toString());
-//     note3.setCategory(query.value(2).toString());
-//     note3.setItemId(query.value(3).toInt());
+    QSqlQuery query;
+    query.exec(record3Query);
+    query.next();
+    qDebug() << query.record();
 
-//     // Start Test
-//     // Update Key
-//     note3.setKey(noteFields.value(0).toString());
-//     QVERIFY(katalogue_db.updateNoteEntry(note3) == true);
+    // Build Note 3
+    Note note3(3);
+    note3.setTitle(query.value(0).toString());
+    note3.setNoteContent(query.value(1).toString());
+    note3.setItemId(query.value(2).toInt());
 
-//     query.exec(record3Query);
-//     query.next();
-//     QVERIFY(query.value(0).toString() == noteFields.value(0).toString());
+    // Start Test
+    // Update Title
+    note3.setTitle(noteFields.value(0).toString());
+    QVERIFY(katalogue_db.updateNoteEntry(note3) == true);
 
-//     // Update Value
-//     note3.setValue(noteFields.value(1).toString());
-//     QVERIFY(katalogue_db.updateNoteEntry(note3) == true);
+    query.exec(record3Query);
+    query.next();
+    QVERIFY(query.value(0).toString() == noteFields.value(0).toString());
 
-//     query.exec(record3Query);
-//     query.next();
-//     QVERIFY(query.value(1).toString() == noteFields.value(1).toString());
+    // Update Content
+    note3.setNoteContent(noteFields.value(1).toString());
+    QVERIFY(katalogue_db.updateNoteEntry(note3) == true);
 
-//     // Update Category
-//     note3.setCategory(noteFields.value(2).toString());
-//     QVERIFY(katalogue_db.updateNoteEntry(note3) == true);
-
-//     query.exec(record3Query);
-//     query.next();
-//     QVERIFY(query.value(2).toString() == noteFields.value(2).toString());
-// }
+    query.exec(record3Query);
+    query.next();
+    QVERIFY(query.value(1).toString() == noteFields.value(1).toString());
+}
 
 // void DatabaseNoteTest::deleteNoteEntry() const
 // {
