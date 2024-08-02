@@ -10,8 +10,8 @@ class DatabaseTaskTest : public QObject
 
 private Q_SLOTS:
     void insertTaskEntry() const;
-    // void updateTaskEntry() const;
-    // void deleteTaskEntry() const;
+    void updateTaskEntry() const;
+    void deleteTaskEntry() const;
 };
 
 /*
@@ -67,7 +67,6 @@ void DatabaseTaskTest::insertTaskEntry() const
         int taskId = i + 1;
 
         query.next();
-        // qDebug() << query.record();
 
         QVERIFY(query.value(0).toInt() == taskId);                     // id
         QVERIFY(query.value(1).toString() == tasks.value(i).value(0)); // Due Date
@@ -78,86 +77,97 @@ void DatabaseTaskTest::insertTaskEntry() const
     }
 }
 
-// void DatabaseTaskTest::updateTaskEntry() const
-// {
-//     /*Test Task Insert*/
-//     Database katalogue_db;
-//     bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
-//     qDebug() << "db open" << DB_OPEN;
-//     QVERIFY(DB_OPEN == true);
+void DatabaseTaskTest::updateTaskEntry() const
+{
+    /*Test Task Insert*/
+    Database katalogue_db;
+    bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
+    qDebug() << "db open" << DB_OPEN;
+    QVERIFY(DB_OPEN == true);
 
-//     Task refTask(-1);
-//     refTask.setKey(QStringLiteral("refKey"));
-//     refTask.setValue(QStringLiteral("refValue"));
-//     refTask.setCategory(QStringLiteral("refCat"));
-//     refTask.setItemId(1);
+    Task refTask(-1);
+    refTask.setDueDate(QStringLiteral("2024-09-19T00:00:00.000-05:00"));
+    refTask.setStatus(QStringLiteral("refStatus"));
+    refTask.setTitle(QStringLiteral("refTitle"));
+    refTask.setDescription(QStringLiteral("refDescription"));
+    refTask.setItemId(1);
 
-//     QVERIFY2(katalogue_db.insertTaskEntry(refTask) == true, "Reference Task added");
+    QVERIFY2(katalogue_db.insertTaskEntry(refTask) == true, "Reference Task added");
 
-//     QVariantList taskFields = {
-//         QStringLiteral("refKeyUpdated"),
-//         QStringLiteral("refValueUpdated"),
-//         QStringLiteral("refCatUpdated"),
-//         4,
-//     };
+    QVariantList taskFields = {
+        QStringLiteral("2222-09-19T00:00:00.000-05:00"),
+        QStringLiteral("refStatusUpdated"),
+        QStringLiteral("refTitleUpdated"),
+        QStringLiteral("refDescriptionUpdated"),
+        4,
+    };
 
-//     // Query for reference task id 3
-//     const QString record3Query = QStringLiteral("SELECT %1, %2, %3, %4 FROM %5 WHERE id=3")
-//                                      .arg(Database::KEY, Database::VALUE, Database::CATEGORY,
-//                                           Database::KEY_ITEM_ID, Database::TABLE_ATTRIBUTES);
-//     QSqlQuery query;
-//     query.exec(record3Query);
-//     query.next();
-//     // qDebug() << query.record();
+    // Query for reference task id 3
+    const QString record3Query = QStringLiteral("SELECT %1, %2, %3, %4, %5 FROM %6 WHERE id=4")
+                                     .arg(Database::DUE_DATE, Database::STATUS, Database::TITLE,
+                                          Database::DESCRIPTION, Database::KEY_ITEM_ID, Database::TABLE_TASKS);
+    QSqlQuery query;
+    query.exec(record3Query);
+    query.next();
+    qDebug() << query.record();
 
-//     // Build Task 3
-//     Task task3(3);
-//     task3.setKey(query.value(0).toString());
-//     task3.setValue(query.value(1).toString());
-//     task3.setCategory(query.value(2).toString());
-//     task3.setItemId(query.value(3).toInt());
+    // Build Task 3
+    Task task3(4); // TODO task X
+    task3.setDueDate(query.value(0).toString());
+    task3.setStatus(query.value(1).toString());
+    task3.setTitle(query.value(2).toString());
+    task3.setDescription(query.value(3).toString());
+    task3.setItemId(query.value(4).toInt());
 
-//     // Start Test
-//     // Update Key
-//     task3.setKey(taskFields.value(0).toString());
-//     QVERIFY(katalogue_db.updateTaskEntry(task3) == true);
+    // Start Test
+    // Update Due Date
+    task3.setDueDate(taskFields.value(0).toString());
+    QVERIFY(katalogue_db.updateTaskEntry(task3) == true);
 
-//     query.exec(record3Query);
-//     query.next();
-//     QVERIFY(query.value(0).toString() == taskFields.value(0).toString());
+    query.exec(record3Query);
+    query.next();
+    QVERIFY(query.value(0).toString() == taskFields.value(0).toString());
 
-//     // Update Value
-//     task3.setValue(taskFields.value(1).toString());
-//     QVERIFY(katalogue_db.updateTaskEntry(task3) == true);
+    // Update Status
+    task3.setStatus(taskFields.value(1).toString());
+    QVERIFY(katalogue_db.updateTaskEntry(task3) == true);
 
-//     query.exec(record3Query);
-//     query.next();
-//     QVERIFY(query.value(1).toString() == taskFields.value(1).toString());
+    query.exec(record3Query);
+    query.next();
+    QVERIFY(query.value(1).toString() == taskFields.value(1).toString());
 
-//     // Update Category
-//     task3.setCategory(taskFields.value(2).toString());
-//     QVERIFY(katalogue_db.updateTaskEntry(task3) == true);
+    // Update Title
+    task3.setTitle(taskFields.value(2).toString());
+    QVERIFY(katalogue_db.updateTaskEntry(task3) == true);
 
-//     query.exec(record3Query);
-//     query.next();
-//     QVERIFY(query.value(2).toString() == taskFields.value(2).toString());
-// }
+    query.exec(record3Query);
+    query.next();
+    QVERIFY(query.value(2).toString() == taskFields.value(2).toString());
 
-// void DatabaseTaskTest::deleteTaskEntry() const
-// {
-//     Database katalogue_db;
-//     // Get Data from Record 3
-//     // Check if KEY is null after delete
-//     const QString record3Query = QStringLiteral("SELECT %1 FROM %2 WHERE id=3")
-//                                      .arg(Database::KEY, Database::TABLE_ATTRIBUTES);
+    // Update Description
+    task3.setDescription(taskFields.value(3).toString());
+    QVERIFY(katalogue_db.updateTaskEntry(task3) == true);
 
-//     QVERIFY2(katalogue_db.deleteTaskEntry(3) == true, "Task 3 deleted");
+    query.exec(record3Query);
+    query.next();
+    QVERIFY(query.value(3).toString() == taskFields.value(3).toString());
+}
 
-//     QSqlQuery query;
-//     query.exec(record3Query);
-//     query.next();
-//     QVERIFY(query.record().value(0) == QStringLiteral(""));
-// }
+void DatabaseTaskTest::deleteTaskEntry() const
+{
+    Database katalogue_db;
+    // Get Data from Record 3
+    // Check if KEY is null after delete
+    const QString record3Query = QStringLiteral("SELECT %1 FROM %2 WHERE id=3")
+                                     .arg(Database::KEY, Database::TABLE_ATTRIBUTES);
+
+    QVERIFY2(katalogue_db.deleteTaskEntry(3) == true, "Task 3 deleted");
+
+    QSqlQuery query;
+    query.exec(record3Query);
+    query.next();
+    QVERIFY(query.record().value(0) == QStringLiteral(""));
+}
 
 QTEST_MAIN(DatabaseTaskTest)
 #include "databaseTaskTest.moc"

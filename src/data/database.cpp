@@ -525,7 +525,7 @@ bool Database::updateTaskEntry(const Task &task) const
     QString currentTime = this->getCurrentTime();
 
     query.bindValue(QStringLiteral(":modified"), currentTime);
-
+    qDebug() << task.getDueDate();
     query.bindValue(QStringLiteral(":dueDate"), task.getDueDate());
     query.bindValue(QStringLiteral(":status"), task.getStatus());
     query.bindValue(QStringLiteral(":title"), task.getTitle());
