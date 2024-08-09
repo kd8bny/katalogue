@@ -1,8 +1,11 @@
 #include <QtTest>
+#include <QSqlRecord>
 
-#include "data/database.h"
+#include "databaseInit.h"
+#include "databaseSchema.h"
+#include "eventDatabase.h"
 
-class DatabaseEventTest : public QObject
+class EventDatabaseTest : public QObject
 {
     Q_OBJECT
     const QString testDBPath = QStringLiteral("../tests/");
@@ -10,7 +13,7 @@ class DatabaseEventTest : public QObject
 
 private Q_SLOTS:
     void insertEventEntry() const;
-    void updateEventEntry() const;
+    void updateEntry() const;
     void deleteEventEntry() const;
 };
 
@@ -18,12 +21,14 @@ private Q_SLOTS:
  * Database CRUD Tests
  */
 
-void DatabaseEventTest::insertEventEntry() const
+void EventDatabaseTest::insertEventEntry() const
 {
     /*Test Event Insert*/
-    Database katalogue_db;
-    bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
-    qDebug() << "db open" << DB_OPEN;
+    DatabaseInit init_db;
+    bool DB_OPEN = init_db.connectKatalogueDb(this->testDBPath);
+    QVERIFY2(DB_OPEN == true, "db open");
+
+    EventDatabase katalogue_db;
 
     QVERIFY(DB_OPEN == true);
 
@@ -54,14 +59,14 @@ void DatabaseEventTest::insertEventEntry() const
         event.setComment(eventAsList.value(5).toString());
         event.setItemId(eventAsList.value(6).toInt());
 
-        QVERIFY(katalogue_db.insertEventEntry(event) == true);
+        QVERIFY(katalogue_db.insertEntry(event) == true);
     }
 
     // Validate data
     const QString modelQueryBase = QStringLiteral("SELECT id, %1, %2, %3, %4, %5, %6, %7 FROM %8")
-                                       .arg(Database::DATE, Database::EVENT, Database::COST, Database::INCREMENT,
-                                            Database::CATEGORY, Database::COMMENT, Database::KEY_ITEM_ID,
-                                            Database::TABLE_EVENTS);
+                                       .arg(DatabaseSchema::DATE, DatabaseSchema::EVENT, DatabaseSchema::COST, DatabaseSchema::INCREMENT,
+                                            DatabaseSchema::CATEGORY, DatabaseSchema::COMMENT, DatabaseSchema::KEY_ITEM_ID,
+                                            DatabaseSchema::TABLE_EVENTS);
 
     QSqlQuery query;
     query.exec(modelQueryBase);
@@ -83,13 +88,14 @@ void DatabaseEventTest::insertEventEntry() const
     }
 }
 
-void DatabaseEventTest::updateEventEntry() const
+void EventDatabaseTest::updateEntry() const
 {
     /*Test Event Insert*/
-    Database katalogue_db;
-    bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
-    qDebug() << "db open" << DB_OPEN;
-    QVERIFY(DB_OPEN == true);
+    DatabaseInit init_db;
+    bool DB_OPEN = init_db.connectKatalogueDb(this->testDBPath);
+    QVERIFY2(DB_OPEN == true, "db open");
+
+    EventDatabase katalogue_db;
 
     Event refEvent(-1);
     refEvent.setDate(QStringLiteral("2015-09-19T00:00:00.000-05:00"));
@@ -100,7 +106,7 @@ void DatabaseEventTest::updateEventEntry() const
     refEvent.setComment(QStringLiteral("comment"));
     refEvent.setItemId(1);
 
-    QVERIFY2(katalogue_db.insertEventEntry(refEvent) == true, "Reference Event added");
+    QVERIFY2(katalogue_db.insertEntry(refEvent) == true, "Reference Event added");
 
     QVariantList eventFields = {QStringLiteral("2222-09-19T00:00:00.000-05:00"), QStringLiteral("eventUpdated"),
                                 QStringLiteral("567.89"), QStringLiteral("765432.1"), QStringLiteral("categoryUpdated"),
@@ -108,8 +114,8 @@ void DatabaseEventTest::updateEventEntry() const
 
     // Query for reference event id 3
     const QString record3Query = QStringLiteral("SELECT %1, %2, %3, %4, %5, %6 FROM %7 WHERE id=3")
-                                     .arg(Database::DATE, Database::EVENT, Database::COST, Database::INCREMENT,
-                                          Database::CATEGORY, Database::COMMENT, Database::TABLE_EVENTS);
+                                     .arg(DatabaseSchema::DATE, DatabaseSchema::EVENT, DatabaseSchema::COST, DatabaseSchema::INCREMENT,
+                                          DatabaseSchema::CATEGORY, DatabaseSchema::COMMENT, DatabaseSchema::TABLE_EVENTS);
     QSqlQuery query;
     query.exec(record3Query);
     query.next();
@@ -127,7 +133,7 @@ void DatabaseEventTest::updateEventEntry() const
     // Start Test
     // Update Date
     event3.setDate(eventFields.value(0).toString());
-    QVERIFY(katalogue_db.updateEventEntry(event3) == true);
+    QVERIFY(katalogue_db.updateEntry(event3) == true);
 
     query.exec(record3Query);
     query.next();
@@ -135,7 +141,7 @@ void DatabaseEventTest::updateEventEntry() const
 
     // Update Event
     event3.setEvent(eventFields.value(1).toString());
-    QVERIFY(katalogue_db.updateEventEntry(event3) == true);
+    QVERIFY(katalogue_db.updateEntry(event3) == true);
 
     query.exec(record3Query);
     query.next();
@@ -143,7 +149,7 @@ void DatabaseEventTest::updateEventEntry() const
 
     // Update Cost
     event3.setCost(eventFields.value(2).toFloat());
-    QVERIFY(katalogue_db.updateEventEntry(event3) == true);
+    QVERIFY(katalogue_db.updateEntry(event3) == true);
 
     query.exec(record3Query);
     query.next();
@@ -151,7 +157,7 @@ void DatabaseEventTest::updateEventEntry() const
 
     // Update Increment
     event3.setIncrement(eventFields.value(3).toFloat());
-    QVERIFY(katalogue_db.updateEventEntry(event3) == true);
+    QVERIFY(katalogue_db.updateEntry(event3) == true);
 
     query.exec(record3Query);
     query.next();
@@ -159,7 +165,7 @@ void DatabaseEventTest::updateEventEntry() const
 
     // Update Category
     event3.setCategory(eventFields.value(4).toString());
-    QVERIFY(katalogue_db.updateEventEntry(event3) == true);
+    QVERIFY(katalogue_db.updateEntry(event3) == true);
 
     query.exec(record3Query);
     query.next();
@@ -167,22 +173,22 @@ void DatabaseEventTest::updateEventEntry() const
 
     // Update Comment
     event3.setComment(eventFields.value(5).toString());
-    QVERIFY(katalogue_db.updateEventEntry(event3) == true);
+    QVERIFY(katalogue_db.updateEntry(event3) == true);
 
     query.exec(record3Query);
     query.next();
     QVERIFY(query.value(5).toString() == eventFields.value(5).toString());
 }
 
-void DatabaseEventTest::deleteEventEntry() const
+void EventDatabaseTest::deleteEventEntry() const
 {
-    Database katalogue_db;
+    EventDatabase katalogue_db;
     // Get Data from Record 3
     // Check if KEY is null after delete
     const QString record3Query = QStringLiteral("SELECT %1 FROM %2 WHERE id=3")
-                                     .arg(Database::DATE, Database::TABLE_EVENTS);
+                                     .arg(DatabaseSchema::DATE, DatabaseSchema::TABLE_EVENTS);
 
-    QVERIFY2(katalogue_db.deleteEventEntry(3) == true, "Event 3 deleted");
+    QVERIFY2(katalogue_db.deleteEntryById(3) == true, "Event 3 deleted");
 
     QSqlQuery query;
     query.exec(record3Query);
@@ -190,5 +196,5 @@ void DatabaseEventTest::deleteEventEntry() const
     QVERIFY(query.record().value(0) == QStringLiteral(""));
 }
 
-QTEST_MAIN(DatabaseEventTest)
-#include "databaseEventTest.moc"
+QTEST_MAIN(EventDatabaseTest)
+#include "eventDatabaseTest.moc"
