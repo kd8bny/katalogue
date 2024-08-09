@@ -1,15 +1,18 @@
 #include <QtTest>
+#include <QSqlRecord>
 
-#include "data/database.h"
+#include "databaseInit.h"
+#include "databaseSchema.h"
+#include "noteDatabase.h"
 
-class DatabaseNoteTest : public QObject
+class NoteDatabaseTest : public QObject
 {
     Q_OBJECT
     const QString testDBPath = QStringLiteral("../tests/");
     const QString DATABASE_NAME = QStringLiteral("katalogue.db");
 
 private Q_SLOTS:
-    void insertNoteEntry() const;
+    void insertEntry() const;
     void updateNoteEntry() const;
     void deleteNoteEntry() const;
 };
@@ -18,14 +21,14 @@ private Q_SLOTS:
  * Database CRUD Tests
  */
 
-void DatabaseNoteTest::insertNoteEntry() const
+void NoteDatabaseTest::insertEntry() const
 {
     /*Test Note Insert*/
-    Database katalogue_db;
-    bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
-    qDebug() << "db open" << DB_OPEN;
+    DatabaseInit init_db;
+    bool DB_OPEN = init_db.connectKatalogueDb(this->testDBPath);
+    QVERIFY2(DB_OPEN == true, "db open");
 
-    QVERIFY(DB_OPEN == true);
+    NoteDatabase katalogue_db;
 
     QList<QVariantList> notes;
 
@@ -46,13 +49,13 @@ void DatabaseNoteTest::insertNoteEntry() const
         note.setNoteContent(noteAsList.value(1).toString());
         note.setItemId(noteAsList.value(2).toInt());
 
-        QVERIFY(katalogue_db.insertNoteEntry(note) == true);
+        QVERIFY(katalogue_db.insertEntry(note) == true);
     }
 
     // Validate data
     const QString modelQueryBase = QStringLiteral("SELECT id, %1, %2, %3 FROM %4 ")
-                                       .arg(Database::TITLE, Database::NOTE_CONTENT, Database::KEY_ITEM_ID,
-                                            Database::TABLE_NOTES);
+                                       .arg(DatabaseSchema::TITLE, DatabaseSchema::NOTE_CONTENT, DatabaseSchema::KEY_ITEM_ID,
+                                            DatabaseSchema::TABLE_NOTES);
 
     QSqlQuery query;
     query.exec(modelQueryBase);
@@ -69,20 +72,21 @@ void DatabaseNoteTest::insertNoteEntry() const
     }
 }
 
-void DatabaseNoteTest::updateNoteEntry() const
+void NoteDatabaseTest::updateNoteEntry() const
 {
     /*Test Note Insert*/
-    Database katalogue_db;
-    bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
-    qDebug() << "db open" << DB_OPEN;
-    QVERIFY(DB_OPEN == true);
+    DatabaseInit init_db;
+    bool DB_OPEN = init_db.connectKatalogueDb(this->testDBPath);
+    QVERIFY2(DB_OPEN == true, "db open");
+
+    NoteDatabase katalogue_db;
 
     Note refNote(-1);
     refNote.setTitle(QStringLiteral("refTitle"));
     refNote.setNoteContent(QStringLiteral("refContent"));
     refNote.setItemId(1);
 
-    QVERIFY2(katalogue_db.insertNoteEntry(refNote) == true, "Reference Note added");
+    QVERIFY2(katalogue_db.insertEntry(refNote) == true, "Reference Note added");
 
     QVariantList noteFields = {
         QStringLiteral("refTitleUpdated"),
@@ -92,8 +96,8 @@ void DatabaseNoteTest::updateNoteEntry() const
 
     // Query for reference note id 3
     const QString record3Query = QStringLiteral("SELECT %1, %2, %3 FROM %4 WHERE id=3")
-                                     .arg(Database::TITLE, Database::NOTE_CONTENT, Database::KEY_ITEM_ID,
-                                          Database::TABLE_NOTES);
+                                     .arg(DatabaseSchema::TITLE, DatabaseSchema::NOTE_CONTENT, DatabaseSchema::KEY_ITEM_ID,
+                                          DatabaseSchema::TABLE_NOTES);
 
     QSqlQuery query;
     query.exec(record3Query);
@@ -109,7 +113,7 @@ void DatabaseNoteTest::updateNoteEntry() const
     // Start Test
     // Update Title
     note3.setTitle(noteFields.value(0).toString());
-    QVERIFY(katalogue_db.updateNoteEntry(note3) == true);
+    QVERIFY(katalogue_db.updateEntry(note3) == true);
 
     query.exec(record3Query);
     query.next();
@@ -117,22 +121,22 @@ void DatabaseNoteTest::updateNoteEntry() const
 
     // Update Content
     note3.setNoteContent(noteFields.value(1).toString());
-    QVERIFY(katalogue_db.updateNoteEntry(note3) == true);
+    QVERIFY(katalogue_db.updateEntry(note3) == true);
 
     query.exec(record3Query);
     query.next();
     QVERIFY(query.value(1).toString() == noteFields.value(1).toString());
 }
 
-void DatabaseNoteTest::deleteNoteEntry() const
+void NoteDatabaseTest::deleteNoteEntry() const
 {
-    Database katalogue_db;
+    NoteDatabase katalogue_db;
     // Get Data from Record 3
     // Check if Title is null after delete
     const QString record3Query = QStringLiteral("SELECT %1 FROM %2 WHERE id=3")
-                                     .arg(Database::TITLE, Database::TABLE_NOTES);
+                                     .arg(DatabaseSchema::TITLE, DatabaseSchema::TABLE_NOTES);
 
-    QVERIFY2(katalogue_db.deleteNoteEntry(3) == true, "Note 3 deleted");
+    QVERIFY2(katalogue_db.deleteEntryById(3) == true, "Note 3 deleted");
 
     QSqlQuery query;
     query.exec(record3Query);
@@ -140,5 +144,5 @@ void DatabaseNoteTest::deleteNoteEntry() const
     QVERIFY(query.record().value(0) == QStringLiteral(""));
 }
 
-QTEST_MAIN(DatabaseNoteTest)
-#include "databaseNoteTest.moc"
+QTEST_MAIN(NoteDatabaseTest)
+#include "noteDatabaseTest.moc"

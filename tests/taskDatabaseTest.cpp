@@ -1,16 +1,19 @@
 #include <QtTest>
+#include <QSqlRecord>
 
-#include "data/database.h"
+#include "databaseInit.h"
+#include "databaseSchema.h"
+#include "taskDatabase.h"
 
-class DatabaseTaskTest : public QObject
+class TaskDatabaseTest : public QObject
 {
     Q_OBJECT
     const QString testDBPath = QStringLiteral("../tests/");
     const QString DATABASE_NAME = QStringLiteral("katalogue.db");
 
 private Q_SLOTS:
-    void insertTaskEntry() const;
-    void updateTaskEntry() const;
+    void insertEntry() const;
+    void updateEntry() const;
     void deleteTaskEntry() const;
 };
 
@@ -18,14 +21,14 @@ private Q_SLOTS:
  * Database CRUD Tests
  */
 
-void DatabaseTaskTest::insertTaskEntry() const
+void TaskDatabaseTest::insertEntry() const
 {
     /*Test Task Insert*/
-    Database katalogue_db;
-    bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
-    qDebug() << "db open" << DB_OPEN;
+    DatabaseInit init_db;
+    bool DB_OPEN = init_db.connectKatalogueDb(this->testDBPath);
+    QVERIFY2(DB_OPEN == true, "db open");
 
-    QVERIFY(DB_OPEN == true);
+    TaskDatabase katalogue_db;
 
     QList<QVariantList> tasks;
 
@@ -52,13 +55,13 @@ void DatabaseTaskTest::insertTaskEntry() const
         task.setDescription(taskAsList.value(3).toString());
         task.setItemId(taskAsList.value(4).toInt());
 
-        QVERIFY(katalogue_db.insertTaskEntry(task) == true);
+        QVERIFY(katalogue_db.insertEntry(task) == true);
     }
 
     // Validate data
     const QString modelQueryBase = QStringLiteral("SELECT id, %1, %2, %3, %4, %5 FROM %6 ")
-                                       .arg(Database::DUE_DATE, Database::STATUS, Database::TITLE,
-                                            Database::DESCRIPTION, Database::KEY_ITEM_ID, Database::TABLE_TASKS);
+                                       .arg(DatabaseSchema::DUE_DATE, DatabaseSchema::STATUS, DatabaseSchema::TITLE,
+                                            DatabaseSchema::DESCRIPTION, DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::TABLE_TASKS);
 
     QSqlQuery query;
     query.exec(modelQueryBase);
@@ -77,13 +80,14 @@ void DatabaseTaskTest::insertTaskEntry() const
     }
 }
 
-void DatabaseTaskTest::updateTaskEntry() const
+void TaskDatabaseTest::updateEntry() const
 {
     /*Test Task Insert*/
-    Database katalogue_db;
-    bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
-    qDebug() << "db open" << DB_OPEN;
-    QVERIFY(DB_OPEN == true);
+    DatabaseInit init_db;
+    bool DB_OPEN = init_db.connectKatalogueDb(this->testDBPath);
+    QVERIFY2(DB_OPEN == true, "db open");
+
+    TaskDatabase katalogue_db;
 
     Task refTask(-1);
     refTask.setDueDate(QStringLiteral("2024-09-19T00:00:00.000-05:00"));
@@ -92,7 +96,7 @@ void DatabaseTaskTest::updateTaskEntry() const
     refTask.setDescription(QStringLiteral("refDescription"));
     refTask.setItemId(1);
 
-    QVERIFY2(katalogue_db.insertTaskEntry(refTask) == true, "Reference Task added");
+    QVERIFY2(katalogue_db.insertEntry(refTask) == true, "Reference Task added");
 
     QVariantList taskFields = {
         QStringLiteral("2222-09-19T00:00:00.000-05:00"),
@@ -104,8 +108,8 @@ void DatabaseTaskTest::updateTaskEntry() const
 
     // Query for reference task id 3
     const QString record3Query = QStringLiteral("SELECT %1, %2, %3, %4, %5 FROM %6 WHERE id=4")
-                                     .arg(Database::DUE_DATE, Database::STATUS, Database::TITLE,
-                                          Database::DESCRIPTION, Database::KEY_ITEM_ID, Database::TABLE_TASKS);
+                                     .arg(DatabaseSchema::DUE_DATE, DatabaseSchema::STATUS, DatabaseSchema::TITLE,
+                                          DatabaseSchema::DESCRIPTION, DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::TABLE_TASKS);
     QSqlQuery query;
     query.exec(record3Query);
     query.next();
@@ -122,7 +126,7 @@ void DatabaseTaskTest::updateTaskEntry() const
     // Start Test
     // Update Due Date
     task3.setDueDate(taskFields.value(0).toString());
-    QVERIFY(katalogue_db.updateTaskEntry(task3) == true);
+    QVERIFY(katalogue_db.updateEntry(task3) == true);
 
     query.exec(record3Query);
     query.next();
@@ -130,7 +134,7 @@ void DatabaseTaskTest::updateTaskEntry() const
 
     // Update Status
     task3.setStatus(taskFields.value(1).toString());
-    QVERIFY(katalogue_db.updateTaskEntry(task3) == true);
+    QVERIFY(katalogue_db.updateEntry(task3) == true);
 
     query.exec(record3Query);
     query.next();
@@ -138,7 +142,7 @@ void DatabaseTaskTest::updateTaskEntry() const
 
     // Update Title
     task3.setTitle(taskFields.value(2).toString());
-    QVERIFY(katalogue_db.updateTaskEntry(task3) == true);
+    QVERIFY(katalogue_db.updateEntry(task3) == true);
 
     query.exec(record3Query);
     query.next();
@@ -146,22 +150,22 @@ void DatabaseTaskTest::updateTaskEntry() const
 
     // Update Description
     task3.setDescription(taskFields.value(3).toString());
-    QVERIFY(katalogue_db.updateTaskEntry(task3) == true);
+    QVERIFY(katalogue_db.updateEntry(task3) == true);
 
     query.exec(record3Query);
     query.next();
     QVERIFY(query.value(3).toString() == taskFields.value(3).toString());
 }
 
-void DatabaseTaskTest::deleteTaskEntry() const
+void TaskDatabaseTest::deleteTaskEntry() const
 {
-    Database katalogue_db;
+    TaskDatabase katalogue_db;
     // Get Data from Record 3
     // Check if KEY is null after delete
     const QString record3Query = QStringLiteral("SELECT %1 FROM %2 WHERE id=3")
-                                     .arg(Database::KEY, Database::TABLE_ATTRIBUTES);
+                                     .arg(DatabaseSchema::KEY, DatabaseSchema::TABLE_ATTRIBUTES);
 
-    QVERIFY2(katalogue_db.deleteTaskEntry(3) == true, "Task 3 deleted");
+    QVERIFY2(katalogue_db.deleteEntryById(3) == true, "Task 3 deleted");
 
     QSqlQuery query;
     query.exec(record3Query);
@@ -169,5 +173,5 @@ void DatabaseTaskTest::deleteTaskEntry() const
     QVERIFY(query.record().value(0) == QStringLiteral(""));
 }
 
-QTEST_MAIN(DatabaseTaskTest)
-#include "databaseTaskTest.moc"
+QTEST_MAIN(TaskDatabaseTest)
+#include "taskDatabaseTest.moc"
