@@ -1,15 +1,8 @@
 #include "event.h"
 
-Event::Event(int id_)
-{
-    id = id_;
-}
+// Event::~Event() = default;
 
-Event::~Event()
-{
-}
-
-QVariantList Event::asList()
+QVariantList Event::asList() const
 {
     QVariantList list;
 

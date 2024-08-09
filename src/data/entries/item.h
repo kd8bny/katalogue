@@ -2,24 +2,17 @@
 #include <QDebug>
 #include <QVariantList>
 
+#include "entry.h"
+
 #ifndef ITEM_H
 #define ITEM_H
 
-
-class Item
+class Item : public Entry
 {
 
 public:
-    explicit Item(int id);
-    ~Item();
-
-    int getId() const { return id; }
-
-    QString getCreatedDate() const { return createdDate; }
-    void setCreatedDate(const QString &createdDate_) { createdDate = createdDate_; }
-
-    QString getModifiedDate() const { return modifiedDate; }
-    void setModifiedDate(const QString &modifiedDate_) { modifiedDate = modifiedDate_; }
+    using Entry::Entry;
+    ~Item() override = default;
 
     QString getName() const { return name; }
     void setName(const QString &name_) { name = name_; }
@@ -42,15 +35,9 @@ public:
     int getUserOrder() const { return userOrder; }
     void setUserOrder(const int &userOrder_) { userOrder = userOrder_; }
 
-    int getParent() const { return parent; }
-    void setParent(const int &parent_) { parent = parent_; }
-
-    QVariantList asList();
+    QVariantList asList() const override;
 
 private:
-    int id;
-    QString createdDate;
-    QString modifiedDate;
     QString name;
     QString make;
     QString model;
@@ -58,7 +45,6 @@ private:
     QString type;
     bool archived;
     int userOrder;
-    int parent;
 };
 
 #endif

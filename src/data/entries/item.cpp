@@ -1,16 +1,6 @@
 #include "item.h"
 
-Item::Item(int id_)
-{
-    id = id_;
-}
-
-Item::~Item()
-{
-
-}
-
-QVariantList Item::asList()
+QVariantList Item::asList() const
 {
     QVariantList list;
 
@@ -24,7 +14,7 @@ QVariantList Item::asList()
     list.append(QVariant(this->getType()));
     list.append(QVariant(this->getArchived()));
     list.append(QVariant(this->getUserOrder()));
-    list.append(QVariant(this->getParent()));
+    list.append(QVariant(this->getItemId()));
 
     return list;
 }

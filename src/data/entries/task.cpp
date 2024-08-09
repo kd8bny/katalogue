@@ -1,24 +1,16 @@
-#include "note.h"
+#include "task.h"
 
-Note::Note(int id_)
-{
-    id = id_;
-}
-
-Note::~Note()
-{
-
-}
-
-QVariantList Note::asList()
+QVariantList Task::asList() const
 {
     QVariantList list;
 
     list.append(QVariant(this->getId()));
     list.append(QVariant(this->getCreatedDate()));
     list.append(QVariant(this->getModifiedDate()));
+    list.append(QVariant(this->getDueDate()));
+    list.append(QVariant(this->getStatus()));
     list.append(QVariant(this->getTitle()));
-    list.append(QVariant(this->getNoteContent()));
+    list.append(QVariant(this->getDescription()));
     list.append(QVariant(this->getItemId()));
 
     return list;

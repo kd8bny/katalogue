@@ -2,23 +2,17 @@
 #include <QDebug>
 #include <QVariantList>
 
+#include "entry.h"
+
 #ifndef EVENT_H
 #define EVENT_H
 
-class Event
+class Event : public Entry
 {
 
 public:
-    explicit Event(int id);
-    ~Event();
-
-    int getId() const { return id; }
-
-    QString getCreatedDate() const { return createdDate; }
-    void setCreatedDate(const QString &createdDate_) { createdDate = createdDate_; }
-
-    QString getModifiedDate() const { return modifiedDate; }
-    void setModifiedDate(const QString &modifiedDate_) { modifiedDate = modifiedDate_; }
+    using Entry::Entry;
+    ~Event() override = default;
 
     QString getDate() const { return date; }
     void setDate(const QString &date_) { date = date_; }
@@ -38,22 +32,15 @@ public:
     QString getComment() const { return comment; }
     void setComment(const QString &comment_) { comment = comment_; }
 
-    int getItemId() const { return itemId; }
-    void setItemId(int itemId_) { itemId = itemId_; }
-
-    QVariantList asList();
+    QVariantList asList() const override;
 
 private:
-    int id;
-    QString createdDate;
-    QString modifiedDate;
     QString date;
     QString event;
     float cost;
     float increment;
     QString category;
     QString comment;
-    int itemId;
 };
 
 #endif

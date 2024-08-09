@@ -1,17 +1,13 @@
 #include <QObject>
-#include <QDebug>
-#include <QVariantList>
 
-#ifndef NOTE_H
-#define NOTE_H
+#ifndef ENTRY_H
+#define ENTRY_H
 
-
-class Note
+class Entry
 {
-
 public:
-    explicit Note(int id);
-    ~Note();
+    explicit Entry(int id = 0) : id(id) {}
+    virtual ~Entry() = default;
 
     int getId() const { return id; }
 
@@ -21,23 +17,15 @@ public:
     QString getModifiedDate() const { return modifiedDate; }
     void setModifiedDate(const QString &modifiedDate_) { modifiedDate = modifiedDate_; }
 
-    QString getTitle() const { return title; }
-    void setTitle(const QString &title_) { title = title_; }
-
-    QString getNoteContent() const { return noteContent; }
-    void setNoteContent(const QString &noteContent_) { noteContent = noteContent_; }
-
     int getItemId() const { return itemId; }
     void setItemId(int itemId_) { itemId = itemId_; }
 
-    QVariantList asList();
+    virtual QVariantList asList() const = 0;
 
 private:
     int id;
     QString createdDate;
     QString modifiedDate;
-    QString title;
-    QString noteContent;
     int itemId;
 };
 
