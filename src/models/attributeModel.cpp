@@ -1,8 +1,6 @@
 #include "attributeModel.h"
 
-
-AttributeModel::AttributeModel(QObject *parent) :
-    QSqlQueryModel(parent)
+AttributeModel::AttributeModel(QObject *parent) : QSqlQueryModel(parent)
 {
     // QObject::connect(this, SIGNAL(dataChanged()), this, SLOT(refresh()));
 
@@ -11,11 +9,11 @@ AttributeModel::AttributeModel(QObject *parent) :
 
 AttributeModel::~AttributeModel()
 {
-
 }
 
 // The method for obtaining data from the model
-QVariant AttributeModel::data(const QModelIndex & index, int role) const {
+QVariant AttributeModel::data(const QModelIndex &index, int role) const
+{
 
     // Define the column number, on the role of number
     int columnId = role - Qt::UserRole - 1;
@@ -25,21 +23,22 @@ QVariant AttributeModel::data(const QModelIndex & index, int role) const {
     return QSqlQueryModel::data(modelIndex, Qt::DisplayRole);
 }
 
-QHash<int, QByteArray> AttributeModel::roleNames() const {
+QHash<int, QByteArray> AttributeModel::roleNames() const
+{
 
     QHash<int, QByteArray> roles;
     roles[rID] = "id";
-    roles[rKey] = Database::KEY.toUtf8();
-    roles[rValue] = Database::VALUE.toUtf8();
-    roles[rCategory] = Database::CATEGORY.toUtf8();
-    roles[rItemID] = Database::KEY_ITEM_ID.toUtf8();
+    roles[rKey] = DatabaseSchema::KEY.toUtf8();
+    roles[rValue] = DatabaseSchema::VALUE.toUtf8();
+    roles[rCategory] = DatabaseSchema::CATEGORY.toUtf8();
+    roles[rItemID] = DatabaseSchema::KEY_ITEM_ID.toUtf8();
 
     return roles;
 }
 
 void AttributeModel::setItemId(QString itemId)
 {
-    this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(Database::KEY_ITEM_ID, itemId);
+    this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(DatabaseSchema::KEY_ITEM_ID, itemId);
 
     this->setQuery(modelQuery);
     Q_EMIT dataChanged();
@@ -48,7 +47,7 @@ void AttributeModel::setItemId(QString itemId)
 void AttributeModel::refresh()
 {
     this->setQuery(this->modelQuery);
-    qDebug()<< this->modelQuery;
+    qDebug() << this->modelQuery;
 }
 
 int AttributeModel::getId(int row)
@@ -77,9 +76,9 @@ QVariantList AttributeModel::getRecordAsList(int row)
 }
 
 bool AttributeModel::setRecord(int attributeIndex, QString key, QString value,
-    QString category, int itemId)
+                               QString category, int itemId)
 {
-    Database db;
+    AttributeDatabase db;
     // eventIndex defaults to -1 for new entries.
     Attribute attribute(this->getId(attributeIndex));
 
@@ -92,11 +91,14 @@ bool AttributeModel::setRecord(int attributeIndex, QString key, QString value,
 
     qDebug() << attribute.asList();
 
-    if (attributeIndex == -1) {
-        success = db.insertAttributeEntry(attribute);
+    if (attributeIndex == -1)
+    {
+        success = db.insertEntry(attribute);
         qDebug() << "attributeModel | Inserting Entry | " << success;
-    } else {
-        success = db.updateAttributeEntry(attribute);
+    }
+    else
+    {
+        success = db.updateEntry(attribute);
         qDebug() << "attributeModel | Updating Entry | " << success;
     }
 
@@ -104,16 +106,15 @@ bool AttributeModel::setRecord(int attributeIndex, QString key, QString value,
         Q_EMIT dataChanged();
 
     return success;
-
 }
 
 bool AttributeModel::deleteRecord(int eventId)
 {
-    Database db;
+    AttributeDatabase db;
 
     bool success = false;
 
-    success = db.deleteAttributeEntry(eventId);
+    success = db.deleteEntryById(eventId);
 
     if (success)
         Q_EMIT dataChanged();

@@ -1,18 +1,13 @@
 #include "itemParentModel.h"
 
-
-ItemParentModel::ItemParentModel(QObject *parent) :
-    QSqlQueryModel(parent)
+ItemParentModel::ItemParentModel(QObject *parent) : QSqlQueryModel(parent)
 {
     QObject::connect(this, SIGNAL(dataChanged()), this, SLOT(refresh()));
 
     this->refresh();
 }
 
-ItemParentModel::~ItemParentModel()
-{
-
-}
+ItemParentModel::~ItemParentModel() = default;
 
 void ItemParentModel::refresh()
 {

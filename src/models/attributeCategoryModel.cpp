@@ -1,9 +1,6 @@
 #include "attributeCategoryModel.h"
-#include "data/database.h"
 
-
-AttributeCategoryModel::AttributeCategoryModel(QObject *parent) :
-    QSqlQueryModel(parent)
+AttributeCategoryModel::AttributeCategoryModel(QObject *parent) : QSqlQueryModel(parent)
 {
     QObject::connect(this, SIGNAL(dataChanged()), this, SLOT(refresh()));
 
@@ -12,7 +9,6 @@ AttributeCategoryModel::AttributeCategoryModel(QObject *parent) :
 
 AttributeCategoryModel::~AttributeCategoryModel()
 {
-
 }
 
 void AttributeCategoryModel::refresh()

@@ -1,8 +1,6 @@
 #include "taskModel.h"
 
-
-TaskModel::TaskModel(QObject *parent) :
-    QSqlQueryModel(parent)
+TaskModel::TaskModel(QObject *parent) : QSqlQueryModel(parent)
 {
     QObject::connect(this, SIGNAL(dataChanged()), this, SLOT(refresh()));
 
@@ -12,11 +10,11 @@ TaskModel::TaskModel(QObject *parent) :
 
 TaskModel::~TaskModel()
 {
-
 }
 
 // The method for obtaining data from the model
-QVariant TaskModel::data(const QModelIndex & index, int role) const {
+QVariant TaskModel::data(const QModelIndex &index, int role) const
+{
 
     // Define the column number, on the role of number
     int columnId = role - Qt::UserRole - 1;
@@ -26,20 +24,22 @@ QVariant TaskModel::data(const QModelIndex & index, int role) const {
     return QSqlQueryModel::data(modelIndex, Qt::DisplayRole);
 }
 
-QHash<int, QByteArray> TaskModel::roleNames() const {
+QHash<int, QByteArray> TaskModel::roleNames() const
+{
 
     QHash<int, QByteArray> roles;
     roles[rID] = "id";
-    roles[rDueDate] = Database::DUE_DATE.toUtf8();
-    roles[rStatus] = Database::STATUS.toUtf8();
-    roles[rTitle] = Database::TITLE.toUtf8();
-    roles[rDescription] = Database::DESCRIPTION.toUtf8();
-    roles[rItemID] = Database::KEY_ITEM_ID.toUtf8();
+    roles[rDueDate] = DatabaseSchema::DUE_DATE.toUtf8();
+    roles[rStatus] = DatabaseSchema::STATUS.toUtf8();
+    roles[rTitle] = DatabaseSchema::TITLE.toUtf8();
+    roles[rDescription] = DatabaseSchema::DESCRIPTION.toUtf8();
+    roles[rItemID] = DatabaseSchema::KEY_ITEM_ID.toUtf8();
 
     return roles;
 }
 
-void TaskModel::resetItemId(){
+void TaskModel::resetItemId()
+{
     this->modelQuery = this->modelQueryBase;
     Q_EMIT dataChanged();
 }
@@ -47,7 +47,7 @@ void TaskModel::resetItemId(){
 void TaskModel::setItemId(QString itemId)
 {
     this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(
-        Database::KEY_ITEM_ID, itemId);
+                                                  DatabaseSchema::KEY_ITEM_ID, itemId);
 
     this->setQuery(modelQuery);
     Q_EMIT dataChanged();
@@ -56,7 +56,7 @@ void TaskModel::setItemId(QString itemId)
 void TaskModel::refresh()
 {
     this->setQuery(this->modelQuery);
-    qDebug()<< this->modelQuery;
+    qDebug() << this->modelQuery;
 }
 
 int TaskModel::getId(int row)
@@ -86,7 +86,7 @@ QVariantList TaskModel::getRecordAsList(int row)
 
 bool TaskModel::setRecord(int taskIndex, QString dueDate, QString status, QString title, QString description, int itemId)
 {
-    Database db;
+    TaskDatabase db;
     // taskIndex defaults to -1 for new entries.
     Task task(this->getId(taskIndex));
 
@@ -100,11 +100,14 @@ bool TaskModel::setRecord(int taskIndex, QString dueDate, QString status, QStrin
 
     qDebug() << task.asList();
 
-    if (taskIndex == -1) {
-        success = db.insertTaskEntry(task);
+    if (taskIndex == -1)
+    {
+        success = db.insertEntry(task);
         qDebug() << "taskModel | Inserting Entry | " << success;
-    } else {
-        success = db.updateTaskEntry(task);
+    }
+    else
+    {
+        success = db.updateEntry(task);
         qDebug() << "taskModel | Updating Entry | " << success;
     }
 
@@ -112,16 +115,15 @@ bool TaskModel::setRecord(int taskIndex, QString dueDate, QString status, QStrin
         Q_EMIT dataChanged();
 
     return success;
-
 }
 
 bool TaskModel::deleteRecord(int taskId)
 {
-    Database db;
+    TaskDatabase db;
 
     bool success = false;
 
-    success = db.deleteTaskEntry(taskId);
+    success = db.deleteEntryById(taskId);
 
     if (success)
         Q_EMIT dataChanged();

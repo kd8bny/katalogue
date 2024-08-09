@@ -1,8 +1,9 @@
 #include <QObject>
 #include <QSqlQueryModel>
 
-#include "data/database.h"
-#include "data/note.h"
+#include "data/databaseSchema.h"
+#include "data/noteDatabase.h"
+#include "data/entries/note.h"
 
 class NoteModel : public QSqlQueryModel
 {
@@ -36,8 +37,8 @@ protected:
 
 private:
     const QString modelQueryBase = QStringLiteral("SELECT id, %1, %2, %3 FROM %4")
-                                       .arg(Database::TITLE, Database::NOTE_CONTENT, Database::KEY_ITEM_ID,
-                                            Database::TABLE_NOTES);
+                                       .arg(DatabaseSchema::TITLE, DatabaseSchema::NOTE_CONTENT, DatabaseSchema::KEY_ITEM_ID,
+                                            DatabaseSchema::TABLE_NOTES);
 
     const QString modelQuerySetId = QStringLiteral(" WHERE %1=%2");
 

@@ -1,8 +1,9 @@
 #include <QObject>
 #include <QSqlQueryModel>
 
-#include "data/database.h"
-#include "data/item.h"
+#include "data/databaseSchema.h"
+#include "data/itemDatabase.h"
+#include "data/entries/item.h"
 
 #ifndef ITEM_MODEL_H
 #define ITEM_MODEL_H
@@ -26,7 +27,7 @@ public:
     };
 
     explicit ItemModel(QObject *parent = nullptr);
-    ~ItemModel();
+    ~ItemModel() override = default;
 
     // Override the method that will return the data
     QVariant data(const QModelIndex &index, int role) const override;
@@ -47,14 +48,14 @@ protected:
 private:
     const QString modelQueryBase = QStringLiteral(
                                        "SELECT id, %1, %2, %3, %4, %5, %6, %7 FROM %8")
-                                       .arg(Database::NAME, Database::MAKE, Database::MODEL, Database::YEAR,
-                                            Database::TYPE, Database::ARCHIVED, Database::USER_ORDER,
-                                            Database::TABLE_ITEMS);
+                                       .arg(DatabaseSchema::NAME, DatabaseSchema::MAKE, DatabaseSchema::MODEL, DatabaseSchema::YEAR,
+                                            DatabaseSchema::TYPE, DatabaseSchema::ARCHIVED, DatabaseSchema::USER_ORDER,
+                                            DatabaseSchema::TABLE_ITEMS);
     const QString modelQueryParentItem = QStringLiteral(" WHERE %1 IS NULL AND %2 IS 0")
-                                             .arg(Database::KEY_ITEM_ID, Database::ARCHIVED);
-    const QString modelQueryIncludeComponents = QStringLiteral(" WHERE %2 IS 0").arg(Database::ARCHIVED);
-    const QString modelQueryArchive = QStringLiteral(" WHERE %1 IS 1").arg(Database::ARCHIVED);
-    const QString modelQuerySortUser = QStringLiteral(" ORDER BY %1 ASC NULLS LAST").arg(Database::USER_ORDER);
+                                             .arg(DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::ARCHIVED);
+    const QString modelQueryIncludeComponents = QStringLiteral(" WHERE %2 IS 0").arg(DatabaseSchema::ARCHIVED);
+    const QString modelQueryArchive = QStringLiteral(" WHERE %1 IS 1").arg(DatabaseSchema::ARCHIVED);
+    const QString modelQuerySortUser = QStringLiteral(" ORDER BY %1 ASC NULLS LAST").arg(DatabaseSchema::USER_ORDER);
 
 Q_SIGNALS:
     void filterItem();

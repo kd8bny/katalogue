@@ -1,15 +1,17 @@
 #include <QObject>
 #include <QSqlQueryModel>
 
-#include "data/database.h"
-#include "data/task.h"
+#include "data/databaseSchema.h"
+#include "data/taskDatabase.h"
+#include "data/entries/task.h"
 
-class TaskModel: public QSqlQueryModel
+class TaskModel : public QSqlQueryModel
 {
     Q_OBJECT
 
 public:
-    enum Roles {
+    enum Roles
+    {
         rID = Qt::UserRole + 1,
         rDueDate,
         rStatus,
@@ -36,9 +38,7 @@ protected:
     QHash<int, QByteArray> roleNames() const override;
 
 private:
-    const QString modelQueryBase = QStringLiteral("SELECT id, %1, %2, %3, %4, %5 FROM %6 ").arg(
-        Database::DUE_DATE, Database::STATUS, Database::TITLE, Database::DESCRIPTION,
-        Database::KEY_ITEM_ID, Database::TABLE_TASKS);
+    const QString modelQueryBase = QStringLiteral("SELECT id, %1, %2, %3, %4, %5 FROM %6 ").arg(DatabaseSchema::DUE_DATE, DatabaseSchema::STATUS, DatabaseSchema::TITLE, DatabaseSchema::DESCRIPTION, DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::TABLE_TASKS);
 
     const QString modelQuerySetId = QStringLiteral(" WHERE %1=%2");
 
@@ -49,5 +49,4 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void refresh();
-
 };

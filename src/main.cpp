@@ -14,7 +14,14 @@
 #include "katalogue.h"
 #include "version-katalogue.h"
 #include "constants/defaults.h"
-#include "data/database.h"
+
+#include "data/databaseInit.h"
+#include "data/itemDatabase.h"
+#include "data/attributeDatabase.h"
+#include "data/eventDatabase.h"
+#include "data/noteDatabase.h"
+#include "data/taskDatabase.h"
+
 #include "models/attributeModel.h"
 #include "models/attributeCategoryModel.h"
 #include "models/eventModel.h"
@@ -81,13 +88,22 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     App application;
     qmlRegisterSingletonInstance("org.kde.katalogue", 1, 0, "App", &application);
 
-    Database database;
-    if (!database.connectKatalogueDb(qPath))
+    if (DatabaseInit db; !db.connectKatalogueDb(qPath))
     {
         return -1;
     }
 
-    qmlRegisterSingletonInstance<Database>("com.kd8bny.katalogue", 1, 0, "Database", &database);
+    // TODO introduce factory
+    ItemDatabase itemDatabase;
+    qmlRegisterSingletonInstance<ItemDatabase>("com.kd8bny.katalogue", 1, 0, "ItemDatabase", &itemDatabase);
+    AttributeDatabase attributeDatabase;
+    qmlRegisterSingletonInstance<AttributeDatabase>("com.kd8bny.katalogue", 1, 0, "AttributeDatabase", &attributeDatabase);
+    EventDatabase eventDatabase;
+    qmlRegisterSingletonInstance<EventDatabase>("com.kd8bny.katalogue", 1, 0, "EventDatabase", &eventDatabase);
+    NoteDatabase noteDatabase;
+    qmlRegisterSingletonInstance<NoteDatabase>("com.kd8bny.katalogue", 1, 0, "NoteDatabase", &noteDatabase);
+    TaskDatabase taskDatabase;
+    qmlRegisterSingletonInstance<TaskDatabase>("com.kd8bny.katalogue", 1, 0, "TaskDatabase", &taskDatabase);
 
     AttributeModel attributeModel;
     qmlRegisterSingletonInstance<AttributeModel>("com.kd8bny.katalogue", 1, 0, "AttributeModel", &attributeModel);

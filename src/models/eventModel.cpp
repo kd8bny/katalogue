@@ -7,10 +7,6 @@ EventModel::EventModel(QObject *parent) : QSqlQueryModel(parent)
     this->refresh();
 }
 
-EventModel::~EventModel()
-{
-}
-
 // The method for obtaining data from the model
 QVariant EventModel::data(const QModelIndex &index, int role) const
 {
@@ -28,20 +24,20 @@ QHash<int, QByteArray> EventModel::roleNames() const
 
     QHash<int, QByteArray> roles;
     roles[rID] = "id";
-    roles[rDate] = Database::DATE.toUtf8();
-    roles[rEvent] = Database::EVENT.toUtf8();
-    roles[rCost] = Database::COST.toUtf8();
-    roles[rIncrement] = Database::INCREMENT.toUtf8();
-    roles[rCategory] = Database::CATEGORY.toUtf8();
-    roles[rComment] = Database::COMMENT.toUtf8();
-    roles[rItemID] = Database::KEY_ITEM_ID.toUtf8();
+    roles[rDate] = DatabaseSchema::DATE.toUtf8();
+    roles[rEvent] = DatabaseSchema::EVENT.toUtf8();
+    roles[rCost] = DatabaseSchema::COST.toUtf8();
+    roles[rIncrement] = DatabaseSchema::INCREMENT.toUtf8();
+    roles[rCategory] = DatabaseSchema::CATEGORY.toUtf8();
+    roles[rComment] = DatabaseSchema::COMMENT.toUtf8();
+    roles[rItemID] = DatabaseSchema::KEY_ITEM_ID.toUtf8();
 
     return roles;
 }
 
 void EventModel::setItemId(QString itemId)
 {
-    this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(Database::KEY_ITEM_ID, itemId);
+    this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(DatabaseSchema::KEY_ITEM_ID, itemId);
 
     this->setQuery(modelQuery);
     Q_EMIT dataChanged();
@@ -84,7 +80,7 @@ QVariantList EventModel::getRecordAsList(int row)
 bool EventModel::setRecord(int eventIndex, QString date, QString eventName,
                            float cost, float increment, QString category, QString comment, int itemId)
 {
-    Database db;
+    EventDatabase db;
     // eventIndex defaults to -1 for new entries.
     Event event(this->getId(eventIndex));
 
@@ -102,12 +98,12 @@ bool EventModel::setRecord(int eventIndex, QString date, QString eventName,
 
     if (eventIndex == -1)
     {
-        success = db.insertEventEntry(event);
+        success = db.insertEntry(event);
         qDebug() << "eventModel | Inserting Entry | " << success;
     }
     else
     {
-        success = db.updateEventEntry(event);
+        success = db.updateEntry(event);
         qDebug() << "eventModel | Updating Entry | " << success;
     }
 
@@ -119,11 +115,11 @@ bool EventModel::setRecord(int eventIndex, QString date, QString eventName,
 
 bool EventModel::deleteRecord(int eventId)
 {
-    Database db;
+    EventDatabase db;
 
     bool success = false;
 
-    success = db.deleteEventEntry(eventId);
+    success = db.deleteEntryById(eventId);
 
     if (success)
         Q_EMIT dataChanged();

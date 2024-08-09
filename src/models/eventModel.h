@@ -1,8 +1,9 @@
 #include <QObject>
 #include <QSqlQueryModel>
 
-#include "data/database.h"
-#include "data/event.h"
+#include "data/databaseSchema.h"
+#include "data/eventDatabase.h"
+#include "data/entries/event.h"
 
 class EventModel : public QSqlQueryModel
 {
@@ -22,7 +23,7 @@ public:
     };
 
     explicit EventModel(QObject *parent = nullptr);
-    ~EventModel();
+    ~EventModel() = default;
 
     // Override the method that will return the data
     QVariant data(const QModelIndex &index, int role) const override;
@@ -40,8 +41,8 @@ protected:
 
 private:
     const QString modelQueryBase = QStringLiteral("SELECT id, %1, %2, %3, %4, %5, %6 FROM %7")
-                                       .arg(Database::DATE, Database::EVENT, Database::COST, Database::INCREMENT,
-                                            Database::CATEGORY, Database::COMMENT, Database::TABLE_EVENTS);
+                                       .arg(DatabaseSchema::DATE, DatabaseSchema::EVENT, DatabaseSchema::COST, DatabaseSchema::INCREMENT,
+                                            DatabaseSchema::CATEGORY, DatabaseSchema::COMMENT, DatabaseSchema::TABLE_EVENTS);
 
     const QString modelQuerySetId = QStringLiteral(" WHERE %1=%2");
 
