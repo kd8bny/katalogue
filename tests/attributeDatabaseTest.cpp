@@ -1,8 +1,11 @@
 #include <QtTest>
+#include <QSqlRecord>
 
-#include "data/database.h"
+#include "databaseInit.h"
+#include "databaseSchema.h"
+#include "attributeDatabase.h"
 
-class DatabaseAttributeTest : public QObject
+class AttributeDatabaseTest : public QObject
 {
     Q_OBJECT
     const QString testDBPath = QStringLiteral("../tests/");
@@ -10,7 +13,7 @@ class DatabaseAttributeTest : public QObject
 
 private Q_SLOTS:
     void insertAttributeEntry() const;
-    void updateAttributeEntry() const;
+    void updateEntry() const;
     void deleteAttributeEntry() const;
 };
 
@@ -18,14 +21,14 @@ private Q_SLOTS:
  * Database CRUD Tests
  */
 
-void DatabaseAttributeTest::insertAttributeEntry() const
+void AttributeDatabaseTest::insertAttributeEntry() const
 {
     /*Test Attribute Insert*/
-    Database katalogue_db;
-    bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
-    qDebug() << "db open" << DB_OPEN;
+    DatabaseInit init_db;
+    bool DB_OPEN = init_db.connectKatalogueDb(this->testDBPath);
+    QVERIFY2(DB_OPEN == true, "db open");
 
-    QVERIFY(DB_OPEN == true);
+    AttributeDatabase katalogue_db;
 
     QList<QVariantList> attributes;
 
@@ -48,13 +51,13 @@ void DatabaseAttributeTest::insertAttributeEntry() const
         attribute.setCategory(AttributeAsList.value(2).toString());
         attribute.setItemId(AttributeAsList.value(3).toInt());
 
-        QVERIFY(katalogue_db.insertAttributeEntry(attribute) == true);
+        QVERIFY(katalogue_db.insertEntry(attribute) == true);
     }
 
     // Validate data
     const QString modelQueryBase = QStringLiteral("SELECT id, %1, %2, %3, %4 FROM %5 ")
-                                       .arg(Database::KEY, Database::VALUE, Database::CATEGORY, Database::KEY_ITEM_ID,
-                                            Database::TABLE_ATTRIBUTES);
+                                       .arg(DatabaseSchema::KEY, DatabaseSchema::VALUE, DatabaseSchema::CATEGORY, DatabaseSchema::KEY_ITEM_ID,
+                                            DatabaseSchema::TABLE_ATTRIBUTES);
 
     QSqlQuery query;
     query.exec(modelQueryBase);
@@ -73,13 +76,14 @@ void DatabaseAttributeTest::insertAttributeEntry() const
     }
 }
 
-void DatabaseAttributeTest::updateAttributeEntry() const
+void AttributeDatabaseTest::updateEntry() const
 {
     /*Test Attribute Insert*/
-    Database katalogue_db;
-    bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
-    qDebug() << "db open" << DB_OPEN;
-    QVERIFY(DB_OPEN == true);
+    DatabaseInit init_db;
+    bool DB_OPEN = init_db.connectKatalogueDb(this->testDBPath);
+    QVERIFY2(DB_OPEN == true, "db open");
+
+    AttributeDatabase katalogue_db;
 
     Attribute refAttribute(-1);
     refAttribute.setKey(QStringLiteral("refKey"));
@@ -87,7 +91,7 @@ void DatabaseAttributeTest::updateAttributeEntry() const
     refAttribute.setCategory(QStringLiteral("refCat"));
     refAttribute.setItemId(1);
 
-    QVERIFY2(katalogue_db.insertAttributeEntry(refAttribute) == true, "Reference Attribute added");
+    QVERIFY2(katalogue_db.insertEntry(refAttribute) == true, "Reference Attribute added");
 
     QVariantList attributeFields = {
         QStringLiteral("refKeyUpdated"),
@@ -98,8 +102,8 @@ void DatabaseAttributeTest::updateAttributeEntry() const
 
     // Query for reference attribute id 3
     const QString record3Query = QStringLiteral("SELECT %1, %2, %3, %4 FROM %5 WHERE id=3")
-                                     .arg(Database::KEY, Database::VALUE, Database::CATEGORY,
-                                          Database::KEY_ITEM_ID, Database::TABLE_ATTRIBUTES);
+                                     .arg(DatabaseSchema::KEY, DatabaseSchema::VALUE, DatabaseSchema::CATEGORY,
+                                          DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::TABLE_ATTRIBUTES);
     QSqlQuery query;
     query.exec(record3Query);
     query.next();
@@ -115,7 +119,7 @@ void DatabaseAttributeTest::updateAttributeEntry() const
     // Start Test
     // Update Key
     attribute3.setKey(attributeFields.value(0).toString());
-    QVERIFY(katalogue_db.updateAttributeEntry(attribute3) == true);
+    QVERIFY(katalogue_db.updateEntry(attribute3) == true);
 
     query.exec(record3Query);
     query.next();
@@ -123,7 +127,7 @@ void DatabaseAttributeTest::updateAttributeEntry() const
 
     // Update Value
     attribute3.setValue(attributeFields.value(1).toString());
-    QVERIFY(katalogue_db.updateAttributeEntry(attribute3) == true);
+    QVERIFY(katalogue_db.updateEntry(attribute3) == true);
 
     query.exec(record3Query);
     query.next();
@@ -131,22 +135,22 @@ void DatabaseAttributeTest::updateAttributeEntry() const
 
     // Update Category
     attribute3.setCategory(attributeFields.value(2).toString());
-    QVERIFY(katalogue_db.updateAttributeEntry(attribute3) == true);
+    QVERIFY(katalogue_db.updateEntry(attribute3) == true);
 
     query.exec(record3Query);
     query.next();
     QVERIFY(query.value(2).toString() == attributeFields.value(2).toString());
 }
 
-void DatabaseAttributeTest::deleteAttributeEntry() const
+void AttributeDatabaseTest::deleteAttributeEntry() const
 {
-    Database katalogue_db;
+    AttributeDatabase katalogue_db;
     // Get Data from Record 3
     // Check if KEY is null after delete
     const QString record3Query = QStringLiteral("SELECT %1 FROM %2 WHERE id=3")
-                                     .arg(Database::KEY, Database::TABLE_ATTRIBUTES);
+                                     .arg(DatabaseSchema::KEY, DatabaseSchema::TABLE_ATTRIBUTES);
 
-    QVERIFY2(katalogue_db.deleteAttributeEntry(3) == true, "Attribute 3 deleted");
+    QVERIFY2(katalogue_db.deleteEntryById(3) == true, "Attribute 3 deleted");
 
     QSqlQuery query;
     query.exec(record3Query);
@@ -154,5 +158,5 @@ void DatabaseAttributeTest::deleteAttributeEntry() const
     QVERIFY(query.record().value(0) == QStringLiteral(""));
 }
 
-QTEST_MAIN(DatabaseAttributeTest)
-#include "databaseAttributeTest.moc"
+QTEST_MAIN(AttributeDatabaseTest)
+#include "attributeDatabaseTest.moc"

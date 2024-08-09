@@ -5,7 +5,7 @@
 #include "databaseSchema.h"
 #include "itemDatabase.h"
 
-class DatabaseItemTest : public QObject
+class ItemDatabaseTest : public QObject
 {
     Q_OBJECT
     const QString testDBPath = QStringLiteral("../tests/");
@@ -19,7 +19,7 @@ private Q_SLOTS:
     void deleteItemEntry() const;
 };
 
-void DatabaseItemTest::databaseConnected() const
+void ItemDatabaseTest::databaseConnected() const
 {
     /*Clean up Database from previous Tests*/
     QFile file(this->testDBPath + this->DATABASE_NAME);
@@ -55,7 +55,7 @@ void DatabaseItemTest::databaseConnected() const
  * Database CRUD Tests
  */
 
-void DatabaseItemTest::insertItemEntry() const
+void ItemDatabaseTest::insertItemEntry() const
 {
     /*Test Item Insert*/
     DatabaseInit init_db;
@@ -126,7 +126,7 @@ void DatabaseItemTest::insertItemEntry() const
     }
 }
 
-void DatabaseItemTest::insertItemComponentEntry() const
+void ItemDatabaseTest::insertItemComponentEntry() const
 {
     /*Test Item Insert*/
     DatabaseInit init_db;
@@ -205,7 +205,7 @@ void DatabaseItemTest::insertItemComponentEntry() const
     }
 }
 
-void DatabaseItemTest::updateEntry() const
+void ItemDatabaseTest::updateEntry() const
 {
     /*Test Item Insert*/
     DatabaseInit init_db;
@@ -307,7 +307,7 @@ void DatabaseItemTest::updateEntry() const
     QVERIFY2(query.value(5).toBool() == itemFields.value(5).toBool(), "Update Archived");
 }
 
-void DatabaseItemTest::deleteItemEntry() const
+void ItemDatabaseTest::deleteItemEntry() const
 {
     DatabaseInit init_db;
     bool DB_OPEN = init_db.connectKatalogueDb(this->testDBPath);
@@ -327,6 +327,6 @@ void DatabaseItemTest::deleteItemEntry() const
     QVERIFY(query.record().value(0) == QStringLiteral(""));
 }
 
-QTEST_MAIN(DatabaseItemTest)
+QTEST_MAIN(ItemDatabaseTest)
 
-#include "databaseItemTest.moc"
+#include "itemDatabaseTest.moc"
