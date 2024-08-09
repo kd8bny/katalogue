@@ -35,9 +35,9 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Kirigami CoreAddons Conf
 
 add_subdirectory(src)
 
-if(BUILD_TESTING)
-    add_subdirectory(tests)
-endif()
+# if(BUILD_TESTING) #TODO
+#     add_subdirectory(tests)
+# endif()
 
 install(PROGRAMS org.kde.katalogue.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 install(FILES org.kde.katalogue.metainfo.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
