@@ -9,10 +9,11 @@ bool AttributeDatabase::insertEntry(const Attribute &attribute) const
 {
     QSqlQuery query;
 
-    query.prepare(QStringLiteral(
-                      "INSERT INTO %1 (%2, %3, %4, %5, %6, %7) "
-                      "VALUES (:created, :modified, :key, :value, :category, :itemId)")
-                      .arg(DatabaseSchema::TABLE_ATTRIBUTES, DatabaseSchema::CREATED, DatabaseSchema::MODIFIED, DatabaseSchema::KEY, DatabaseSchema::VALUE, DatabaseSchema::CATEGORY, DatabaseSchema::KEY_ITEM_ID));
+    query.prepare(
+        QStringLiteral("INSERT INTO %1 (%2, %3, %4, %5, %6, %7) "
+                       "VALUES (:created, :modified, :key, :value, :category, :itemId)")
+            .arg(DatabaseSchema::TABLE_ATTRIBUTES, DatabaseSchema::CREATED, DatabaseSchema::MODIFIED,
+                 DatabaseSchema::KEY, DatabaseSchema::VALUE, DatabaseSchema::CATEGORY, DatabaseSchema::KEY_ITEM_ID));
 
     QString currentTime = DatabaseUtils::getCurrentDateTime();
 
@@ -39,8 +40,10 @@ bool AttributeDatabase::updateEntry(const Attribute &attribute) const
 {
     QSqlQuery query;
 
-    query.prepare(QStringLiteral("UPDATE %1 SET %2=:modified, %3=:key, %4=:value, %5=:category WHERE id=:attributeId")
-                      .arg(DatabaseSchema::TABLE_ATTRIBUTES, DatabaseSchema::MODIFIED, DatabaseSchema::KEY, DatabaseSchema::VALUE, DatabaseSchema::CATEGORY));
+    query.prepare(
+        QStringLiteral("UPDATE %1 SET %2=:modified, %3=:key, %4=:value, %5=:category WHERE id=:attributeId")
+            .arg(DatabaseSchema::TABLE_ATTRIBUTES, DatabaseSchema::MODIFIED, DatabaseSchema::KEY,
+                 DatabaseSchema::VALUE, DatabaseSchema::CATEGORY));
 
     QString currentTime = DatabaseUtils::getCurrentDateTime();
 

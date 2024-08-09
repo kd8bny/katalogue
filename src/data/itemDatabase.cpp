@@ -13,11 +13,12 @@ bool ItemDatabase::insertEntry(const Item &item) const
      */
     QSqlQuery query;
 
-    query.prepare(QStringLiteral("INSERT INTO %1 (%2, %3, %4, %5, %6, %7, %8, %9, %10) "
-                                 "VALUES (:created, :modified, :name, :make, :model, :year, :type, :archived, :parent)")
-                      .arg(DatabaseSchema::TABLE_ITEMS, DatabaseSchema::CREATED, DatabaseSchema::MODIFIED,
-                           DatabaseSchema::NAME, DatabaseSchema::MAKE, DatabaseSchema::MODEL, DatabaseSchema::YEAR,
-                           DatabaseSchema::TYPE, DatabaseSchema::ARCHIVED, DatabaseSchema::KEY_ITEM_ID));
+    query.prepare(
+        QStringLiteral("INSERT INTO %1 (%2, %3, %4, %5, %6, %7, %8, %9, %10) "
+                       "VALUES (:created, :modified, :name, :make, :model, :year, :type, :archived, :parent)")
+            .arg(DatabaseSchema::TABLE_ITEMS, DatabaseSchema::CREATED, DatabaseSchema::MODIFIED,
+                 DatabaseSchema::NAME, DatabaseSchema::MAKE, DatabaseSchema::MODEL, DatabaseSchema::YEAR,
+                 DatabaseSchema::TYPE, DatabaseSchema::ARCHIVED, DatabaseSchema::KEY_ITEM_ID));
 
     QString currentTime = DatabaseUtils::getCurrentDateTime();
 
@@ -52,9 +53,10 @@ bool ItemDatabase::updateEntry(const Item &item) const
     QSqlQuery query;
 
     query.prepare(
-        QStringLiteral("UPDATE %1 SET %2=:modified, %3=:name, %4=:make, %5=:model, "
-                       "%6=:year, %7=:type, %8=:parent WHERE id=:id")
-            .arg(DatabaseSchema::TABLE_ITEMS, DatabaseSchema::MODIFIED, DatabaseSchema::NAME, DatabaseSchema::MAKE, DatabaseSchema::MODEL, DatabaseSchema::YEAR, DatabaseSchema::TYPE, DatabaseSchema::KEY_ITEM_ID));
+        QStringLiteral("UPDATE %1 SET %2=:modified, %3=:name, %4=:make, %5=:model, %6=:year, %7=:type, %8=:parent "
+                       "WHERE id=:id")
+            .arg(DatabaseSchema::TABLE_ITEMS, DatabaseSchema::MODIFIED, DatabaseSchema::NAME, DatabaseSchema::MAKE,
+                 DatabaseSchema::MODEL, DatabaseSchema::YEAR, DatabaseSchema::TYPE, DatabaseSchema::KEY_ITEM_ID));
 
     QString currentTime = DatabaseUtils::getCurrentDateTime();
 
@@ -88,7 +90,8 @@ bool ItemDatabase::deleteEntryById(const int id) const
      */
     QSqlQuery query;
 
-    query.prepare(QStringLiteral("DELETE FROM %1 WHERE id=:itemId").arg(DatabaseSchema::TABLE_ITEMS));
+    query.prepare(
+        QStringLiteral("DELETE FROM %1 WHERE id=:itemId").arg(DatabaseSchema::TABLE_ITEMS));
     qDebug() << QStringLiteral("DELETE FROM %1 WHERE id=:itemId").arg(DatabaseSchema::TABLE_ITEMS);
 
     query.bindValue(QStringLiteral(":itemId"), id);
@@ -106,8 +109,9 @@ bool ItemDatabase::setArchived(const int id, const bool archived) const
 {
     QSqlQuery query;
 
-    query.prepare(QStringLiteral("UPDATE %1 SET %2=:modified, %3=:archived WHERE id=:id")
-                      .arg(DatabaseSchema::TABLE_ITEMS, DatabaseSchema::MODIFIED, DatabaseSchema::ARCHIVED));
+    query.prepare(
+        QStringLiteral("UPDATE %1 SET %2=:modified, %3=:archived WHERE id=:id")
+            .arg(DatabaseSchema::TABLE_ITEMS, DatabaseSchema::MODIFIED, DatabaseSchema::ARCHIVED));
 
     QString currentTime = DatabaseUtils::getCurrentDateTime();
 
@@ -130,8 +134,9 @@ bool ItemDatabase::setUserOrder(const int id, const int user_order) const
 {
     QSqlQuery query;
 
-    query.prepare(QStringLiteral("UPDATE %1 SET %2=:modified, %3=:user_order WHERE id=:id")
-                      .arg(DatabaseSchema::TABLE_ITEMS, DatabaseSchema::MODIFIED, DatabaseSchema::USER_ORDER));
+    query.prepare(
+        QStringLiteral("UPDATE %1 SET %2=:modified, %3=:user_order WHERE id=:id")
+            .arg(DatabaseSchema::TABLE_ITEMS, DatabaseSchema::MODIFIED, DatabaseSchema::USER_ORDER));
 
     query.bindValue(QStringLiteral(":modified"), DatabaseUtils::getCurrentDateTime());
     query.bindValue(QStringLiteral(":user_order"), user_order);

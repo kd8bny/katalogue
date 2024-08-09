@@ -11,11 +11,12 @@ bool EventDatabase::insertEntry(const Event &event) const
 {
     QSqlQuery query;
 
-    query.prepare(QStringLiteral(
-                      "INSERT INTO %1 ( %2, %3, %4, %5, %6, %7, %8, %9, %10) VALUES "
-                      "(:created, :modified, :date, :event, :cost, :increment, :category, :comment, :itemId)")
-                      .arg(DatabaseSchema::TABLE_EVENTS, DatabaseSchema::CREATED, DatabaseSchema::MODIFIED, DatabaseSchema::DATE, DatabaseSchema::EVENT, DatabaseSchema::COST, DatabaseSchema::INCREMENT, DatabaseSchema::CATEGORY, DatabaseSchema::COMMENT,
-                           DatabaseSchema::KEY_ITEM_ID));
+    query.prepare(
+        QStringLiteral("INSERT INTO %1 ( %2, %3, %4, %5, %6, %7, %8, %9, %10) "
+                       "VALUES (:created, :modified, :date, :event, :cost, :increment, :category, :comment, :itemId)")
+            .arg(DatabaseSchema::TABLE_EVENTS, DatabaseSchema::CREATED, DatabaseSchema::MODIFIED, DatabaseSchema::DATE,
+                 DatabaseSchema::EVENT, DatabaseSchema::COST, DatabaseSchema::INCREMENT, DatabaseSchema::CATEGORY,
+                 DatabaseSchema::COMMENT, DatabaseSchema::KEY_ITEM_ID));
 
     QString currentTime = DatabaseUtils::getCurrentDateTime();
 
@@ -44,9 +45,11 @@ bool EventDatabase::updateEntry(const Event &event) const
 {
     QSqlQuery query;
 
-    query.prepare(QStringLiteral("UPDATE %1 SET %2=:modified, %3=:date, %4=:event, %5=:cost, %6=:increment, "
-                                 "%7=:category, %8=:comment WHERE id=:eventId")
-                      .arg(DatabaseSchema::TABLE_EVENTS, DatabaseSchema::MODIFIED, DatabaseSchema::DATE, DatabaseSchema::EVENT, DatabaseSchema::COST, DatabaseSchema::INCREMENT, DatabaseSchema::CATEGORY, DatabaseSchema::COMMENT));
+    query.prepare(
+        QStringLiteral("UPDATE %1 SET %2=:modified, %3=:date, %4=:event, %5=:cost, %6=:increment, "
+                       "%7=:category, %8=:comment WHERE id=:eventId")
+            .arg(DatabaseSchema::TABLE_EVENTS, DatabaseSchema::MODIFIED, DatabaseSchema::DATE, DatabaseSchema::EVENT,
+                 DatabaseSchema::COST, DatabaseSchema::INCREMENT, DatabaseSchema::CATEGORY, DatabaseSchema::COMMENT));
 
     QString currentTime = DatabaseUtils::getCurrentDateTime();
 

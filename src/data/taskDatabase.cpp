@@ -11,9 +11,12 @@ bool TaskDatabase::insertEntry(const Task &task) const
 {
     QSqlQuery query;
 
-    query.prepare(QStringLiteral("INSERT INTO %1 ( %2, %3, %4, %5, %6, %7, %8) VALUES "
-                                 "(:created, :modified, :dueDate, :status, :title, :description, :itemId)")
-                      .arg(DatabaseSchema::TABLE_TASKS, DatabaseSchema::CREATED, DatabaseSchema::MODIFIED, DatabaseSchema::DUE_DATE, DatabaseSchema::STATUS, DatabaseSchema::TITLE, DatabaseSchema::DESCRIPTION, DatabaseSchema::KEY_ITEM_ID));
+    query.prepare(
+        QStringLiteral("INSERT INTO %1 ( %2, %3, %4, %5, %6, %7, %8) VALUES "
+                       "(:created, :modified, :dueDate, :status, :title, :description, :itemId)")
+            .arg(DatabaseSchema::TABLE_TASKS, DatabaseSchema::CREATED, DatabaseSchema::MODIFIED,
+                 DatabaseSchema::DUE_DATE, DatabaseSchema::STATUS, DatabaseSchema::TITLE, DatabaseSchema::DESCRIPTION,
+                 DatabaseSchema::KEY_ITEM_ID));
 
     QString currentTime = DatabaseUtils::getCurrentDateTime();
 
@@ -42,10 +45,12 @@ bool TaskDatabase::updateEntry(const Task &task) const
 {
     QSqlQuery query;
 
-    query.prepare(QStringLiteral(
-                      "UPDATE %1 SET %2=:modified, %3=:dueDate, %4=:status, %5=:title, %6=:description, %7=:itemId "
-                      "WHERE id=:taskId")
-                      .arg(DatabaseSchema::TABLE_TASKS, DatabaseSchema::MODIFIED, DatabaseSchema::DUE_DATE, DatabaseSchema::STATUS, DatabaseSchema::TITLE, DatabaseSchema::DESCRIPTION, DatabaseSchema::KEY_ITEM_ID));
+    query.prepare(
+        QStringLiteral("UPDATE %1 SET %2=:modified, %3=:dueDate, %4=:status, %5=:title, %6=:description, %7=:itemId "
+                       "WHERE id=:taskId")
+            .arg(DatabaseSchema::TABLE_TASKS, DatabaseSchema::MODIFIED, DatabaseSchema::DUE_DATE,
+                 DatabaseSchema::STATUS, DatabaseSchema::TITLE, DatabaseSchema::DESCRIPTION,
+                 DatabaseSchema::KEY_ITEM_ID));
 
     QString currentTime = DatabaseUtils::getCurrentDateTime();
 

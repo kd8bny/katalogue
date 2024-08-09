@@ -11,9 +11,11 @@ bool NoteDatabase::insertEntry(const Note &note) const
 {
     QSqlQuery query;
 
-    query.prepare(QStringLiteral("INSERT INTO %1 (%2, %3, %4, %5, %6) "
-                                 "VALUES (:created, :modified, :title, :noteContent, :itemId)")
-                      .arg(DatabaseSchema::TABLE_NOTES, DatabaseSchema::CREATED, DatabaseSchema::MODIFIED, DatabaseSchema::TITLE, DatabaseSchema::NOTE_CONTENT, DatabaseSchema::KEY_ITEM_ID));
+    query.prepare(
+        QStringLiteral("INSERT INTO %1 (%2, %3, %4, %5, %6) "
+                       "VALUES (:created, :modified, :title, :noteContent, :itemId)")
+            .arg(DatabaseSchema::TABLE_NOTES, DatabaseSchema::CREATED, DatabaseSchema::MODIFIED,
+                 DatabaseSchema::TITLE, DatabaseSchema::NOTE_CONTENT, DatabaseSchema::KEY_ITEM_ID));
 
     QString currentTime = DatabaseUtils::getCurrentDateTime();
 
@@ -41,8 +43,10 @@ bool NoteDatabase::updateEntry(const Note &note) const
 {
     QSqlQuery query;
 
-    query.prepare(QStringLiteral("UPDATE %1 SET %2=:modified, %3=:title, %4=:noteContent, %5=:itemId WHERE id=:noteId")
-                      .arg(DatabaseSchema::TABLE_NOTES, DatabaseSchema::MODIFIED, DatabaseSchema::TITLE, DatabaseSchema::NOTE_CONTENT, DatabaseSchema::KEY_ITEM_ID));
+    query.prepare(
+        QStringLiteral("UPDATE %1 SET %2=:modified, %3=:title, %4=:noteContent, %5=:itemId WHERE id=:noteId")
+            .arg(DatabaseSchema::TABLE_NOTES, DatabaseSchema::MODIFIED, DatabaseSchema::TITLE,
+                 DatabaseSchema::NOTE_CONTENT, DatabaseSchema::KEY_ITEM_ID));
 
     QString currentTime = DatabaseUtils::getCurrentDateTime();
 
@@ -68,8 +72,7 @@ bool NoteDatabase::deleteEntryById(int id) const
 {
     QSqlQuery query;
 
-    query.prepare(QStringLiteral("DELETE FROM %1 WHERE id=:noteId")
-                      .arg(DatabaseSchema::TABLE_NOTES));
+    query.prepare(QStringLiteral("DELETE FROM %1 WHERE id=:noteId").arg(DatabaseSchema::TABLE_NOTES));
 
     query.bindValue(QStringLiteral(":noteId"), id);
 
