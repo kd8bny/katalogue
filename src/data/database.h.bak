@@ -20,13 +20,13 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
-class Database : public QObject
+class Database final : public QObject
 {
     Q_OBJECT
 
 public:
     explicit Database(QObject *parent = nullptr);
-    ~Database();
+    ~Database() override;
     bool connectKatalogueDb(QString path);
 
     bool insertItemEntry(const Item &item) const;
