@@ -1,21 +1,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # SPDX-FileCopyrightText: 2022 Daryl Bennett <kd8bny@gmail.com>
 
-add_executable(katalogue
-    main.cpp
-    about.cpp
-    katalogue.cpp
-    resources.qrc
-
-    constants/defaults.cpp
-
-    data/database.cpp
-    data/attribute.cpp
-    data/event.cpp
-    data/item.cpp
-    data/note.cpp
-    data/task.cpp
-
+set(katalogue_models_src
     models/attributeModel.cpp
     models/attributeCategoryModel.cpp
     models/eventModel.cpp
@@ -28,15 +14,38 @@ add_executable(katalogue
     models/taskModel.cpp
 )
 
-target_link_libraries(katalogue
+add_library(katalogue_models STATIC
+    ${katalogue_models_src}
+)
+
+target_link_libraries(katalogue_models
+    katalogue_data
     Qt6::Core
+    Qt6::Sql
+)
+
+add_subdirectory(data)
+
+add_executable(katalogue
+    main.cpp
+    about.cpp
+    katalogue.cpp
+    resources.qrc
+
+    constants/defaults.cpp
+)
+
+target_link_libraries(katalogue
+    katalogue_data
+    katalogue_models
+
     Qt6::Gui
     Qt6::Qml
     Qt6::Quick
     Qt6::QuickControls2
+    Qt6::Widgets
     Qt6::Svg
     Qt6::Sql
-    Qt6::Widgets
     KF6::I18n
     KF6::CoreAddons
     KF6::ConfigCore

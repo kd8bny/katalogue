@@ -14,7 +14,14 @@
 #include "katalogue.h"
 #include "version-katalogue.h"
 #include "constants/defaults.h"
-#include "data/database.h"
+
+#include "data/databaseInit.h"
+#include "data/itemDatabase.h"
+#include "data/attributeDatabase.h"
+#include "data/eventDatabase.h"
+#include "data/noteDatabase.h"
+#include "data/taskDatabase.h"
+
 #include "models/attributeModel.h"
 #include "models/attributeCategoryModel.h"
 #include "models/eventModel.h"
@@ -32,38 +39,39 @@
 
 #include "katalogueconfig.h"
 
-
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    //QCoreApplication::setOrganizationName(QStringLiteral("KDE"));
+    // QCoreApplication::setOrganizationName(QStringLiteral("KDE"));
     QCoreApplication::setApplicationName(QStringLiteral("katalogue"));
 
     KAboutData aboutData(
-                         // The program name used internally.
-                         QStringLiteral("katalogue"),
-                         // A displayable program name string.
-                         i18nc("@title", "katalogue"),
-                         // The program version string.
-                         QStringLiteral(KATALOGUE_VERSION_STRING),
-                         // Short description of what the app does.
-                         i18n("Maintenance Logging System"),
-                         // The license this code is released under.
-                         KAboutLicense::GPL,
-                         // Copyright Statement.
-                         i18n("(c) 2023"));
+        // The program name used internally.
+        QStringLiteral("katalogue"),
+        // A displayable program name string.
+        i18nc("@title", "katalogue"),
+        // The program version string.
+        QStringLiteral(KATALOGUE_VERSION_STRING),
+        // Short description of what the app does.
+        i18n("Maintenance Logging System"),
+        // The license this code is released under.
+        KAboutLicense::GPL,
+        // Copyright Statement.
+        i18n("(c) 2023"));
 
     aboutData.addAuthor(i18nc("@info:credit", "Daryl Bennett"), i18nc("@info:credit", "Developer"), QStringLiteral("kd8bny@gmail.com"));
     KAboutData::setApplicationData(aboutData);
 
     // Set Application Directories
     QString qPath = QProcessEnvironment::systemEnvironment().value(QStringLiteral("KATALOGUE_DATA"), QStringLiteral(""));
-    if(qPath.length() == 0){
+    if (qPath.length() == 0)
+    {
         qPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     }
     qDebug() << qPath;
 
-    if(!QDir(qPath).mkpath(qPath)){
+    if (!QDir(qPath).mkpath(qPath))
+    {
         qDebug() << "Path not writeable " << qPath;
 
         return -1;
@@ -80,12 +88,22 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     App application;
     qmlRegisterSingletonInstance("org.kde.katalogue", 1, 0, "App", &application);
 
-    Database database;
-    if(!database.connect(qPath)){
+    if (DatabaseInit db; !db.connectKatalogueDb(qPath))
+    {
         return -1;
     }
 
-    qmlRegisterSingletonInstance<Database>("com.kd8bny.katalogue", 1, 0, "Database", &database);
+    // TODO introduce factory
+    ItemDatabase itemDatabase;
+    qmlRegisterSingletonInstance<ItemDatabase>("com.kd8bny.katalogue", 1, 0, "ItemDatabase", &itemDatabase);
+    AttributeDatabase attributeDatabase;
+    qmlRegisterSingletonInstance<AttributeDatabase>("com.kd8bny.katalogue", 1, 0, "AttributeDatabase", &attributeDatabase);
+    EventDatabase eventDatabase;
+    qmlRegisterSingletonInstance<EventDatabase>("com.kd8bny.katalogue", 1, 0, "EventDatabase", &eventDatabase);
+    NoteDatabase noteDatabase;
+    qmlRegisterSingletonInstance<NoteDatabase>("com.kd8bny.katalogue", 1, 0, "NoteDatabase", &noteDatabase);
+    TaskDatabase taskDatabase;
+    qmlRegisterSingletonInstance<TaskDatabase>("com.kd8bny.katalogue", 1, 0, "TaskDatabase", &taskDatabase);
 
     AttributeModel attributeModel;
     qmlRegisterSingletonInstance<AttributeModel>("com.kd8bny.katalogue", 1, 0, "AttributeModel", &attributeModel);
@@ -123,7 +141,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
 
-    if (engine.rootObjects().isEmpty()) {
+    if (engine.rootObjects().isEmpty())
+    {
         return -1;
     }
 

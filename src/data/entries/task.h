@@ -2,24 +2,17 @@
 #include <QDebug>
 #include <QVariantList>
 
+#include "entry.h"
+
 #ifndef TASK_H
 #define TASK_H
 
-
-class Task
+class Task : public Entry
 {
 
 public:
-    Task(int id);
-    ~Task();
-
-    int getId() const { return id; }
-
-    QString getCreatedDate() const { return createdDate; }
-    void setCreatedDate(const QString &createdDate_) { createdDate = createdDate_; }
-
-    QString getModifiedDate() const { return modifiedDate; }
-    void setModifiedDate(const QString &modifiedDate_) { modifiedDate = modifiedDate_; }
+    using Entry::Entry;
+    ~Task() override = default;
 
     QString getDueDate() const { return dueDate; }
     void setDueDate(const QString &dueDate_) { dueDate = dueDate_; }
@@ -33,20 +26,13 @@ public:
     QString getDescription() const { return description; }
     void setDescription(const QString &description_) { description = description_; }
 
-    int getItemId() const { return itemId; }
-    void setItemId(int itemId_) { itemId = itemId_; }
-
-    QVariantList asList();
+    QVariantList asList() const override;
 
 private:
-    int id;
-    QString createdDate;
-    QString modifiedDate;
     QString dueDate;
     QString status;
     QString title;
     QString description;
-    int itemId;
 };
 
 #endif

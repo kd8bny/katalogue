@@ -1,8 +1,6 @@
 #include "itemModel.h"
 
-
-ItemModel::ItemModel(QObject *parent) :
-    QSqlQueryModel(parent)
+ItemModel::ItemModel(QObject *parent) : QSqlQueryModel(parent)
 {
     QObject::connect(this, &ItemModel::filterItem, this, &ItemModel::setItemQuery);
     QObject::connect(this, &ItemModel::filterArchive, this, &ItemModel::setArchiveQuery);
@@ -13,12 +11,8 @@ ItemModel::ItemModel(QObject *parent) :
     this->refresh();
 }
 
-ItemModel::~ItemModel()
+QVariant ItemModel::data(const QModelIndex &index, int role) const
 {
-
-}
-
-QVariant ItemModel::data(const QModelIndex &index, int role) const {
 
     // Define the column number, on the role of number
     int columnId = role - Qt::UserRole - 1;
@@ -28,18 +22,19 @@ QVariant ItemModel::data(const QModelIndex &index, int role) const {
     return QSqlQueryModel::data(modelIndex, Qt::DisplayRole);
 }
 
-QHash<int, QByteArray> ItemModel::roleNames() const {
+QHash<int, QByteArray> ItemModel::roleNames() const
+{
 
     QHash<int, QByteArray> roles;
     roles[rID] = "id";
-    roles[rNAME] = Database::NAME.toUtf8();
-    roles[rMAKE] = Database::MAKE.toUtf8();
-    roles[rMODEL] = Database::MODEL.toUtf8();
-    roles[rYEAR] = Database::YEAR.toUtf8();
-    roles[rTYPE] = Database::TYPE.toUtf8();
-    roles[rARCHIVED] = Database::ARCHIVED.toUtf8();
-    roles[rUSER_ORDER] = Database::USER_ORDER.toUtf8();
-    roles[rPARENT] = Database::KEY_ITEM_ID.toUtf8();
+    roles[rNAME] = DatabaseSchema::NAME.toUtf8();
+    roles[rMAKE] = DatabaseSchema::MAKE.toUtf8();
+    roles[rMODEL] = DatabaseSchema::MODEL.toUtf8();
+    roles[rYEAR] = DatabaseSchema::YEAR.toUtf8();
+    roles[rTYPE] = DatabaseSchema::TYPE.toUtf8();
+    roles[rARCHIVED] = DatabaseSchema::ARCHIVED.toUtf8();
+    roles[rUSER_ORDER] = DatabaseSchema::USER_ORDER.toUtf8();
+    roles[rPARENT] = DatabaseSchema::KEY_ITEM_ID.toUtf8();
 
     return roles;
 }
@@ -65,26 +60,28 @@ void ItemModel::setComponentQuery()
 
 void ItemModel::setItemPosition(const int index, const int direction)
 {
-    Database db;
+    ItemDatabase db;
 
-    for (int i=0; i < this->rowCount(); i++)
+    for (int i = 0; i < this->rowCount(); i++)
     {
         int id = this->data(this->index(index, 0), rID).toInt();
-        if (direction == 1) {
+        if (direction == 1)
+        {
             // Move down in list by increasing value
-            db.updateItemUserOrder(id, index + 1);
+            db.setUserOrder(id, index + 1);
 
-            //Move affected following Item
+            // Move affected following Item
             int pid = this->data(this->index(index + 1, 0), rID).toInt();
-            db.updateItemUserOrder(pid, index - 1);
-
-        } else if (direction == -1) {
+            db.setUserOrder(pid, index - 1);
+        }
+        else if (direction == -1)
+        {
             // Move up in list by increasing value
-            db.updateItemUserOrder(id, index);
+            db.setUserOrder(id, index);
 
-            //Move affected preceding Item
+            // Move affected preceding Item
             int pid = this->data(this->index(index - 1, 0), rID).toInt();
-            db.updateItemUserOrder(pid, index + 1);
+            db.setUserOrder(pid, index + 1);
         }
     }
 
@@ -115,8 +112,9 @@ Item ItemModel::getRecord(int row)
     item.setType(this->data(this->index(row, 5), rTYPE).toString());
     item.setArchived(this->data(this->index(row, 6), rARCHIVED).toInt());
     item.setUserOrder(this->data(this->index(row, 7), rUSER_ORDER).toInt());
-    item.setParent(this->data(this->index(row, 8), rPARENT).toInt());
+    item.setItemId(this->data(this->index(row, 8), rPARENT).toInt());
 
+    qDebug() << this->data(this->index(row, 8), rPARENT).toInt();
     return item;
 }
 
@@ -128,9 +126,9 @@ QVariantList ItemModel::getRecordAsList(int row)
 }
 
 bool ItemModel::setRecord(
-    int itemIndex, QString name, QString make, QString model, int year, QString type, int archived, int parent)
+    int itemIndex, QString name, QString make, QString model, int year, QString type, int parent)
 {
-    Database db;
+    ItemDatabase db;
     // itemIndex defaults to -1 for new entries.
     Item item(this->getId(itemIndex));
 
@@ -141,14 +139,16 @@ bool ItemModel::setRecord(
     item.setModel(model);
     item.setYear(year);
     item.setType(type);
-    item.setArchived(archived);
-    item.setParent(parent);
+    item.setItemId(parent);
 
-    if (itemIndex == -1) {
-        success = db.insertItemEntry(item);
+    if (itemIndex == -1)
+    {
+        success = db.insertEntry(item);
         qDebug() << "itemModel | Inserting Entry | " << success;
-    } else {
-        success = db.updateItemEntry(item);
+    }
+    else
+    {
+        success = db.updateEntry(item);
         qDebug() << "itemModel | Updating Entry | " << success;
     }
 
@@ -160,11 +160,11 @@ bool ItemModel::setRecord(
 
 bool ItemModel::deleteRecord(int itemId)
 {
-    Database db;
+    ItemDatabase db;
 
     bool success = false;
 
-    success = db.deleteItemEntry(itemId);
+    success = db.deleteEntryById(itemId);
 
     if (success)
         Q_EMIT dataChanged();

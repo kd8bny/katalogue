@@ -1,22 +1,19 @@
 #include "noteModel.h"
 
-
-NoteModel::NoteModel(QObject *parent) :
-    QSqlQueryModel(parent)
+NoteModel::NoteModel(QObject *parent) : QSqlQueryModel(parent)
 {
     QObject::connect(this, SIGNAL(dataChanged()), this, SLOT(refresh()));
-
 
     this->resetItemId();
 }
 
 NoteModel::~NoteModel()
 {
-
 }
 
 // The method for obtaining data from the model
-QVariant NoteModel::data(const QModelIndex & index, int role) const {
+QVariant NoteModel::data(const QModelIndex &index, int role) const
+{
 
     // Define the column number, on the role of number
     int columnId = role - Qt::UserRole - 1;
@@ -26,25 +23,27 @@ QVariant NoteModel::data(const QModelIndex & index, int role) const {
     return QSqlQueryModel::data(modelIndex, Qt::DisplayRole);
 }
 
-QHash<int, QByteArray> NoteModel::roleNames() const {
+QHash<int, QByteArray> NoteModel::roleNames() const
+{
 
     QHash<int, QByteArray> roles;
     roles[rID] = "id";
-    roles[rTitle] = Database::TITLE.toUtf8();
-    roles[rNote] = Database::NOTE_CONTENT.toUtf8();
-    roles[rItemID] = Database::KEY_ITEM_ID.toUtf8();
+    roles[rTitle] = DatabaseSchema::TITLE.toUtf8();
+    roles[rNote] = DatabaseSchema::NOTE_CONTENT.toUtf8();
+    roles[rItemID] = DatabaseSchema::KEY_ITEM_ID.toUtf8();
 
     return roles;
 }
 
-void NoteModel::resetItemId(){
+void NoteModel::resetItemId()
+{
     this->modelQuery = this->modelQueryBase;
     Q_EMIT dataChanged();
 }
 
 void NoteModel::setItemId(QString itemId)
 {
-    this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(Database::KEY_ITEM_ID, itemId);
+    this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(DatabaseSchema::KEY_ITEM_ID, itemId);
 
     this->setQuery(modelQuery);
     Q_EMIT dataChanged();
@@ -53,7 +52,7 @@ void NoteModel::setItemId(QString itemId)
 void NoteModel::refresh()
 {
     this->setQuery(this->modelQuery);
-    qDebug()<< this->modelQuery;
+    qDebug() << this->modelQuery;
 }
 
 int NoteModel::getId(int row)
@@ -82,7 +81,7 @@ QVariantList NoteModel::getRecordAsList(int row)
 
 bool NoteModel::setRecord(int noteIndex, QString title, QString noteContent, int itemId)
 {
-    Database db;
+    NoteDatabase db;
     // noteIndex defaults to -1 for new entries.
     Note note(this->getId(noteIndex));
 
@@ -94,11 +93,14 @@ bool NoteModel::setRecord(int noteIndex, QString title, QString noteContent, int
 
     qDebug() << note.asList();
 
-    if (noteIndex == -1) {
-        success = db.insertNoteEntry(note);
+    if (noteIndex == -1)
+    {
+        success = db.insertEntry(note);
         qDebug() << "noteModel | Inserting Entry | " << success;
-    } else {
-        success = db.updateNoteEntry(note);
+    }
+    else
+    {
+        success = db.updateEntry(note);
         qDebug() << "noteModel | Updating Entry | " << success;
     }
 
@@ -106,16 +108,15 @@ bool NoteModel::setRecord(int noteIndex, QString title, QString noteContent, int
         Q_EMIT dataChanged();
 
     return success;
-
 }
 
 bool NoteModel::deleteRecord(int noteId)
 {
-    Database db;
+    NoteDatabase db;
 
     bool success = false;
 
-    success = db.deleteNoteEntry(noteId);
+    success = db.deleteEntryById(noteId);
 
     if (success)
         Q_EMIT dataChanged();

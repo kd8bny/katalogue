@@ -8,6 +8,8 @@ import com.kd8bny.katalogue
 import org.kde.kirigami as Kirigami
 
 Kirigami.ScrollablePage {
+    //TODO update action
+
     id: addEditItemPage
 
     property int itemModelIndex: -1
@@ -24,7 +26,7 @@ Kirigami.ScrollablePage {
         if (itemArchived.checked)
             archived = true;
 
-        var parentId = -1;
+        var parentId = 0;
         if (itemParentEnabled.checked)
             parentId = ItemParentModel.getId(itemParentBox.currentIndex);
 
