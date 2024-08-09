@@ -33,25 +33,6 @@ add_executable(katalogue
     resources.qrc
 
     constants/defaults.cpp
-
-    # ${katalogue_data_src}
-
-    # data/databaseInit.cpp
-    # data/databaseUtils.cpp
-
-    # data/itemDatabase.cpp
-    # data/attributeDatabase.cpp
-    # data/eventDatabase.cpp
-    # data/noteDatabase.cpp
-    # data/taskDatabase.cpp
-
-    # data/entries/item.cpp
-    # data/entries/attribute.cpp
-    # data/entries/event.cpp
-    # data/entries/note.cpp
-    # data/entries/task.cpp
-
-
 )
 
 target_link_libraries(katalogue
