@@ -1,6 +1,9 @@
 #include <QtTest>
+#include <QSqlRecord>
 
-#include "data/database.h"
+#include "databaseInit.h"
+#include "databaseSchema.h"
+#include "itemDatabase.h"
 
 class DatabaseItemTest : public QObject
 {
@@ -12,7 +15,7 @@ private Q_SLOTS:
     void databaseConnected() const;
     void insertItemEntry() const;
     void insertItemComponentEntry() const;
-    void updateItemEntry() const;
+    void updateEntry() const;
     void deleteItemEntry() const;
 };
 
@@ -28,10 +31,9 @@ void DatabaseItemTest::databaseConnected() const
     }
 
     /*Test Database creation*/
-    Database katalogue_db;
-    bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
-
-    QVERIFY(DB_OPEN == true);
+    DatabaseInit init_db;
+    bool DB_OPEN = init_db.connectKatalogueDb(this->testDBPath);
+    QVERIFY2(DB_OPEN == true, "db open");
 
     /*Check Database Settings*/
     QSqlQuery query;
@@ -41,8 +43,6 @@ void DatabaseItemTest::databaseConnected() const
 
     query.exec(QStringLiteral("PRAGMA foreign_keys"));
     query.next();
-    qDebug() << query.record();
-    // qDebug() << "here" << query.value(0);
     QVERIFY(query.value(0).toInt() == 1);
 
     /*Remove Database File*/
@@ -58,11 +58,11 @@ void DatabaseItemTest::databaseConnected() const
 void DatabaseItemTest::insertItemEntry() const
 {
     /*Test Item Insert*/
-    Database katalogue_db;
-    bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
-    qDebug() << "db open" << DB_OPEN;
+    DatabaseInit init_db;
+    bool DB_OPEN = init_db.connectKatalogueDb(this->testDBPath);
+    QVERIFY2(DB_OPEN == true, "db open");
 
-    QVERIFY(DB_OPEN == true);
+    ItemDatabase katalogue_db;
 
     QList<QVariantList> items;
 
@@ -94,17 +94,17 @@ void DatabaseItemTest::insertItemEntry() const
         item.setType(itemAsList.value(4).toString());
         item.setArchived(itemAsList.value(5).toBool());
         // Ignore user order and set as null
-        item.setParent(itemAsList.value(7).toInt());
+        item.setItemId(itemAsList.value(7).toInt());
 
-        QVERIFY(katalogue_db.insertItemEntry(item) == true);
+        QVERIFY(katalogue_db.insertEntry(item) == true);
     }
 
     // Validate data
     const QString modelQueryBase = QStringLiteral(
                                        "SELECT id, %1, %2, %3, %4, %5, %6, %7, %8 FROM %9")
-                                       .arg(Database::NAME, Database::MAKE, Database::MODEL, Database::YEAR,
-                                            Database::TYPE, Database::ARCHIVED, Database::USER_ORDER,
-                                            Database::KEY_ITEM_ID, Database::TABLE_ITEMS);
+                                       .arg(DatabaseSchema::NAME, DatabaseSchema::MAKE, DatabaseSchema::MODEL, DatabaseSchema::YEAR,
+                                            DatabaseSchema::TYPE, DatabaseSchema::ARCHIVED, DatabaseSchema::USER_ORDER,
+                                            DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::TABLE_ITEMS);
     QSqlQuery query;
     query.exec(modelQueryBase);
     for (int i = 0; i < items.length(); i++)
@@ -129,9 +129,11 @@ void DatabaseItemTest::insertItemEntry() const
 void DatabaseItemTest::insertItemComponentEntry() const
 {
     /*Test Item Insert*/
-    Database katalogue_db;
-    bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
+    DatabaseInit init_db;
+    bool DB_OPEN = init_db.connectKatalogueDb(this->testDBPath);
     QVERIFY2(DB_OPEN == true, "db open");
+
+    ItemDatabase katalogue_db;
 
     QList<QVariantList> items;
 
@@ -162,18 +164,18 @@ void DatabaseItemTest::insertItemComponentEntry() const
         item.setType(itemAsList.value(4).toString());
         item.setArchived(itemAsList.value(5).toBool());
         // Ignore user order and set as null
-        item.setParent(itemAsList.value(7).toInt());
+        item.setItemId(itemAsList.value(7).toInt());
 
         // qDebug() << "itemInserted: " << itemInserted;
-        QVERIFY2(katalogue_db.insertItemEntry(item) == true, "item inserted");
+        QVERIFY2(katalogue_db.insertEntry(item) == true, "item inserted");
     }
 
     // Validate data
     const QString modelQueryBase = QStringLiteral(
                                        "SELECT id, %1, %2, %3, %4, %5, %6, %7, %8 FROM %9")
-                                       .arg(Database::NAME, Database::MAKE, Database::MODEL, Database::YEAR,
-                                            Database::TYPE, Database::ARCHIVED, Database::USER_ORDER,
-                                            Database::KEY_ITEM_ID, Database::TABLE_ITEMS);
+                                       .arg(DatabaseSchema::NAME, DatabaseSchema::MAKE, DatabaseSchema::MODEL, DatabaseSchema::YEAR,
+                                            DatabaseSchema::TYPE, DatabaseSchema::ARCHIVED, DatabaseSchema::USER_ORDER,
+                                            DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::TABLE_ITEMS);
     QSqlQuery query;
     query.exec(modelQueryBase);
     query.seek(2); // Seek to component item in sql results
@@ -203,13 +205,14 @@ void DatabaseItemTest::insertItemComponentEntry() const
     }
 }
 
-void DatabaseItemTest::updateItemEntry() const
+void DatabaseItemTest::updateEntry() const
 {
     /*Test Item Insert*/
-    Database katalogue_db;
-    bool DB_OPEN = katalogue_db.connectKatalogueDb(this->testDBPath);
-    qDebug() << "db open" << DB_OPEN;
-    QVERIFY(DB_OPEN == true);
+    DatabaseInit init_db;
+    bool DB_OPEN = init_db.connectKatalogueDb(this->testDBPath);
+    QVERIFY2(DB_OPEN == true, "db open");
+
+    ItemDatabase katalogue_db;
 
     QVariantList itemFields = {
         QStringLiteral("updatedName"), QStringLiteral("updatedMake"), QStringLiteral("updatedModel"), 2001,
@@ -218,13 +221,13 @@ void DatabaseItemTest::updateItemEntry() const
     // Get Data from Record 3
     const QString record3Query = QStringLiteral(
                                      "SELECT %1, %2, %3, %4, %5, %6, %7, %8 FROM %9 WHERE id=3")
-                                     .arg(Database::NAME, Database::MAKE, Database::MODEL, Database::YEAR,
-                                          Database::TYPE, Database::ARCHIVED, Database::USER_ORDER,
-                                          Database::KEY_ITEM_ID, Database::TABLE_ITEMS);
+                                     .arg(DatabaseSchema::NAME, DatabaseSchema::MAKE, DatabaseSchema::MODEL, DatabaseSchema::YEAR,
+                                          DatabaseSchema::TYPE, DatabaseSchema::ARCHIVED, DatabaseSchema::USER_ORDER,
+                                          DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::TABLE_ITEMS);
     QSqlQuery query;
     query.exec(record3Query);
     query.next();
-    qDebug() << query.record();
+    // qDebug() << query.record();
 
     // Build item 3
     Item item3(3);
@@ -235,14 +238,14 @@ void DatabaseItemTest::updateItemEntry() const
     item3.setType(query.value(4).toString());
     item3.setArchived(query.value(5).toBool());
     // Ignore user order and set as null
-    item3.setParent(query.value(7).toInt());
+    item3.setItemId(query.value(7).toInt());
 
     qDebug() << item3.asList();
 
     // Start Test
     // Update Name
     item3.setName(itemFields.value(0).toString());
-    QVERIFY(katalogue_db.updateItemEntry(item3) == true);
+    QVERIFY(katalogue_db.updateEntry(item3) == true);
 
     query.exec(record3Query);
     query.next();
@@ -250,7 +253,7 @@ void DatabaseItemTest::updateItemEntry() const
 
     // Update Make
     item3.setMake(itemFields.value(1).toString());
-    QVERIFY(katalogue_db.updateItemEntry(item3) == true);
+    QVERIFY(katalogue_db.updateEntry(item3) == true);
 
     query.exec(record3Query);
     query.next();
@@ -258,7 +261,7 @@ void DatabaseItemTest::updateItemEntry() const
 
     // Update Model
     item3.setModel(itemFields.value(2).toString());
-    QVERIFY(katalogue_db.updateItemEntry(item3) == true);
+    QVERIFY(katalogue_db.updateEntry(item3) == true);
 
     query.exec(record3Query);
     query.next();
@@ -266,7 +269,7 @@ void DatabaseItemTest::updateItemEntry() const
 
     // Update Year
     item3.setYear(itemFields.value(3).toInt());
-    QVERIFY(katalogue_db.updateItemEntry(item3) == true);
+    QVERIFY(katalogue_db.updateEntry(item3) == true);
 
     query.exec(record3Query);
     query.next();
@@ -274,22 +277,22 @@ void DatabaseItemTest::updateItemEntry() const
 
     // Update Type
     item3.setType(itemFields.value(4).toString());
-    QVERIFY(katalogue_db.updateItemEntry(item3) == true);
+    QVERIFY(katalogue_db.updateEntry(item3) == true);
 
     query.exec(record3Query);
     query.next();
     QVERIFY(query.value(4).toString() == itemFields.value(4).toString());
 
     // Update Parent
-    item3.setParent(itemFields.value(7).toInt());
-    QVERIFY(katalogue_db.updateItemEntry(item3) == true);
+    item3.setItemId(itemFields.value(7).toInt());
+    QVERIFY(katalogue_db.updateEntry(item3) == true);
 
     query.exec(record3Query);
     query.next();
     QVERIFY(query.value(7).toInt() == itemFields.value(7).toInt());
     // Update User Order
     // Uses updateItemUserOrder
-    QVERIFY(katalogue_db.updateItemUserOrder(3, itemFields.value(6).toInt()) == true);
+    QVERIFY(katalogue_db.setUserOrder(3, itemFields.value(6).toInt()) == true);
 
     query.exec(record3Query);
     query.next();
@@ -297,7 +300,7 @@ void DatabaseItemTest::updateItemEntry() const
 
     // Update Archived
     // Uses updateItemArchived
-    QVERIFY(katalogue_db.updateItemArchived(3, itemFields.value(5).toBool()) == true);
+    QVERIFY(katalogue_db.setArchived(3, itemFields.value(5).toBool()) == true);
 
     query.exec(record3Query);
     query.next();
@@ -306,12 +309,17 @@ void DatabaseItemTest::updateItemEntry() const
 
 void DatabaseItemTest::deleteItemEntry() const
 {
-    Database katalogue_db;
+    DatabaseInit init_db;
+    bool DB_OPEN = init_db.connectKatalogueDb(this->testDBPath);
+    QVERIFY2(DB_OPEN == true, "db open");
+
+    ItemDatabase katalogue_db;
+
     // Get Data from Record 3
     const QString record3Query = QStringLiteral("SELECT %1 FROM %2 WHERE id=3")
-                                     .arg(Database::NAME, Database::TABLE_ITEMS);
+                                     .arg(DatabaseSchema::NAME, DatabaseSchema::TABLE_ITEMS);
 
-    QVERIFY2(katalogue_db.deleteItemEntry(3) == true, "item 3 deleted");
+    QVERIFY2(katalogue_db.deleteEntryById(3) == true, "item 3 deleted");
 
     QSqlQuery query;
     query.exec(record3Query);
