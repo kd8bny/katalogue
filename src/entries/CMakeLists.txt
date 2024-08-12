@@ -8,12 +8,6 @@ set(katalogue_entries_src
     event.cpp
     note.cpp
     task.cpp
-    # entry.h # TODO
-    # item.h
-    # attribute.h
-    # event.h
-    # note.h
-    # task.h
 )
 
 add_library(katalogue_entries STATIC
