@@ -15,7 +15,6 @@ Kirigami.ScrollablePage {
 
     title: i18n(entryItem.name + " Details")
     Component.onCompleted: {
-        console.log("ddd");
         nameField.text = entryItem.name;
         makeField.text = entryItem.make;
         modelField.text = entryItem.model;
@@ -25,12 +24,12 @@ Kirigami.ScrollablePage {
     }
     actions: [
         Kirigami.Action {
+            //TODO update data on exit
+
             text: i18n("Edit")
             icon.name: "entry-edit"
             tooltip: i18n("Edit item")
             onTriggered: {
-                //TODO update data on exit
-
                 pageStack.push("qrc:AddEditItemPage.qml", {
                     "entryItem": entryItem
                 });
