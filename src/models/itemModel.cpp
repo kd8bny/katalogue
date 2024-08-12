@@ -39,23 +39,10 @@ QHash<int, QByteArray> ItemModel::roleNames() const
     return roles;
 }
 
-void ItemModel::setItemQuery()
+int ItemModel::getId(int row) const
 {
-    modelQuery = this->modelQueryBase + this->modelQueryParentItem + this->modelQuerySortUser;
-    qDebug() << modelQuery;
-    Q_EMIT dataChanged();
-}
-
-void ItemModel::setArchiveQuery()
-{
-    modelQuery = this->modelQueryBase + this->modelQueryArchive + this->modelQuerySortUser;
-    Q_EMIT dataChanged();
-}
-
-void ItemModel::setComponentQuery()
-{
-    modelQuery = this->modelQueryBase + this->modelQueryIncludeComponents + this->modelQuerySortUser;
-    Q_EMIT dataChanged();
+    qDebug() << "getId " << this->data(this->index(row, 0), rID).toInt();
+    return this->data(this->index(row, 0), rID).toInt();
 }
 
 void ItemModel::setItemPosition(const int index, const int direction) const
@@ -88,13 +75,26 @@ void ItemModel::setItemPosition(const int index, const int direction) const
     Q_EMIT dataChanged();
 }
 
+void ItemModel::setItemQuery()
+{
+    modelQuery = this->modelQueryBase + this->modelQueryParentItem + this->modelQuerySortUser;
+    qDebug() << modelQuery;
+    Q_EMIT dataChanged();
+}
+
+void ItemModel::setArchiveQuery()
+{
+    modelQuery = this->modelQueryBase + this->modelQueryArchive + this->modelQuerySortUser;
+    Q_EMIT dataChanged();
+}
+
+void ItemModel::setComponentQuery()
+{
+    modelQuery = this->modelQueryBase + this->modelQueryIncludeComponents + this->modelQuerySortUser;
+    Q_EMIT dataChanged();
+}
+
 void ItemModel::refresh()
 {
     this->setQuery(this->modelQuery);
-}
-
-int ItemModel::getId(int row) const
-{
-    qDebug() << "getId " << this->data(this->index(row, 0), rID).toInt();
-    return this->data(this->index(row, 0), rID).toInt();
 }
