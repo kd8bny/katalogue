@@ -88,6 +88,14 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     App application;
     qmlRegisterSingletonInstance("org.kde.katalogue", 1, 0, "App", &application);
 
+    // QML Data Types
+    qmlRegisterType<Item>("com.kd8bny.katalogue.entries", 1, 0, "EntryItem");
+    qmlRegisterType<Attribute>("com.kd8bny.katalogue.entries", 1, 0, "EntryAttribute");
+    qmlRegisterType<Event>("com.kd8bny.katalogue.entries", 1, 0, "EntryEvent");
+    qmlRegisterType<Note>("com.kd8bny.katalogue.entries", 1, 0, "EntryNote");
+    qmlRegisterType<Task>("com.kd8bny.katalogue.entries", 1, 0, "EntryTask");
+
+    // Models and Data Interfaces
     if (DatabaseInit db; !db.connectKatalogueDb(qPath))
     {
         return -1;
@@ -105,6 +113,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     TaskDatabase taskDatabase;
     qmlRegisterSingletonInstance<TaskDatabase>("com.kd8bny.katalogue", 1, 0, "TaskDatabase", &taskDatabase);
 
+    // Models
     AttributeModel attributeModel;
     qmlRegisterSingletonInstance<AttributeModel>("com.kd8bny.katalogue", 1, 0, "AttributeModel", &attributeModel);
 
