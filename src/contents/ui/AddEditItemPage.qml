@@ -5,55 +5,55 @@ import QtQuick
 import QtQuick.Controls as Controls
 import QtQuick.Layouts
 import com.kd8bny.katalogue
+import com.kd8bny.katalogue.entries
 import org.kde.kirigami as Kirigami
 
 Kirigami.ScrollablePage {
-    //TODO update action
+    // itemParentBox.find(entryItem.itemId); //TODO wron item
 
     id: addEditItemPage
 
-    property int itemModelIndex: -1
+    property EntryItem entryItem
     property bool isEdit: false
-    property bool isArchived: false
 
     function insertUpdate() {
-        var typeText = "";
+        entryItem.name = nameField.text;
+        entryItem.make = makeField.text;
+        entryItem.model = modelField.text;
+        entryItem.year = yearField.text;
         if (typeBox.find(typeBox.editText) === -1)
-            typeText = typeBox.editText;
+            entryItem.type = typeBox.editText;
         else
-            typeText = typeBox.currentText;
-        var archived = false;
+            entryItem.type = typeBox.currentText;
         if (itemArchived.checked)
-            archived = true;
+            entryItem.archived = true;
 
-        var parentId = 0;
         if (itemParentEnabled.checked)
-            parentId = ItemParentModel.getId(itemParentBox.currentIndex);
+            entryItem.type.itemId = ItemParentModel.getId(itemParentBox.currentIndex);
 
-        var success = ItemModel.setRecord(itemModelIndex, nameField.text, makeField.text, modelField.text, parseInt(yearField.text), typeText, archived, parentId);
-        if (success)
-            ItemTypeModel.refresh();
-
-        return success;
+        if (isEdit)
+            return ItemDatabase.updateEntry(entryItem);
+        else
+            return ItemDatabase.insertEntry(entryItem);
     }
 
     title: (isEdit) ? i18n("Edit Item") : i18n("Add Item")
     Component.onCompleted: {
-        if (isEdit) {
-            var recordData = ItemModel.getRecordAsList(itemModelIndex);
-            nameField.text = recordData[3];
-            makeField.text = recordData[4];
-            modelField.text = recordData[5];
-            yearField.text = recordData[6];
-            typeBox.currentIndex = typeBox.find(recordData[7]);
-            if (recordData[8]) {
-                itemArchived.checked = recordData[8];
-                isArchived = true;
-            }
-            if (recordData[10]) {
-                itemParentEnabled.checked = recordData[6];
-                itemParentBox.find(recordData[10]);
-            }
+        if (entryItem) {
+            isEdit = true;
+            nameField.text = entryItem.name;
+            makeField.text = entryItem.make;
+            modelField.text = entryItem.model;
+            yearField.text = entryItem.year;
+            typeBox.currentIndex = typeBox.find(entryItem.type);
+            if (entryItem.archived)
+                itemArchived.checked = entryItem.archived;
+
+            if (entryItem.itemId)
+                itemParentEnabled.checked = entryItem.itemId;
+
+        } else {
+            entryItem = ItemDatabase.getNewEntry();
         }
     }
     actions: [
@@ -75,8 +75,8 @@ Kirigami.ScrollablePage {
         subtitle: i18n("Are you sure you want to delete Item")
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: {
-            var success = ItemModel.deleteRecord(ItemModel.getId(itemModelIndex));
-            if (success) {
+            if (ItemDatabase.deleteEntryById(entryItem.id)) {
+                ItemModel.refresh();
                 pageStack.clear();
                 pageStack.push("qrc:Items.qml");
             } else {
@@ -157,11 +157,13 @@ Kirigami.ScrollablePage {
             text: (isEdit) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
             enabled: nameField.text.length > 0
             onClicked: {
-                var success = insertUpdate();
-                if (success)
+                if (insertUpdate()) {
+                    ItemModel.refresh();
+                    ItemTypeModel.refresh();
                     pageStack.pop();
-                else
+                } else {
                     msgInsertUpdateError.visible = true;
+                }
             }
         }
 
@@ -181,7 +183,7 @@ Kirigami.ScrollablePage {
         id: msgInsertUpdateError
 
         type: Kirigami.MessageType.Error
-        text: "Failed to update Item"
+        text: (isEdit) ? i18n("Failed to update Item") : i18n("Failed to insert Item")
         visible: false
     }
 

@@ -4,70 +4,81 @@
 import QtQuick
 import QtQuick.Controls as Controls
 import QtQuick.Layouts
-import org.kde.kirigami as Kirigami
-
 import com.kd8bny.katalogue
+import com.kd8bny.katalogue.entries
+import org.kde.kirigami as Kirigami
 
 Kirigami.ScrollablePage {
     id: itemInfoPage
 
-    required property int itemModelIndex  // Item Model index position
+    required property EntryItem entryItem
 
-    title: "Details"
-
+    title: i18n(entryItem.name + " Details")
+    Component.onCompleted: {
+        console.log("ddd");
+        nameField.text = entryItem.name;
+        makeField.text = entryItem.make;
+        modelField.text = entryItem.model;
+        yearField.text = entryItem.year;
+        typeBox.text = entryItem.type;
+        itemParentBox.text = entryItem.itemId; //TODO name not number
+    }
     actions: [
         Kirigami.Action {
             text: i18n("Edit")
             icon.name: "entry-edit"
             tooltip: i18n("Edit item")
-
             onTriggered: {
-                pageStack.push("qrc:AddEditItemPage.qml", {"isEdit": true, "itemModelIndex": itemModelIndex})
+                //TODO update data on exit
+
+                pageStack.push("qrc:AddEditItemPage.qml", {
+                    "entryItem": entryItem
+                });
             }
         }
     ]
-
-    Component.onCompleted: {
-        var recordData = ItemModel.getRecordAsList(itemModelIndex)
-
-        print(recordData)
-        nameField.text = recordData[3]
-        makeField.text = recordData[4]
-        modelField.text = recordData[5]
-        yearField.text = recordData[6]
-
-        typeBox.text = recordData[7]
-        itemParentBox.text = recordData[9]  //TODO name not number
-
-    }
 
     Kirigami.FormLayout {
         id: form
 
         Controls.Label {
             id: nameField
+
             Kirigami.FormData.label: i18nc("@label:textbox", "Name:")
         }
+
         Controls.Label {
             id: makeField
+
             Kirigami.FormData.label: i18nc("@label:textbox", "Make:")
         }
+
         Controls.Label {
             id: modelField
+
             Kirigami.FormData.label: i18nc("@label:textbox", "Model:")
         }
+
         Controls.Label {
             id: yearField
+
             Kirigami.FormData.label: i18nc("@label:textbox", "Year:")
         }
+
         Controls.Label {
             id: typeBox
+
             Kirigami.FormData.label: i18nc("@label:textbox", "Type:")
         }
+
         Controls.Label {
-            id: itemParentBox
-            Kirigami.FormData.label: i18nc("@label:textbox", "Parent Item:")
             // TODO visable
+
+            id: itemParentBox
+
+            Kirigami.FormData.label: i18nc("@label:textbox", "Parent Item:")
         }
+
     }
+
 }

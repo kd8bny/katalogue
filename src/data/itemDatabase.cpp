@@ -5,7 +5,7 @@ ItemDatabase::ItemDatabase(QObject *parent)
 {
 }
 
-bool ItemDatabase::insertEntry(const Item &item) const
+bool ItemDatabase::insertEntry(const Item *item) const
 {
     /*
      * Insert Item.
@@ -25,15 +25,15 @@ bool ItemDatabase::insertEntry(const Item &item) const
     query.bindValue(QStringLiteral(":created"), currentTime);
     query.bindValue(QStringLiteral(":modified"), currentTime);
 
-    query.bindValue(QStringLiteral(":name"), item.getName());
-    query.bindValue(QStringLiteral(":make"), item.getMake());
-    query.bindValue(QStringLiteral(":model"), item.getModel());
-    query.bindValue(QStringLiteral(":year"), item.getYear());
-    query.bindValue(QStringLiteral(":type"), item.getType());
-    query.bindValue(QStringLiteral(":archived"), item.getArchived());
-    if (item.getItemId() != 0)
+    query.bindValue(QStringLiteral(":name"), item->getName());
+    query.bindValue(QStringLiteral(":make"), item->getMake());
+    query.bindValue(QStringLiteral(":model"), item->getModel());
+    query.bindValue(QStringLiteral(":year"), item->getYear());
+    query.bindValue(QStringLiteral(":type"), item->getType());
+    query.bindValue(QStringLiteral(":archived"), item->getArchived());
+    if (item->getItemId() != 0)
     {
-        query.bindValue(QStringLiteral(":parent"), item.getItemId());
+        query.bindValue(QStringLiteral(":parent"), item->getItemId());
     }
 
     if (!query.exec())
@@ -45,7 +45,7 @@ bool ItemDatabase::insertEntry(const Item &item) const
     return true;
 }
 
-bool ItemDatabase::updateEntry(const Item &item) const
+bool ItemDatabase::updateEntry(const Item *item) const
 {
     /*
      * Update Item.
@@ -62,15 +62,15 @@ bool ItemDatabase::updateEntry(const Item &item) const
 
     query.bindValue(QStringLiteral(":modified"), currentTime);
 
-    query.bindValue(QStringLiteral(":id"), item.getId());
-    query.bindValue(QStringLiteral(":name"), item.getName());
-    query.bindValue(QStringLiteral(":make"), item.getMake());
-    query.bindValue(QStringLiteral(":model"), item.getModel());
-    query.bindValue(QStringLiteral(":year"), item.getYear());
-    query.bindValue(QStringLiteral(":type"), item.getType());
-    if (item.getItemId() != 0)
+    query.bindValue(QStringLiteral(":id"), item->getId());
+    query.bindValue(QStringLiteral(":name"), item->getName());
+    query.bindValue(QStringLiteral(":make"), item->getMake());
+    query.bindValue(QStringLiteral(":model"), item->getModel());
+    query.bindValue(QStringLiteral(":year"), item->getYear());
+    query.bindValue(QStringLiteral(":type"), item->getType());
+    if (item->getItemId() != 0)
     {
-        query.bindValue(QStringLiteral(":parent"), item.getItemId());
+        query.bindValue(QStringLiteral(":parent"), item->getItemId());
     }
 
     if (!query.exec())
@@ -150,4 +150,50 @@ bool ItemDatabase::setUserOrder(const int id, const int user_order) const
     }
 
     return true;
+}
+
+Item *ItemDatabase::getEntryById(const int id) const
+{
+    QSqlQuery query;
+
+    query.prepare(
+        QStringLiteral("SELECT %1, %2, %3, %4, %5, %6, %7, %8, %9, %10 FROM %11 WHERE id=:id")
+            .arg(DatabaseSchema::CREATED, DatabaseSchema::MODIFIED, DatabaseSchema::NAME, DatabaseSchema::MAKE,
+                 DatabaseSchema::MODEL, DatabaseSchema::YEAR, DatabaseSchema::TYPE, DatabaseSchema::ARCHIVED,
+                 DatabaseSchema::USER_ORDER, DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::TABLE_ITEMS));
+
+    query.bindValue(QStringLiteral(":id"), id);
+
+    if (!query.exec())
+    {
+        qDebug() << "Error getting item entry " << query.lastError();
+        qDebug() << query.lastQuery() << query.lastError();
+        return nullptr;
+    }
+    query.next();
+
+    EntryFactory entryFactory;
+    std::unique_ptr<Item> item = entryFactory.createItem();
+
+    item->setId(id);
+    item->setCreatedDate(query.value(0).toString());
+    item->setModifiedDate(query.value(1).toString());
+    item->setName(query.value(2).toString());
+    item->setMake(query.value(3).toString());
+    item->setModel(query.value(4).toString());
+    item->setYear(query.value(5).toInt());
+    item->setType(query.value(6).toString());
+    item->setArchived(query.value(7).toInt());
+    item->setUserOrder(query.value(8).toInt());
+    item->setItemId(query.value(9).toInt());
+
+    return item.release();
+}
+
+Item *ItemDatabase::getNewEntry() const
+{
+    EntryFactory entryFactory;
+    std::unique_ptr<Item> item = entryFactory.createItem();
+
+    return item.release();
 }
