@@ -1,15 +1,25 @@
 #include <QObject>
+#include <QtQml>
 
 #ifndef ENTRY_H
 #define ENTRY_H
 
-class Entry
+class Entry : public QObject
 {
+    Q_OBJECT
+    QML_ELEMENT
+    Q_PROPERTY(int id READ getId)
+    Q_PROPERTY(QString createdDate READ getCreatedDate)
+    Q_PROPERTY(QString modifiedDate READ getModifiedDate)
+    Q_PROPERTY(int itemId READ getItemId WRITE setItemId)
+
 public:
-    explicit Entry(int id = 0) : id(id) {}
-    virtual ~Entry() = default;
+    explicit Entry(QObject *parent = nullptr)
+        : QObject(parent) {};
+    ~Entry();
 
     int getId() const { return id; }
+    void setId(const int &id_) { id = id_; }
 
     QString getCreatedDate() const { return createdDate; }
     void setCreatedDate(const QString &createdDate_) { createdDate = createdDate_; }
@@ -20,10 +30,8 @@ public:
     int getItemId() const { return itemId; }
     void setItemId(int itemId_) { itemId = itemId_; }
 
-    virtual QVariantList asList() const = 0;
-
 private:
-    int id;
+    int id = 0;
     QString createdDate;
     QString modifiedDate;
     int itemId;

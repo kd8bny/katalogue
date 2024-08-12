@@ -9,10 +9,12 @@
 
 class Task : public Entry
 {
+    Q_OBJECT
 
 public:
-    using Entry::Entry;
-    ~Task() override = default;
+    Q_INVOKABLE explicit Task(QObject *parent = nullptr)
+        : Entry(parent){};
+    ~Task();
 
     QString getDueDate() const { return dueDate; }
     void setDueDate(const QString &dueDate_) { dueDate = dueDate_; }
@@ -25,8 +27,6 @@ public:
 
     QString getDescription() const { return description; }
     void setDescription(const QString &description_) { description = description_; }
-
-    QVariantList asList() const override;
 
 private:
     QString dueDate;

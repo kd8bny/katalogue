@@ -1,6 +1,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QVariantList>
+#include <QtQml>
 
 #include "entry.h"
 
@@ -9,10 +10,21 @@
 
 class Item : public Entry
 {
+    Q_OBJECT
+    QML_ELEMENT
+    Q_PROPERTY(QString name READ getName WRITE setName)
+    Q_PROPERTY(QString make READ getMake WRITE setMake)
+    Q_PROPERTY(QString model READ getModel WRITE setModel)
+    Q_PROPERTY(int year READ getYear WRITE setYear)
+    Q_PROPERTY(QString type READ getType WRITE setType)
+    Q_PROPERTY(bool archived READ getArchived WRITE setArchived)
+    Q_PROPERTY(int userOrder READ getUserOrder WRITE setUserOrder)
 
 public:
-    using Entry::Entry;
-    ~Item() override = default;
+    Q_INVOKABLE using Entry::Entry;
+    // Q_INVOKABLE explicit Item(QObject *parent = nullptr)
+    //     : Entry(parent){};
+    ~Item();
 
     QString getName() const { return name; }
     void setName(const QString &name_) { name = name_; }
@@ -35,16 +47,14 @@ public:
     int getUserOrder() const { return userOrder; }
     void setUserOrder(const int &userOrder_) { userOrder = userOrder_; }
 
-    QVariantList asList() const override;
-
 private:
     QString name;
     QString make;
     QString model;
     int year;
     QString type;
-    bool archived;
-    int userOrder;
+    bool archived = false;
+    int userOrder = 0;
 };
 
 #endif

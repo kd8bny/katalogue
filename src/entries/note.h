@@ -9,18 +9,18 @@
 
 class Note : public Entry
 {
+    Q_OBJECT
 
 public:
-    using Entry::Entry;
-    ~Note() override = default;
+    Q_INVOKABLE explicit Note(QObject *parent = nullptr)
+        : Entry(parent){};
+    ~Note();
 
     QString getTitle() const { return title; }
     void setTitle(const QString &title_) { title = title_; }
 
     QString getNoteContent() const { return noteContent; }
     void setNoteContent(const QString &noteContent_) { noteContent = noteContent_; }
-
-    QVariantList asList() const override;
 
 private:
     QString title;

@@ -1,6 +1,9 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # SPDX-FileCopyrightText: 2022 Daryl Bennett <kd8bny@gmail.com>
 
+add_subdirectory(entries)
+add_subdirectory(data)
+
 set(katalogue_models_src
     models/attributeModel.cpp
     models/attributeCategoryModel.cpp
@@ -22,9 +25,8 @@ target_link_libraries(katalogue_models
     katalogue_data
     Qt6::Core
     Qt6::Sql
+    Qt6::Qml
 )
-
-add_subdirectory(data)
 
 add_executable(katalogue
     main.cpp
@@ -38,9 +40,9 @@ add_executable(katalogue
 target_link_libraries(katalogue
     katalogue_data
     katalogue_models
+    katalogue_entries
 
     Qt6::Gui
-    Qt6::Qml
     Qt6::Quick
     Qt6::QuickControls2
     Qt6::Widgets

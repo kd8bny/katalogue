@@ -9,10 +9,15 @@
 
 class Event : public Entry
 {
+    Q_OBJECT
 
 public:
     using Entry::Entry;
-    ~Event() override = default;
+    // explicit Event();
+    // ~Event() override = default;
+    Q_INVOKABLE explicit Event(QObject *parent = nullptr)
+        : Entry(parent){};
+    ~Event();
 
     QString getDate() const { return date; }
     void setDate(const QString &date_) { date = date_; }
@@ -31,8 +36,6 @@ public:
 
     QString getComment() const { return comment; }
     void setComment(const QString &comment_) { comment = comment_; }
-
-    QVariantList asList() const override;
 
 private:
     QString date;
