@@ -156,11 +156,8 @@ Item *ItemDatabase::getEntryById(const int id) const
 {
     QSqlQuery query;
 
-    query.prepare(
-        QStringLiteral("SELECT %1, %2, %3, %4, %5, %6, %7, %8, %9, %10 FROM %11 WHERE id=:id")
-            .arg(DatabaseSchema::CREATED, DatabaseSchema::MODIFIED, DatabaseSchema::NAME, DatabaseSchema::MAKE,
-                 DatabaseSchema::MODEL, DatabaseSchema::YEAR, DatabaseSchema::TYPE, DatabaseSchema::ARCHIVED,
-                 DatabaseSchema::USER_ORDER, DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::TABLE_ITEMS));
+    query.prepare(QStringLiteral("SELECT * FROM %1 WHERE id=:id")
+                      .arg(DatabaseSchema::TABLE_ITEMS));
 
     query.bindValue(QStringLiteral(":id"), id);
 
@@ -176,16 +173,16 @@ Item *ItemDatabase::getEntryById(const int id) const
     std::unique_ptr<Item> item = entryFactory.createItem();
 
     item->setId(id);
-    item->setCreatedDate(query.value(0).toString());
-    item->setModifiedDate(query.value(1).toString());
-    item->setName(query.value(2).toString());
-    item->setMake(query.value(3).toString());
-    item->setModel(query.value(4).toString());
-    item->setYear(query.value(5).toInt());
-    item->setType(query.value(6).toString());
-    item->setArchived(query.value(7).toInt());
-    item->setUserOrder(query.value(8).toInt());
-    item->setItemId(query.value(9).toInt());
+    item->setCreatedDate(query.value(1).toString());
+    item->setModifiedDate(query.value(2).toString());
+    item->setName(query.value(3).toString());
+    item->setMake(query.value(4).toString());
+    item->setModel(query.value(5).toString());
+    item->setYear(query.value(6).toInt());
+    item->setType(query.value(7).toString());
+    item->setArchived(query.value(8).toInt());
+    item->setUserOrder(query.value(9).toInt());
+    item->setItemId(query.value(10).toInt());
 
     return item.release();
 }
