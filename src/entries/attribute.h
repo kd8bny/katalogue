@@ -1,6 +1,5 @@
 #include <QObject>
-#include <QDebug>
-#include <QVariantList>
+#include <QtQml>
 
 #include "entry.h"
 
@@ -10,11 +9,13 @@
 class Attribute : public Entry
 {
     Q_OBJECT
+    QML_ELEMENT
+    Q_PROPERTY(QString key READ getKey WRITE setKey)
+    Q_PROPERTY(QString value READ getValue WRITE setValue)
+    Q_PROPERTY(QString category READ getCategory WRITE setCategory)
 
 public:
     Q_INVOKABLE using Entry::Entry;
-    //     Q_INVOKABLE explicit Attribute(QObject *parent = nullptr)
-    //     : Entry(parent){};
     ~Attribute();
 
     QString getKey() const { return key; }

@@ -5,13 +5,13 @@ AttributeDatabase::AttributeDatabase(QObject *parent)
 {
 }
 
-bool AttributeDatabase::insertEntry(const Attribute &attribute) const
+bool AttributeDatabase::insertEntry(const Attribute *attribute) const
 {
     QSqlQuery query;
 
     query.prepare(
         QStringLiteral("INSERT INTO %1 (%2, %3, %4, %5, %6, %7) "
-                       "VALUES (:created, :modified, :key, :value, :category, :itemId)")
+                       "VALUES (:created, :modified, :key, :value, :category, :attributeId)")
             .arg(DatabaseSchema::TABLE_ATTRIBUTES, DatabaseSchema::CREATED, DatabaseSchema::MODIFIED,
                  DatabaseSchema::KEY, DatabaseSchema::VALUE, DatabaseSchema::CATEGORY, DatabaseSchema::KEY_ITEM_ID));
 
@@ -20,10 +20,10 @@ bool AttributeDatabase::insertEntry(const Attribute &attribute) const
     query.bindValue(QStringLiteral(":created"), currentTime);
     query.bindValue(QStringLiteral(":modified"), currentTime);
 
-    query.bindValue(QStringLiteral(":key"), attribute.getKey());
-    query.bindValue(QStringLiteral(":value"), attribute.getValue());
-    query.bindValue(QStringLiteral(":category"), attribute.getCategory());
-    query.bindValue(QStringLiteral(":itemId"), attribute.getItemId());
+    query.bindValue(QStringLiteral(":key"), attribute->getKey());
+    query.bindValue(QStringLiteral(":value"), attribute->getValue());
+    query.bindValue(QStringLiteral(":category"), attribute->getCategory());
+    query.bindValue(QStringLiteral(":attributeId"), attribute->getItemId());
 
     if (!query.exec())
     {
@@ -36,7 +36,7 @@ bool AttributeDatabase::insertEntry(const Attribute &attribute) const
     return true;
 }
 
-bool AttributeDatabase::updateEntry(const Attribute &attribute) const
+bool AttributeDatabase::updateEntry(const Attribute *attribute) const
 {
     QSqlQuery query;
 
@@ -49,12 +49,12 @@ bool AttributeDatabase::updateEntry(const Attribute &attribute) const
 
     query.bindValue(QStringLiteral(":modified"), currentTime);
 
-    query.bindValue(QStringLiteral(":key"), attribute.getKey());
-    query.bindValue(QStringLiteral(":value"), attribute.getValue());
-    query.bindValue(QStringLiteral(":category"), attribute.getCategory());
-    query.bindValue(QStringLiteral(":itemId"), attribute.getItemId());
+    query.bindValue(QStringLiteral(":key"), attribute->getKey());
+    query.bindValue(QStringLiteral(":value"), attribute->getValue());
+    query.bindValue(QStringLiteral(":category"), attribute->getCategory());
+    query.bindValue(QStringLiteral(":attributeId"), attribute->getItemId());
 
-    query.bindValue(QStringLiteral(":attributeId"), attribute.getId());
+    query.bindValue(QStringLiteral(":attributeId"), attribute->getId());
 
     if (!query.exec())
     {
@@ -82,4 +82,44 @@ bool AttributeDatabase::deleteEntryById(int attributeId) const
     }
 
     return true;
+}
+
+Attribute *AttributeDatabase::getEntryById(const int id) const
+{
+    QSqlQuery query;
+
+    query.prepare(
+        QStringLiteral("SELECT * FROM %1 WHERE id=:id")
+            .arg(DatabaseSchema::TABLE_ATTRIBUTES));
+
+    query.bindValue(QStringLiteral(":id"), id);
+
+    if (!query.exec())
+    {
+        qDebug() << "Error getting attribute entry " << query.lastError();
+        qDebug() << query.lastQuery() << query.lastError();
+        return nullptr;
+    }
+    query.next();
+
+    EntryFactory entryFactory;
+    std::unique_ptr<Attribute> attribute = entryFactory.createAttribute();
+
+    attribute->setId(id);
+    attribute->setCreatedDate(query.value(1).toString());
+    attribute->setModifiedDate(query.value(2).toString());
+    attribute->setKey(query.value(3).toString());
+    attribute->setValue(query.value(4).toString());
+    attribute->setCategory(query.value(5).toString());
+    attribute->setItemId(query.value(6).toInt());
+
+    return attribute.release();
+}
+
+Attribute *AttributeDatabase::getNewEntry() const
+{
+    EntryFactory entryFactory;
+    std::unique_ptr<Attribute> attribute = entryFactory.createAttribute();
+
+    return attribute.release();
 }

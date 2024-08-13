@@ -5,7 +5,8 @@
 
 #include "databaseSchema.h"
 #include "databaseUtils.h"
-#include "entries/attribute.h"
+#include "entryFactory.h"
+#include "attribute.h"
 
 #ifndef ATTRIBUTE_DATABASE_H
 #define ATTRIBUTE_DATABASE_H
@@ -18,9 +19,11 @@ public:
     explicit AttributeDatabase(QObject *parent = nullptr);
     ~AttributeDatabase() override = default;
 
-    bool insertEntry(const Attribute &attribute) const;
-    bool updateEntry(const Attribute &attribute) const;
-    bool deleteEntryById(const int id) const;
+    Q_INVOKABLE bool insertEntry(const Attribute *attribute) const;
+    Q_INVOKABLE bool updateEntry(const Attribute *attribute) const;
+    Q_INVOKABLE bool deleteEntryById(const int id) const;
+    Q_INVOKABLE Attribute *getEntryById(const int id) const;
+    Q_INVOKABLE Attribute *getNewEntry() const;
 };
 
 #endif
