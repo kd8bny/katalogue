@@ -41,7 +41,6 @@ QHash<int, QByteArray> ItemModel::roleNames() const
 
 int ItemModel::getId(int row) const
 {
-    qDebug() << "getId " << this->data(this->index(row, 0), rID).toInt();
     return this->data(this->index(row, 0), rID).toInt();
 }
 
