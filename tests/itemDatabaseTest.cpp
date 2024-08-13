@@ -83,20 +83,26 @@ void ItemDatabaseTest::insertItemEntry() const
     // Inserts correctly
     for (int i = 0; i < items.length(); i++)
     {
+
+        EntryFactory entryFactory;
+        std::unique_ptr<Item> item_ptr = entryFactory.createItem();
+        Item *item = item_ptr.release();
+
         QVariantList itemAsList;
         itemAsList = items.value(i);
 
-        Item item(-1); // (itemAsList.value(0).toInt())
-        item.setName(itemAsList.value(0).toString());
-        item.setMake(itemAsList.value(1).toString());
-        item.setModel(itemAsList.value(2).toString());
-        item.setYear(itemAsList.value(3).toInt());
-        item.setType(itemAsList.value(4).toString());
-        item.setArchived(itemAsList.value(5).toBool());
+        item->setName(itemAsList.value(0).toString());
+        item->setMake(itemAsList.value(1).toString());
+        item->setModel(itemAsList.value(2).toString());
+        item->setYear(itemAsList.value(3).toInt());
+        item->setType(itemAsList.value(4).toString());
+        item->setArchived(itemAsList.value(5).toBool());
         // Ignore user order and set as null
-        item.setItemId(itemAsList.value(7).toInt());
+        item->setItemId(itemAsList.value(7).toInt());
 
-        QVERIFY(katalogue_db.insertEntry(item) == true);
+        QVERIFY2(katalogue_db.insertEntry(item) == true, "item inserted");
+
+        delete item;
     }
 
     // Validate data
@@ -153,29 +159,34 @@ void ItemDatabaseTest::insertItemComponentEntry() const
     // Inserts correctly
     for (int i = 0; i < items.length(); i++)
     {
+        EntryFactory entryFactory;
+        std::unique_ptr<Item> item = entryFactory.createItem();
+
         QVariantList itemAsList;
         itemAsList = items.value(i);
 
-        Item item(-1); // (itemAsList.value(0).toInt())
-        item.setName(itemAsList.value(0).toString());
-        item.setMake(itemAsList.value(1).toString());
-        item.setModel(itemAsList.value(2).toString());
-        item.setYear(itemAsList.value(3).toInt());
-        item.setType(itemAsList.value(4).toString());
-        item.setArchived(itemAsList.value(5).toBool());
+        item->setName(itemAsList.value(0).toString());
+        item->setMake(itemAsList.value(1).toString());
+        item->setModel(itemAsList.value(2).toString());
+        item->setYear(itemAsList.value(3).toInt());
+        item->setType(itemAsList.value(4).toString());
+        item->setArchived(itemAsList.value(5).toBool());
         // Ignore user order and set as null
-        item.setItemId(itemAsList.value(7).toInt());
+        item->setItemId(itemAsList.value(7).toInt());
 
         // qDebug() << "itemInserted: " << itemInserted;
-        QVERIFY2(katalogue_db.insertEntry(item) == true, "item inserted");
+        QVERIFY2(katalogue_db.insertEntry(item.release()) == true, "item component inserted");
+
+        delete item.release();
     }
 
     // Validate data
     const QString modelQueryBase = QStringLiteral(
                                        "SELECT id, %1, %2, %3, %4, %5, %6, %7, %8 FROM %9")
-                                       .arg(DatabaseSchema::NAME, DatabaseSchema::MAKE, DatabaseSchema::MODEL, DatabaseSchema::YEAR,
-                                            DatabaseSchema::TYPE, DatabaseSchema::ARCHIVED, DatabaseSchema::USER_ORDER,
-                                            DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::TABLE_ITEMS);
+                                       .arg(DatabaseSchema::NAME, DatabaseSchema::MAKE, DatabaseSchema::MODEL,
+                                            DatabaseSchema::YEAR, DatabaseSchema::TYPE, DatabaseSchema::ARCHIVED,
+                                            DatabaseSchema::USER_ORDER, DatabaseSchema::KEY_ITEM_ID,
+                                            DatabaseSchema::TABLE_ITEMS);
     QSqlQuery query;
     query.exec(modelQueryBase);
     query.seek(2); // Seek to component item in sql results
@@ -229,22 +240,24 @@ void ItemDatabaseTest::updateEntry() const
     query.next();
     // qDebug() << query.record();
 
-    // Build item 3
-    Item item3(3);
-    item3.setName(query.value(0).toString());
-    item3.setMake(query.value(1).toString());
-    item3.setModel(query.value(2).toString());
-    item3.setYear(query.value(3).toInt());
-    item3.setType(query.value(4).toString());
-    item3.setArchived(query.value(5).toBool());
-    // Ignore user order and set as null
-    item3.setItemId(query.value(7).toInt());
+    EntryFactory entryFactory;
+    std::unique_ptr<Item> item_ptr = entryFactory.createItem();
 
-    qDebug() << item3.asList();
+    Item *item3 = item_ptr.release();
+    // Build item 3
+    item3->setId(3);
+    item3->setName(query.value(0).toString());
+    item3->setMake(query.value(1).toString());
+    item3->setModel(query.value(2).toString());
+    item3->setYear(query.value(3).toInt());
+    item3->setType(query.value(4).toString());
+    item3->setArchived(query.value(5).toBool());
+    // Ignore user order and set as null
+    item3->setItemId(query.value(7).toInt());
 
     // Start Test
     // Update Name
-    item3.setName(itemFields.value(0).toString());
+    item3->setName(itemFields.value(0).toString());
     QVERIFY(katalogue_db.updateEntry(item3) == true);
 
     query.exec(record3Query);
@@ -252,7 +265,7 @@ void ItemDatabaseTest::updateEntry() const
     QVERIFY(query.value(0).toString() == itemFields.value(0).toString());
 
     // Update Make
-    item3.setMake(itemFields.value(1).toString());
+    item3->setMake(itemFields.value(1).toString());
     QVERIFY(katalogue_db.updateEntry(item3) == true);
 
     query.exec(record3Query);
@@ -260,7 +273,7 @@ void ItemDatabaseTest::updateEntry() const
     QVERIFY(query.value(1).toString() == itemFields.value(1).toString());
 
     // Update Model
-    item3.setModel(itemFields.value(2).toString());
+    item3->setModel(itemFields.value(2).toString());
     QVERIFY(katalogue_db.updateEntry(item3) == true);
 
     query.exec(record3Query);
@@ -268,7 +281,7 @@ void ItemDatabaseTest::updateEntry() const
     QVERIFY(query.value(2).toString() == itemFields.value(2).toString());
 
     // Update Year
-    item3.setYear(itemFields.value(3).toInt());
+    item3->setYear(itemFields.value(3).toInt());
     QVERIFY(katalogue_db.updateEntry(item3) == true);
 
     query.exec(record3Query);
@@ -276,7 +289,7 @@ void ItemDatabaseTest::updateEntry() const
     QVERIFY(query.value(3).toInt() == itemFields.value(3).toInt());
 
     // Update Type
-    item3.setType(itemFields.value(4).toString());
+    item3->setType(itemFields.value(4).toString());
     QVERIFY(katalogue_db.updateEntry(item3) == true);
 
     query.exec(record3Query);
@@ -284,7 +297,7 @@ void ItemDatabaseTest::updateEntry() const
     QVERIFY(query.value(4).toString() == itemFields.value(4).toString());
 
     // Update Parent
-    item3.setItemId(itemFields.value(7).toInt());
+    item3->setItemId(itemFields.value(7).toInt());
     QVERIFY(katalogue_db.updateEntry(item3) == true);
 
     query.exec(record3Query);
