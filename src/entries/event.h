@@ -10,13 +10,16 @@
 class Event : public Entry
 {
     Q_OBJECT
+    QML_ELEMENT
+    Q_PROPERTY(QString date READ getDate WRITE setDate);
+    Q_PROPERTY(QString event READ getEvent WRITE setEvent);
+    Q_PROPERTY(float cost READ getCost WRITE setCost);
+    Q_PROPERTY(float increment READ getIncrement WRITE setIncrement);
+    Q_PROPERTY(QString category READ getCategory WRITE setCategory);
+    Q_PROPERTY(QString comment READ getComment WRITE setComment);
 
 public:
     using Entry::Entry;
-    // explicit Event();
-    // ~Event() override = default;
-    Q_INVOKABLE explicit Event(QObject *parent = nullptr)
-        : Entry(parent){};
     ~Event();
 
     QString getDate() const { return date; }

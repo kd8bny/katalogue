@@ -5,9 +5,7 @@ EventDatabase::EventDatabase(QObject *parent)
 {
 }
 
-EventDatabase::~EventDatabase() = default;
-
-bool EventDatabase::insertEntry(const Event &event) const
+bool EventDatabase::insertEntry(const Event *event) const
 {
     QSqlQuery query;
 
@@ -23,13 +21,13 @@ bool EventDatabase::insertEntry(const Event &event) const
     query.bindValue(QStringLiteral(":created"), currentTime);
     query.bindValue(QStringLiteral(":modified"), currentTime);
 
-    query.bindValue(QStringLiteral(":date"), event.getDate());
-    query.bindValue(QStringLiteral(":event"), event.getEvent());
-    query.bindValue(QStringLiteral(":cost"), event.getCost());
-    query.bindValue(QStringLiteral(":increment"), event.getIncrement());
-    query.bindValue(QStringLiteral(":category"), event.getCategory());
-    query.bindValue(QStringLiteral(":comment"), event.getComment());
-    query.bindValue(QStringLiteral(":itemId"), event.getItemId());
+    query.bindValue(QStringLiteral(":date"), event->getDate());
+    query.bindValue(QStringLiteral(":event"), event->getEvent());
+    query.bindValue(QStringLiteral(":cost"), event->getCost());
+    query.bindValue(QStringLiteral(":increment"), event->getIncrement());
+    query.bindValue(QStringLiteral(":category"), event->getCategory());
+    query.bindValue(QStringLiteral(":comment"), event->getComment());
+    query.bindValue(QStringLiteral(":itemId"), event->getItemId());
 
     if (!query.exec())
     {
@@ -41,7 +39,7 @@ bool EventDatabase::insertEntry(const Event &event) const
     return true;
 }
 
-bool EventDatabase::updateEntry(const Event &event) const
+bool EventDatabase::updateEntry(const Event *event) const
 {
     QSqlQuery query;
 
@@ -55,15 +53,16 @@ bool EventDatabase::updateEntry(const Event &event) const
 
     query.bindValue(QStringLiteral(":modified"), currentTime);
 
-    query.bindValue(QStringLiteral(":date"), event.getDate());
-    query.bindValue(QStringLiteral(":event"), event.getEvent());
-    query.bindValue(QStringLiteral(":cost"), event.getCost());
-    query.bindValue(QStringLiteral(":increment"), event.getIncrement());
-    query.bindValue(QStringLiteral(":category"), event.getCategory());
-    query.bindValue(QStringLiteral(":comment"), event.getComment());
+    query.bindValue(QStringLiteral(":date"), event->getDate());
+    query.bindValue(QStringLiteral(":event"), event->getEvent());
+    query.bindValue(QStringLiteral(":cost"), event->getCost());
+    query.bindValue(QStringLiteral(":increment"), event->getIncrement());
+    query.bindValue(QStringLiteral(":category"), event->getCategory());
+    query.bindValue(QStringLiteral(":comment"), event->getComment());
 
-    query.bindValue(QStringLiteral(":eventId"), event.getId());
+    query.bindValue(QStringLiteral(":eventId"), event->getId());
 
+    qDebug() << "hmm" << event->getDate();
     if (!query.exec())
     {
         qDebug() << "Error updating record " << DatabaseSchema::TABLE_EVENTS;
@@ -90,4 +89,47 @@ bool EventDatabase::deleteEntryById(const int id) const
     }
 
     return true;
+}
+
+Event *EventDatabase::getEntryById(const int id) const
+{
+    QSqlQuery query;
+
+    query.prepare(
+        QStringLiteral("SELECT * FROM %1 WHERE id=:id")
+            .arg(DatabaseSchema::TABLE_EVENTS));
+
+    query.bindValue(QStringLiteral(":id"), id);
+
+    if (!query.exec())
+    {
+        qDebug() << "Error getting event entry " << query.lastError();
+        qDebug() << query.lastQuery() << query.lastError();
+        return nullptr;
+    }
+    query.next();
+
+    EntryFactory entryFactory;
+    std::unique_ptr<Event> event = entryFactory.createEvent();
+
+    event->setId(id);
+    event->setCreatedDate(query.value(1).toString());
+    event->setModifiedDate(query.value(2).toString());
+    event->setDate(query.value(3).toString());
+    event->setEvent(query.value(4).toString());
+    event->setCost(query.value(5).toFloat());
+    event->setIncrement(query.value(6).toFloat());
+    event->setCategory(query.value(7).toString());
+    event->setComment(query.value(8).toString());
+    event->setItemId(query.value(9).toInt());
+
+    return event.release();
+}
+
+Event *EventDatabase::getNewEntry() const
+{
+    EntryFactory entryFactory;
+    std::unique_ptr<Event> event = entryFactory.createEvent();
+
+    return event.release();
 }

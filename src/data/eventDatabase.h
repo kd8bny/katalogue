@@ -5,7 +5,8 @@
 
 #include "databaseSchema.h"
 #include "databaseUtils.h"
-#include "entries/event.h"
+#include "entryFactory.h"
+#include "event.h"
 
 #ifndef EVENT_DATABASE_H
 #define EVENT_DATABASE_H
@@ -16,11 +17,13 @@ class EventDatabase : public QObject
 
 public:
     explicit EventDatabase(QObject *parent = nullptr);
-    ~EventDatabase() override;
+    ~EventDatabase() override = default;
 
-    bool insertEntry(const Event &event) const;
-    bool updateEntry(const Event &event) const;
-    bool deleteEntryById(const int id) const;
+    Q_INVOKABLE bool insertEntry(const Event *event) const;
+    Q_INVOKABLE bool updateEntry(const Event *event) const;
+    Q_INVOKABLE bool deleteEntryById(const int id) const;
+    Q_INVOKABLE Event *getEntryById(const int id) const;
+    Q_INVOKABLE Event *getNewEntry() const;
 };
 
 #endif

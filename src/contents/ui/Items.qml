@@ -77,10 +77,6 @@ Kirigami.ScrollablePage {
         Kirigami.AbstractCard {
             showClickFeedback: true
             onClicked: {
-                var tt = getEntryByIndex(index);
-                console.log(getEntryByIndex(index));
-                console.log(tt);
-                console.log(tt.name);
                 pageStack.push("qrc:Details.qml", {
                     "entryItem": getEntryByIndex(index)
                 });
