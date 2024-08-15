@@ -15,7 +15,7 @@ class Note : public Entry
 
 public:
     Q_INVOKABLE using Entry::Entry;
-    ~Note();
+    ~Note() override = default;
 
     QString getTitle() const { return title; }
     void setTitle(const QString &title_) { title = title_; }

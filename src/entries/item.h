@@ -1,6 +1,4 @@
 #include <QObject>
-#include <QDebug>
-#include <QVariantList>
 #include <QtQml>
 
 #include "entry.h"
@@ -22,9 +20,7 @@ class Item : public Entry
 
 public:
     Q_INVOKABLE using Entry::Entry;
-    // Q_INVOKABLE explicit Item(QObject *parent = nullptr)
-    //     : Entry(parent){};
-    ~Item();
+    ~Item() override = default;
 
     QString getName() const { return name; }
     void setName(const QString &name_) { name = name_; }

@@ -13,7 +13,7 @@
 class EntryFactory
 {
 public:
-    std::unique_ptr<Item> createItem() const
+    std::unique_ptr<Item> createItem() const // TODO make wrapper
     {
         return std::make_unique<Item>();
     };

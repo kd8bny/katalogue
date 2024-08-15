@@ -11,16 +11,16 @@ class Event : public Entry
 {
     Q_OBJECT
     QML_ELEMENT
-    Q_PROPERTY(QString date READ getDate WRITE setDate);
-    Q_PROPERTY(QString event READ getEvent WRITE setEvent);
-    Q_PROPERTY(float cost READ getCost WRITE setCost);
-    Q_PROPERTY(float increment READ getIncrement WRITE setIncrement);
-    Q_PROPERTY(QString category READ getCategory WRITE setCategory);
-    Q_PROPERTY(QString comment READ getComment WRITE setComment);
+    Q_PROPERTY(QString date READ getDate WRITE setDate)
+    Q_PROPERTY(QString event READ getEvent WRITE setEvent)
+    Q_PROPERTY(float cost READ getCost WRITE setCost)
+    Q_PROPERTY(float increment READ getIncrement WRITE setIncrement)
+    Q_PROPERTY(QString category READ getCategory WRITE setCategory)
+    Q_PROPERTY(QString comment READ getComment WRITE setComment)
 
 public:
     using Entry::Entry;
-    ~Event();
+    ~Event() override = default;
 
     QString getDate() const { return date; }
     void setDate(const QString &date_) { date = date_; }

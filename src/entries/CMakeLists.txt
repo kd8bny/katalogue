@@ -2,12 +2,12 @@
 # SPDX-FileCopyrightText: 2022 Daryl Bennett <kd8bny@gmail.com>
 
 set(katalogue_entries_src
-    entry.cpp
-    item.cpp
-    attribute.cpp
-    event.cpp
-    note.cpp
-    task.cpp
+    entry.h
+    item.h
+    attribute.h
+    event.h
+    note.h
+    task.h
 )
 
 add_library(katalogue_entries STATIC

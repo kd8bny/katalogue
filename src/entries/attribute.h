@@ -16,7 +16,7 @@ class Attribute : public Entry
 
 public:
     Q_INVOKABLE using Entry::Entry;
-    ~Attribute();
+    ~Attribute() override = default;
 
     QString getKey() const { return key; }
     void setKey(const QString &key_) { key = key_; }

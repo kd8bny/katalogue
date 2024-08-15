@@ -16,7 +16,7 @@ class Entry : public QObject
 public:
     explicit Entry(QObject *parent = nullptr)
         : QObject(parent) {};
-    ~Entry();
+    ~Entry() override = default;
 
     int getId() const { return id; }
     void setId(const int &id_) { id = id_; }

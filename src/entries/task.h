@@ -16,7 +16,7 @@ class Task : public Entry
 
 public:
     Q_INVOKABLE using Entry::Entry;
-    ~Task();
+    ~Task() override = default;
 
     QString getDueDate() const { return dueDate; }
     void setDueDate(const QString &dueDate_) { dueDate = dueDate_; }
