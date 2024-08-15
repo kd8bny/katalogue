@@ -4,49 +4,52 @@
 import QtQuick
 import QtQuick.Controls as Controls
 import QtQuick.Layouts
-import org.kde.kirigami as Kirigami
 import com.kd8bny.katalogue
-
+import com.kd8bny.katalogue.entries
+import org.kde.kirigami as Kirigami
 
 Kirigami.ScrollablePage {
-    id: page
+    id: notesPage
 
-    property string itemId
-    property string itemName
+    property EntryItem entryItem
 
-    title: i18n("Notes")
+    function getEntryByIndex(index) {
+        return NoteDatabase.getEntryById(NoteModel.getId(index));
+    }
 
+    title: (entryItem) ? i18n(entryItem.name + " Notes") : i18n("All Notes")
+    Component.onCompleted: {
+        if (entryItem)
+            NoteModel.setItemIdQuery(entryItem.id);
+
+    }
     actions: [
         Kirigami.Action {
             text: i18n("Add Note")
             icon.name: "list-add"
             tooltip: i18n("Add new note")
             onTriggered: {
-                pageStack.push("qrc:AddEditNotePage.qml", {"itemId": itemId})
+                pageStack.push("qrc:AddEditNotePage.qml", {
+                    "entryItem": entryItem
+                });
             }
         }
     ]
 
-    Component.onCompleted: {
-        if(itemId){
-            NoteModel.setItemId(itemId)
-        }
-    }
-
     Kirigami.CardsListView {
         id: layout
+
         model: NoteModel
         delegate: notesDelegate
-
         headerPositioning: ListView.OverlayHeader
 
         Kirigami.PlaceholderMessage {
             anchors.centerIn: layout
             width: layout.width - (Kirigami.Units.largeSpacing * 4)
-
             visible: layout.count == 0
             text: i18n("Select 'Add Note' to insert a new Note")
         }
+
     }
 
     Component {
@@ -54,6 +57,12 @@ Kirigami.ScrollablePage {
 
         Kirigami.Card {
             showClickFeedback: true
+            onClicked: {
+                pageStack.push("qrc:AddEditNotePage.qml", {
+                    "entryItem": entryItem,
+                    "entryNote": getEntryByIndex(index)
+                });
+            }
 
             banner {
                 //TODO clean up view
@@ -71,24 +80,30 @@ Kirigami.ScrollablePage {
 
                 GridLayout {
                     id: delegateLayout
-                    anchors {
-                        left: parent.left
-                        top: parent.top
-                        right: parent.right
-                        //IMPORTANT: never put the bottom margin
-                    }
+
                     rowSpacing: Kirigami.Units.largeSpacing
                     columnSpacing: Kirigami.Units.largeSpacing
                     columns: width > Kirigami.Units.gridUnit * 20 ? 4 : 2
+
+                    anchors {
+                        //IMPORTANT: never put the bottom margin
+
+                        left: parent.left
+                        top: parent.top
+                        right: parent.right
+                    }
+
                     Controls.Label {
                         wrapMode: TextEdit.Wrap
                         text: note_content
                     }
+
                 }
+
             }
-            onClicked: {
-                pageStack.push("qrc:AddEditNotePage.qml", {"itemId": id, "noteModelIndex": index, "isEdit": true})
-            }
+
         }
+
     }
+
 }

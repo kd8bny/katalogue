@@ -5,9 +5,7 @@ NoteDatabase::NoteDatabase(QObject *parent)
 {
 }
 
-NoteDatabase::~NoteDatabase() = default;
-
-bool NoteDatabase::insertEntry(const Note &note) const
+bool NoteDatabase::insertEntry(const Note *note) const
 {
     QSqlQuery query;
 
@@ -22,11 +20,11 @@ bool NoteDatabase::insertEntry(const Note &note) const
     query.bindValue(QStringLiteral(":created"), currentTime);
     query.bindValue(QStringLiteral(":modified"), currentTime);
 
-    query.bindValue(QStringLiteral(":title"), note.getTitle());
-    query.bindValue(QStringLiteral(":noteContent"), note.getNoteContent());
-    if (note.getItemId() != 0)
+    query.bindValue(QStringLiteral(":title"), note->getTitle());
+    query.bindValue(QStringLiteral(":noteContent"), note->getNoteContent());
+    if (note->getItemId() != 0)
     {
-        query.bindValue(QStringLiteral(":itemId"), note.getItemId());
+        query.bindValue(QStringLiteral(":itemId"), note->getItemId());
     }
 
     if (!query.exec())
@@ -39,7 +37,7 @@ bool NoteDatabase::insertEntry(const Note &note) const
     return true;
 }
 
-bool NoteDatabase::updateEntry(const Note &note) const
+bool NoteDatabase::updateEntry(const Note *note) const
 {
     QSqlQuery query;
 
@@ -52,11 +50,14 @@ bool NoteDatabase::updateEntry(const Note &note) const
 
     query.bindValue(QStringLiteral(":modified"), currentTime);
 
-    query.bindValue(QStringLiteral(":title"), note.getTitle());
-    query.bindValue(QStringLiteral(":noteContent"), note.getNoteContent());
-    query.bindValue(QStringLiteral(":itemId"), note.getItemId());
+    query.bindValue(QStringLiteral(":title"), note->getTitle());
+    query.bindValue(QStringLiteral(":noteContent"), note->getNoteContent());
+    if (note->getItemId() != 0)
+    {
+        query.bindValue(QStringLiteral(":itemId"), note->getItemId());
+    }
 
-    query.bindValue(QStringLiteral(":noteId"), note.getId());
+    query.bindValue(QStringLiteral(":noteId"), note->getId());
 
     if (!query.exec())
     {
@@ -84,4 +85,44 @@ bool NoteDatabase::deleteEntryById(int id) const
     }
 
     return true;
+}
+
+Note *NoteDatabase::getEntryById(const int id) const
+{
+    QSqlQuery query;
+
+    query.prepare(
+        QStringLiteral("SELECT id, %1, %2, %3, %4, %5 FROM %6 WHERE id=:id")
+            .arg(DatabaseSchema::CREATED, DatabaseSchema::MODIFIED, DatabaseSchema::TITLE, DatabaseSchema::NOTE_CONTENT,
+                 DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::TABLE_NOTES));
+
+    query.bindValue(QStringLiteral(":id"), id);
+
+    if (!query.exec())
+    {
+        qDebug() << "Error getting note entry " << query.lastError();
+        qDebug() << query.lastQuery() << query.lastError();
+        return nullptr;
+    }
+    query.next();
+
+    EntryFactory entryFactory;
+    std::unique_ptr<Note> note = entryFactory.createNote();
+
+    note->setId(id);
+    note->setCreatedDate(query.value(1).toString());
+    note->setModifiedDate(query.value(2).toString());
+    note->setTitle(query.value(3).toString());
+    note->setNoteContent(query.value(4).toString());
+    note->setItemId(query.value(5).toInt());
+
+    return note.release();
+}
+
+Note *NoteDatabase::getNewEntry() const
+{
+    EntryFactory entryFactory;
+    std::unique_ptr<Note> note = entryFactory.createNote();
+
+    return note.release();
 }

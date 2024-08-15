@@ -5,7 +5,8 @@
 
 #include "databaseSchema.h"
 #include "databaseUtils.h"
-#include "entries/note.h"
+#include "entryFactory.h"
+#include "note.h"
 
 #ifndef NOTE_DATABASE_H
 #define NOTE_DATABASE_H
@@ -16,11 +17,13 @@ class NoteDatabase : public QObject
 
 public:
     explicit NoteDatabase(QObject *parent = nullptr);
-    ~NoteDatabase() override;
+    ~NoteDatabase() override = default;
 
-    bool insertEntry(const Note &note) const;
-    bool updateEntry(const Note &note) const;
-    bool deleteEntryById(const int id) const;
+    Q_INVOKABLE bool insertEntry(const Note *note) const;
+    Q_INVOKABLE bool updateEntry(const Note *note) const;
+    Q_INVOKABLE bool deleteEntryById(const int id) const;
+    Q_INVOKABLE Note *getEntryById(const int id) const;
+    Q_INVOKABLE Note *getNewEntry() const;
 };
 
 #endif

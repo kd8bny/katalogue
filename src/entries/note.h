@@ -1,6 +1,5 @@
 #include <QObject>
-#include <QDebug>
-#include <QVariantList>
+#include <QtQml>
 
 #include "entry.h"
 
@@ -10,10 +9,12 @@
 class Note : public Entry
 {
     Q_OBJECT
+    QML_ELEMENT
+    Q_PROPERTY(QString title READ getTitle WRITE setTitle)
+    Q_PROPERTY(QString noteContent READ getNoteContent WRITE setNoteContent)
 
 public:
-    Q_INVOKABLE explicit Note(QObject *parent = nullptr)
-        : Entry(parent){};
+    Q_INVOKABLE using Entry::Entry;
     ~Note();
 
     QString getTitle() const { return title; }

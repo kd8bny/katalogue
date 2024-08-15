@@ -1,9 +1,10 @@
 #include <QObject>
 #include <QSqlQueryModel>
 
-#include "data/databaseSchema.h"
-#include "data/noteDatabase.h"
-#include "data/entries/note.h"
+#include "databaseSchema.h"
+#include "noteDatabase.h"
+#include "entryFactory.h"
+#include "note.h"
 
 class NoteModel : public QSqlQueryModel
 {
@@ -19,18 +20,12 @@ public:
     };
 
     explicit NoteModel(QObject *parent = nullptr);
-    ~NoteModel();
+    ~NoteModel() override = default;
 
     // Override the method that will return the data
     QVariant data(const QModelIndex &index, int role) const override;
 
-    Q_INVOKABLE void resetItemId();
-    Q_INVOKABLE void setItemId(QString itemId);
-    Q_INVOKABLE int getId(int row);
-    Note getRecord(int row);
-    Q_INVOKABLE QVariantList getRecordAsList(int row);
-    Q_INVOKABLE bool setRecord(int noteIndex, QString title, QString note, int itemId);
-    Q_INVOKABLE bool deleteRecord(int eventId);
+    Q_INVOKABLE int getId(int row) const;
 
 protected:
     QHash<int, QByteArray> roleNames() const override;
@@ -45,8 +40,12 @@ private:
     QString modelQuery;
 
 Q_SIGNALS:
+    void filterItemId(QString itemId);
+    void resetFilterItemId();
     void dataChanged();
 
 public Q_SLOTS:
+    void setItemIdQuery(QString itemId);
+    void resetItemIdQuery();
     void refresh();
 };

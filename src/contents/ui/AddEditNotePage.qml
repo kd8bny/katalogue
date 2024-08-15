@@ -4,19 +4,39 @@
 import QtQuick
 import QtQuick.Controls as Controls
 import QtQuick.Layouts
-import org.kde.kirigami as Kirigami
-
 import com.kd8bny.katalogue
+import com.kd8bny.katalogue.entries
+import org.kde.kirigami as Kirigami
 
 Kirigami.ScrollablePage {
     id: addEditNotePage
 
-    property int itemId: -1
-    property int noteModelIndex: -1
+    property EntryItem entryItem
+    property EntryNote entryNote
     property bool isEdit: false
 
-    title: (noteModelIndex != -1) ? i18n("Edit Note") : i18n("Add Note")
+    function insertUpdate() {
+        entryNote.title = titleField.text;
+        entryNote.noteContent = noteContentField.text;
+        if (entryItem)
+            entryNote.itemId = entryItem.id;
 
+        if (isEdit)
+            return NoteDatabase.updateEntry(entryNote);
+        else
+            return NoteDatabase.insertEntry(entryNote);
+    }
+
+    title: (isEdit) ? i18n("Edit Note") : i18n("Add Note")
+    Component.onCompleted: {
+        if (entryNote) {
+            isEdit = true;
+            titleField.text = entryNote.title;
+            noteContentField.text = entryNote.noteContent;
+        } else {
+            entryNote = NoteDatabase.getNewEntry();
+        }
+    }
     actions: [
         Kirigami.Action {
             visible: isEdit
@@ -24,7 +44,7 @@ Kirigami.ScrollablePage {
             icon.name: "delete"
             tooltip: i18n("Remove note")
             onTriggered: {
-                deleteDialog.open()
+                deleteDialog.open();
             }
         }
     ]
@@ -36,87 +56,73 @@ Kirigami.ScrollablePage {
         subtitle: i18n("Are you sure you want to delete: ")
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: {
-            var success = NoteModel.deleteRecord(NoteModel.getId(noteModelIndex))
-            if (success) {
-                pageStack.pop()
+            if (NoteDatabase.deleteEntryById(entryNote.id)) {
+                NoteModel.refresh();
+                pageStack.pop();
             } else {
-                msgDeleteError.visible = true
-            }}
+                msgDeleteError.visible = true;
+            }
+        }
         onRejected: {
-            pageStack.pop()
+            pageStack.pop();
         }
-    }
-
-    function insertUpdate() {
-        var success = NoteModel.setRecord(
-            noteModelIndex,
-            titleField.text,
-            noteContentField.text,
-            itemId)
-
-        if (success) {
-            NoteModel.refresh()
-        }
-
-        return success
-    }
-
-    Component.onCompleted: {
-        if (isEdit) {
-            var recordData = NoteModel.getRecordAsList(noteModelIndex)
-
-            console.log(recordData)
-            titleField.text = recordData[3]
-            noteContentField.text = recordData[4]
-        }
-        console.log(itemId)
     }
 
     Kirigami.FormLayout {
         Controls.TextField {
             id: titleField
+
             Kirigami.FormData.label: i18nc("@label:textbox", "Title:")
         }
+
         Controls.TextArea {
             id: noteContentField
-            Layout.fillWidth: true  //TODO scrollview entry
+
+            Layout.fillWidth: true //TODO scrollview entry
             Kirigami.FormData.label: i18nc("@label:textbox", "Note:")
         }
+
         Controls.Button {
             id: doneButton
-            Layout.fillWidth: true
-            text: (noteModelIndex != -1) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
-            onClicked: {
-                var success = insertUpdate()
 
-                if (success) {
-                    pageStack.pop()
-                }else {
-                    msgInsertUpdateError.visible = true
+            Layout.fillWidth: true
+            text: (isEdit) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
+            onClicked: {
+                if (insertUpdate()) {
+                    NoteModel.refresh();
+                    pageStack.pop();
+                } else {
+                    msgInsertUpdateError.visible = true;
                 }
             }
         }
+
         Controls.Button {
             id: cancelButton
+
             Layout.fillWidth: true
             text: i18nc("@action:button", "Cancel")
             onClicked: {
-                pageStack.pop()
+                pageStack.pop();
             }
         }
+
     }
 
     Kirigami.InlineMessage {
         id: msgInsertUpdateError
+
         type: Kirigami.MessageType.Error
-        text: "Failed to update Note"
+        text: (isEdit) ? i18n("Failed to update Note") : i18n("Failed to insert Note")
         visible: false
     }
 
     Kirigami.InlineMessage {
         id: msgDeleteError
+
         type: Kirigami.MessageType.Error
         text: "Failed to delete Note"
         visible: false
     }
+
 }
