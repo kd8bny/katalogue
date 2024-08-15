@@ -5,9 +5,7 @@ TaskDatabase::TaskDatabase(QObject *parent)
 {
 }
 
-TaskDatabase::~TaskDatabase() = default;
-
-bool TaskDatabase::insertEntry(const Task &task) const
+bool TaskDatabase::insertEntry(const Task *task) const
 {
     QSqlQuery query;
 
@@ -22,13 +20,13 @@ bool TaskDatabase::insertEntry(const Task &task) const
 
     query.bindValue(QStringLiteral(":created"), currentTime);
     query.bindValue(QStringLiteral(":modified"), currentTime);
-    query.bindValue(QStringLiteral(":dueDate"), task.getDueDate());
-    query.bindValue(QStringLiteral(":status"), task.getStatus());
-    query.bindValue(QStringLiteral(":title"), task.getTitle());
-    query.bindValue(QStringLiteral(":description"), task.getDescription());
-    if (task.getItemId() != 0)
+    query.bindValue(QStringLiteral(":dueDate"), task->getDueDate());
+    query.bindValue(QStringLiteral(":status"), task->getStatus());
+    query.bindValue(QStringLiteral(":title"), task->getTitle());
+    query.bindValue(QStringLiteral(":description"), task->getDescription());
+    if (task->getItemId() != 0)
     {
-        query.bindValue(QStringLiteral(":itemId"), task.getItemId());
+        query.bindValue(QStringLiteral(":itemId"), task->getItemId());
     }
 
     if (!query.exec())
@@ -41,7 +39,7 @@ bool TaskDatabase::insertEntry(const Task &task) const
     return true;
 }
 
-bool TaskDatabase::updateEntry(const Task &task) const
+bool TaskDatabase::updateEntry(const Task *task) const
 {
     QSqlQuery query;
 
@@ -55,14 +53,17 @@ bool TaskDatabase::updateEntry(const Task &task) const
     QString currentTime = DatabaseUtils::getCurrentDateTime();
 
     query.bindValue(QStringLiteral(":modified"), currentTime);
-    qDebug() << task.getDueDate();
-    query.bindValue(QStringLiteral(":dueDate"), task.getDueDate());
-    query.bindValue(QStringLiteral(":status"), task.getStatus());
-    query.bindValue(QStringLiteral(":title"), task.getTitle());
-    query.bindValue(QStringLiteral(":description"), task.getDescription());
-    query.bindValue(QStringLiteral(":itemId"), task.getItemId());
+    qDebug() << task->getDueDate();
+    query.bindValue(QStringLiteral(":dueDate"), task->getDueDate());
+    query.bindValue(QStringLiteral(":status"), task->getStatus());
+    query.bindValue(QStringLiteral(":title"), task->getTitle());
+    query.bindValue(QStringLiteral(":description"), task->getDescription());
+    if (task->getItemId() != 0)
+    {
+        query.bindValue(QStringLiteral(":itemId"), task->getItemId());
+    }
 
-    query.bindValue(QStringLiteral(":taskId"), task.getId());
+    query.bindValue(QStringLiteral(":taskId"), task->getId());
 
     if (!query.exec())
     {
@@ -89,4 +90,47 @@ bool TaskDatabase::deleteEntryById(const int id) const
     }
 
     return true;
+}
+
+Task *TaskDatabase::getEntryById(const int id) const
+{
+    QSqlQuery query;
+
+    query.prepare(
+        QStringLiteral("SELECT id, %1, %2, %3, %4, %5, %6, %7 FROM %8 WHERE id=:id")
+            .arg(DatabaseSchema::CREATED, DatabaseSchema::MODIFIED, DatabaseSchema::DUE_DATE, DatabaseSchema::STATUS,
+                 DatabaseSchema::TITLE, DatabaseSchema::DESCRIPTION, DatabaseSchema::KEY_ITEM_ID,
+                 DatabaseSchema::TABLE_TASKS));
+
+    query.bindValue(QStringLiteral(":id"), id);
+
+    if (!query.exec())
+    {
+        qDebug() << "Error getting task entry " << query.lastError();
+        qDebug() << query.lastQuery() << query.lastError();
+        return nullptr;
+    }
+    query.next();
+
+    EntryFactory entryFactory;
+    std::unique_ptr<Task> task = entryFactory.createTask();
+
+    task->setId(id);
+    task->setCreatedDate(query.value(1).toString());
+    task->setModifiedDate(query.value(2).toString());
+    task->setDueDate(query.value(3).toString());
+    task->setStatus(query.value(4).toString());
+    task->setTitle(query.value(5).toString());
+    task->setDescription(query.value(5).toString());
+    task->setItemId(query.value(6).toInt());
+
+    return task.release();
+}
+
+Task *TaskDatabase::getNewEntry() const
+{
+    EntryFactory entryFactory;
+    std::unique_ptr<Task> task = entryFactory.createTask();
+
+    return task.release();
 }

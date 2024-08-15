@@ -1,6 +1,5 @@
 #include <QObject>
-#include <QDebug>
-#include <QVariantList>
+#include <QtQml>
 
 #include "entry.h"
 
@@ -10,10 +9,13 @@
 class Task : public Entry
 {
     Q_OBJECT
+    Q_PROPERTY(QString dueDate READ getDueDate WRITE setDueDate)
+    Q_PROPERTY(QString status READ getStatus WRITE setStatus)
+    Q_PROPERTY(QString title READ getTitle WRITE setTitle)
+    Q_PROPERTY(QString description READ getDescription WRITE setDescription)
 
 public:
-    Q_INVOKABLE explicit Task(QObject *parent = nullptr)
-        : Entry(parent){};
+    Q_INVOKABLE using Entry::Entry;
     ~Task();
 
     QString getDueDate() const { return dueDate; }
