@@ -29,7 +29,7 @@ Kirigami.ScrollablePage {
             return AttributeDatabase.insertEntry(entryAttribute);
     }
 
-    title: (isEdit != -1) ? i18n("Edit Attribute") : i18n("Add Attribute")
+    title: (isEdit) ? i18n("Edit Attribute") : i18n("Add Attribute")
     Component.onCompleted: {
         if (entryAttribute) {
             isEdit = true;
@@ -59,10 +59,13 @@ Kirigami.ScrollablePage {
         subtitle: i18n("Are you sure you want to delete: ")
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: {
-            if (AttributeDatabase.deleteEntryById(entryAttribute.id))
+            if (AttributeDatabase.deleteEntryById(entryAttribute.id)) {
+                AttributeModel.refresh();
+                AttributeCategoryModel.refresh();
                 pageStack.pop();
-            else
+            } else {
                 msgDeleteError.visible = true;
+            }
         }
         onRejected: {
             pageStack.pop();

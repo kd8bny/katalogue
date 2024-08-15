@@ -32,7 +32,7 @@ Kirigami.ScrollablePage {
             return EventDatabase.insertEntry(entryEvent);
     }
 
-    title: (isEdit != -1) ? i18n("Edit Event") : i18n("Add Event")
+    title: (isEdit) ? i18n("Edit Event") : i18n("Add Event")
     Component.onCompleted: {
         var locale = Qt.locale();
         var currentDate = new Date();
@@ -69,10 +69,13 @@ Kirigami.ScrollablePage {
         subtitle: i18n("Are you sure you want to delete: ")
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: {
-            if (EventModel.deleteEntryById(EventModel.getId(entryEvent.id)))
+            if (EventModel.deleteEntryById(EventModel.getId(entryEvent.id))) {
+                EventModel.refresh();
+                EventCategoryModel.refresh();
                 pageStack.pop();
-            else
+            } else {
                 msgDeleteError.visible = true;
+            }
         }
         onRejected: {
             pageStack.pop();
