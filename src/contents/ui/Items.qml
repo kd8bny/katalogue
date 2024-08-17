@@ -12,6 +12,7 @@ import org.kde.kitemmodels as KTM
 Kirigami.ScrollablePage {
     id: itemsPage
 
+    property EntryItem entryComponent
     property bool isComponentView: false
 
     function getEntryByIndex(index) {
@@ -23,7 +24,7 @@ Kirigami.ScrollablePage {
     }
 
     Layout.fillWidth: true
-    title: i18n("Katalogued Items")
+    title: (isComponentView) ? i18n(entryComponent.name + " Components") : i18n("Katalogued Items")
     Component.onCompleted: {
         if (isComponentView)
             itemsLayout.model = ItemComponentModel;

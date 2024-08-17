@@ -88,6 +88,7 @@ Kirigami.ScrollablePage {
             visible: !isComponentView
             onClicked: {
                 pageStack.push("qrc:Items.qml", {
+                    "entryComponent": entryItem,
                     "isComponentView": true
                 });
                 ItemComponentModel.filterParentItemId(entryItem.id);
