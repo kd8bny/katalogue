@@ -9,16 +9,16 @@ import com.kd8bny.katalogue.entries
 import org.kde.kirigami as Kirigami
 
 Kirigami.ScrollablePage {
-    // Component.onCompleted: {
-    //     // TODO enable and or fix?
-    //     // pageStack.push("qrc:Attributes.qml", {"itemName": itemName, "itemId": itemId})
-    // }
-
     id: itemsDetailPage
 
-    // property bool isComponentView         // Component view or Item level view // todo
     required property EntryItem entryItem
+    property bool isComponentView: false
 
+    Component.onCompleted: {
+        if (entryItem.itemId)
+            isComponentView = true;
+
+    }
     title: i18n(entryItem.name)
     actions: [
         Kirigami.Action {
@@ -33,6 +33,18 @@ Kirigami.ScrollablePage {
     ]
 
     ColumnLayout {
+        // Default Page Push
+        Timer {
+            interval: 50
+            running: true
+            repeat: false
+            onTriggered: {
+                pageStack.push("qrc:Attributes.qml", {
+                    "entryItem": entryItem
+                });
+            }
+        }
+
         Kirigami.SubtitleDelegate {
             Layout.fillWidth: true
             icon.name: "view-list-details"
@@ -73,12 +85,12 @@ Kirigami.ScrollablePage {
             Layout.fillWidth: true
             icon.name: "extension-symbolic"
             text: i18n("Components")
-            // visible: !isComponentView
+            visible: !isComponentView
             onClicked: {
                 pageStack.push("qrc:Items.qml", {
-                    "isComponentView": true
+                    "isComponentView": isComponentView
                 });
-                ItemComponentModel.filterParentItemId(itemId);
+                ItemComponentModel.filterParentItemId(entryItem.id);
             }
         }
 
