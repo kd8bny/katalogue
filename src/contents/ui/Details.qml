@@ -15,7 +15,8 @@ Kirigami.ScrollablePage {
     property bool isComponentView: false
 
     Component.onCompleted: {
-        if (entryItem.itemId)
+        console.log(entryItem.itemId);
+        if (entryItem.itemId != 0)
             isComponentView = true;
 
     }
@@ -88,7 +89,7 @@ Kirigami.ScrollablePage {
             visible: !isComponentView
             onClicked: {
                 pageStack.push("qrc:Items.qml", {
-                    "isComponentView": isComponentView
+                    "isComponentView": true
                 });
                 ItemComponentModel.filterParentItemId(entryItem.id);
             }

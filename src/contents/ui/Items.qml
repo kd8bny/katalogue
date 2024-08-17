@@ -15,7 +15,11 @@ Kirigami.ScrollablePage {
     property bool isComponentView: false
 
     function getEntryByIndex(index) {
-        return ItemDatabase.getEntryById(ItemModel.getId(index));
+        var itemId = ItemModel.getId(index);
+        if (isComponentView)
+            itemId = ItemComponentModel.getId(index);
+
+        return ItemDatabase.getEntryById(itemId);
     }
 
     Layout.fillWidth: true
