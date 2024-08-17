@@ -41,15 +41,20 @@ void NoteDatabaseTest::insertEntry() const
     // Inserts correctly
     for (int i = 0; i < notes.length(); i++)
     {
+
+        EntryFactory entryFactory;
+        Note *note = entryFactory.createNote();
+
         QVariantList noteAsList;
         noteAsList = notes.value(i);
 
-        Note note(-1);
-        note.setTitle(noteAsList.value(0).toString());
-        note.setNoteContent(noteAsList.value(1).toString());
-        note.setItemId(noteAsList.value(2).toInt());
+        note->setTitle(noteAsList.value(0).toString());
+        note->setNoteContent(noteAsList.value(1).toString());
+        note->setItemId(noteAsList.value(2).toInt());
 
         QVERIFY(katalogue_db.insertEntry(note) == true);
+
+        delete note;
     }
 
     // Validate data
@@ -81,12 +86,16 @@ void NoteDatabaseTest::updateNoteEntry() const
 
     NoteDatabase katalogue_db;
 
-    Note refNote(-1);
-    refNote.setTitle(QStringLiteral("refTitle"));
-    refNote.setNoteContent(QStringLiteral("refContent"));
-    refNote.setItemId(1);
+    EntryFactory entryFactory;
+    Note *refNote = entryFactory.createNote();
+
+    refNote->setTitle(QStringLiteral("refTitle"));
+    refNote->setNoteContent(QStringLiteral("refContent"));
+    refNote->setItemId(1);
 
     QVERIFY2(katalogue_db.insertEntry(refNote) == true, "Reference Note added");
+
+    delete refNote;
 
     QVariantList noteFields = {
         QStringLiteral("refTitleUpdated"),
@@ -105,14 +114,15 @@ void NoteDatabaseTest::updateNoteEntry() const
     qDebug() << query.record();
 
     // Build Note 3
-    Note note3(3);
-    note3.setTitle(query.value(0).toString());
-    note3.setNoteContent(query.value(1).toString());
-    note3.setItemId(query.value(2).toInt());
+    Note *note3 = entryFactory.createNote();
+    note3->setId(3);
+    note3->setTitle(query.value(0).toString());
+    note3->setNoteContent(query.value(1).toString());
+    note3->setItemId(query.value(2).toInt());
 
     // Start Test
     // Update Title
-    note3.setTitle(noteFields.value(0).toString());
+    note3->setTitle(noteFields.value(0).toString());
     QVERIFY(katalogue_db.updateEntry(note3) == true);
 
     query.exec(record3Query);
@@ -120,12 +130,14 @@ void NoteDatabaseTest::updateNoteEntry() const
     QVERIFY(query.value(0).toString() == noteFields.value(0).toString());
 
     // Update Content
-    note3.setNoteContent(noteFields.value(1).toString());
+    note3->setNoteContent(noteFields.value(1).toString());
     QVERIFY(katalogue_db.updateEntry(note3) == true);
 
     query.exec(record3Query);
     query.next();
     QVERIFY(query.value(1).toString() == noteFields.value(1).toString());
+
+    delete note3;
 }
 
 void NoteDatabaseTest::deleteNoteEntry() const

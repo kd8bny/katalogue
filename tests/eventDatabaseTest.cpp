@@ -47,19 +47,23 @@ void EventDatabaseTest::insertEventEntry() const
     // Inserts correctly
     for (int i = 0; i < events.length(); i++)
     {
+        EntryFactory entryFactory;
+        Event *event = entryFactory.createEvent();
+
         QVariantList eventAsList;
         eventAsList = events.value(i);
 
-        Event event(-1);
-        event.setDate(eventAsList.value(0).toString());
-        event.setEvent(eventAsList.value(1).toString());
-        event.setCost(eventAsList.value(2).toFloat());
-        event.setIncrement(eventAsList.value(3).toFloat());
-        event.setCategory(eventAsList.value(4).toString());
-        event.setComment(eventAsList.value(5).toString());
-        event.setItemId(eventAsList.value(6).toInt());
+        event->setDate(eventAsList.value(0).toString());
+        event->setEvent(eventAsList.value(1).toString());
+        event->setCost(eventAsList.value(2).toFloat());
+        event->setIncrement(eventAsList.value(3).toFloat());
+        event->setCategory(eventAsList.value(4).toString());
+        event->setComment(eventAsList.value(5).toString());
+        event->setItemId(eventAsList.value(6).toInt());
 
         QVERIFY(katalogue_db.insertEntry(event) == true);
+
+        delete event;
     }
 
     // Validate data
@@ -97,16 +101,20 @@ void EventDatabaseTest::updateEntry() const
 
     EventDatabase katalogue_db;
 
-    Event refEvent(-1);
-    refEvent.setDate(QStringLiteral("2015-09-19T00:00:00.000-05:00"));
-    refEvent.setEvent(QStringLiteral("refEvent"));
-    refEvent.setCost(123.45);
-    refEvent.setIncrement(123456.7);
-    refEvent.setCategory(QStringLiteral("category"));
-    refEvent.setComment(QStringLiteral("comment"));
-    refEvent.setItemId(1);
+    EntryFactory entryFactory;
+    Event *refEvent = entryFactory.createEvent();
+
+    refEvent->setDate(QStringLiteral("2015-09-19T00:00:00.000-05:00"));
+    refEvent->setEvent(QStringLiteral("refEvent"));
+    refEvent->setCost(123.45);
+    refEvent->setIncrement(123456.7);
+    refEvent->setCategory(QStringLiteral("category"));
+    refEvent->setComment(QStringLiteral("comment"));
+    refEvent->setItemId(1);
 
     QVERIFY2(katalogue_db.insertEntry(refEvent) == true, "Reference Event added");
+
+    delete refEvent;
 
     QVariantList eventFields = {QStringLiteral("2222-09-19T00:00:00.000-05:00"), QStringLiteral("eventUpdated"),
                                 QStringLiteral("567.89"), QStringLiteral("765432.1"), QStringLiteral("categoryUpdated"),
@@ -121,18 +129,19 @@ void EventDatabaseTest::updateEntry() const
     query.next();
 
     // Build Event 3
-    Event event3(3);
-    event3.setDate(query.value(0).toString());
-    event3.setEvent(query.value(1).toString());
-    event3.setCost(query.value(2).toFloat());
-    event3.setIncrement(query.value(3).toFloat());
-    event3.setCategory(query.value(4).toString());
-    event3.setComment(query.value(5).toString());
-    event3.setItemId(query.value(6).toInt());
+    Event *event3 = entryFactory.createEvent();
+    event3->setId(3);
+    event3->setDate(query.value(0).toString());
+    event3->setEvent(query.value(1).toString());
+    event3->setCost(query.value(2).toFloat());
+    event3->setIncrement(query.value(3).toFloat());
+    event3->setCategory(query.value(4).toString());
+    event3->setComment(query.value(5).toString());
+    event3->setItemId(query.value(6).toInt());
 
     // Start Test
     // Update Date
-    event3.setDate(eventFields.value(0).toString());
+    event3->setDate(eventFields.value(0).toString());
     QVERIFY(katalogue_db.updateEntry(event3) == true);
 
     query.exec(record3Query);
@@ -140,7 +149,7 @@ void EventDatabaseTest::updateEntry() const
     QVERIFY(query.value(0).toString() == eventFields.value(0).toString());
 
     // Update Event
-    event3.setEvent(eventFields.value(1).toString());
+    event3->setEvent(eventFields.value(1).toString());
     QVERIFY(katalogue_db.updateEntry(event3) == true);
 
     query.exec(record3Query);
@@ -148,7 +157,7 @@ void EventDatabaseTest::updateEntry() const
     QVERIFY(query.value(1).toString() == eventFields.value(1).toString());
 
     // Update Cost
-    event3.setCost(eventFields.value(2).toFloat());
+    event3->setCost(eventFields.value(2).toFloat());
     QVERIFY(katalogue_db.updateEntry(event3) == true);
 
     query.exec(record3Query);
@@ -156,7 +165,7 @@ void EventDatabaseTest::updateEntry() const
     QVERIFY(QString::asprintf("%.2f", query.value(2).toFloat()) == eventFields.value(2));
 
     // Update Increment
-    event3.setIncrement(eventFields.value(3).toFloat());
+    event3->setIncrement(eventFields.value(3).toFloat());
     QVERIFY(katalogue_db.updateEntry(event3) == true);
 
     query.exec(record3Query);
@@ -164,7 +173,7 @@ void EventDatabaseTest::updateEntry() const
     QVERIFY(QString::asprintf("%.1f", query.value(3).toFloat()) == eventFields.value(3));
 
     // Update Category
-    event3.setCategory(eventFields.value(4).toString());
+    event3->setCategory(eventFields.value(4).toString());
     QVERIFY(katalogue_db.updateEntry(event3) == true);
 
     query.exec(record3Query);
@@ -172,12 +181,14 @@ void EventDatabaseTest::updateEntry() const
     QVERIFY(query.value(4).toString() == eventFields.value(4).toString());
 
     // Update Comment
-    event3.setComment(eventFields.value(5).toString());
+    event3->setComment(eventFields.value(5).toString());
     QVERIFY(katalogue_db.updateEntry(event3) == true);
 
     query.exec(record3Query);
     query.next();
     QVERIFY(query.value(5).toString() == eventFields.value(5).toString());
+
+    delete event3;
 }
 
 void EventDatabaseTest::deleteEventEntry() const

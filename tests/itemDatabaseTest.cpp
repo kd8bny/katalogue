@@ -85,8 +85,7 @@ void ItemDatabaseTest::insertItemEntry() const
     {
 
         EntryFactory entryFactory;
-        std::unique_ptr<Item> item_ptr = entryFactory.createItem();
-        Item *item = item_ptr.release();
+        Item *item = entryFactory.createItem();
 
         QVariantList itemAsList;
         itemAsList = items.value(i);
@@ -160,7 +159,7 @@ void ItemDatabaseTest::insertItemComponentEntry() const
     for (int i = 0; i < items.length(); i++)
     {
         EntryFactory entryFactory;
-        std::unique_ptr<Item> item = entryFactory.createItem();
+        Item *item = entryFactory.createItem();
 
         QVariantList itemAsList;
         itemAsList = items.value(i);
@@ -174,10 +173,9 @@ void ItemDatabaseTest::insertItemComponentEntry() const
         // Ignore user order and set as null
         item->setItemId(itemAsList.value(7).toInt());
 
-        // qDebug() << "itemInserted: " << itemInserted;
-        QVERIFY2(katalogue_db.insertEntry(item.release()) == true, "item component inserted");
+        QVERIFY2(katalogue_db.insertEntry(item) == true, "item component inserted");
 
-        delete item.release();
+        delete item;
     }
 
     // Validate data
@@ -241,9 +239,8 @@ void ItemDatabaseTest::updateEntry() const
     // qDebug() << query.record();
 
     EntryFactory entryFactory;
-    std::unique_ptr<Item> item_ptr = entryFactory.createItem();
+    Item *item3 = entryFactory.createItem();
 
-    Item *item3 = item_ptr.release();
     // Build item 3
     item3->setId(3);
     item3->setName(query.value(0).toString());
@@ -318,6 +315,8 @@ void ItemDatabaseTest::updateEntry() const
     query.exec(record3Query);
     query.next();
     QVERIFY2(query.value(5).toBool() == itemFields.value(5).toBool(), "Update Archived");
+
+    delete item3;
 }
 
 void ItemDatabaseTest::deleteItemEntry() const

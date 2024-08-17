@@ -105,7 +105,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     ItemDatabase itemDatabase;
     qmlRegisterSingletonInstance<ItemDatabase>("com.kd8bny.katalogue", 1, 0, "ItemDatabase", &itemDatabase);
     AttributeDatabase attributeDatabase;
-    qmlRegisterSingletonInstance<AttributeDatabase>("com.kd8bny.katalogue", 1, 0, "AttributeDatabase", &attributeDatabase);
+    qmlRegisterSingletonInstance<AttributeDatabase>("com.kd8bny.katalogue", 1, 0,
+                                                    "AttributeDatabase", &attributeDatabase);
     EventDatabase eventDatabase;
     qmlRegisterSingletonInstance<EventDatabase>("com.kd8bny.katalogue", 1, 0, "EventDatabase", &eventDatabase);
     NoteDatabase noteDatabase;
@@ -118,7 +119,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterSingletonInstance<AttributeModel>("com.kd8bny.katalogue", 1, 0, "AttributeModel", &attributeModel);
 
     AttributeCategoryModel attributeCategoryModel;
-    qmlRegisterSingletonInstance<AttributeCategoryModel>("com.kd8bny.katalogue", 1, 0, "AttributeCategoryModel", &attributeCategoryModel);
+    qmlRegisterSingletonInstance<AttributeCategoryModel>("com.kd8bny.katalogue", 1, 0,
+                                                         "AttributeCategoryModel", &attributeCategoryModel);
 
     Defaults defaults;
     qmlRegisterSingletonInstance<Defaults>("com.kd8bny.katalogue", 1, 0, "Defaults", &defaults);
@@ -127,13 +129,15 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterSingletonInstance<EventModel>("com.kd8bny.katalogue", 1, 0, "EventModel", &eventModel);
 
     EventCategoryModel eventCategoryModel;
-    qmlRegisterSingletonInstance<EventCategoryModel>("com.kd8bny.katalogue", 1, 0, "EventCategoryModel", &eventCategoryModel);
+    qmlRegisterSingletonInstance<EventCategoryModel>("com.kd8bny.katalogue", 1, 0,
+                                                     "EventCategoryModel", &eventCategoryModel);
 
     ItemModel itemModel;
     qmlRegisterSingletonInstance<ItemModel>("com.kd8bny.katalogue", 1, 0, "ItemModel", &itemModel);
 
     ItemComponentModel itemComponentModel;
-    qmlRegisterSingletonInstance<ItemComponentModel>("com.kd8bny.katalogue", 1, 0, "ItemComponentModel", &itemComponentModel);
+    qmlRegisterSingletonInstance<ItemComponentModel>("com.kd8bny.katalogue", 1, 0,
+                                                     "ItemComponentModel", &itemComponentModel);
 
     ItemTypeModel itemTypeModel;
     qmlRegisterSingletonInstance<ItemTypeModel>("com.kd8bny.katalogue", 1, 0, "ItemTypeModel", &itemTypeModel);

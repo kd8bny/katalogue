@@ -42,16 +42,21 @@ void AttributeDatabaseTest::insertAttributeEntry() const
     // Inserts correctly
     for (int i = 0; i < attributes.length(); i++)
     {
+
+        EntryFactory entryFactory;
+        Attribute *attribute = entryFactory.createAttribute();
+
         QVariantList AttributeAsList;
         AttributeAsList = attributes.value(i);
 
-        Attribute attribute(-1);
-        attribute.setKey(AttributeAsList.value(0).toString());
-        attribute.setValue(AttributeAsList.value(1).toString());
-        attribute.setCategory(AttributeAsList.value(2).toString());
-        attribute.setItemId(AttributeAsList.value(3).toInt());
+        attribute->setKey(AttributeAsList.value(0).toString());
+        attribute->setValue(AttributeAsList.value(1).toString());
+        attribute->setCategory(AttributeAsList.value(2).toString());
+        attribute->setItemId(AttributeAsList.value(3).toInt());
 
         QVERIFY(katalogue_db.insertEntry(attribute) == true);
+
+        delete attribute;
     }
 
     // Validate data
@@ -85,13 +90,17 @@ void AttributeDatabaseTest::updateEntry() const
 
     AttributeDatabase katalogue_db;
 
-    Attribute refAttribute(-1);
-    refAttribute.setKey(QStringLiteral("refKey"));
-    refAttribute.setValue(QStringLiteral("refValue"));
-    refAttribute.setCategory(QStringLiteral("refCat"));
-    refAttribute.setItemId(1);
+    EntryFactory entryFactory;
+    Attribute *refAttribute = entryFactory.createAttribute();
+
+    refAttribute->setKey(QStringLiteral("refKey"));
+    refAttribute->setValue(QStringLiteral("refValue"));
+    refAttribute->setCategory(QStringLiteral("refCat"));
+    refAttribute->setItemId(1);
 
     QVERIFY2(katalogue_db.insertEntry(refAttribute) == true, "Reference Attribute added");
+
+    delete refAttribute;
 
     QVariantList attributeFields = {
         QStringLiteral("refKeyUpdated"),
@@ -110,15 +119,16 @@ void AttributeDatabaseTest::updateEntry() const
     // qDebug() << query.record();
 
     // Build Attribute 3
-    Attribute attribute3(3);
-    attribute3.setKey(query.value(0).toString());
-    attribute3.setValue(query.value(1).toString());
-    attribute3.setCategory(query.value(2).toString());
-    attribute3.setItemId(query.value(3).toInt());
+    Attribute *attribute3 = entryFactory.createAttribute();
+    attribute3->setId(3);
+    attribute3->setKey(query.value(0).toString());
+    attribute3->setValue(query.value(1).toString());
+    attribute3->setCategory(query.value(2).toString());
+    attribute3->setItemId(query.value(3).toInt());
 
     // Start Test
     // Update Key
-    attribute3.setKey(attributeFields.value(0).toString());
+    attribute3->setKey(attributeFields.value(0).toString());
     QVERIFY(katalogue_db.updateEntry(attribute3) == true);
 
     query.exec(record3Query);
@@ -126,7 +136,7 @@ void AttributeDatabaseTest::updateEntry() const
     QVERIFY(query.value(0).toString() == attributeFields.value(0).toString());
 
     // Update Value
-    attribute3.setValue(attributeFields.value(1).toString());
+    attribute3->setValue(attributeFields.value(1).toString());
     QVERIFY(katalogue_db.updateEntry(attribute3) == true);
 
     query.exec(record3Query);
@@ -134,12 +144,14 @@ void AttributeDatabaseTest::updateEntry() const
     QVERIFY(query.value(1).toString() == attributeFields.value(1).toString());
 
     // Update Category
-    attribute3.setCategory(attributeFields.value(2).toString());
+    attribute3->setCategory(attributeFields.value(2).toString());
     QVERIFY(katalogue_db.updateEntry(attribute3) == true);
 
     query.exec(record3Query);
     query.next();
     QVERIFY(query.value(2).toString() == attributeFields.value(2).toString());
+
+    delete attribute3;
 }
 
 void AttributeDatabaseTest::deleteAttributeEntry() const

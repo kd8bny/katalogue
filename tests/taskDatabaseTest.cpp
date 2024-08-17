@@ -45,17 +45,21 @@ void TaskDatabaseTest::insertEntry() const
     // Inserts correctly
     for (int i = 0; i < tasks.length(); i++)
     {
+        EntryFactory entryFactory;
+        Task *task = entryFactory.createTask();
+
         QVariantList taskAsList;
         taskAsList = tasks.value(i);
 
-        Task task(-1);
-        task.setDueDate(taskAsList.value(0).toString());
-        task.setStatus(taskAsList.value(1).toString());
-        task.setTitle(taskAsList.value(2).toString());
-        task.setDescription(taskAsList.value(3).toString());
-        task.setItemId(taskAsList.value(4).toInt());
+        task->setDueDate(taskAsList.value(0).toString());
+        task->setStatus(taskAsList.value(1).toString());
+        task->setTitle(taskAsList.value(2).toString());
+        task->setDescription(taskAsList.value(3).toString());
+        task->setItemId(taskAsList.value(4).toInt());
 
         QVERIFY(katalogue_db.insertEntry(task) == true);
+
+        delete task;
     }
 
     // Validate data
@@ -89,14 +93,18 @@ void TaskDatabaseTest::updateEntry() const
 
     TaskDatabase katalogue_db;
 
-    Task refTask(-1);
-    refTask.setDueDate(QStringLiteral("2024-09-19T00:00:00.000-05:00"));
-    refTask.setStatus(QStringLiteral("refStatus"));
-    refTask.setTitle(QStringLiteral("refTitle"));
-    refTask.setDescription(QStringLiteral("refDescription"));
-    refTask.setItemId(1);
+    EntryFactory entryFactory;
+    Task *refTask = entryFactory.createTask();
+
+    refTask->setDueDate(QStringLiteral("2024-09-19T00:00:00.000-05:00"));
+    refTask->setStatus(QStringLiteral("refStatus"));
+    refTask->setTitle(QStringLiteral("refTitle"));
+    refTask->setDescription(QStringLiteral("refDescription"));
+    refTask->setItemId(1);
 
     QVERIFY2(katalogue_db.insertEntry(refTask) == true, "Reference Task added");
+
+    delete refTask;
 
     QVariantList taskFields = {
         QStringLiteral("2222-09-19T00:00:00.000-05:00"),
@@ -107,54 +115,58 @@ void TaskDatabaseTest::updateEntry() const
     };
 
     // Query for reference task id 3
-    const QString record3Query = QStringLiteral("SELECT %1, %2, %3, %4, %5 FROM %6 WHERE id=4")
+    const QString record4Query = QStringLiteral("SELECT %1, %2, %3, %4, %5 FROM %6 WHERE id=4")
                                      .arg(DatabaseSchema::DUE_DATE, DatabaseSchema::STATUS, DatabaseSchema::TITLE,
                                           DatabaseSchema::DESCRIPTION, DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::TABLE_TASKS);
     QSqlQuery query;
-    query.exec(record3Query);
+    query.exec(record4Query);
     query.next();
     qDebug() << query.record();
 
-    // Build Task 3
-    Task task3(4); // TODO task X
-    task3.setDueDate(query.value(0).toString());
-    task3.setStatus(query.value(1).toString());
-    task3.setTitle(query.value(2).toString());
-    task3.setDescription(query.value(3).toString());
-    task3.setItemId(query.value(4).toInt());
+    // Build Task 4
+    Task *task4 = entryFactory.createTask();
+    task4->setId(4);
+    task4->setDueDate(query.value(0).toString());
+    task4->setStatus(query.value(1).toString());
+    task4->setTitle(query.value(2).toString());
+    task4->setDescription(query.value(3).toString());
+    task4->setItemId(query.value(4).toInt());
 
     // Start Test
     // Update Due Date
-    task3.setDueDate(taskFields.value(0).toString());
-    QVERIFY(katalogue_db.updateEntry(task3) == true);
+    task4->setDueDate(taskFields.value(0).toString());
+    QVERIFY(katalogue_db.updateEntry(task4) == true);
 
-    query.exec(record3Query);
+    query.exec(record4Query);
     query.next();
+    qDebug() << query.value(0).toString() << taskFields.value(0).toString();
     QVERIFY(query.value(0).toString() == taskFields.value(0).toString());
 
     // Update Status
-    task3.setStatus(taskFields.value(1).toString());
-    QVERIFY(katalogue_db.updateEntry(task3) == true);
+    task4->setStatus(taskFields.value(1).toString());
+    QVERIFY(katalogue_db.updateEntry(task4) == true);
 
-    query.exec(record3Query);
+    query.exec(record4Query);
     query.next();
     QVERIFY(query.value(1).toString() == taskFields.value(1).toString());
 
     // Update Title
-    task3.setTitle(taskFields.value(2).toString());
-    QVERIFY(katalogue_db.updateEntry(task3) == true);
+    task4->setTitle(taskFields.value(2).toString());
+    QVERIFY(katalogue_db.updateEntry(task4) == true);
 
-    query.exec(record3Query);
+    query.exec(record4Query);
     query.next();
     QVERIFY(query.value(2).toString() == taskFields.value(2).toString());
 
     // Update Description
-    task3.setDescription(taskFields.value(3).toString());
-    QVERIFY(katalogue_db.updateEntry(task3) == true);
+    task4->setDescription(taskFields.value(3).toString());
+    QVERIFY(katalogue_db.updateEntry(task4) == true);
 
-    query.exec(record3Query);
+    query.exec(record4Query);
     query.next();
     QVERIFY(query.value(3).toString() == taskFields.value(3).toString());
+
+    delete task4;
 }
 
 void TaskDatabaseTest::deleteTaskEntry() const
