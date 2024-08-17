@@ -165,7 +165,7 @@ Item *ItemDatabase::getEntryById(const int id) const
     QSqlQuery query;
 
     query.prepare(
-        QStringLiteral("SELECT %1, %2, %3, %4, %5, %6, %7, %8, %9, %10 FROM %11 WHERE id=:id")
+        QStringLiteral("SELECT id, %1, %2, %3, %4, %5, %6, %7, %8, %9, %10 FROM %11 WHERE id=:id")
             .arg(DatabaseSchema::CREATED, DatabaseSchema::MODIFIED, DatabaseSchema::NAME, DatabaseSchema::MAKE,
                  DatabaseSchema::MODEL, DatabaseSchema::YEAR, DatabaseSchema::TYPE, DatabaseSchema::ARCHIVED,
                  DatabaseSchema::USER_ORDER, DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::TABLE_ITEMS));
