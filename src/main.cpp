@@ -102,7 +102,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
         return -1;
     }
 
-    // TODO introduce factory
     ItemDatabase itemDatabase;
     qmlRegisterSingletonInstance<ItemDatabase>("com.kd8bny.katalogue", 1, 0, "ItemDatabase", &itemDatabase);
     AttributeDatabase attributeDatabase;

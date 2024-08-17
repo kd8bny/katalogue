@@ -15,7 +15,6 @@ class Entry : public QObject
 
 public:
     using QObject::QObject;
-    ;
     ~Entry() override = default;
 
     int getId() const { return id; }
