@@ -15,7 +15,6 @@ Kirigami.ScrollablePage {
     property bool isComponentView: false
 
     Component.onCompleted: {
-        console.log(entryItem.itemId);
         if (entryItem.itemId != 0)
             isComponentView = true;
 
