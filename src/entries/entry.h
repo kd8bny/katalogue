@@ -14,8 +14,8 @@ class Entry : public QObject
     Q_PROPERTY(int itemId READ getItemId WRITE setItemId)
 
 public:
-    explicit Entry(QObject *parent = nullptr)
-        : QObject(parent) {};
+    using QObject::QObject;
+    ;
     ~Entry() override = default;
 
     int getId() const { return id; }

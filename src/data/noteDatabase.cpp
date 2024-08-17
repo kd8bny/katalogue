@@ -89,6 +89,14 @@ bool NoteDatabase::deleteEntryById(int id) const
 
 Note *NoteDatabase::getEntryById(const int id) const
 {
+    EntryFactory entryFactory;
+    Note *note = entryFactory.createNote();
+
+    if (id == 0)
+    {
+        return note;
+    }
+
     QSqlQuery query;
 
     query.prepare(
@@ -106,9 +114,6 @@ Note *NoteDatabase::getEntryById(const int id) const
     }
     query.next();
 
-    EntryFactory entryFactory;
-    std::unique_ptr<Note> note = entryFactory.createNote();
-
     note->setId(id);
     note->setCreatedDate(query.value(1).toString());
     note->setModifiedDate(query.value(2).toString());
@@ -116,13 +121,5 @@ Note *NoteDatabase::getEntryById(const int id) const
     note->setNoteContent(query.value(4).toString());
     note->setItemId(query.value(5).toInt());
 
-    return note.release();
-}
-
-Note *NoteDatabase::getNewEntry() const
-{
-    EntryFactory entryFactory;
-    std::unique_ptr<Note> note = entryFactory.createNote();
-
-    return note.release();
+    return note;
 }

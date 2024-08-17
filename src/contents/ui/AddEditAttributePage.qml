@@ -37,7 +37,7 @@ Kirigami.ScrollablePage {
             valueField.text = entryAttribute.value;
             categoryBox.currentIndex = categoryBox.find(entryAttribute.category);
         } else {
-            entryAttribute = AttributeDatabase.getNewEntry();
+            entryAttribute = AttributeDatabase.getEntryById();
         }
     }
     actions: [

@@ -53,7 +53,7 @@ Kirigami.ScrollablePage {
                 itemParentEnabled.checked = entryItem.itemId;
 
         } else {
-            entryItem = ItemDatabase.getNewEntry();
+            entryItem = ItemDatabase.getEntryById();
         }
     }
     actions: [

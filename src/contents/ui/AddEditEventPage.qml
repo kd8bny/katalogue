@@ -47,7 +47,7 @@ Kirigami.ScrollablePage {
             categoryBox.currentIndex = categoryBox.find(entryEvent.category);
             commentField.text = entryEvent.comment;
         } else {
-            entryEvent = EventDatabase.getNewEntry();
+            entryEvent = EventDatabase.getEntryById();
         }
     }
     actions: [

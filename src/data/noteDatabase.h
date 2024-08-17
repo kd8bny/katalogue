@@ -22,8 +22,7 @@ public:
     Q_INVOKABLE bool insertEntry(const Note *note) const;
     Q_INVOKABLE bool updateEntry(const Note *note) const;
     Q_INVOKABLE bool deleteEntryById(const int id) const;
-    Q_INVOKABLE Note *getEntryById(const int id) const;
-    Q_INVOKABLE Note *getNewEntry() const;
+    Q_INVOKABLE Note *getEntryById(const int id = 0) const;
 };
 
 #endif

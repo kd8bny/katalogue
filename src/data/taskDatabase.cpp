@@ -94,6 +94,14 @@ bool TaskDatabase::deleteEntryById(const int id) const
 
 Task *TaskDatabase::getEntryById(const int id) const
 {
+    EntryFactory entryFactory;
+    Task *task = entryFactory.createTask();
+
+    if (id == 0)
+    {
+        return task;
+    }
+
     QSqlQuery query;
 
     query.prepare(
@@ -112,9 +120,6 @@ Task *TaskDatabase::getEntryById(const int id) const
     }
     query.next();
 
-    EntryFactory entryFactory;
-    std::unique_ptr<Task> task = entryFactory.createTask();
-
     task->setId(id);
     task->setCreatedDate(query.value(1).toString());
     task->setModifiedDate(query.value(2).toString());
@@ -124,13 +129,5 @@ Task *TaskDatabase::getEntryById(const int id) const
     task->setDescription(query.value(5).toString());
     task->setItemId(query.value(6).toInt());
 
-    return task.release();
-}
-
-Task *TaskDatabase::getNewEntry() const
-{
-    EntryFactory entryFactory;
-    std::unique_ptr<Task> task = entryFactory.createTask();
-
-    return task.release();
+    return task;
 }

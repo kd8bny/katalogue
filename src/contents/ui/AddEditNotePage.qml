@@ -34,7 +34,7 @@ Kirigami.ScrollablePage {
             titleField.text = entryNote.title;
             noteContentField.text = entryNote.noteContent;
         } else {
-            entryNote = NoteDatabase.getNewEntry();
+            entryNote = NoteDatabase.getEntryById();
         }
     }
     actions: [

@@ -86,6 +86,14 @@ bool AttributeDatabase::deleteEntryById(int attributeId) const
 
 Attribute *AttributeDatabase::getEntryById(const int id) const
 {
+    EntryFactory entryFactory;
+    Attribute *attribute = entryFactory.createAttribute();
+
+    if (id == 0)
+    {
+        return attribute;
+    }
+
     QSqlQuery query;
 
     query.prepare(
@@ -103,9 +111,6 @@ Attribute *AttributeDatabase::getEntryById(const int id) const
     }
     query.next();
 
-    EntryFactory entryFactory;
-    std::unique_ptr<Attribute> attribute = entryFactory.createAttribute();
-
     attribute->setId(id);
     attribute->setCreatedDate(query.value(1).toString());
     attribute->setModifiedDate(query.value(2).toString());
@@ -114,13 +119,5 @@ Attribute *AttributeDatabase::getEntryById(const int id) const
     attribute->setCategory(query.value(5).toString());
     attribute->setItemId(query.value(6).toInt());
 
-    return attribute.release();
-}
-
-Attribute *AttributeDatabase::getNewEntry() const
-{
-    EntryFactory entryFactory;
-    std::unique_ptr<Attribute> attribute = entryFactory.createAttribute();
-
-    return attribute.release();
+    return attribute;
 }

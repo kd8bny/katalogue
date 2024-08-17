@@ -93,6 +93,14 @@ bool EventDatabase::deleteEntryById(const int id) const
 
 Event *EventDatabase::getEntryById(const int id) const
 {
+    EntryFactory entryFactory;
+    Event *event = entryFactory.createEvent();
+
+    if (id == 0)
+    {
+        return event;
+    }
+
     QSqlQuery query;
 
     query.prepare(
@@ -109,9 +117,6 @@ Event *EventDatabase::getEntryById(const int id) const
     }
     query.next();
 
-    EntryFactory entryFactory;
-    std::unique_ptr<Event> event = entryFactory.createEvent();
-
     event->setId(id);
     event->setCreatedDate(query.value(1).toString());
     event->setModifiedDate(query.value(2).toString());
@@ -123,13 +128,5 @@ Event *EventDatabase::getEntryById(const int id) const
     event->setComment(query.value(8).toString());
     event->setItemId(query.value(9).toInt());
 
-    return event.release();
-}
-
-Event *EventDatabase::getNewEntry() const
-{
-    EntryFactory entryFactory;
-    std::unique_ptr<Event> event = entryFactory.createEvent();
-
-    return event.release();
+    return event;
 }

@@ -22,8 +22,7 @@ public:
     Q_INVOKABLE bool insertEntry(const Task *task) const;
     Q_INVOKABLE bool updateEntry(const Task *task) const;
     Q_INVOKABLE bool deleteEntryById(const int id) const;
-    Q_INVOKABLE Task *getEntryById(const int id) const;
-    Q_INVOKABLE Task *getNewEntry() const;
+    Q_INVOKABLE Task *getEntryById(const int id = 0) const;
 };
 
 #endif

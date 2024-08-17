@@ -16,7 +16,7 @@ Kirigami.ScrollablePage {
 
     id: itemsDetailPage
 
-    // property bool isComponentView         // Component view or Item level view
+    // property bool isComponentView         // Component view or Item level view // todo
     required property EntryItem entryItem
 
     title: i18n(entryItem.name)

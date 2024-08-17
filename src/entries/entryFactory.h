@@ -13,29 +13,32 @@
 class EntryFactory
 {
 public:
-    std::unique_ptr<Item> createItem() const // TODO make wrapper
+    EntryFactory() = default;
+    ~EntryFactory() = default;
+
+    Item *createItem() const
     {
-        return std::make_unique<Item>();
+        return new Item();
     };
 
-    std::unique_ptr<Attribute> createAttribute() const
+    Attribute *createAttribute() const
     {
-        return std::make_unique<Attribute>();
+        return new Attribute();
     };
 
-    std::unique_ptr<Event> createEvent() const
+    Event *createEvent() const
     {
-        return std::make_unique<Event>();
+        return new Event();
     };
 
-    std::unique_ptr<Note> createNote() const
+    Note *createNote() const
     {
-        return std::make_unique<Note>();
+        return new Note();
     };
 
-    std::unique_ptr<Task> createTask() const
+    Task *createTask() const
     {
-        return std::make_unique<Task>();
+        return new Task();
     };
 };
 

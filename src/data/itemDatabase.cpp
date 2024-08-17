@@ -154,6 +154,14 @@ bool ItemDatabase::setUserOrder(const int id, const int user_order) const
 
 Item *ItemDatabase::getEntryById(const int id) const
 {
+    EntryFactory entryFactory;
+    Item *item = entryFactory.createItem();
+
+    if (id == 0)
+    {
+        return item;
+    }
+
     QSqlQuery query;
 
     query.prepare(
@@ -172,9 +180,6 @@ Item *ItemDatabase::getEntryById(const int id) const
     }
     query.next();
 
-    EntryFactory entryFactory;
-    std::unique_ptr<Item> item = entryFactory.createItem();
-
     item->setId(id);
     item->setCreatedDate(query.value(1).toString());
     item->setModifiedDate(query.value(2).toString());
@@ -187,13 +192,5 @@ Item *ItemDatabase::getEntryById(const int id) const
     item->setUserOrder(query.value(9).toInt());
     item->setItemId(query.value(10).toInt());
 
-    return item.release();
-}
-
-Item *ItemDatabase::getNewEntry() const
-{
-    EntryFactory entryFactory;
-    std::unique_ptr<Item> item = entryFactory.createItem();
-
-    return item.release();
+    return item;
 }

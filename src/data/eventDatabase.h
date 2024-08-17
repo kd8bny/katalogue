@@ -22,8 +22,7 @@ public:
     Q_INVOKABLE bool insertEntry(const Event *event) const;
     Q_INVOKABLE bool updateEntry(const Event *event) const;
     Q_INVOKABLE bool deleteEntryById(const int id) const;
-    Q_INVOKABLE Event *getEntryById(const int id) const;
-    Q_INVOKABLE Event *getNewEntry() const;
+    Q_INVOKABLE Event *getEntryById(const int id = 0) const;
 };
 
 #endif

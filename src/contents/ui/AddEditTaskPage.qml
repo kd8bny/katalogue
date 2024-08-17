@@ -38,7 +38,7 @@ Kirigami.ScrollablePage {
             titleField.text = entryTask.title;
             descriptionField.text = entryTask.description;
         } else {
-            entryTask = TaskDatabase.getNewEntry();
+            entryTask = TaskDatabase.getEntryById();
             var locale = Qt.locale();
             var currentDate = new Date();
             dateField.text = currentDate.toLocaleDateString(locale, Locale.ShortFormat).split("T")[0];
