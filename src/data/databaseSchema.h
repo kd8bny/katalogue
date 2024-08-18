@@ -14,7 +14,7 @@ namespace DatabaseSchema
      const QString TABLE_ITEMS = QStringLiteral("items");
      const QString TABLE_NOTES = QStringLiteral("notes");
      const QString TABLE_TASKS = QStringLiteral("tasks");
-     const QString TABLE_DEFAULTS = QStringLiteral("defaults");
+     const QString TABLE_DOCUMENTS = StringLiteral("documents");
 
      const QString ARCHIVED = QStringLiteral("archived");
      const QString CATEGORY = QStringLiteral("category");
@@ -22,8 +22,11 @@ namespace DatabaseSchema
      const QString COST = QStringLiteral("cost");
      const QString CREATED = QStringLiteral("created");
      const QString DATE = QStringLiteral("date");
+     const QString DATA = QStringLiteral("data");
+     const QString DESCRIPTION = QStringLiteral("description");
+     const QString DUE_DATE = QStringLiteral("due_date");
      const QString EVENT = QStringLiteral("event");
-     const QString GROUP = QStringLiteral("item_group"); // TODO used??
+     const QString FILE_NAME = QStringLiteral("file_name");
      const QString ID = QStringLiteral("id");
      const QString INCREMENT = QStringLiteral("increment");
      const QString KEY = QStringLiteral("key");
@@ -32,17 +35,18 @@ namespace DatabaseSchema
      const QString MODEL = QStringLiteral("model");
      const QString MODIFIED = QStringLiteral("modified");
      const QString NAME = QStringLiteral("name");
-     const QString USER_ORDER = QStringLiteral("user_order");
+     const QString NOTE_CONTENT = QStringLiteral("note_content");
      const QString TITLE = QStringLiteral("title");
      const QString TYPE = QStringLiteral("type");
+     const QString USER_ORDER = QStringLiteral("user_order");
      const QString VALUE = QStringLiteral("value");
      const QString YEAR = QStringLiteral("year");
-     const QString NOTE_CONTENT = QStringLiteral("note_content");
-     const QString DESCRIPTION = QStringLiteral("description");
-     const QString DUE_DATE = QStringLiteral("due_date");
      const QString STATUS = QStringLiteral("status");
 
      const QString KEY_ITEM_ID = QStringLiteral("fk_item_id");
+     const QString KEY_EVENT_ID = QStringLiteral("fk_event_id");
+     const QString KEY_NOTE_ID = QStringLiteral("fk_note_id");
+     const QString KEY_TASK_ID = QStringLiteral("fk_task_id");
 
      const QString SCHEMA_ITEMS = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
                                                  "%2 DATE NOT NULL, "                          // CREATED
@@ -109,6 +113,25 @@ namespace DatabaseSchema
                                                  "ON DELETE CASCADE ON UPDATE CASCADE)")
                                       .arg(TABLE_TASKS, CREATED, MODIFIED, DUE_DATE, STATUS, TITLE, DESCRIPTION,
                                            KEY_ITEM_ID, TABLE_ITEMS);
+
+     const QString SCHEMA_DOCUMENTS = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                                                     "%2 DATE NOT NULL, "                     // CREATED
+                                                     "%3 DATE NOT NULL, "                     // MODIFIED
+                                                     "%4 TEXT NOT NULL, "                     // NAME
+                                                     "%5 TEXT NOT NULL, "                     // FILE_NAME
+                                                     "%6 BLOB NOT NULL, "                     // DATA
+                                                     "%7 INT, "                               // FK Item
+                                                     "%8 INT, "                               // FK Event
+                                                     "%9 INT, "                               // FK Note
+                                                     "%10 INT, "                              // FK Task
+                                                     "FOREIGN KEY (%7) REFERENCES %11 (id) "  // Does not need to belong to item
+                                                     "FOREIGN KEY (%8) REFERENCES %12 (id) "  // Does not need to belong to event
+                                                     "FOREIGN KEY (%9) REFERENCES %13 (id) "  // Does not need to belong to note
+                                                     "FOREIGN KEY (%10) REFERENCES %14 (id) " // Does not need to belong to task
+                                                     "ON DELETE CASCADE ON UPDATE CASCADE)")
+                                          .arg(TABLE_DOCUMENTS, CREATED, MODIFIED, NAME, FILE_NAME, DATA,
+                                               KEY_ITEM_ID, KEY_EVENT_ID, KEY_NOTE_ID, KEY_TASK_ID,
+                                               TABLE_ITEMS, TABLE_EVENTS, TABLE_NOTES, TABLE_TASKS);
 };
 
 #endif

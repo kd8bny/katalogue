@@ -94,5 +94,12 @@ bool DatabaseInit::initializeSchema() const
         return false;
     }
 
+    if (!query.exec(DatabaseSchema::SCHEMA_DOCUMENTS))
+    {
+        qDebug() << "Failed to create table: " << DatabaseSchema::TABLE_DOCUMENTS;
+        qDebug() << query.lastError();
+        return false;
+    }
+
     return true;
 }

@@ -10,6 +10,7 @@ set(katalogue_data_src
     eventDatabase.cpp
     noteDatabase.cpp
     taskDatabase.cpp
+    documentDatabase.cpp
 )
 
 add_library(katalogue_data STATIC
