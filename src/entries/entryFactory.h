@@ -1,11 +1,10 @@
-#include <QObject>
-
 #include "entry.h"
 #include "item.h"
 #include "attribute.h"
 #include "event.h"
 #include "task.h"
 #include "note.h"
+#include "document.h"
 
 #ifndef ENTRY_FACTORY_H
 #define ENTRY_FACTORY_H
@@ -39,6 +38,11 @@ public:
     Task *createTask() const
     {
         return new Task();
+    };
+
+    Document *createDocument() const
+    {
+        return new Document();
     };
 };
 

@@ -8,6 +8,7 @@ set(katalogue_entries_src
     event.h
     note.h
     task.h
+    document.h
 )
 
 add_library(katalogue_entries STATIC
