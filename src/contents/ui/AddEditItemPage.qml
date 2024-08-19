@@ -9,18 +9,18 @@ import com.kd8bny.katalogue.entries
 import org.kde.kirigami as Kirigami
 
 Kirigami.ScrollablePage {
-    // itemParentBox.find(entryItem.itemId); //TODO wron item
-
     id: addEditItemPage
 
     property EntryItem entryItem
     property bool isEdit: false
 
+    signal modelModified()
+
     function insertUpdate() {
         entryItem.name = nameField.text;
         entryItem.make = makeField.text;
         entryItem.model = modelField.text;
-        entryItem.year = yearField.text;
+        entryItem.year = yearField.value;
         if (typeBox.find(typeBox.editText) === -1)
             entryItem.type = typeBox.editText;
         else
@@ -29,7 +29,7 @@ Kirigami.ScrollablePage {
             entryItem.archived = true;
 
         if (itemParentEnabled.checked)
-            entryItem.type.itemId = ItemParentModel.getId(itemParentBox.currentIndex);
+            entryItem.itemId = ItemParentModel.getId(itemParentBox.currentIndex);
 
         if (isEdit)
             return ItemDatabase.updateEntry(entryItem);
@@ -44,14 +44,16 @@ Kirigami.ScrollablePage {
             nameField.text = entryItem.name;
             makeField.text = entryItem.make;
             modelField.text = entryItem.model;
-            yearField.text = entryItem.year;
+            yearField.value = entryItem.year;
             typeBox.currentIndex = typeBox.find(entryItem.type);
             if (entryItem.archived)
                 itemArchived.checked = entryItem.archived;
 
-            if (entryItem.itemId)
+            if (entryItem.itemId) {
                 itemParentEnabled.checked = entryItem.itemId;
-
+                var parentEntry = ItemDatabase.getEntryById(entryItem.itemId);
+                itemParentBox.currentIndex = itemParentBox.find(parentEntry.name);
+            }
         } else {
             entryItem = ItemDatabase.getEntryById();
         }
@@ -67,6 +69,22 @@ Kirigami.ScrollablePage {
             }
         }
     ]
+
+    Controls.Action {
+        id: addUpdateAction
+
+        enabled: nameField.text.length > 0
+        shortcut: "Return"
+        onTriggered: {
+            if (insertUpdate()) {
+                ItemModel.refresh();
+                ItemTypeModel.refresh();
+                pageStack.pop();
+            } else {
+                msgInsertUpdateError.visible = true;
+            }
+        }
+    }
 
     Kirigami.PromptDialog {
         id: deleteDialog
@@ -89,6 +107,10 @@ Kirigami.ScrollablePage {
     }
 
     Kirigami.FormLayout {
+        // RowLayout {
+        // Layout.fillWidth: true
+        // }
+
         id: form
 
         Controls.TextField {
@@ -96,6 +118,10 @@ Kirigami.ScrollablePage {
 
             Kirigami.FormData.label: i18nc("@label:textbox", "Name:")
             placeholderText: i18n("Required")
+        }
+
+        Kirigami.Separator {
+            Kirigami.FormData.isSection: true
         }
 
         Controls.TextField {
@@ -110,36 +136,51 @@ Kirigami.ScrollablePage {
             Kirigami.FormData.label: i18nc("@label:textbox", "Model:")
         }
 
-        Controls.TextField {
+        Controls.SpinBox {
             id: yearField
 
+            Layout.fillWidth: true
             Kirigami.FormData.label: i18nc("@label:textbox", "Year:")
-            placeholderText: i18n("YYYY")
-            inputMask: "9999"
-            text: "2000"
+            from: 1900
+            to: 3000
+            value: 2000
+            textFromValue: function(year) {
+                // Do not format the year
+                return year;
+            }
+        }
+
+        Kirigami.Separator {
+            Kirigami.FormData.isSection: true
         }
 
         Controls.ComboBox {
             id: typeBox
 
+            Layout.fillWidth: true
             Kirigami.FormData.label: i18nc("@label:textbox", "Type:")
             editable: true
             model: ItemTypeModel
         }
 
+        Kirigami.Separator {
+            Kirigami.FormData.isSection: true
+        }
+
         Controls.Switch {
             id: itemParentEnabled
 
-            Kirigami.FormData.label: i18nc("@label:textbox", "Item is a component")
+            Kirigami.FormData.label: i18n("Item Component:")
         }
 
         Controls.ComboBox {
             id: itemParentBox
 
+            Layout.fillWidth: true
+            Kirigami.FormData.label: i18nc("@label:textbox", "Component Parent:")
             editable: false
             visible: itemParentEnabled.checked
             model: ItemParentModel
-            Kirigami.FormData.label: i18nc("@label:textbox", "Component of:")
         }
 
         Controls.Switch {
@@ -148,33 +189,6 @@ Kirigami.ScrollablePage {
             enabled: isEdit
             visible: isEdit
             Kirigami.FormData.label: i18nc("@label:textbox", i18n("Archive"))
-        }
-
-        Controls.Button {
-            id: doneButton
-
-            Layout.fillWidth: true
-            text: (isEdit) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
-            enabled: nameField.text.length > 0
-            onClicked: {
-                if (insertUpdate()) {
-                    ItemModel.refresh();
-                    ItemTypeModel.refresh();
-                    pageStack.pop();
-                } else {
-                    msgInsertUpdateError.visible = true;
-                }
-            }
-        }
-
-        Controls.Button {
-            id: cancelButton
-
-            Layout.fillWidth: true
-            text: i18nc("@action:button", "Cancel")
-            onClicked: {
-                pageStack.pop();
-            }
         }
 
     }
@@ -193,6 +207,20 @@ Kirigami.ScrollablePage {
         type: Kirigami.MessageType.Error
         text: "Failed to delete Item"
         visible: false
+    }
+
+    footer: Controls.DialogButtonBox {
+        standardButtons: Controls.DialogButtonBox.Cancel
+        onRejected: pageStack.pop()
+        onAccepted: addUpdateAction.trigger()
+
+        Controls.Button {
+            icon.name: isEdit ? "document-save" : "list-add"
+            text: isEdit ? i18n("Save") : i18n("Add")
+            Controls.DialogButtonBox.buttonRole: Controls.DialogButtonBox.AcceptRole
+            enabled: nameField.length > 0
+        }
+
     }
 
 }
