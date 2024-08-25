@@ -183,14 +183,6 @@ Kirigami.ScrollablePage {
             model: ItemParentModel
         }
 
-        Controls.Switch {
-            id: itemArchived
-
-            enabled: isEdit
-            visible: isEdit
-            Kirigami.FormData.label: i18nc("@label:textbox", i18n("Archive"))
-        }
-
     }
 
     Kirigami.InlineMessage {
