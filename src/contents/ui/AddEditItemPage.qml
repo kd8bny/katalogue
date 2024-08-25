@@ -25,9 +25,6 @@ Kirigami.ScrollablePage {
             entryItem.type = typeBox.editText;
         else
             entryItem.type = typeBox.currentText;
-        if (itemArchived.checked)
-            entryItem.archived = true;
-
         if (itemParentEnabled.checked)
             entryItem.itemId = ItemParentModel.getId(itemParentBox.currentIndex);
 
@@ -59,6 +56,15 @@ Kirigami.ScrollablePage {
         }
     }
     actions: [
+        Kirigami.Action {
+            visible: isEdit
+            text: (entryItem.archived) ? i18n("Unarchive") : i18n("Archive")
+            icon.name: (entryItem.archived) ? "archive-remove-symbolic" : "archive-insert-symbolic"
+            tooltip: i18n("Archive Item in Katalogue")
+            onTriggered: {
+                archiveDialog.open();
+            }
+        },
         Kirigami.Action {
             visible: isEdit
             text: i18n("Delete")
@@ -106,18 +112,59 @@ Kirigami.ScrollablePage {
         }
     }
 
-    Kirigami.FormLayout {
-        // RowLayout {
-        // Layout.fillWidth: true
-        // }
+    Kirigami.PromptDialog {
+        id: archiveDialog
 
+        title: (entryItem.archived) ? ii18n("Unarchive Item") : i18n("Archive Item")
+        subtitle: i18n("Are you sure you want to ") + ((entryItem.archived) ? i18n("Unarchive Item") : i18n("Archive Item"))
+        standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
+        onAccepted: {
+            if (ItemDatabase.setArchived(entryItem.id, !entryItem.archived)) {
+                ItemModel.refresh();
+                pageStack.clear();
+                pageStack.push("qrc:Items.qml");
+            } else {
+                msgDeleteError.visible = true;
+            }
+        }
+        onRejected: {
+            pageStack.pop();
+        }
+    }
+
+    Kirigami.FormLayout {
         id: form
+
+        Kirigami.InlineMessage {
+            id: msgInsertUpdateError
+
+            type: Kirigami.MessageType.Error
+            text: (isEdit) ? i18n("Failed to update Item") : i18n("Failed to insert Item")
+            visible: false
+        }
+
+        Kirigami.InlineMessage {
+            id: msgDeleteError
+
+            type: Kirigami.MessageType.Error
+            text: "Failed to delete Item"
+            visible: false
+        }
+
+        Kirigami.InlineMessage {
+            id: msgArchived
+
+            type: Kirigami.MessageType.Error
+            text: "Item is Archived, no futher edits are allowed."
+            visible: entryItem.archived
+        }
 
         Controls.TextField {
             id: nameField
 
             Kirigami.FormData.label: i18nc("@label:textbox", "Name:")
             placeholderText: i18n("Required")
+            enabled: !entryItem.archived
         }
 
         Kirigami.Separator {
@@ -128,12 +175,14 @@ Kirigami.ScrollablePage {
             id: makeField
 
             Kirigami.FormData.label: i18nc("@label:textbox", "Make:")
+            enabled: !entryItem.archived
         }
 
         Controls.TextField {
             id: modelField
 
             Kirigami.FormData.label: i18nc("@label:textbox", "Model:")
+            enabled: !entryItem.archived
         }
 
         Controls.SpinBox {
@@ -148,6 +197,7 @@ Kirigami.ScrollablePage {
                 // Do not format the year
                 return year;
             }
+            enabled: !entryItem.archived
         }
 
         Kirigami.Separator {
@@ -161,6 +211,7 @@ Kirigami.ScrollablePage {
             Kirigami.FormData.label: i18nc("@label:textbox", "Type:")
             editable: true
             model: ItemTypeModel
+            enabled: !entryItem.archived
         }
 
         Kirigami.Separator {
@@ -171,6 +222,7 @@ Kirigami.ScrollablePage {
             id: itemParentEnabled
 
             Kirigami.FormData.label: i18n("Item Component:")
+            enabled: !entryItem.archived
         }
 
         Controls.ComboBox {
@@ -181,24 +233,9 @@ Kirigami.ScrollablePage {
             editable: false
             visible: itemParentEnabled.checked
             model: ItemParentModel
+            enabled: !entryItem.archived
         }
 
-    }
-
-    Kirigami.InlineMessage {
-        id: msgInsertUpdateError
-
-        type: Kirigami.MessageType.Error
-        text: (isEdit) ? i18n("Failed to update Item") : i18n("Failed to insert Item")
-        visible: false
-    }
-
-    Kirigami.InlineMessage {
-        id: msgDeleteError
-
-        type: Kirigami.MessageType.Error
-        text: "Failed to delete Item"
-        visible: false
     }
 
     footer: Controls.DialogButtonBox {
