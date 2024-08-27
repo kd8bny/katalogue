@@ -201,11 +201,30 @@ Kirigami.ScrollablePage {
             model: EventCategoryModel
         }
 
-        Controls.TextArea {
-            id: commentField
-
+        RowLayout {
             Layout.fillWidth: true
             Kirigami.FormData.label: i18nc("@label:textbox", "Comment:")
+            Kirigami.FormData.labelAlignment: Qt.AlignTop
+
+            Flickable {
+                id: commentFieldParent
+
+                Layout.fillWidth: true
+                height: Math.min(contentHeight, Kirigami.Units.gridUnit * 8)
+                contentWidth: width
+                contentHeight: commentField.implicitHeight
+
+                Controls.TextArea.flickable: Controls.TextArea {
+                    id: commentField
+
+                    wrapMode: Text.WordWrap
+                }
+
+                Controls.ScrollBar.vertical: Controls.ScrollBar {
+                }
+
+            }
+
         }
 
     }
