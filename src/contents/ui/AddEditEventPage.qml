@@ -7,6 +7,7 @@ import QtQuick.Layouts
 import com.kd8bny.katalogue
 import com.kd8bny.katalogue.entries
 import org.kde.kirigami as Kirigami
+import org.kde.kirigamiaddons.dateandtime
 
 Kirigami.ScrollablePage {
     id: addEditEventPage
@@ -19,7 +20,7 @@ Kirigami.ScrollablePage {
         entryEvent.date = dateField.text;
         entryEvent.event = eventField.text;
         entryEvent.cost = costField.text;
-        entryEvent.increment = incrementField.text;
+        entryEvent.increment = incrementField.value;
         if (categoryBox.find(categoryBox.editText) === -1)
             entryEvent.category = categoryBox.editText;
         else
@@ -42,8 +43,8 @@ Kirigami.ScrollablePage {
             isEdit = true;
             dateField.text = entryEvent.date;
             eventField.text = entryEvent.event;
-            costField.text = entryEvent.cost; // TODO `${recordData[5]}`;
-            incrementField.text = entryEvent.increment; //`${recordData[6]}`;
+            costField.text = entryEvent.cost;
+            incrementField.text = entryEvent.increment;
             categoryBox.currentIndex = categoryBox.find(entryEvent.category);
             commentField.text = entryEvent.comment;
         } else {
@@ -61,6 +62,31 @@ Kirigami.ScrollablePage {
             }
         }
     ]
+
+    DatePopup {
+        // Layout.fillWidth: true
+        // display: root.incidenceWrapper.incidenceStartDateDisplay
+        // dateTime: root.incidenceWrapper.incidenceStart
+        // onNewDateChosen: root.incidenceWrapper.setIncidenceStartDate(day, month, year)
+
+        id: dateDialog
+    }
+
+    Controls.Action {
+        id: addUpdateAction
+
+        enabled: eventField.text.length > 0
+        shortcut: "Return"
+        onTriggered: {
+            if (insertUpdate()) {
+                EventModel.refresh();
+                EventCategoryModel.refresh();
+                pageStack.pop();
+            } else {
+                msgInsertUpdateError.visible = true;
+            }
+        }
+    }
 
     Kirigami.PromptDialog {
         id: deleteDialog
@@ -83,10 +109,42 @@ Kirigami.ScrollablePage {
     }
 
     Kirigami.FormLayout {
-        Controls.TextField {
-            id: dateField
+        Kirigami.InlineMessage {
+            id: msgInsertUpdateError
 
-            Kirigami.FormData.label: i18nc("@label:textbox", "Date:")
+            type: Kirigami.MessageType.Error
+            text: (isEdit) ? i18n("Failed to update Event") : i18n("Failed to insert Event")
+            visible: false
+        }
+
+        Kirigami.InlineMessage {
+            id: msgDeleteError
+
+            type: Kirigami.MessageType.Error
+            text: "Failed to delete Event"
+            visible: false
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            Kirigami.FormData.label: i18n("Date:")
+
+            Controls.TextField {
+                id: dateField
+
+                Kirigami.FormData.label: i18nc("@label:textbox", "Date:")
+            }
+
+            Controls.Button {
+                id: dateButton
+
+                // Layout.fillWidth: true
+                text: i18nc("@action:button", "date")
+                onClicked: {
+                    dateDialog.open();
+                }
+            }
+
         }
 
         Controls.TextField {
@@ -95,22 +153,50 @@ Kirigami.ScrollablePage {
             Kirigami.FormData.label: i18nc("@label:textbox", "Event:")
         }
 
-        Controls.TextField {
-            id: costField
-
-            Kirigami.FormData.label: i18nc("@label:textbox", "Cost:")
+        Kirigami.Separator {
+            Kirigami.FormData.isSection: true
         }
 
-        Controls.TextField {
-            id: incrementField
+        Controls.SpinBox {
+            id: costField
 
-            Kirigami.FormData.label: i18nc("@label:textbox", "Increment:") //TODO determine name on schema
+            Layout.fillWidth: true
+            Kirigami.FormData.label: i18nc("@label:textbox", "Cost:")
+            from: 0
+            to: 500000
+            value: 0
+        }
+
+        RowLayout {
+            Kirigami.FormData.label: i18nc("@label:textbox", "Increment:")
+            Layout.fillWidth: true
+
+            Controls.SpinBox {
+                id: incrementField
+
+                Layout.fillWidth: true
+                from: 0
+                to: 500000
+                value: 0
+            }
+
+            Controls.ComboBox {
+                id: incrementUnit
+
+                Layout.fillWidth: true
+            }
+
+        }
+
+        Kirigami.Separator {
+            Kirigami.FormData.isSection: true
         }
 
         Controls.ComboBox {
             id: categoryBox
 
-            Kirigami.FormData.label: i18nc("@label:textbox", "Category")
+            Layout.fillWidth: true
+            Kirigami.FormData.label: i18nc("@label:textbox", "Category:")
             editable: true
             model: EventCategoryModel
         }
@@ -119,52 +205,23 @@ Kirigami.ScrollablePage {
             id: commentField
 
             Layout.fillWidth: true
-            Kirigami.FormData.label: i18nc("@label:textbox", "Comment")
-        }
-
-        Controls.Button {
-            id: doneButton
-
-            Layout.fillWidth: true
-            text: (isEdit != -1) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
-            enabled: eventField.text.length > 0
-            onClicked: {
-                if (insertUpdate()) {
-                    EventModel.refresh();
-                    EventCategoryModel.refresh();
-                    pageStack.pop();
-                } else {
-                    msgInsertUpdateError.visible = true;
-                }
-            }
-        }
-
-        Controls.Button {
-            id: cancelButton
-
-            Layout.fillWidth: true
-            text: i18nc("@action:button", "Cancel")
-            onClicked: {
-                pageStack.pop();
-            }
+            Kirigami.FormData.label: i18nc("@label:textbox", "Comment:")
         }
 
     }
 
-    Kirigami.InlineMessage {
-        id: msgInsertUpdateError
+    footer: Controls.DialogButtonBox {
+        standardButtons: Controls.DialogButtonBox.Cancel
+        onRejected: pageStack.pop()
+        onAccepted: addUpdateAction.trigger()
 
-        type: Kirigami.MessageType.Error
-        text: (isEdit) ? i18n("Failed to update Event") : i18n("Failed to insert Event")
-        visible: false
-    }
+        Controls.Button {
+            icon.name: isEdit ? "document-save" : "list-add"
+            text: isEdit ? i18n("Save") : i18n("Add")
+            Controls.DialogButtonBox.buttonRole: Controls.DialogButtonBox.AcceptRole
+            enabled: eventField.length > 0
+        }
 
-    Kirigami.InlineMessage {
-        id: msgDeleteError
-
-        type: Kirigami.MessageType.Error
-        text: "Failed to delete Event"
-        visible: false
     }
 
 }
