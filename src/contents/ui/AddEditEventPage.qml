@@ -10,6 +10,15 @@ import org.kde.kirigami as Kirigami
 import org.kde.kirigamiaddons.dateandtime
 
 Kirigami.ScrollablePage {
+    // DatePopup {
+    //     //root.incidenceWrapper.setIncidenceStartDate(day, month, year)
+    //     // Layout.fillWidth: true
+    //     // display: root.incidenceWrapper.incidenceStartDateDisplay
+    //     // dateTime: root.incidenceWrapper.incidenceStart
+    //     // onNewDateChosen: console.log("hi" + day)
+    //     id: dateDialog
+    // }
+
     id: addEditEventPage
 
     required property EntryItem entryItem
@@ -63,19 +72,9 @@ Kirigami.ScrollablePage {
         }
     ]
 
-    DatePopup {
-        // Layout.fillWidth: true
-        // display: root.incidenceWrapper.incidenceStartDateDisplay
-        // dateTime: root.incidenceWrapper.incidenceStart
-        // onNewDateChosen: root.incidenceWrapper.setIncidenceStartDate(day, month, year)
-
-        id: dateDialog
-    }
-
     Controls.Action {
         id: addUpdateAction
 
-        enabled: eventField.text.length > 0
         shortcut: "Return"
         onTriggered: {
             if (insertUpdate()) {
@@ -108,24 +107,46 @@ Kirigami.ScrollablePage {
         }
     }
 
-    Kirigami.FormLayout {
+    ColumnLayout {
         Kirigami.InlineMessage {
             id: msgInsertUpdateError
 
+            Layout.fillWidth: true
             type: Kirigami.MessageType.Error
             text: (isEdit) ? i18n("Failed to update Event") : i18n("Failed to insert Event")
             visible: false
         }
 
         Kirigami.InlineMessage {
+            id: msgDateError
+
+            Layout.fillWidth: true
+            type: Kirigami.MessageType.Error
+            text: "Invalid Date"
+            visible: false
+        }
+
+        Kirigami.InlineMessage {
             id: msgDeleteError
 
+            Layout.fillWidth: true
             type: Kirigami.MessageType.Error
             text: "Failed to delete Event"
             visible: false
         }
 
-        RowLayout {
+        Kirigami.FormLayout {
+            // Controls.Button {
+            //     id: dateButton
+            //     // Layout.fillWidth: true
+            //     text: i18nc("@action:button", "date")
+            //     onClicked: {
+            //         dateDialog.open();
+            //     }
+            // } //TODO date popup
+
+            id: form
+
             Layout.fillWidth: true
             Kirigami.FormData.label: i18n("Date:")
 
@@ -133,89 +154,87 @@ Kirigami.ScrollablePage {
                 id: dateField
 
                 Kirigami.FormData.label: i18nc("@label:textbox", "Date:")
-            }
-
-            Controls.Button {
-                id: dateButton
-
-                // Layout.fillWidth: true
-                text: i18nc("@action:button", "date")
-                onClicked: {
-                    dateDialog.open();
+                inputMask: "D999-99-99"
+                onEditingFinished: {
+                    let inputDate = new Date(dateField.text);
+                    if (isNaN(inputDate.getDate()))
+                        msgDateError.visible = true;
+                    else
+                        msgDateError.visible = false;
                 }
             }
 
-        }
+            Controls.TextField {
+                id: eventField
 
-        Controls.TextField {
-            id: eventField
-
-            Kirigami.FormData.label: i18nc("@label:textbox", "Event:")
-        }
-
-        Kirigami.Separator {
-            Kirigami.FormData.isSection: true
-        }
-
-        Controls.TextField {
-            id: costField
-
-            Layout.fillWidth: true
-            Kirigami.FormData.label: i18nc("@label:textbox", "Cost:")
-            text: Number("0.00").toFixed(2)
-            onEditingFinished: {
-                costField.text = parseFloat(costField.text).toFixed(2);
+                Kirigami.FormData.label: i18nc("@label:textbox", "Event:")
             }
-        }
 
-        Controls.TextField {
-            id: incrementField
-
-            Layout.fillWidth: true
-            Kirigami.FormData.label: i18nc("@label:textbox", "Increment:")
-            text: Number("0.0").toFixed(1)
-            onEditingFinished: {
-                incrementField.text = parseFloat(incrementField.text).toFixed(1);
+            Kirigami.Separator {
+                Kirigami.FormData.isSection: true
             }
-        }
 
-        Kirigami.Separator {
-            Kirigami.FormData.isSection: true
-        }
-
-        Controls.ComboBox {
-            id: categoryBox
-
-            Layout.fillWidth: true
-            Kirigami.FormData.label: i18nc("@label:textbox", "Category:")
-            editable: true
-            model: EventCategoryModel
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-            Kirigami.FormData.label: i18nc("@label:textbox", "Comment:")
-            Kirigami.FormData.labelAlignment: Qt.AlignTop
-
-            Flickable {
-                // width: parent.width
-                // height: Kirigami.Units.gridUnit * 8
-                // clip: false
-
-                id: commentFieldParent
+            Controls.TextField {
+                id: costField
 
                 Layout.fillWidth: true
-                height: Math.min(contentHeight, Kirigami.Units.gridUnit * 8)
-                contentWidth: width
-                contentHeight: commentField.implicitHeight
-
-                Controls.TextArea.flickable: Controls.TextArea {
-                    id: commentField
-
-                    wrapMode: Text.WordWrap //TODO style isnt correct in flickable
+                Kirigami.FormData.label: i18nc("@label:textbox", "Cost:")
+                text: Number("0.00").toFixed(2)
+                onEditingFinished: {
+                    costField.text = parseFloat(costField.text).toFixed(2);
                 }
+            }
 
-                Controls.ScrollBar.vertical: Controls.ScrollBar {
+            Controls.TextField {
+                id: incrementField
+
+                Layout.fillWidth: true
+                Kirigami.FormData.label: i18nc("@label:textbox", "Increment:")
+                text: Number("0.0").toFixed(1)
+                onEditingFinished: {
+                    incrementField.text = parseFloat(incrementField.text).toFixed(1);
+                }
+            }
+
+            Kirigami.Separator {
+                Kirigami.FormData.isSection: true
+            }
+
+            Controls.ComboBox {
+                id: categoryBox
+
+                Layout.fillWidth: true
+                Kirigami.FormData.label: i18nc("@label:textbox", "Category:")
+                editable: true
+                model: EventCategoryModel
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+                Kirigami.FormData.label: i18nc("@label:textbox", "Comment:")
+                Kirigami.FormData.labelAlignment: Qt.AlignTop
+
+                Flickable {
+                    // width: parent.width
+                    // height: Kirigami.Units.gridUnit * 8
+                    // clip: false
+
+                    id: commentFieldParent
+
+                    Layout.fillWidth: true
+                    height: Math.min(contentHeight, Kirigami.Units.gridUnit * 8)
+                    contentWidth: width
+                    contentHeight: commentField.implicitHeight
+
+                    Controls.TextArea.flickable: Controls.TextArea {
+                        id: commentField
+
+                        wrapMode: Text.WordWrap //TODO style isnt correct in flickable
+                    }
+
+                    Controls.ScrollBar.vertical: Controls.ScrollBar {
+                    }
+
                 }
 
             }
@@ -230,10 +249,10 @@ Kirigami.ScrollablePage {
         onAccepted: addUpdateAction.trigger()
 
         Controls.Button {
+            Controls.DialogButtonBox.buttonRole: Controls.DialogButtonBox.AcceptRole
+            enabled: (eventField.text.length > 0) && !msgDateError.visible
             icon.name: isEdit ? "document-save" : "list-add"
             text: isEdit ? i18n("Save") : i18n("Add")
-            Controls.DialogButtonBox.buttonRole: Controls.DialogButtonBox.AcceptRole
-            enabled: eventField.length > 0
         }
 
     }
