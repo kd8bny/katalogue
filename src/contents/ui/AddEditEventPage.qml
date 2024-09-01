@@ -157,35 +157,26 @@ Kirigami.ScrollablePage {
             Kirigami.FormData.isSection: true
         }
 
-        Controls.SpinBox {
+        Controls.TextField {
             id: costField
 
             Layout.fillWidth: true
             Kirigami.FormData.label: i18nc("@label:textbox", "Cost:")
-            from: 0
-            to: 500000
-            value: 0
+            text: Number("0.00").toFixed(2)
+            onEditingFinished: {
+                costField.text = parseFloat(costField.text).toFixed(2);
+            }
         }
 
-        RowLayout {
-            Kirigami.FormData.label: i18nc("@label:textbox", "Increment:")
+        Controls.TextField {
+            id: incrementField
+
             Layout.fillWidth: true
-
-            Controls.SpinBox {
-                id: incrementField
-
-                Layout.fillWidth: true
-                from: 0
-                to: 500000
-                value: 0
+            Kirigami.FormData.label: i18nc("@label:textbox", "Increment:")
+            text: Number("0.0").toFixed(1)
+            onEditingFinished: {
+                incrementField.text = parseFloat(incrementField.text).toFixed(1);
             }
-
-            Controls.ComboBox {
-                id: incrementUnit
-
-                Layout.fillWidth: true
-            }
-
         }
 
         Kirigami.Separator {
@@ -207,6 +198,10 @@ Kirigami.ScrollablePage {
             Kirigami.FormData.labelAlignment: Qt.AlignTop
 
             Flickable {
+                // width: parent.width
+                // height: Kirigami.Units.gridUnit * 8
+                // clip: false
+
                 id: commentFieldParent
 
                 Layout.fillWidth: true
@@ -217,7 +212,7 @@ Kirigami.ScrollablePage {
                 Controls.TextArea.flickable: Controls.TextArea {
                     id: commentField
 
-                    wrapMode: Text.WordWrap
+                    wrapMode: Text.WordWrap //TODO style isnt correct in flickable
                 }
 
                 Controls.ScrollBar.vertical: Controls.ScrollBar {
