@@ -79,7 +79,6 @@ Kirigami.ScrollablePage {
     Controls.Action {
         id: addUpdateAction
 
-        enabled: nameField.text.length > 0
         shortcut: "Return"
         onTriggered: {
             if (insertUpdate()) {
@@ -132,12 +131,11 @@ Kirigami.ScrollablePage {
         }
     }
 
-    Kirigami.FormLayout {
-        id: form
-
+    ColumnLayout {
         Kirigami.InlineMessage {
             id: msgInsertUpdateError
 
+            Layout.fillWidth: true
             type: Kirigami.MessageType.Error
             text: (isEdit) ? i18n("Failed to update Item") : i18n("Failed to insert Item")
             visible: false
@@ -146,6 +144,7 @@ Kirigami.ScrollablePage {
         Kirigami.InlineMessage {
             id: msgDeleteError
 
+            Layout.fillWidth: true
             type: Kirigami.MessageType.Error
             text: "Failed to delete Item"
             visible: false
@@ -154,86 +153,92 @@ Kirigami.ScrollablePage {
         Kirigami.InlineMessage {
             id: msgArchived
 
+            Layout.fillWidth: true
             type: Kirigami.MessageType.Error
             text: "Item is Archived, no futher edits are allowed."
             visible: entryItem.archived
         }
 
-        Controls.TextField {
-            id: nameField
+        Kirigami.FormLayout {
+            id: form
 
-            Kirigami.FormData.label: i18nc("@label:textbox", "Name:")
-            placeholderText: i18n("Required")
-            enabled: !entryItem.archived
-        }
+            Controls.TextField {
+                id: nameField
 
-        Kirigami.Separator {
-            Kirigami.FormData.isSection: true
-        }
-
-        Controls.TextField {
-            id: makeField
-
-            Kirigami.FormData.label: i18nc("@label:textbox", "Make:")
-            enabled: !entryItem.archived
-        }
-
-        Controls.TextField {
-            id: modelField
-
-            Kirigami.FormData.label: i18nc("@label:textbox", "Model:")
-            enabled: !entryItem.archived
-        }
-
-        Controls.SpinBox {
-            id: yearField
-
-            Layout.fillWidth: true
-            Kirigami.FormData.label: i18nc("@label:textbox", "Year:")
-            from: 1900
-            to: 3000
-            value: 2000
-            textFromValue: function(year) {
-                // Do not format the year
-                return year;
+                Kirigami.FormData.label: i18nc("@label:textbox", "Name:")
+                placeholderText: i18n("Required")
+                enabled: !entryItem.archived
             }
-            enabled: !entryItem.archived
-        }
 
-        Kirigami.Separator {
-            Kirigami.FormData.isSection: true
-        }
+            Kirigami.Separator {
+                Kirigami.FormData.isSection: true
+            }
 
-        Controls.ComboBox {
-            id: typeBox
+            Controls.TextField {
+                id: makeField
 
-            Layout.fillWidth: true
-            Kirigami.FormData.label: i18nc("@label:textbox", "Type:")
-            editable: true
-            model: ItemTypeModel
-            enabled: !entryItem.archived
-        }
+                Kirigami.FormData.label: i18nc("@label:textbox", "Make:")
+                enabled: !entryItem.archived
+            }
 
-        Kirigami.Separator {
-            Kirigami.FormData.isSection: true
-        }
+            Controls.TextField {
+                id: modelField
 
-        Controls.Switch {
-            id: itemParentEnabled
+                Kirigami.FormData.label: i18nc("@label:textbox", "Model:")
+                enabled: !entryItem.archived
+            }
 
-            Kirigami.FormData.label: i18n("Item Component:")
-            enabled: !entryItem.archived
-        }
+            Controls.SpinBox {
+                id: yearField
 
-        Controls.ComboBox {
-            id: itemParentBox
+                Layout.fillWidth: true
+                Kirigami.FormData.label: i18nc("@label:textbox", "Year:")
+                from: 1900
+                to: 3000
+                value: 2000
+                textFromValue: function(year) {
+                    // Do not format the year
+                    return year;
+                }
+                enabled: !entryItem.archived
+            }
 
-            Layout.fillWidth: true
-            Kirigami.FormData.label: i18nc("@label:textbox", "Component Parent:")
-            editable: false
-            visible: itemParentEnabled.checked
-            model: ItemParentModel
-            enabled: !entryItem.archived
+            Kirigami.Separator {
+                Kirigami.FormData.isSection: true
+            }
+
+            Controls.ComboBox {
+                id: typeBox
+
+                Layout.fillWidth: true
+                Kirigami.FormData.label: i18nc("@label:textbox", "Type:")
+                editable: true
+                model: ItemTypeModel
+                enabled: !entryItem.archived
+            }
+
+            Kirigami.Separator {
+                Kirigami.FormData.isSection: true
+            }
+
+            Controls.Switch {
+                id: itemParentEnabled
+
+                Kirigami.FormData.label: i18n("Item Component:")
+                enabled: !entryItem.archived
+            }
+
+            Controls.ComboBox {
+                id: itemParentBox
+
+                Layout.fillWidth: true
+                Kirigami.FormData.label: i18nc("@label:textbox", "Component Parent:")
+                editable: false
+                visible: itemParentEnabled.checked
+                model: ItemParentModel
+                enabled: !entryItem.archived
+            }
+
         }
 
     }
@@ -244,10 +249,10 @@ Kirigami.ScrollablePage {
         onAccepted: addUpdateAction.trigger()
 
         Controls.Button {
-            icon.name: isEdit ? "document-save" : "list-add"
-            text: isEdit ? i18n("Save") : i18n("Add")
             Controls.DialogButtonBox.buttonRole: Controls.DialogButtonBox.AcceptRole
             enabled: nameField.length > 0
+            icon.name: isEdit ? "document-save" : "list-add"
+            text: isEdit ? i18n("Save") : i18n("Add")
         }
 
     }
