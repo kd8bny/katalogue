@@ -26,7 +26,7 @@ Kirigami.ScrollablePage {
     property bool isEdit: false
 
     function insertUpdate() {
-        entryEvent.date = dateField.text;
+        entryEvent.date = `${dateField.text}T${Qt.formatDateTime(new Date(), Qt.ISODate).split("T")[1]}`;
         entryEvent.event = eventField.text;
         entryEvent.cost = costField.text;
         entryEvent.increment = incrementField.value;
@@ -47,7 +47,7 @@ Kirigami.ScrollablePage {
         var locale = Qt.locale();
         var currentDate = new Date();
         var dateString = currentDate.toLocaleDateString(locale, Locale.ShortFormat);
-        dateField.text = Qt.formatDateTime(currentDate, Qt.ISODate).split("T")[0]; //TODO adjust in event
+        dateField.text = Qt.formatDateTime(currentDate, Qt.ISODate).split("T")[0];
         if (entryEvent) {
             isEdit = true;
             dateField.text = entryEvent.date;
