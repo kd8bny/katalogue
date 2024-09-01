@@ -62,7 +62,6 @@ bool EventDatabase::updateEntry(const Event *event) const
 
     query.bindValue(QStringLiteral(":eventId"), event->getId());
 
-    qDebug() << "hmm" << event->getDate();
     if (!query.exec())
     {
         qDebug() << "Error updating record " << DatabaseSchema::TABLE_EVENTS;
