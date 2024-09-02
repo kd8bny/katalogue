@@ -29,7 +29,7 @@ Kirigami.ScrollablePage {
         entryEvent.date = `${dateField.text}T${Qt.formatDateTime(new Date(), Qt.ISODate).split("T")[1]}`;
         entryEvent.event = eventField.text;
         entryEvent.cost = costField.text;
-        entryEvent.increment = incrementField.value;
+        entryEvent.increment = incrementField.text;
         if (categoryBox.find(categoryBox.editText) === -1)
             entryEvent.category = categoryBox.editText;
         else
@@ -44,10 +44,7 @@ Kirigami.ScrollablePage {
 
     title: (isEdit) ? i18n("Edit Event") : i18n("Add Event")
     Component.onCompleted: {
-        var locale = Qt.locale();
-        var currentDate = new Date();
-        var dateString = currentDate.toLocaleDateString(locale, Locale.ShortFormat);
-        dateField.text = Qt.formatDateTime(currentDate, Qt.ISODate).split("T")[0];
+        dateField.text = Qt.formatDateTime(new Date(), Qt.ISODate).split("T")[0];
         if (entryEvent) {
             isEdit = true;
             dateField.text = entryEvent.date;
@@ -94,7 +91,7 @@ Kirigami.ScrollablePage {
         subtitle: i18n("Are you sure you want to delete: ")
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: {
-            if (EventModel.deleteEntryById(EventModel.getId(entryEvent.id))) {
+            if (EventDatabase.deleteEntryById(EventModel.getId(entryEvent.id))) {
                 EventModel.refresh();
                 EventCategoryModel.refresh();
                 pageStack.pop();
