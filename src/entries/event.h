@@ -13,6 +13,7 @@ class Event : public Entry
     QML_ELEMENT
     Q_PROPERTY(QString date READ getDate WRITE setDate)
     Q_PROPERTY(QString event READ getEvent WRITE setEvent)
+    Q_PROPERTY(QString servicer READ getServicer WRITE setServicer)
     Q_PROPERTY(float cost READ getCost WRITE setCost)
     Q_PROPERTY(float increment READ getIncrement WRITE setIncrement)
     Q_PROPERTY(QString category READ getCategory WRITE setCategory)
@@ -27,6 +28,9 @@ public:
 
     QString getEvent() const { return event; }
     void setEvent(const QString &event_) { event = event_; }
+
+    QString getServicer() const { return servicer; }
+    void setServicer(QString servicer_) { servicer = servicer_; }
 
     float getCost() const { return cost; }
     void setCost(float cost_) { cost = cost_; }
@@ -43,6 +47,7 @@ public:
 private:
     QString date;
     QString event;
+    QString servicer;
     float cost;
     float increment;
     QString category;

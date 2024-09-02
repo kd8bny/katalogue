@@ -28,6 +28,7 @@ Kirigami.ScrollablePage {
     function insertUpdate() {
         entryEvent.date = `${dateField.text}T${Qt.formatDateTime(new Date(), Qt.ISODate).split("T")[1]}`;
         entryEvent.event = eventField.text;
+        entryEvent.servicer = servicerField.text;
         entryEvent.cost = costField.text;
         entryEvent.increment = incrementField.text;
         if (categoryBox.find(categoryBox.editText) === -1)
@@ -49,6 +50,7 @@ Kirigami.ScrollablePage {
             isEdit = true;
             dateField.text = entryEvent.date;
             eventField.text = entryEvent.event;
+            servicerField.text = entryEvent.servicer;
             costField.text = entryEvent.cost;
             incrementField.text = entryEvent.increment;
             categoryBox.currentIndex = categoryBox.find(entryEvent.category);
@@ -169,6 +171,12 @@ Kirigami.ScrollablePage {
 
             Kirigami.Separator {
                 Kirigami.FormData.isSection: true
+            }
+
+            Controls.TextField {
+                id: servicerField
+
+                Kirigami.FormData.label: i18nc("@label:textbox", "Servicer:")
             }
 
             Controls.TextField {
