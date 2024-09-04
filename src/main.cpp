@@ -64,7 +64,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     KAboutData::setApplicationData(aboutData);
 
     // Set Application Directories
-    QString qPath = QProcessEnvironment::systemEnvironment().value(QStringLiteral("KATALOGUE_DATA"), QStringLiteral(""));
+    QString qPath = QProcessEnvironment::systemEnvironment().value(QStringLiteral("KATALOGUE_DATA"), QLatin1String(""));
     if (qPath.length() == 0)
     {
         qPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);

@@ -1,5 +1,4 @@
 #include <QObject>
-#include <QtQml>
 
 #include "entry.h"
 
