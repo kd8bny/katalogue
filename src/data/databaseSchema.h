@@ -23,7 +23,6 @@ namespace DatabaseSchema
      const QString CREATED = QStringLiteral("created");
      const QString DATE = QStringLiteral("date");
      const QString EVENT = QStringLiteral("event");
-     const QString GROUP = QStringLiteral("item_group"); // TODO used??
      const QString ID = QStringLiteral("id");
      const QString INCREMENT = QStringLiteral("increment");
      const QString KEY = QStringLiteral("key");
@@ -74,16 +73,16 @@ namespace DatabaseSchema
                                                 TABLE_ITEMS);
 
      const QString SCHEMA_EVENTS = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                                                  "%2 DATE NOT NULL, "              // CREATED
-                                                  "%3 DATE NOT NULL, "              // MODIFIED
-                                                  "%4 DATE NOT NULL, "              // DATE
-                                                  "%5 TEXT NOT NULL, "              // EVENT
-                                                  "%6 TEXT, "                       // SERVICER
-                                                  "%7 REAL NOT NULL DEFAULT 0.00, " // COST
-                                                  "%8 REAL NOT NULL DEFAULT 0.0, "  // INCREMENT
-                                                  "%9 TEXT, "                       // CATEGORY
-                                                  "%10 VARCHAR(255), "              // COMMENT
-                                                  "%11 INT NOT NULL, "              // FK
+                                                  "%2 DATE NOT NULL, "                // CREATED
+                                                  "%3 DATE NOT NULL, "                // MODIFIED
+                                                  "%4 DATE NOT NULL, "                // DATE
+                                                  "%5 TEXT NOT NULL, "                // EVENT
+                                                  "%6 TEXT, "                         // SERVICER
+                                                  "%7 DOUBLE NOT NULL DEFAULT 0.00, " // COST
+                                                  "%8 DOUBLE NOT NULL DEFAULT 0.0, "  // INCREMENT
+                                                  "%9 TEXT, "                         // CATEGORY
+                                                  "%10 VARCHAR(255), "                // COMMENT
+                                                  "%11 INT NOT NULL, "                // FK
                                                   "CONSTRAINT %11 FOREIGN KEY (%11) REFERENCES %12 (id) "
                                                   "ON DELETE CASCADE ON UPDATE CASCADE)")
                                        .arg(TABLE_EVENTS, CREATED, MODIFIED, DATE, EVENT, SERVICER, COST, INCREMENT,
