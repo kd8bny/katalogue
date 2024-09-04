@@ -117,6 +117,7 @@ Event *EventDatabase::getEntryById(const int id) const
     {
         qDebug() << "Error getting event entry " << query.lastError();
         qDebug() << query.lastQuery() << query.lastError();
+        delete event;
         return nullptr;
     }
     query.next();
