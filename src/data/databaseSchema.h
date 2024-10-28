@@ -117,23 +117,22 @@ namespace DatabaseSchema
                                            KEY_ITEM_ID, TABLE_ITEMS);
 
      const QString SCHEMA_DOCUMENTS = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                                                     "%2 DATE NOT NULL, "                     // CREATED
-                                                     "%3 DATE NOT NULL, "                     // MODIFIED
-                                                     "%4 TEXT NOT NULL, "                     // NAME
-                                                     "%5 TEXT NOT NULL, "                     // FILE_NAME
-                                                     "%6 BLOB, "                              // DATA
-                                                     "%7 INT, "                               // FK Item
-                                                     "%8 INT, "                               // FK Event
-                                                     "%9 INT, "                               // FK Note
-                                                     "%10 INT, "                              // FK Task
-                                                     "FOREIGN KEY (%7) REFERENCES %11 (id) "  // Does not need to belong to item
-                                                     "FOREIGN KEY (%8) REFERENCES %12 (id) "  // Does not need to belong to event
-                                                     "FOREIGN KEY (%9) REFERENCES %13 (id) "  // Does not need to belong to note
-                                                     "FOREIGN KEY (%10) REFERENCES %14 (id) " // Does not need to belong to task
+                                                     "%2 DATE NOT NULL, "                    // CREATED
+                                                     "%3 DATE NOT NULL, "                    // MODIFIED
+                                                     "%4 TEXT NOT NULL, "                    // NAME
+                                                     "%5 TEXT NOT NULL, "                    // FILE_NAME
+                                                     "%6 BLOB, "                             // DATA
+                                                     "%7 INT, "                              // FK Item
+                                                     "%8 INT, "                              // FK Event
+                                                     "%9 INT, "                              // FK Note
+                                                     "%10 INT, "                             // FK Task
+                                                     "FOREIGN KEY (%7) REFERENCES %10 (id) " // Does not need to belong to item
+                                                     "FOREIGN KEY (%8) REFERENCES %11 (id) " // Does not need to belong to event
+                                                     "FOREIGN KEY (%9) REFERENCES %12 (id) " // Does not need to belong to note
                                                      "ON DELETE CASCADE ON UPDATE CASCADE)")
                                           .arg(TABLE_DOCUMENTS, CREATED, MODIFIED, NAME, FILE_NAME, DATA,
-                                               KEY_ITEM_ID, KEY_EVENT_ID, KEY_NOTE_ID, KEY_TASK_ID,
-                                               TABLE_ITEMS, TABLE_EVENTS, TABLE_NOTES, TABLE_TASKS);
+                                               KEY_ITEM_ID, KEY_EVENT_ID, KEY_NOTE_ID,
+                                               TABLE_ITEMS, TABLE_EVENTS, TABLE_NOTES);
 };
 
 #endif
