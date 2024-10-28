@@ -83,6 +83,15 @@ Kirigami.ScrollablePage {
 
         Kirigami.SubtitleDelegate {
             Layout.fillWidth: true
+            icon.name: "view-task"
+            text: i18n("Documents")
+            onClicked: pageStack.push("qrc:Documents.qml", {
+                "entryItem": entryItem
+            })
+        }
+
+        Kirigami.SubtitleDelegate {
+            Layout.fillWidth: true
             icon.name: "extension-symbolic"
             text: i18n("Components")
             visible: !isComponentView

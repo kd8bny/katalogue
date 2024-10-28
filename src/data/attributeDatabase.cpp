@@ -107,6 +107,7 @@ Attribute *AttributeDatabase::getEntryById(const int id) const
     {
         qDebug() << "Error getting attribute entry " << query.lastError();
         qDebug() << query.lastQuery() << query.lastError();
+        delete attribute;
         return nullptr;
     }
     query.next();

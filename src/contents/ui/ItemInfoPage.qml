@@ -20,7 +20,11 @@ Kirigami.ScrollablePage {
         modelField.text = entryItem.model;
         yearField.text = entryItem.year;
         typeBox.text = entryItem.type;
-        itemParentBox.text = entryItem.itemId; //TODO name not number
+        if (entryItem.itemId) {
+            itemParentBox.visible = true;
+            var parentEntry = ItemDatabase.getEntryById(entryItem.itemId);
+            itemParentBox.text = parentEntry.name;
+        }
     }
     actions: [
         Kirigami.Action {
@@ -71,10 +75,9 @@ Kirigami.ScrollablePage {
         }
 
         Controls.Label {
-            // TODO visable
-
             id: itemParentBox
 
+            visible: false
             Kirigami.FormData.label: i18nc("@label:textbox", "Parent Item:")
         }
 

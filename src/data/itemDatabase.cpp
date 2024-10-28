@@ -176,6 +176,7 @@ Item *ItemDatabase::getEntryById(const int id) const
     {
         qDebug() << "Error getting item entry " << query.lastError();
         qDebug() << query.lastQuery() << query.lastError();
+        delete item;
         return nullptr;
     }
     query.next();

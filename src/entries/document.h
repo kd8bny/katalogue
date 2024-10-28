@@ -27,14 +27,15 @@ public:
     QString getFileName() const { return fileName; }
     void setFileName(const QString &fileName_) { fileName = fileName_; }
 
-    QString getData() const { return data; }
-    void setData(const QString &data_) { data = data_; }
+    // Lazy load data to control memory use
+    QByteArray getDataLazy() const { return data; }
+    void setDataLazy(const QByteArray &data_) { data = data_; }
 
     int getEventId() const { return eventId; }
     void setEventId(int eventId_) { eventId = eventId_; }
 
-    int getNoteId() const { return NoteId; }
-    void setNoteId(int eventId_) { NoteId = NoteId_; }
+    int getNoteId() const { return noteId; }
+    void setNoteId(int noteId_) { noteId = noteId_; }
 
     int getTaskId() const { return taskId; }
     void setTaskId(int taskId_) { taskId = taskId_; }
@@ -42,7 +43,7 @@ public:
 private:
     QString name;
     QString fileName;
-    QString data;
+    QByteArray data;
     int eventId;
     int noteId;
     int taskId;

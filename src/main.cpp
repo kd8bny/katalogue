@@ -21,6 +21,8 @@
 #include "data/eventDatabase.h"
 #include "data/noteDatabase.h"
 #include "data/taskDatabase.h"
+#include "data/documentDatabase.h"
+#include "utils/documentIOHelper.h"
 
 #include "models/attributeModel.h"
 #include "models/attributeCategoryModel.h"
@@ -32,6 +34,7 @@
 #include "models/itemParentModel.h"
 #include "models/noteModel.h"
 #include "models/taskModel.h"
+#include "models/documentModel.h"
 
 #include <KAboutData>
 #include <KLocalizedContext>
@@ -64,7 +67,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     KAboutData::setApplicationData(aboutData);
 
     // Set Application Directories
-    QString qPath = QProcessEnvironment::systemEnvironment().value(QStringLiteral("KATALOGUE_DATA"), QStringLiteral(""));
+    QString qPath = QProcessEnvironment::systemEnvironment().value(QStringLiteral("KATALOGUE_DATA"), QLatin1String(""));
     if (qPath.length() == 0)
     {
         qPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
@@ -95,6 +98,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterType<Event>("com.kd8bny.katalogue.entries", 1, 0, "EntryEvent");
     qmlRegisterType<Note>("com.kd8bny.katalogue.entries", 1, 0, "EntryNote");
     qmlRegisterType<Task>("com.kd8bny.katalogue.entries", 1, 0, "EntryTask");
+    qmlRegisterType<Document>("com.kd8bny.katalogue.entries", 1, 0, "EntryDocument");
 
     // Models and Data Interfaces
     if (DatabaseInit db; !db.connectKatalogueDb(qPath))
@@ -113,6 +117,11 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterSingletonInstance<NoteDatabase>("com.kd8bny.katalogue", 1, 0, "NoteDatabase", &noteDatabase);
     TaskDatabase taskDatabase;
     qmlRegisterSingletonInstance<TaskDatabase>("com.kd8bny.katalogue", 1, 0, "TaskDatabase", &taskDatabase);
+
+    DocumentIOHelper documentIOHelper;
+    qmlRegisterSingletonInstance<DocumentIOHelper>("com.kd8bny.katalogue", 1, 0, "DocumentIOHelper", &documentIOHelper);
+    DocumentDatabase documentDatabase;
+    qmlRegisterSingletonInstance<DocumentDatabase>("com.kd8bny.katalogue", 1, 0, "DocumentDatabase", &documentDatabase);
 
     // Models
     AttributeModel attributeModel;
@@ -150,6 +159,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     TaskModel taskModel;
     qmlRegisterSingletonInstance<TaskModel>("com.kd8bny.katalogue", 1, 0, "TaskModel", &taskModel);
+
+    DocumentModel documentModel;
+    qmlRegisterSingletonInstance<DocumentModel>("com.kd8bny.katalogue", 1, 0, "DocumentModel", &documentModel);
 
     engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));

@@ -7,8 +7,18 @@ import QtQuick.Layouts
 import com.kd8bny.katalogue
 import com.kd8bny.katalogue.entries
 import org.kde.kirigami as Kirigami
+import org.kde.kirigamiaddons.dateandtime
 
 Kirigami.ScrollablePage {
+    // DatePopup {
+    //     //root.incidenceWrapper.setIncidenceStartDate(day, month, year)
+    //     // Layout.fillWidth: true
+    //     // display: root.incidenceWrapper.incidenceStartDateDisplay
+    //     // dateTime: root.incidenceWrapper.incidenceStart
+    //     // onNewDateChosen: console.log("hi" + day)
+    //     id: dateDialog
+    // }
+
     id: addEditEventPage
 
     required property EntryItem entryItem
@@ -16,8 +26,9 @@ Kirigami.ScrollablePage {
     property bool isEdit: false
 
     function insertUpdate() {
-        entryEvent.date = dateField.text;
+        entryEvent.date = `${dateField.text}T${Qt.formatDateTime(new Date(), Qt.ISODate).split("T")[1]}`;
         entryEvent.event = eventField.text;
+        entryEvent.servicer = servicerField.text;
         entryEvent.cost = costField.text;
         entryEvent.increment = incrementField.text;
         if (categoryBox.find(categoryBox.editText) === -1)
@@ -34,16 +45,14 @@ Kirigami.ScrollablePage {
 
     title: (isEdit) ? i18n("Edit Event") : i18n("Add Event")
     Component.onCompleted: {
-        var locale = Qt.locale();
-        var currentDate = new Date();
-        var dateString = currentDate.toLocaleDateString(locale, Locale.ShortFormat);
-        dateField.text = Qt.formatDateTime(currentDate, Qt.ISODate).split("T")[0]; //TODO adjust in event
+        dateField.text = Qt.formatDateTime(new Date(), Qt.ISODate).split("T")[0];
         if (entryEvent) {
             isEdit = true;
             dateField.text = entryEvent.date;
             eventField.text = entryEvent.event;
-            costField.text = entryEvent.cost; // TODO `${recordData[5]}`;
-            incrementField.text = entryEvent.increment; //`${recordData[6]}`;
+            servicerField.text = entryEvent.servicer;
+            costField.text = entryEvent.cost;
+            incrementField.text = entryEvent.increment;
             categoryBox.currentIndex = categoryBox.find(entryEvent.category);
             commentField.text = entryEvent.comment;
         } else {
@@ -62,6 +71,21 @@ Kirigami.ScrollablePage {
         }
     ]
 
+    Controls.Action {
+        id: addUpdateAction
+
+        shortcut: "Return"
+        onTriggered: {
+            if (insertUpdate()) {
+                EventModel.refresh();
+                EventCategoryModel.refresh();
+                pageStack.pop();
+            } else {
+                msgInsertUpdateError.visible = true;
+            }
+        }
+    }
+
     Kirigami.PromptDialog {
         id: deleteDialog
 
@@ -69,7 +93,7 @@ Kirigami.ScrollablePage {
         subtitle: i18n("Are you sure you want to delete: ")
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: {
-            if (EventModel.deleteEntryById(EventModel.getId(entryEvent.id))) {
+            if (EventDatabase.deleteEntryById(EventModel.getId(entryEvent.id))) {
                 EventModel.refresh();
                 EventCategoryModel.refresh();
                 pageStack.pop();
@@ -82,89 +106,160 @@ Kirigami.ScrollablePage {
         }
     }
 
-    Kirigami.FormLayout {
-        Controls.TextField {
-            id: dateField
-
-            Kirigami.FormData.label: i18nc("@label:textbox", "Date:")
-        }
-
-        Controls.TextField {
-            id: eventField
-
-            Kirigami.FormData.label: i18nc("@label:textbox", "Event:")
-        }
-
-        Controls.TextField {
-            id: costField
-
-            Kirigami.FormData.label: i18nc("@label:textbox", "Cost:")
-        }
-
-        Controls.TextField {
-            id: incrementField
-
-            Kirigami.FormData.label: i18nc("@label:textbox", "Increment:") //TODO determine name on schema
-        }
-
-        Controls.ComboBox {
-            id: categoryBox
-
-            Kirigami.FormData.label: i18nc("@label:textbox", "Category")
-            editable: true
-            model: EventCategoryModel
-        }
-
-        Controls.TextArea {
-            id: commentField
+    ColumnLayout {
+        Kirigami.InlineMessage {
+            id: msgInsertUpdateError
 
             Layout.fillWidth: true
-            Kirigami.FormData.label: i18nc("@label:textbox", "Comment")
+            type: Kirigami.MessageType.Error
+            text: (isEdit) ? i18n("Failed to update Event") : i18n("Failed to insert Event")
+            visible: false
         }
 
-        Controls.Button {
-            id: doneButton
+        Kirigami.InlineMessage {
+            id: msgDateError
 
             Layout.fillWidth: true
-            text: (isEdit != -1) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
-            enabled: eventField.text.length > 0
-            onClicked: {
-                if (insertUpdate()) {
-                    EventModel.refresh();
-                    EventCategoryModel.refresh();
-                    pageStack.pop();
-                } else {
-                    msgInsertUpdateError.visible = true;
+            type: Kirigami.MessageType.Error
+            text: "Invalid Date"
+            visible: false
+        }
+
+        Kirigami.InlineMessage {
+            id: msgDeleteError
+
+            Layout.fillWidth: true
+            type: Kirigami.MessageType.Error
+            text: "Failed to delete Event"
+            visible: false
+        }
+
+        Kirigami.FormLayout {
+            // Controls.Button {
+            //     id: dateButton
+            //     // Layout.fillWidth: true
+            //     text: i18nc("@action:button", "date")
+            //     onClicked: {
+            //         dateDialog.open();
+            //     }
+            // } //TODO date popup
+
+            id: form
+
+            Layout.fillWidth: true
+            Kirigami.FormData.label: i18n("Date:")
+
+            Controls.TextField {
+                id: dateField
+
+                Kirigami.FormData.label: i18nc("@label:textbox", "Date:")
+                inputMask: "D999-99-99"
+                onEditingFinished: {
+                    let inputDate = new Date(dateField.text);
+                    if (isNaN(inputDate.getDate()))
+                        msgDateError.visible = true;
+                    else
+                        msgDateError.visible = false;
                 }
             }
+
+            Controls.TextField {
+                id: eventField
+
+                Kirigami.FormData.label: i18nc("@label:textbox", "Event:")
+            }
+
+            Kirigami.Separator {
+                Kirigami.FormData.isSection: true
+            }
+
+            Controls.TextField {
+                id: servicerField
+
+                Kirigami.FormData.label: i18nc("@label:textbox", "Servicer:")
+            }
+
+            Controls.TextField {
+                id: costField
+
+                Layout.fillWidth: true
+                Kirigami.FormData.label: i18nc("@label:textbox", "Cost:")
+                text: Number("0.00").toFixed(2)
+                onEditingFinished: {
+                    costField.text = parseFloat(costField.text).toFixed(2);
+                }
+            }
+
+            Controls.TextField {
+                id: incrementField
+
+                Layout.fillWidth: true
+                Kirigami.FormData.label: i18nc("@label:textbox", "Increment:")
+                text: Number("0.0").toFixed(1)
+                onEditingFinished: {
+                    incrementField.text = parseFloat(incrementField.text).toFixed(1);
+                }
+            }
+
+            Kirigami.Separator {
+                Kirigami.FormData.isSection: true
+            }
+
+            Controls.ComboBox {
+                id: categoryBox
+
+                Layout.fillWidth: true
+                Kirigami.FormData.label: i18nc("@label:textbox", "Category:")
+                editable: true
+                model: EventCategoryModel
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+                Kirigami.FormData.label: i18nc("@label:textbox", "Comment:")
+                Kirigami.FormData.labelAlignment: Qt.AlignTop
+
+                Flickable {
+                    // width: parent.width
+                    // height: Kirigami.Units.gridUnit * 8
+                    // clip: false
+
+                    id: commentFieldParent
+
+                    Layout.fillWidth: true
+                    height: Math.min(contentHeight, Kirigami.Units.gridUnit * 8)
+                    contentWidth: width
+                    contentHeight: commentField.implicitHeight
+
+                    Controls.TextArea.flickable: Controls.TextArea {
+                        id: commentField
+
+                        wrapMode: Text.WordWrap //TODO style isnt correct in flickable
+                    }
+
+                    Controls.ScrollBar.vertical: Controls.ScrollBar {
+                    }
+
+                }
+
+            }
+
         }
+
+    }
+
+    footer: Controls.DialogButtonBox {
+        standardButtons: Controls.DialogButtonBox.Cancel
+        onRejected: pageStack.pop()
+        onAccepted: addUpdateAction.trigger()
 
         Controls.Button {
-            id: cancelButton
-
-            Layout.fillWidth: true
-            text: i18nc("@action:button", "Cancel")
-            onClicked: {
-                pageStack.pop();
-            }
+            Controls.DialogButtonBox.buttonRole: Controls.DialogButtonBox.AcceptRole
+            enabled: (eventField.text.length > 0) && !msgDateError.visible
+            icon.name: isEdit ? "document-save" : "list-add"
+            text: isEdit ? i18n("Save") : i18n("Add")
         }
 
-    }
-
-    Kirigami.InlineMessage {
-        id: msgInsertUpdateError
-
-        type: Kirigami.MessageType.Error
-        text: (isEdit) ? i18n("Failed to update Event") : i18n("Failed to insert Event")
-        visible: false
-    }
-
-    Kirigami.InlineMessage {
-        id: msgDeleteError
-
-        type: Kirigami.MessageType.Error
-        text: "Failed to delete Event"
-        visible: false
     }
 
 }

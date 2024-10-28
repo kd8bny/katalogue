@@ -3,6 +3,8 @@
 
 add_subdirectory(entries)
 add_subdirectory(data)
+add_subdirectory(utils)
+
 
 set(katalogue_models_src
     models/attributeModel.cpp
@@ -15,6 +17,7 @@ set(katalogue_models_src
     models/itemParentModel.cpp
     models/noteModel.cpp
     models/taskModel.cpp
+    models/documentModel.cpp
 )
 
 add_library(katalogue_models STATIC
@@ -41,6 +44,7 @@ target_link_libraries(katalogue
     katalogue_data
     katalogue_models
     katalogue_entries
+    katalogue_utils
 
     Qt6::Gui
     Qt6::Quick
