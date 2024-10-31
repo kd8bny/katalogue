@@ -14,11 +14,10 @@ int DocumentDatabase::insertEntry(const Document *document) const
 
     query.prepare(
         QStringLiteral("INSERT INTO %1 (%2, %3, %4, %5, %6, %7, %8, %9, %10) "
-                       "VALUES (:created, :modified, :name, :fileName, :data, :itemId, :eventId, :noteId, :taskId)")
+                       "VALUES (:created, :modified, :name, :fileName, :data, :itemId, :eventId, :noteId)")
             .arg(DatabaseSchema::TABLE_DOCUMENTS, DatabaseSchema::CREATED, DatabaseSchema::MODIFIED,
                  DatabaseSchema::NAME, DatabaseSchema::FILE_NAME, DatabaseSchema::DATA,
-                 DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::KEY_EVENT_ID, DatabaseSchema::KEY_NOTE_ID,
-                 DatabaseSchema::KEY_TASK_ID));
+                 DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::KEY_EVENT_ID, DatabaseSchema::KEY_NOTE_ID));
 
     QString currentTime = DatabaseUtils::getCurrentDateTime();
 
@@ -39,10 +38,6 @@ int DocumentDatabase::insertEntry(const Document *document) const
     if (document->getNoteId() != 0)
     {
         query.bindValue(QStringLiteral(":noteId"), document->getNoteId());
-    }
-    if (document->getTaskId() != 0)
-    {
-        query.bindValue(QStringLiteral(":taskId"), document->getTaskId());
     }
 
     if (!query.exec())
@@ -62,12 +57,11 @@ bool DocumentDatabase::updateEntry(const Document *document) const
     QSqlQuery query;
 
     query.prepare(
-        QStringLiteral("UPDATE %1 SET %2=:modified, %3=:name, %4=:fileName, %5=:data, %6=:itemId, %7=:eventId, "
-                       "%8=:noteId, %9:=taskId WHERE id=:documentId")
+        QStringLiteral("UPDATE %1 SET %2=:modified, %3=:name, %4=:fileName, %5=:data, "
+                       "%6 =:itemId, %7 =:eventId, %8=:noteId WHERE id=:documentId")
             .arg(DatabaseSchema::TABLE_DOCUMENTS, DatabaseSchema::MODIFIED, DatabaseSchema::NAME,
                  DatabaseSchema::FILE_NAME, DatabaseSchema::DATA,
-                 DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::KEY_EVENT_ID, DatabaseSchema::KEY_NOTE_ID,
-                 DatabaseSchema::KEY_TASK_ID));
+                 DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::KEY_EVENT_ID, DatabaseSchema::KEY_NOTE_ID));
 
     QString currentTime = DatabaseUtils::getCurrentDateTime();
 
@@ -88,10 +82,6 @@ bool DocumentDatabase::updateEntry(const Document *document) const
     if (document->getNoteId() != 0)
     {
         query.bindValue(QStringLiteral(":noteId"), document->getNoteId());
-    }
-    if (document->getTaskId() != 0)
-    {
-        query.bindValue(QStringLiteral(":taskId"), document->getTaskId());
     }
 
     if (!query.exec())
