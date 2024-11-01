@@ -27,7 +27,7 @@ ecm_add_test(taskDatabaseTest.cpp
     LINK_LIBRARIES Qt6::Test katalogue_data
 )
 
-# ecm_add_test(documentDatabaseTest.cpp
-#     TEST_NAME "documentDatabaseTest"
-#     LINK_LIBRARIES Qt6::Test katalogue_data
-# )
+ecm_add_test(documentDatabaseTest.cpp
+    TEST_NAME "documentDatabaseTest"
+    LINK_LIBRARIES Qt6::Test katalogue_data
+)

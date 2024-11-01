@@ -13,7 +13,7 @@ int DocumentDatabase::insertEntry(const Document *document) const
     QSqlQuery query;
 
     query.prepare(
-        QStringLiteral("INSERT INTO %1 (%2, %3, %4, %5, %6, %7, %8, %9, %10) "
+        QStringLiteral("INSERT INTO %1 (%2, %3, %4, %5, %6, %7, %8, %9) "
                        "VALUES (:created, :modified, :name, :fileName, :data, :itemId, :eventId, :noteId)")
             .arg(DatabaseSchema::TABLE_DOCUMENTS, DatabaseSchema::CREATED, DatabaseSchema::MODIFIED,
                  DatabaseSchema::NAME, DatabaseSchema::FILE_NAME, DatabaseSchema::DATA,
