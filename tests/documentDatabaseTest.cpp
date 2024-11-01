@@ -14,7 +14,7 @@ class DocumentDatabaseTest : public QObject
 private Q_SLOTS:
     void insertEntry() const;
     // void updateEntry() const;
-    // void deleteDocumentEntry() const;
+    void deleteDocumentEntry() const;
 };
 
 /*
@@ -41,6 +41,8 @@ void DocumentDatabaseTest::insertEntry() const
     // documents.append(QVariantList({QStringLiteral("name"), QStringLiteral("filename"), QByteArray("data"), 2, 1, 0})); # TODO events and notes db
     // Note Document
     // documents.append(QVariantList({QStringLiteral("name"), QStringLiteral("filename"), QByteArray("data"), 0, 0, 1}));
+    // To DELETE
+    documents.append(QVariantList({QStringLiteral("name"), QStringLiteral("filename"), QByteArray("data"), 2, 0, 0}));
 
     // qDebug() << documents;
 
@@ -174,21 +176,21 @@ void DocumentDatabaseTest::insertEntry() const
 //     delete document4;
 // }
 
-// void DocumentDatabaseTest::deleteDocumentEntry() const
-// {
-//     DocumentDatabase katalogue_db;
-//     // Get Data from Record 3
-//     // Check if KEY is null after delete
-//     const QString record3Query = QStringLiteral("SELECT %1 FROM %2 WHERE id=3")
-//                                      .arg(DatabaseSchema::KEY, DatabaseSchema::TABLE_ATTRIBUTES);
+void DocumentDatabaseTest::deleteDocumentEntry() const
+{
+    DocumentDatabase katalogue_db;
+    // Get Data from Record 3
+    // Check if NAME is null after delete
+    const QString record3Query = QStringLiteral("SELECT %1 FROM %2 WHERE id=3")
+                                     .arg(DatabaseSchema::NAME, DatabaseSchema::TABLE_DOCUMENTS);
 
-//     QVERIFY2(katalogue_db.deleteEntryById(3) == true, "Document 3 deleted");
+    QVERIFY2(katalogue_db.deleteEntryById(3) == true, "Document 3 deleted");
 
-//     QSqlQuery query;
-//     query.exec(record3Query);
-//     query.next();
-//     QVERIFY(query.record().value(0) == QStringLiteral(""));
-// }
+    QSqlQuery query;
+    query.exec(record3Query);
+    query.next();
+    QVERIFY(query.record().value(0) == QStringLiteral(""));
+}
 
 QTEST_MAIN(DocumentDatabaseTest)
 #include "documentDatabaseTest.moc"
