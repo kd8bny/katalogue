@@ -12,7 +12,7 @@ import org.kde.kirigami as Kirigami
 Kirigami.ScrollablePage {
     id: documentsPage
 
-    required property EntryItem entryItem
+    property EntryItem entryItem
     property EntryDocument entryDocument
 
     function getEntryByIndex(index) {
@@ -21,7 +21,11 @@ Kirigami.ScrollablePage {
 
     Layout.fillWidth: true
     title: (entryItem) ? i18n(entryItem.name + " Documents") : i18n("All Documents")
-    Component.onCompleted: DocumentModel.setItemIdQuery(entryItem.id)
+    Component.onCompleted: {
+        if (entryItem)
+            DocumentModel.setItemIdQuery(entryItem.id);
+
+    }
     actions: [
         Kirigami.Action {
             text: i18n("Add")
