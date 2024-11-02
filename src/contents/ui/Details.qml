@@ -83,7 +83,7 @@ Kirigami.ScrollablePage {
 
         Kirigami.SubtitleDelegate {
             Layout.fillWidth: true
-            icon.name: "view-task"
+            icon.name: "folder-documents-symbolic"
             text: i18n("Documents")
             onClicked: pageStack.push("qrc:Documents.qml", {
                 "entryItem": entryItem

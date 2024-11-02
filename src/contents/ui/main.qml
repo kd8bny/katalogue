@@ -59,7 +59,7 @@ Kirigami.ApplicationWindow {
         actions: [
             Kirigami.Action {
                 text: i18n("Items")
-                tooltip: i18n("Katalouged Items")
+                tooltip: i18n("Items in Katalogue")
                 icon.name: "file-catalog-symbolic"
                 onTriggered: {
                     pageStack.clear();
@@ -68,23 +68,33 @@ Kirigami.ApplicationWindow {
                 }
             },
             Kirigami.Action {
-                text: i18n("Tasks")
-                tooltip: i18n("View Tasks")
-                icon.name: "view-task"
-                onTriggered: {
-                    TaskModel.resetItemIdQuery();
-                    pageStack.clear();
-                    pageStack.push('qrc:Tasks.qml');
-                }
-            },
-            Kirigami.Action {
                 text: i18n("Notes")
-                tooltip: i18n("View Notes")
+                tooltip: i18n("View All Notes")
                 icon.name: "backgroundtool-symbolic"
                 onTriggered: {
                     NoteModel.resetItemIdQuery();
                     pageStack.clear();
                     pageStack.push('qrc:Notes.qml');
+                }
+            },
+            Kirigami.Action {
+                text: i18n("Documents")
+                tooltip: i18n("View All Documents")
+                icon.name: "folder-documents-symbolic"
+                onTriggered: {
+                    DocumentModel.resetItemIdQuery();
+                    pageStack.clear();
+                    pageStack.push('qrc:Documents.qml');
+                }
+            },
+            Kirigami.Action {
+                text: i18n("Tasks")
+                tooltip: i18n("View All Tasks")
+                icon.name: "view-task"
+                onTriggered: {
+                    TaskModel.resetItemIdQuery();
+                    pageStack.clear();
+                    pageStack.push('qrc:Tasks.qml');
                 }
             },
             Kirigami.Action {
