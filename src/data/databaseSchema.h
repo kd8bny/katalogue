@@ -110,7 +110,7 @@ namespace DatabaseSchema
                                                  "%7 TEXT NOT NULL, "                   // STATUS
                                                  "%5 TEXT NOT NULL, "                   // TITLE
                                                  "%6 VARCHAR(255), "                    // DESCRIPTION
-                                                 "%8 INT, "                             // FK
+                                                 "%8 INT, "                             // FK Item
                                                  "FOREIGN KEY (%8) REFERENCES %9 (id) " // Notes and tasks do not need to belong to item
                                                  "ON DELETE CASCADE ON UPDATE CASCADE)")
                                       .arg(TABLE_TASKS, CREATED, MODIFIED, DUE_DATE, STATUS, TITLE, DESCRIPTION,
@@ -125,7 +125,6 @@ namespace DatabaseSchema
                                                      "%7 INT, "                              // FK Item
                                                      "%8 INT, "                              // FK Event
                                                      "%9 INT, "                              // FK Note
-                                                     "%10 INT, "                             // FK Task
                                                      "FOREIGN KEY (%7) REFERENCES %10 (id) " // Does not need to belong to item
                                                      "FOREIGN KEY (%8) REFERENCES %11 (id) " // Does not need to belong to event
                                                      "FOREIGN KEY (%9) REFERENCES %12 (id) " // Does not need to belong to note

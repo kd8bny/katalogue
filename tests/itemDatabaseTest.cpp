@@ -300,6 +300,7 @@ void ItemDatabaseTest::updateEntry() const
     query.exec(record3Query);
     query.next();
     QVERIFY(query.value(7).toInt() == itemFields.value(7).toInt());
+
     // Update User Order
     // Uses updateItemUserOrder
     QVERIFY(katalogue_db.setUserOrder(3, itemFields.value(6).toInt()) == true);

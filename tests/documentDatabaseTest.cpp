@@ -13,7 +13,7 @@ class DocumentDatabaseTest : public QObject
 
 private Q_SLOTS:
     void insertEntry() const;
-    // void updateEntry() const;
+    void updateEntry() const;
     void deleteDocumentEntry() const;
 };
 
@@ -42,7 +42,7 @@ void DocumentDatabaseTest::insertEntry() const
     // Note Document
     // documents.append(QVariantList({QStringLiteral("name"), QStringLiteral("filename"), QByteArray("data"), 0, 0, 1}));
     // To DELETE
-    documents.append(QVariantList({QStringLiteral("name"), QStringLiteral("filename"), QByteArray("data"), 2, 0, 0}));
+    documents.append(QVariantList({QStringLiteral("to delete"), QStringLiteral("filename"), QByteArray("data"), 2, 0, 0}));
 
     // qDebug() << documents;
 
@@ -91,90 +91,107 @@ void DocumentDatabaseTest::insertEntry() const
     }
 }
 
-// void DocumentDatabaseTest::updateEntry() const
-// {
-//     /*Test Document Insert*/
-//     DatabaseInit init_db;
-//     bool DB_OPEN = init_db.connectKatalogueDb(this->testDBPath);
-//     QVERIFY2(DB_OPEN == true, "db open");
+void DocumentDatabaseTest::updateEntry() const
+{
+    /*Test Document Insert*/
+    DatabaseInit init_db;
+    bool DB_OPEN = init_db.connectKatalogueDb(this->testDBPath);
+    QVERIFY2(DB_OPEN == true, "db open");
 
-//     DocumentDatabase katalogue_db;
+    DocumentDatabase katalogue_db;
 
-//     EntryFactory entryFactory;
-//     Document *refDocument = entryFactory.createDocument();
+    EntryFactory entryFactory;
+    Document *refDocument = entryFactory.createDocument();
 
-//     refDocument->setDueDate(QStringLiteral("2024-09-19T00:00:00.000-05:00"));
-//     refDocument->setStatus(QStringLiteral("refStatus"));
-//     refDocument->setTitle(QStringLiteral("refTitle"));
-//     refDocument->setDescription(QStringLiteral("refDescription"));
-//     refDocument->setItemId(1);
+    refDocument->setName(QStringLiteral("refName"));
+    refDocument->setFileName(QStringLiteral("refFileName"));
+    refDocument->setDataLazy(QByteArray("refData"));
+    refDocument->setItemId(0);
+    refDocument->setEventId(0);
+    refDocument->setNoteId(0);
 
-//     QVERIFY2(katalogue_db.insertEntry(refDocument) == true, "Reference Document added");
+    QVERIFY2(katalogue_db.insertEntry(refDocument) != -1, "Reference Document added");
 
-//     delete refDocument;
+    delete refDocument;
 
-//     QVariantList documentFields = {
-//         QStringLiteral("2222-09-19T00:00:00.000-05:00"),
-//         QStringLiteral("refStatusUpdated"),
-//         QStringLiteral("refTitleUpdated"),
-//         QStringLiteral("refDescriptionUpdated"),
-//         4,
-//     };
+    QVariantList documentFields = {
+        QStringLiteral("refNameUpdated"),
+        QStringLiteral("refFileNameUpdated"),
+        QByteArray("refDataUpdated"),
+        1, 1, 1};
 
-//     // Query for reference document id 3
-//     const QString record4Query = QStringLiteral("SELECT %1, %2, %3, %4, %5 FROM %6 WHERE id=4")
-//                                      .arg(DatabaseSchema::DUE_DATE, DatabaseSchema::STATUS, DatabaseSchema::TITLE,
-//                                           DatabaseSchema::DESCRIPTION, DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::TABLE_TASKS);
-//     QSqlQuery query;
-//     query.exec(record4Query);
-//     query.next();
-//     qDebug() << query.record();
+    // Query for reference document id 4
+    const QString record4Query = QStringLiteral("SELECT %1, %2, %3, %4, %5, %6 FROM %7 WHERE id=4")
+                                     .arg(DatabaseSchema::NAME, DatabaseSchema::FILE_NAME, DatabaseSchema::DATA,
+                                          DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::KEY_EVENT_ID,
+                                          DatabaseSchema::KEY_NOTE_ID, DatabaseSchema::TABLE_DOCUMENTS);
+    QSqlQuery query;
+    query.exec(record4Query);
+    query.next();
+    qDebug() << query.record();
 
-//     // Build Document 4
-//     Document *document4 = entryFactory.createDocument();
-//     document4->setId(4);
-//     document4->setDueDate(query.value(0).toString());
-//     document4->setStatus(query.value(1).toString());
-//     document4->setTitle(query.value(2).toString());
-//     document4->setDescription(query.value(3).toString());
-//     document4->setItemId(query.value(4).toInt());
+    // Build Document 4
+    Document *document4 = entryFactory.createDocument();
+    document4->setId(4);
+    document4->setName(query.value(0).toString());
+    document4->setFileName(query.value(1).toString());
+    document4->setDataLazy(query.value(2).toByteArray());
+    document4->setItemId(query.value(3).toInt());
+    document4->setEventId(query.value(4).toInt());
+    document4->setNoteId(query.value(5).toInt());
 
-//     // Start Test
-//     // Update Due Date
-//     document4->setDueDate(documentFields.value(0).toString());
-//     QVERIFY(katalogue_db.updateEntry(document4) == true);
+    // Start Test
+    // Update Name
+    document4->setName(documentFields.value(0).toString());
+    QVERIFY(katalogue_db.updateEntry(document4) == true);
 
-//     query.exec(record4Query);
-//     query.next();
-//     qDebug() << query.value(0).toString() << documentFields.value(0).toString();
-//     QVERIFY(query.value(0).toString() == documentFields.value(0).toString());
+    query.exec(record4Query);
+    query.next();
+    qDebug() << query.value(0).toString() << documentFields.value(0).toString();
+    QVERIFY(query.value(0).toString() == documentFields.value(0).toString());
 
-//     // Update Status
-//     document4->setStatus(documentFields.value(1).toString());
-//     QVERIFY(katalogue_db.updateEntry(document4) == true);
+    // Update File Name
+    document4->setFileName(documentFields.value(1).toString());
+    QVERIFY(katalogue_db.updateEntry(document4) == true);
 
-//     query.exec(record4Query);
-//     query.next();
-//     QVERIFY(query.value(1).toString() == documentFields.value(1).toString());
+    query.exec(record4Query);
+    query.next();
+    QVERIFY(query.value(1).toString() == documentFields.value(1).toString());
 
-//     // Update Title
-//     document4->setTitle(documentFields.value(2).toString());
-//     QVERIFY(katalogue_db.updateEntry(document4) == true);
+    // Update Data
+    document4->setDataLazy(documentFields.value(2).toByteArray());
+    QVERIFY(katalogue_db.updateEntry(document4) == true);
 
-//     query.exec(record4Query);
-//     query.next();
-//     QVERIFY(query.value(2).toString() == documentFields.value(2).toString());
+    query.exec(record4Query);
+    query.next();
+    QVERIFY(query.value(2).toByteArray() == documentFields.value(2).toByteArray());
 
-//     // Update Description
-//     document4->setDescription(documentFields.value(3).toString());
-//     QVERIFY(katalogue_db.updateEntry(document4) == true);
+    // Update ItemId
+    document4->setItemId(documentFields.value(3).toInt());
+    QVERIFY(katalogue_db.updateEntry(document4) == true);
 
-//     query.exec(record4Query);
-//     query.next();
-//     QVERIFY(query.value(3).toString() == documentFields.value(3).toString());
+    query.exec(record4Query);
+    query.next();
+    QVERIFY(query.value(3).toInt() == documentFields.value(3).toInt());
 
-//     delete document4;
-// }
+    // Update EventId
+    document4->setEventId(documentFields.value(4).toInt());
+    QVERIFY(katalogue_db.updateEntry(document4) == true);
+
+    query.exec(record4Query);
+    query.next();
+    QVERIFY(query.value(4).toInt() == documentFields.value(4).toInt());
+
+    // Update NoteId
+    document4->setNoteId(documentFields.value(5).toInt());
+    QVERIFY(katalogue_db.updateEntry(document4) == true);
+
+    query.exec(record4Query);
+    query.next();
+    QVERIFY(query.value(5).toInt() == documentFields.value(5).toInt());
+
+    delete document4;
+}
 
 void DocumentDatabaseTest::deleteDocumentEntry() const
 {

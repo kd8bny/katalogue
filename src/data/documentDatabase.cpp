@@ -58,16 +58,16 @@ bool DocumentDatabase::updateEntry(const Document *document) const
 
     query.prepare(
         QStringLiteral("UPDATE %1 SET %2=:modified, %3=:name, %4=:fileName, %5=:data, "
-                       "%6 =:itemId, %7 =:eventId, %8=:noteId WHERE id=:documentId")
+                       "%6=:itemId, %7=:eventId, %8=:noteId WHERE id=:id")
             .arg(DatabaseSchema::TABLE_DOCUMENTS, DatabaseSchema::MODIFIED, DatabaseSchema::NAME,
                  DatabaseSchema::FILE_NAME, DatabaseSchema::DATA,
                  DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::KEY_EVENT_ID, DatabaseSchema::KEY_NOTE_ID));
 
     QString currentTime = DatabaseUtils::getCurrentDateTime();
 
-    query.bindValue(QStringLiteral(":created"), currentTime);
     query.bindValue(QStringLiteral(":modified"), currentTime);
 
+    query.bindValue(QStringLiteral(":id"), document->getId());
     query.bindValue(QStringLiteral(":name"), document->getName());
     query.bindValue(QStringLiteral(":fileName"), document->getFileName());
     query.bindValue(QStringLiteral(":data"), document->getDataLazy());
