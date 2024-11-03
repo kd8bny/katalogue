@@ -89,9 +89,10 @@ Kirigami.ScrollablePage {
         Controls.ComboBox {
             id: categoryBox
 
+            Layout.fillWidth: true
             editable: true
             Kirigami.FormData.label: i18nc("@label:textbox", "Category:")
-            model: AttributeCategoryModel
+            model: UniqueValueModelFactory.createAttributeCategoryModel()
         }
 
         Controls.Button {

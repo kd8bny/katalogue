@@ -5,19 +5,16 @@ add_subdirectory(entries)
 add_subdirectory(data)
 add_subdirectory(utils)
 
-
 set(katalogue_models_src
+    models/uniqueValueModelFactory.h
     models/attributeModel.cpp
-    models/attributeCategoryModel.cpp
+    models/documentModel.cpp
     models/eventModel.cpp
-    models/eventCategoryModel.cpp
-    models/itemModel.cpp
     models/itemComponentModel.cpp
-    models/itemTypeModel.cpp
-    models/itemParentModel.cpp
+    models/itemModel.cpp
     models/noteModel.cpp
     models/taskModel.cpp
-    models/documentModel.cpp
+    models/uniqueValueModel.cpp
 )
 
 add_library(katalogue_models STATIC

@@ -28,9 +28,13 @@ Kirigami.ScrollablePage {
     function insertUpdate() {
         entryEvent.date = `${dateField.text}T${Qt.formatDateTime(new Date(), Qt.ISODate).split("T")[1]}`;
         entryEvent.event = eventField.text;
-        entryEvent.servicer = servicerField.text;
+        entryEvent.servicer = servicerBox.text;
         entryEvent.cost = costField.text;
         entryEvent.increment = incrementField.text;
+        if (servicerBox.find(servicerBox.editText) === -1)
+            entryEvent.category = servicerBox.editText;
+        else
+            entryEvent.category = servicerBox.currentText;
         if (categoryBox.find(categoryBox.editText) === -1)
             entryEvent.category = categoryBox.editText;
         else
@@ -50,7 +54,7 @@ Kirigami.ScrollablePage {
             isEdit = true;
             dateField.text = entryEvent.date;
             eventField.text = entryEvent.event;
-            servicerField.text = entryEvent.servicer;
+            servicerBox.text = entryEvent.servicer;
             costField.text = entryEvent.cost;
             incrementField.text = entryEvent.increment;
             categoryBox.currentIndex = categoryBox.find(entryEvent.category);
@@ -173,10 +177,13 @@ Kirigami.ScrollablePage {
                 Kirigami.FormData.isSection: true
             }
 
-            Controls.TextField {
-                id: servicerField
+            Controls.ComboBox {
+                id: servicerBox
 
+                Layout.fillWidth: true
                 Kirigami.FormData.label: i18nc("@label:textbox", "Servicer:")
+                editable: true
+                model: UniqueValueModelFactory.createEventServicerModel()
             }
 
             Controls.TextField {
@@ -211,7 +218,7 @@ Kirigami.ScrollablePage {
                 Layout.fillWidth: true
                 Kirigami.FormData.label: i18nc("@label:textbox", "Category:")
                 editable: true
-                model: EventCategoryModel
+                model: UniqueValueModelFactory.createEventCategoryModel()
             }
 
             RowLayout {

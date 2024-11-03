@@ -213,7 +213,7 @@ Kirigami.ScrollablePage {
                 Layout.fillWidth: true
                 Kirigami.FormData.label: i18nc("@label:textbox", "Type:")
                 editable: true
-                model: ItemTypeModel
+                model: UniqueValueModelFactory.createItemTypeModel()
                 enabled: !entryItem.archived
             }
 
@@ -235,7 +235,7 @@ Kirigami.ScrollablePage {
                 Kirigami.FormData.label: i18nc("@label:textbox", "Component Parent:")
                 editable: false
                 visible: itemParentEnabled.checked
-                model: ItemParentModel
+                model: UniqueValueModelFactory.createItemParentNameModel()
                 enabled: !entryItem.archived
             }
 

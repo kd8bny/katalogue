@@ -10,8 +10,13 @@
 #include <QDir>
 #include <QProcessEnvironment>
 
+#include <KAboutData>
+#include <KLocalizedContext>
+#include <KLocalizedString>
+
 #include "about.h"
 #include "katalogue.h"
+#include "katalogueconfig.h"
 #include "version-katalogue.h"
 #include "constants/defaults.h"
 
@@ -25,22 +30,14 @@
 #include "utils/documentIOHelper.h"
 
 #include "models/attributeModel.h"
-#include "models/attributeCategoryModel.h"
+#include "models/documentModel.h"
 #include "models/eventModel.h"
-#include "models/eventCategoryModel.h"
 #include "models/itemModel.h"
 #include "models/itemComponentModel.h"
-#include "models/itemTypeModel.h"
-#include "models/itemParentModel.h"
 #include "models/noteModel.h"
 #include "models/taskModel.h"
-#include "models/documentModel.h"
-
-#include <KAboutData>
-#include <KLocalizedContext>
-#include <KLocalizedString>
-
-#include "katalogueconfig.h"
+#include "models/uniqueValueModel.h"
+#include "models/uniqueValueModelFactory.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -100,68 +97,52 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterType<Task>("com.kd8bny.katalogue.entries", 1, 0, "EntryTask");
     qmlRegisterType<Document>("com.kd8bny.katalogue.entries", 1, 0, "EntryDocument");
 
-    // Models and Data Interfaces
+    // Database and Data Interfaces
     if (DatabaseInit db; !db.connectKatalogueDb(qPath))
     {
         return -1;
     }
 
+    DocumentIOHelper documentIOHelper;
+    qmlRegisterSingletonInstance<DocumentIOHelper>("com.kd8bny.katalogue", 1, 0, "DocumentIOHelper", &documentIOHelper);
+
     ItemDatabase itemDatabase;
     qmlRegisterSingletonInstance<ItemDatabase>("com.kd8bny.katalogue", 1, 0, "ItemDatabase", &itemDatabase);
     AttributeDatabase attributeDatabase;
-    qmlRegisterSingletonInstance<AttributeDatabase>("com.kd8bny.katalogue", 1, 0,
-                                                    "AttributeDatabase", &attributeDatabase);
+    qmlRegisterSingletonInstance<AttributeDatabase>(
+        "com.kd8bny.katalogue", 1, 0, "AttributeDatabase", &attributeDatabase);
     EventDatabase eventDatabase;
     qmlRegisterSingletonInstance<EventDatabase>("com.kd8bny.katalogue", 1, 0, "EventDatabase", &eventDatabase);
     NoteDatabase noteDatabase;
     qmlRegisterSingletonInstance<NoteDatabase>("com.kd8bny.katalogue", 1, 0, "NoteDatabase", &noteDatabase);
     TaskDatabase taskDatabase;
     qmlRegisterSingletonInstance<TaskDatabase>("com.kd8bny.katalogue", 1, 0, "TaskDatabase", &taskDatabase);
-
-    DocumentIOHelper documentIOHelper;
-    qmlRegisterSingletonInstance<DocumentIOHelper>("com.kd8bny.katalogue", 1, 0, "DocumentIOHelper", &documentIOHelper);
     DocumentDatabase documentDatabase;
     qmlRegisterSingletonInstance<DocumentDatabase>("com.kd8bny.katalogue", 1, 0, "DocumentDatabase", &documentDatabase);
 
     // Models
     AttributeModel attributeModel;
     qmlRegisterSingletonInstance<AttributeModel>("com.kd8bny.katalogue", 1, 0, "AttributeModel", &attributeModel);
-
-    AttributeCategoryModel attributeCategoryModel;
-    qmlRegisterSingletonInstance<AttributeCategoryModel>("com.kd8bny.katalogue", 1, 0,
-                                                         "AttributeCategoryModel", &attributeCategoryModel);
-
-    Defaults defaults;
+    DocumentModel documentModel;
+    qmlRegisterSingletonInstance<DocumentModel>("com.kd8bny.katalogue", 1, 0, "DocumentModel", &documentModel);
+    Defaults defaults; // TODO
     qmlRegisterSingletonInstance<Defaults>("com.kd8bny.katalogue", 1, 0, "Defaults", &defaults);
-
     EventModel eventModel;
     qmlRegisterSingletonInstance<EventModel>("com.kd8bny.katalogue", 1, 0, "EventModel", &eventModel);
-
-    EventCategoryModel eventCategoryModel;
-    qmlRegisterSingletonInstance<EventCategoryModel>("com.kd8bny.katalogue", 1, 0,
-                                                     "EventCategoryModel", &eventCategoryModel);
-
     ItemModel itemModel;
     qmlRegisterSingletonInstance<ItemModel>("com.kd8bny.katalogue", 1, 0, "ItemModel", &itemModel);
-
     ItemComponentModel itemComponentModel;
-    qmlRegisterSingletonInstance<ItemComponentModel>("com.kd8bny.katalogue", 1, 0,
-                                                     "ItemComponentModel", &itemComponentModel);
-
-    ItemTypeModel itemTypeModel;
-    qmlRegisterSingletonInstance<ItemTypeModel>("com.kd8bny.katalogue", 1, 0, "ItemTypeModel", &itemTypeModel);
-
-    ItemParentModel itemParentModel;
-    qmlRegisterSingletonInstance<ItemParentModel>("com.kd8bny.katalogue", 1, 0, "ItemParentModel", &itemParentModel);
-
+    qmlRegisterSingletonInstance<ItemComponentModel>(
+        "com.kd8bny.katalogue", 1, 0, "ItemComponentModel", &itemComponentModel);
     NoteModel noteModel;
     qmlRegisterSingletonInstance<NoteModel>("com.kd8bny.katalogue", 1, 0, "NoteModel", &noteModel);
-
     TaskModel taskModel;
     qmlRegisterSingletonInstance<TaskModel>("com.kd8bny.katalogue", 1, 0, "TaskModel", &taskModel);
 
-    DocumentModel documentModel;
-    qmlRegisterSingletonInstance<DocumentModel>("com.kd8bny.katalogue", 1, 0, "DocumentModel", &documentModel);
+    // Unique Value Models
+    UniqueValueModelFactory uniqueValueModelFactory;
+    qmlRegisterSingletonInstance<UniqueValueModelFactory>(
+        "com.kd8bny.katalogue", 1, 0, "UniqueValueModelFactory", &uniqueValueModelFactory);
 
     engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
