@@ -64,7 +64,7 @@ Kirigami.ScrollablePage {
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: {
             if (TaskDatabase.deleteEntryById(entryTask.id)) {
-                TaskModel.refresh();
+                TaskModel.refreshModel();
                 pageStack.pop();
             } else {
                 msgDeleteError.visible = true;
@@ -109,7 +109,7 @@ Kirigami.ScrollablePage {
             text: (isEdit) ? i18nc("@action:button", "Update") : i18nc("@action:button", "Add")
             onClicked: {
                 if (insertUpdate()) {
-                    TaskModel.refresh();
+                    TaskModel.refreshModel();
                     pageStack.pop();
                 } else {
                     msgInsertUpdateError.visible = true;

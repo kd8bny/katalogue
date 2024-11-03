@@ -4,9 +4,9 @@ NoteModel::NoteModel(QObject *parent) : QSqlQueryModel(parent)
 {
     QObject::connect(this, &NoteModel::filterItemId, this, &NoteModel::setItemIdQuery);
     QObject::connect(this, &NoteModel::resetFilterItemId, this, &NoteModel::resetItemIdQuery);
-    QObject::connect(this, SIGNAL(dataChanged()), this, SLOT(refresh()));
+    QObject::connect(this, SIGNAL(modelQueryChanged()), this, SLOT(refreshModel()));
 
-    this->refresh();
+    this->refreshModel();
 }
 
 // The method for obtaining data from the model
@@ -43,16 +43,16 @@ void NoteModel::setItemIdQuery(QString itemId)
     this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(DatabaseSchema::KEY_ITEM_ID, itemId);
 
     this->setQuery(modelQuery);
-    Q_EMIT dataChanged();
+    Q_EMIT modelQueryChanged();
 }
 
 void NoteModel::resetItemIdQuery()
 {
     this->modelQuery = this->modelQueryBase;
-    Q_EMIT dataChanged();
+    Q_EMIT modelQueryChanged();
 }
 
-void NoteModel::refresh()
+void NoteModel::refreshModel()
 {
     this->setQuery(this->modelQuery);
     qDebug() << this->modelQuery;

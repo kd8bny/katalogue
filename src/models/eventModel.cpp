@@ -3,9 +3,9 @@
 EventModel::EventModel(QObject *parent) : QSqlQueryModel(parent)
 {
     QObject::connect(this, &EventModel::filterItemId, this, &EventModel::setItemIdQuery);
-    QObject::connect(this, &EventModel::dataChanged, this, &EventModel::refresh);
+    QObject::connect(this, &EventModel::modelQueryChanged, this, &EventModel::refreshModel);
 
-    this->refresh();
+    this->refreshModel();
 }
 
 // The method for obtaining data from the model
@@ -45,10 +45,10 @@ void EventModel::setItemIdQuery(QString itemId)
 {
     this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(DatabaseSchema::KEY_ITEM_ID, itemId);
     this->setQuery(modelQuery);
-    Q_EMIT dataChanged();
+    Q_EMIT modelQueryChanged();
 }
 
-void EventModel::refresh()
+void EventModel::refreshModel()
 {
     this->setQuery(this->modelQuery);
     qDebug() << this->modelQuery;

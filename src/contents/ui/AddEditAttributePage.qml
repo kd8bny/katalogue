@@ -60,8 +60,8 @@ Kirigami.ScrollablePage {
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: {
             if (AttributeDatabase.deleteEntryById(entryAttribute.id)) {
-                AttributeModel.refresh();
-                AttributeCategoryModel.refresh();
+                AttributeModel.refreshModel();
+                AttributeCategoryModel.refreshModel();
                 pageStack.pop();
             } else {
                 msgDeleteError.visible = true;
@@ -102,8 +102,8 @@ Kirigami.ScrollablePage {
             enabled: (keyField.text.length && valueField.text.length) > 0
             onClicked: {
                 if (insertUpdate()) {
-                    AttributeModel.refresh();
-                    AttributeCategoryModel.refresh();
+                    AttributeModel.refreshModel();
+                    AttributeCategoryModel.refreshModel();
                     pageStack.pop();
                 } else {
                     msgInsertUpdateError.visible = true;

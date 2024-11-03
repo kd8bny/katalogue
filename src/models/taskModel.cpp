@@ -4,9 +4,9 @@ TaskModel::TaskModel(QObject *parent) : QSqlQueryModel(parent)
 {
     QObject::connect(this, &TaskModel::filterItemId, this, &TaskModel::setItemIdQuery);
     QObject::connect(this, &TaskModel::resetFilterItemId, this, &TaskModel::resetItemIdQuery);
-    QObject::connect(this, &TaskModel::dataChanged, this, &TaskModel::refresh);
+    QObject::connect(this, &TaskModel::modelQueryChanged, this, &TaskModel::refreshModel);
 
-    this->refresh();
+    this->refreshModel();
 }
 
 // The method for obtaining data from the model
@@ -46,16 +46,16 @@ void TaskModel::setItemIdQuery(QString itemId)
                                                   DatabaseSchema::KEY_ITEM_ID, itemId);
 
     this->setQuery(modelQuery);
-    Q_EMIT dataChanged();
+    Q_EMIT modelQueryChanged();
 }
 
 void TaskModel::resetItemIdQuery()
 {
     this->modelQuery = this->modelQueryBase;
-    Q_EMIT dataChanged();
+    Q_EMIT modelQueryChanged();
 }
 
-void TaskModel::refresh()
+void TaskModel::refreshModel()
 {
     this->setQuery(this->modelQuery);
     qDebug() << this->modelQuery;

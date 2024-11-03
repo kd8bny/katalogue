@@ -42,10 +42,10 @@ private:
 Q_SIGNALS:
     void filterItemId(QString itemId);
     void resetFilterItemId();
-    void dataChanged();
+    void modelQueryChanged();
 
 public Q_SLOTS:
     void setItemIdQuery(QString itemId);
     void resetItemIdQuery();
-    void refresh();
+    void refreshModel();
 };

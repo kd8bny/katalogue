@@ -16,5 +16,5 @@ void ItemComponentModel::setParentItemQuery(int itemId)
                                              .arg(DatabaseSchema::KEY_ITEM_ID, QStringLiteral("%1").arg(itemId), DatabaseSchema::ARCHIVED);
 
     this->modelQuery = this->modelQueryBase + modelQueryParentItem;
-    Q_EMIT dataChanged();
+    Q_EMIT modelQueryChanged();
 }

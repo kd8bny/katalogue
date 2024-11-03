@@ -70,7 +70,7 @@ Kirigami.ScrollablePage {
         shortcut: "Return"
         onTriggered: {
             if (insertUpdate()) {
-                DocumentModel.refresh();
+                DocumentModel.refreshModel();
                 pageStack.pop();
             } else {
                 msgInsertUpdateError.visible = true;
@@ -86,7 +86,7 @@ Kirigami.ScrollablePage {
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: {
             if (DocumentDatabase.deleteEntryById(entryDocument.id)) {
-                DocumentModel.refresh();
+                DocumentModel.refreshModel();
                 pageStack.clear();
                 pageStack.push("qrc:Documents.qml");
             } else {

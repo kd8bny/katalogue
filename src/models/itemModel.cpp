@@ -5,10 +5,10 @@ ItemModel::ItemModel(QObject *parent) : QSqlQueryModel(parent)
     QObject::connect(this, &ItemModel::filterItem, this, &ItemModel::setItemQuery);
     QObject::connect(this, &ItemModel::filterArchive, this, &ItemModel::setArchiveQuery);
     QObject::connect(this, &ItemModel::filterComponent, this, &ItemModel::setComponentQuery);
-    QObject::connect(this, &ItemModel::dataChanged, this, &ItemModel::refresh);
+    QObject::connect(this, &ItemModel::modelQueryChanged, this, &ItemModel::refreshModel);
 
     Q_EMIT setItemQuery();
-    this->refresh();
+    this->refreshModel();
 }
 
 QVariant ItemModel::data(const QModelIndex &index, int role) const
@@ -71,29 +71,29 @@ void ItemModel::setItemPosition(const int index, const int direction) const
         }
     }
 
-    Q_EMIT dataChanged();
+    Q_EMIT modelQueryChanged();
 }
 
 void ItemModel::setItemQuery()
 {
     modelQuery = this->modelQueryBase + this->modelQueryParentItem + this->modelQuerySortUser;
     qDebug() << modelQuery;
-    Q_EMIT dataChanged();
+    Q_EMIT modelQueryChanged();
 }
 
 void ItemModel::setArchiveQuery()
 {
     modelQuery = this->modelQueryBase + this->modelQueryArchive + this->modelQuerySortUser;
-    Q_EMIT dataChanged();
+    Q_EMIT modelQueryChanged();
 }
 
 void ItemModel::setComponentQuery()
 {
     modelQuery = this->modelQueryBase + this->modelQueryIncludeComponents + this->modelQuerySortUser;
-    Q_EMIT dataChanged();
+    Q_EMIT modelQueryChanged();
 }
 
-void ItemModel::refresh()
+void ItemModel::refreshModel()
 {
     this->setQuery(this->modelQuery);
 }

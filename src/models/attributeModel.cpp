@@ -38,10 +38,10 @@ void AttributeModel::setItemIdQuery(QString itemId)
 {
     this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(DatabaseSchema::KEY_ITEM_ID, itemId);
     this->setQuery(modelQuery);
-    Q_EMIT dataChanged();
+    Q_EMIT modelQueryChanged();
 }
 
-void AttributeModel::refresh()
+void AttributeModel::refreshModel()
 {
     this->setQuery(this->modelQuery);
     qDebug() << this->modelQuery;

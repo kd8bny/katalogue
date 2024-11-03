@@ -56,13 +56,13 @@ Q_SIGNALS:
     void filterItem();
     void filterArchive();
     void filterComponent();
-    void dataChanged() const;
+    void modelQueryChanged() const;
 
 public Q_SLOTS:
     void setItemQuery();
     void setArchiveQuery();
     void setComponentQuery();
-    void refresh();
+    void refreshModel();
 };
 
 #endif

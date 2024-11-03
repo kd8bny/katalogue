@@ -4,9 +4,9 @@ DocumentModel::DocumentModel(QObject *parent) : QSqlQueryModel(parent)
 {
     QObject::connect(this, &DocumentModel::filterItemId, this, &DocumentModel::setItemIdQuery);
     QObject::connect(this, &DocumentModel::resetFilterItemId, this, &DocumentModel::resetItemIdQuery);
-    QObject::connect(this, SIGNAL(dataChanged()), this, SLOT(refresh()));
+    QObject::connect(this, SIGNAL(modelQueryChanged()), this, SLOT(refreshModel()));
 
-    this->refresh();
+    this->refreshModel();
 }
 
 // The method for obtaining data from the model
@@ -42,16 +42,16 @@ void DocumentModel::setItemIdQuery(QString itemId)
     this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(DatabaseSchema::KEY_ITEM_ID, itemId);
 
     this->setQuery(modelQuery);
-    Q_EMIT dataChanged();
+    Q_EMIT modelQueryChanged();
 }
 
 void DocumentModel::resetItemIdQuery()
 {
     this->modelQuery = this->modelQueryBase;
-    Q_EMIT dataChanged();
+    Q_EMIT modelQueryChanged();
 }
 
-void DocumentModel::refresh()
+void DocumentModel::refreshModel()
 {
     this->setQuery(this->modelQuery);
     qDebug() << this->modelQuery;
