@@ -27,14 +27,16 @@ Kirigami.ScrollablePage {
 
     function insertUpdate() {
         entryEvent.date = `${dateField.text}T${Qt.formatDateTime(new Date(), Qt.ISODate).split("T")[1]}`;
-        entryEvent.event = eventField.text;
-        entryEvent.servicer = servicerBox.text;
         entryEvent.cost = costField.text;
         entryEvent.increment = incrementField.text;
-        if (servicerBox.find(servicerBox.editText) === -1)
-            entryEvent.category = servicerBox.editText;
+        if (eventBox.find(eventBox.editText) === -1)
+            entryEvent.event = eventBox.editText;
         else
-            entryEvent.category = servicerBox.currentText;
+            entryEvent.event = servicerBox.currentText;
+        if (servicerBox.find(servicerBox.editText) === -1)
+            entryEvent.servicer = servicerBox.editText;
+        else
+            entryEvent.servicer = servicerBox.currentText;
         if (categoryBox.find(categoryBox.editText) === -1)
             entryEvent.category = categoryBox.editText;
         else
@@ -53,8 +55,8 @@ Kirigami.ScrollablePage {
         if (entryEvent) {
             isEdit = true;
             dateField.text = entryEvent.date;
-            eventField.text = entryEvent.event;
-            servicerBox.text = entryEvent.servicer;
+            eventBox.currentIndex = eventBox.find(entryEvent.event);
+            servicerBox.currentIndex = servicerBox.find(entryEvent.servicer);
             costField.text = entryEvent.cost;
             incrementField.text = entryEvent.increment;
             categoryBox.currentIndex = categoryBox.find(entryEvent.category);
@@ -167,10 +169,13 @@ Kirigami.ScrollablePage {
                 }
             }
 
-            Controls.TextField {
-                id: eventField
+            Controls.ComboBox {
+                id: eventBox
 
+                Layout.fillWidth: true
                 Kirigami.FormData.label: i18nc("@label:textbox", "Event:")
+                editable: true
+                model: UniqueValueModelFactory.createEventNameModel(entryItem.type)
             }
 
             Kirigami.Separator {
@@ -262,7 +267,7 @@ Kirigami.ScrollablePage {
 
         Controls.Button {
             Controls.DialogButtonBox.buttonRole: Controls.DialogButtonBox.AcceptRole
-            enabled: (eventField.text.length > 0) && !msgDateError.visible
+            enabled: (eventBox.editText.length > 0) && !msgDateError.visible
             icon.name: isEdit ? "document-save" : "list-add"
             text: isEdit ? i18n("Save") : i18n("Add")
         }
