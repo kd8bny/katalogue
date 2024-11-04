@@ -1,5 +1,6 @@
 #include <QObject>
 #include <QSqlQueryModel>
+#include <QSqlRecord>
 
 #include "data/databaseSchema.h"
 
@@ -14,6 +15,7 @@ public:
     explicit UniqueValueModel(QObject *parent = nullptr);
     ~UniqueValueModel() override = default;
     void setModelQuery(QString modelQuery);
+    Q_INVOKABLE int getId(int row);
 
 private:
     QString modelQuery;

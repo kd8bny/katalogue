@@ -26,7 +26,7 @@ Kirigami.ScrollablePage {
         else
             entryItem.type = typeBox.currentText;
         if (itemParentEnabled.checked)
-            entryItem.itemId = ItemParentModel.getId(itemParentBox.currentIndex);
+            entryItem.itemId = UniqueValueModelFactory.createItemParentNameModel(entryItem.id).getId(itemParentBox.currentIndex);
 
         if (isEdit)
             return ItemDatabase.updateEntry(entryItem);
