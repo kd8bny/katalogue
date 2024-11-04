@@ -31,6 +31,15 @@ public:
         return uniqueValueModel;
     };
 
+    Q_INVOKABLE UniqueValueModel *createEventNameModel(QString itemType) const
+    {
+        auto *uniqueValueModel = new UniqueValueModel();
+        uniqueValueModel->setModelQuery(QStringLiteral("SELECT DISTINCT %1 FROM %2 WHERE %3!=%4")
+                                            .arg(DatabaseSchema::EVENT, DatabaseSchema::TABLE_EVENTS,
+                                                 DatabaseSchema::TYPE, itemType));
+        return uniqueValueModel;
+    };
+
     Q_INVOKABLE UniqueValueModel *createEventServicerModel(QString itemType) const
     {
         auto *uniqueValueModel = new UniqueValueModel();
