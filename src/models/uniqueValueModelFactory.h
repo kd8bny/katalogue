@@ -15,7 +15,6 @@ public:
 
     Q_INVOKABLE UniqueValueModel *createAttributeCategoryModel(QString itemType) const
     {
-        qDebug() << itemType;
         auto *uniqueValueModel = new UniqueValueModel();
         uniqueValueModel->setModelQuery(QStringLiteral("SELECT DISTINCT %1 FROM %2 "
                                                        "WHERE %3 in (SELECT %4.id FROM %4 WHERE %4.%5='%6')")
