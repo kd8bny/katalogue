@@ -84,7 +84,6 @@ Kirigami.ScrollablePage {
         onTriggered: {
             if (insertUpdate()) {
                 EventModel.refreshModel();
-                EventCategoryModel.refreshModel();
                 pageStack.pop();
             } else {
                 msgInsertUpdateError.visible = true;
@@ -101,7 +100,6 @@ Kirigami.ScrollablePage {
         onAccepted: {
             if (EventDatabase.deleteEntryById(EventModel.getId(entryEvent.id))) {
                 EventModel.refreshModel();
-                EventCategoryModel.refreshModel();
                 pageStack.pop();
             } else {
                 msgDeleteError.visible = true;

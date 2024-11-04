@@ -83,7 +83,6 @@ Kirigami.ScrollablePage {
         onTriggered: {
             if (insertUpdate()) {
                 ItemModel.refreshModel();
-                ItemTypeModel.refreshModel();
                 pageStack.pop();
             } else {
                 msgInsertUpdateError.visible = true;

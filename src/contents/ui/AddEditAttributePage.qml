@@ -61,7 +61,6 @@ Kirigami.ScrollablePage {
         onAccepted: {
             if (AttributeDatabase.deleteEntryById(entryAttribute.id)) {
                 AttributeModel.refreshModel();
-                AttributeCategoryModel.refreshModel();
                 pageStack.pop();
             } else {
                 msgDeleteError.visible = true;
@@ -104,7 +103,6 @@ Kirigami.ScrollablePage {
             onClicked: {
                 if (insertUpdate()) {
                     AttributeModel.refreshModel();
-                    AttributeCategoryModel.refreshModel();
                     pageStack.pop();
                 } else {
                     msgInsertUpdateError.visible = true;
