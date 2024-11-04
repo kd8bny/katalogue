@@ -15,9 +15,12 @@ public:
 
     Q_INVOKABLE UniqueValueModel *createAttributeCategoryModel(QString itemType) const
     {
+        qDebug() << itemType;
         auto *uniqueValueModel = new UniqueValueModel();
-        uniqueValueModel->setModelQuery(QStringLiteral("SELECT DISTINCT %1 FROM %2 WHERE %3!=%4")
+        uniqueValueModel->setModelQuery(QStringLiteral("SELECT DISTINCT %1 FROM %2 "
+                                                       "WHERE %3 in (SELECT %4.id FROM %4 WHERE %4.%5='%6')")
                                             .arg(DatabaseSchema::CATEGORY, DatabaseSchema::TABLE_ATTRIBUTES,
+                                                 DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::TABLE_ITEMS,
                                                  DatabaseSchema::TYPE, itemType));
         return uniqueValueModel;
     };
@@ -25,8 +28,10 @@ public:
     Q_INVOKABLE UniqueValueModel *createEventCategoryModel(QString itemType) const
     {
         auto *uniqueValueModel = new UniqueValueModel();
-        uniqueValueModel->setModelQuery(QStringLiteral("SELECT DISTINCT %1 FROM %2 WHERE %3!=%4")
+        uniqueValueModel->setModelQuery(QStringLiteral("SELECT DISTINCT %1 FROM %2 "
+                                                       "WHERE %3 in (SELECT %4.id FROM %4 WHERE %4.%5='%6')")
                                             .arg(DatabaseSchema::CATEGORY, DatabaseSchema::TABLE_EVENTS,
+                                                 DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::TABLE_ITEMS,
                                                  DatabaseSchema::TYPE, itemType));
         return uniqueValueModel;
     };
@@ -34,8 +39,10 @@ public:
     Q_INVOKABLE UniqueValueModel *createEventNameModel(QString itemType) const
     {
         auto *uniqueValueModel = new UniqueValueModel();
-        uniqueValueModel->setModelQuery(QStringLiteral("SELECT DISTINCT %1 FROM %2 WHERE %3!=%4")
+        uniqueValueModel->setModelQuery(QStringLiteral("SELECT DISTINCT %1 FROM %2 "
+                                                       "WHERE %3 in (SELECT %4.id FROM %4 WHERE %4.%5='%6')")
                                             .arg(DatabaseSchema::EVENT, DatabaseSchema::TABLE_EVENTS,
+                                                 DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::TABLE_ITEMS,
                                                  DatabaseSchema::TYPE, itemType));
         return uniqueValueModel;
     };
@@ -43,8 +50,10 @@ public:
     Q_INVOKABLE UniqueValueModel *createEventServicerModel(QString itemType) const
     {
         auto *uniqueValueModel = new UniqueValueModel();
-        uniqueValueModel->setModelQuery(QStringLiteral("SELECT DISTINCT %1 FROM %2 WHERE %3!=%4")
+        uniqueValueModel->setModelQuery(QStringLiteral("SELECT DISTINCT %1 FROM %2 "
+                                                       "WHERE %3 in (SELECT %4.id FROM %4 WHERE %4.%5='%6')")
                                             .arg(DatabaseSchema::SERVICER, DatabaseSchema::TABLE_EVENTS,
+                                                 DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::TABLE_ITEMS,
                                                  DatabaseSchema::TYPE, itemType));
         return uniqueValueModel;
     };
