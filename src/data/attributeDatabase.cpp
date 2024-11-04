@@ -97,9 +97,9 @@ Attribute *AttributeDatabase::getEntryById(const int id) const
     QSqlQuery query;
 
     query.prepare(
-        QStringLiteral("SELECT id, %1, %2, %3, %4 FROM %5 WHERE id=:id")
-            .arg(DatabaseSchema::KEY, DatabaseSchema::VALUE, DatabaseSchema::CATEGORY,
-                 DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::TABLE_ATTRIBUTES));
+        QStringLiteral("SELECT id, %1, %2, %3, %4, %5, %6 FROM %7 WHERE id=:id")
+            .arg(DatabaseSchema::CREATED, DatabaseSchema::MODIFIED, DatabaseSchema::KEY, DatabaseSchema::VALUE,
+                 DatabaseSchema::CATEGORY, DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::TABLE_ATTRIBUTES));
 
     query.bindValue(QStringLiteral(":id"), id);
 
