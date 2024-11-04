@@ -235,7 +235,7 @@ Kirigami.ScrollablePage {
                 Kirigami.FormData.label: i18nc("@label:textbox", "Component Parent:")
                 editable: false
                 visible: itemParentEnabled.checked
-                model: UniqueValueModelFactory.createItemParentNameModel()
+                model: UniqueValueModelFactory.createItemParentNameModel(entryItem.id)
                 enabled: !entryItem.archived
             }
 
