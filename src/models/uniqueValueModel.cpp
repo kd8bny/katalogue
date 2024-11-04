@@ -4,8 +4,6 @@ UniqueValueModel::UniqueValueModel(QObject *parent) : QSqlQueryModel(parent)
 {
 
     QObject::connect(this, &UniqueValueModel::modelQueryChanged, this, &UniqueValueModel::refreshModel);
-
-    this->refreshModel();
 }
 
 void UniqueValueModel::setModelQuery(QString modelQuery)
