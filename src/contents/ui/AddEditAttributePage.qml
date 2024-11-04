@@ -92,7 +92,7 @@ Kirigami.ScrollablePage {
             Layout.fillWidth: true
             editable: true
             Kirigami.FormData.label: i18nc("@label:textbox", "Category:")
-            model: UniqueValueModelFactory.createAttributeCategoryModel()
+            model: UniqueValueModelFactory.createAttributeCategoryModel(entryItem.type)
         }
 
         Controls.Button {

@@ -183,7 +183,7 @@ Kirigami.ScrollablePage {
                 Layout.fillWidth: true
                 Kirigami.FormData.label: i18nc("@label:textbox", "Servicer:")
                 editable: true
-                model: UniqueValueModelFactory.createEventServicerModel()
+                model: UniqueValueModelFactory.createEventServicerModel(entryItem.type)
             }
 
             Controls.TextField {
@@ -218,7 +218,7 @@ Kirigami.ScrollablePage {
                 Layout.fillWidth: true
                 Kirigami.FormData.label: i18nc("@label:textbox", "Category:")
                 editable: true
-                model: UniqueValueModelFactory.createEventCategoryModel()
+                model: UniqueValueModelFactory.createEventCategoryModel(entryItem.type)
             }
 
             RowLayout {
