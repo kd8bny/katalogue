@@ -109,7 +109,7 @@ Kirigami.ScrollablePage {
                     }
 
                     Kirigami.Icon {
-                        source: "file-catalog-symbolic"
+                        source: isComponentView ? "extension-symbolic" : "file-catalog-symbolic"
                         Layout.fillHeight: true
                         Layout.fillWidth: false
                         Layout.maximumHeight: Kirigami.Units.iconSizes.huge
