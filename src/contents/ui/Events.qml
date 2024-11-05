@@ -48,7 +48,6 @@ Kirigami.ScrollablePage {
         id: layout
 
         model: EventModel
-        delegate: eventDelegate
         focus: true
 
         Kirigami.PlaceholderMessage {
@@ -58,23 +57,18 @@ Kirigami.ScrollablePage {
             text: i18n("Select add to add an event to this item")
         }
 
-    }
-
-    Component {
-        id: eventDelegate
-
-        Kirigami.SubtitleDelegate {
+        delegate: Kirigami.SubtitleDelegate {
             id: subtitleDelegate
 
-            Layout.fillWidth: true
-            text: event
-            subtitle: date.split("T")[0]
+            width: parent.width
+            onClicked: {
+                openInfoSheet(index);
+            }
 
             contentItem: RowLayout {
                 Layout.fillWidth: true
 
                 Rectangle {
-                    Layout.fillWidth: true
                     radius: height
                     Layout.preferredWidth: Kirigami.Units.largeSpacing
                     Layout.preferredHeight: Kirigami.Units.largeSpacing
@@ -84,16 +78,9 @@ Kirigami.ScrollablePage {
                 Kirigami.IconTitleSubtitle {
                     Layout.fillWidth: true
                     Layout.preferredWidth: Kirigami.Units.largeSpacing * 30
-                    title: subtitleDelegate.text
-                    subtitle: subtitleDelegate.subtitle
+                    title: event
+                    subtitle: date.split("T")[0]
                     icon: icon.fromControlsIcon(subtitleDelegate.icon)
-                }
-
-                Controls.Button {
-                    icon.name: "kdocumentinfo"
-                    onClicked: {
-                        openInfoSheet(index);
-                    }
                 }
 
                 Controls.Button {
