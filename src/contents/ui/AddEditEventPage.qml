@@ -32,7 +32,7 @@ Kirigami.ScrollablePage {
         if (eventBox.find(eventBox.editText) === -1)
             entryEvent.event = eventBox.editText;
         else
-            entryEvent.event = servicerBox.currentText;
+            entryEvent.event = eventBox.currentText;
         if (servicerBox.find(servicerBox.editText) === -1)
             entryEvent.servicer = servicerBox.editText;
         else
