@@ -23,7 +23,7 @@ public:
     };
 
     explicit EventModel(QObject *parent = nullptr);
-    ~EventModel() = default;
+    ~EventModel() override = default;
 
     // Override the method that will return the data
     QVariant data(const QModelIndex &index, int role) const override;
@@ -39,7 +39,7 @@ private:
                                             DatabaseSchema::INCREMENT, DatabaseSchema::CATEGORY, DatabaseSchema::COMMENT,
                                             DatabaseSchema::TABLE_EVENTS);
 
-    const QString modelQuerySetId = QStringLiteral(" WHERE %1=%2");
+    const QString modelQuerySetId = QStringLiteral(" WHERE %1=%2 ORDER BY date DESC");
 
     QString modelQuery;
 
