@@ -13,6 +13,7 @@ Kirigami.ScrollablePage {
 
     required property EntryItem entryItem
     property bool isComponentView: false
+    property int menuItemHighlighted: 0
 
     Component.onCompleted: {
         if (entryItem.itemId != 0)
@@ -49,45 +50,65 @@ Kirigami.ScrollablePage {
             Layout.fillWidth: true
             icon.name: "view-list-details"
             text: i18n("Attributes")
-            onClicked: pageStack.push("qrc:Attributes.qml", {
-                "entryItem": entryItem
-            })
+            highlighted: menuItemHighlighted == 0
+            onClicked: {
+                menuItemHighlighted = 0;
+                pageStack.push("qrc:Attributes.qml", {
+                    "entryItem": entryItem
+                });
+            }
         }
 
         Kirigami.SubtitleDelegate {
             Layout.fillWidth: true
             icon.name: "tag-events-symbolic"
             text: i18n("Events")
-            onClicked: pageStack.push("qrc:Events.qml", {
-                "entryItem": entryItem
-            })
+            highlighted: menuItemHighlighted == 1
+            onClicked: {
+                menuItemHighlighted = 1;
+                pageStack.push("qrc:Events.qml", {
+                    "entryItem": entryItem
+                });
+            }
         }
 
         Kirigami.SubtitleDelegate {
             Layout.fillWidth: true
             icon.name: "backgroundtool-symbolic"
             text: i18n("Notes")
-            onClicked: pageStack.push("qrc:Notes.qml", {
-                "entryItem": entryItem
-            })
+            highlighted: menuItemHighlighted == 2
+            onClicked: {
+                menuItemHighlighted = 2;
+                pageStack.push("qrc:Notes.qml", {
+                    "entryItem": entryItem
+                });
+            }
         }
 
         Kirigami.SubtitleDelegate {
             Layout.fillWidth: true
             icon.name: "view-task"
             text: i18n("Tasks")
-            onClicked: pageStack.push("qrc:Tasks.qml", {
-                "entryItem": entryItem
-            })
+            highlighted: menuItemHighlighted == 3
+            onClicked: {
+                menuItemHighlighted = 3;
+                pageStack.push("qrc:Tasks.qml", {
+                    "entryItem": entryItem
+                });
+            }
         }
 
         Kirigami.SubtitleDelegate {
             Layout.fillWidth: true
             icon.name: "folder-documents-symbolic"
             text: i18n("Documents")
-            onClicked: pageStack.push("qrc:Documents.qml", {
-                "entryItem": entryItem
-            })
+            highlighted: menuItemHighlighted == 4
+            onClicked: {
+                menuItemHighlighted = 4;
+                pageStack.push("qrc:Documents.qml", {
+                    "entryItem": entryItem
+                });
+            }
         }
 
         Kirigami.SubtitleDelegate {
@@ -95,7 +116,9 @@ Kirigami.ScrollablePage {
             icon.name: "extension-symbolic"
             text: i18n("Components")
             visible: !isComponentView
+            highlighted: menuItemHighlighted == 5
             onClicked: {
+                menuItemHighlighted = 5;
                 pageStack.push("qrc:Items.qml", {
                     "entryComponent": entryItem,
                     "isComponentView": true
@@ -108,9 +131,13 @@ Kirigami.ScrollablePage {
             Layout.fillWidth: true
             icon.name: "file-catalog-symbolic"
             text: i18n("Details")
-            onClicked: pageStack.push('qrc:ItemInfoPage.qml', {
-                "entryItem": entryItem
-            })
+            highlighted: menuItemHighlighted == 6
+            onClicked: {
+                menuItemHighlighted = 6;
+                pageStack.push('qrc:ItemInfoPage.qml', {
+                    "entryItem": entryItem
+                });
+            }
         }
 
     }
