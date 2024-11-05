@@ -55,7 +55,6 @@ Kirigami.ScrollablePage {
         id: layout
 
         model: DocumentModel
-        delegate: documentDelegate
         focus: true
 
         Kirigami.PlaceholderMessage {
@@ -65,23 +64,20 @@ Kirigami.ScrollablePage {
             text: i18n("Select add to add an document to this item")
         }
 
-    }
-
-    Component {
-        id: documentDelegate
-
-        Kirigami.SubtitleDelegate {
+        delegate: Kirigami.SubtitleDelegate {
             id: subtitleDelegate
 
-            Layout.fillWidth: true
+            width: parent.width
             text: name
             subtitle: file_name
+            onClicked: {
+                Qt.openUrlExternally(DocumentIOHelper.writeFile("", getEntryByIndex(index)));
+            }
 
             contentItem: RowLayout {
                 Layout.fillWidth: true
 
                 Rectangle {
-                    Layout.fillWidth: true
                     radius: height
                     Layout.preferredWidth: Kirigami.Units.largeSpacing
                     Layout.preferredHeight: Kirigami.Units.largeSpacing
@@ -91,13 +87,12 @@ Kirigami.ScrollablePage {
                 Kirigami.IconTitleSubtitle {
                     Layout.fillWidth: true
                     Layout.preferredWidth: Kirigami.Units.largeSpacing * 30
-                    title: subtitleDelegate.text
-                    subtitle: subtitleDelegate.subtitle
+                    title: name
+                    subtitle: file_name
                     icon: icon.fromControlsIcon(subtitleDelegate.icon)
                 }
 
                 Controls.Button {
-                    Layout.fillWidth: true
                     icon.name: "document-open"
                     onClicked: {
                         Qt.openUrlExternally(DocumentIOHelper.writeFile("", getEntryByIndex(index)));
@@ -105,7 +100,6 @@ Kirigami.ScrollablePage {
                 }
 
                 Controls.Button {
-                    Layout.fillWidth: true
                     icon.name: "download-symbolic"
                     onClicked: {
                         entryDocument = getEntryByIndex(index);
@@ -114,7 +108,6 @@ Kirigami.ScrollablePage {
                 }
 
                 Controls.Button {
-                    Layout.fillWidth: true
                     icon.name: "edit-entry"
                     onClicked: {
                         pageStack.push("qrc:AddEditDocumentPage.qml", {

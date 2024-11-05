@@ -44,7 +44,6 @@ Kirigami.ScrollablePage {
     ListView {
         id: layout
 
-        Layout.fillWidth: true
         model: AttributeModel
         section.property: "category"
         focus: true
