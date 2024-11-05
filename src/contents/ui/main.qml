@@ -19,7 +19,6 @@ Kirigami.ApplicationWindow {
     onHeightChanged: saveWindowGeometryTimer.restart()
     onXChanged: saveWindowGeometryTimer.restart()
     onYChanged: saveWindowGeometryTimer.restart()
-    pageStack.globalToolBar.style: Kirigami.ApplicationHeaderStyle.ToolBar
     pageStack.initialPage: itemsPage
 
     // This timer allows to batch update the window size change to reduce
@@ -51,7 +50,6 @@ Kirigami.ApplicationWindow {
 
         title: i18n("katalogue")
         titleIcon: "applications-graphics"
-        //isMenu: !root.isMobile
         modal: false
         collapsible: true
         showHeaderWhenCollapsed: true
@@ -116,8 +114,6 @@ Kirigami.ApplicationWindow {
         ]
 
         header: RowLayout {
-            Layout.fillWidth: true
-
             Controls.ToolButton {
                 icon.name: "application-menu"
                 visible: globalDrawer.collapsible
@@ -127,10 +123,6 @@ Kirigami.ApplicationWindow {
 
         }
 
-    }
-
-    contextDrawer: Kirigami.ContextDrawer {
-        id: contextDrawer
     }
 
 }
