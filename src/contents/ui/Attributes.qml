@@ -25,6 +25,7 @@ Kirigami.ScrollablePage {
         attributeInfoSheet.open();
     }
 
+    Layout.fillWidth: true
     title: i18n(entryItem.name + " Attributes")
     Component.onCompleted: AttributeModel.setItemIdQuery(entryItem.id)
     actions: [
@@ -43,10 +44,9 @@ Kirigami.ScrollablePage {
     ListView {
         id: layout
 
+        Layout.fillWidth: true
         model: AttributeModel
-        delegate: attributeDelegate
         section.property: "category"
-        section.delegate: sectionDelegate
         focus: true
         headerPositioning: ListView.OverlayHeader
 
@@ -57,39 +57,18 @@ Kirigami.ScrollablePage {
             text: i18n("Select add to add an attribute to this item")
         }
 
-    }
-
-    Component {
-        id: sectionDelegate
-
-        Kirigami.ListSectionHeader {
-            Kirigami.IconTitleSubtitle {
-                // TODO icon: icon.fromControlsIcon(subtitleDelegate.icon)
-
-                Layout.fillWidth: true
-                title: section
-            }
-
-        }
-
-    }
-
-    Component {
-        id: attributeDelegate
-
-        Kirigami.SubtitleDelegate {
+        delegate: Kirigami.SubtitleDelegate {
             id: subtitleDelegate
 
-            Layout.fillWidth: true
-            Layout.preferredWidth: Kirigami.Units.largeSpacing * 60
-            text: key
-            subtitle: value
+            width: parent.width
+            onClicked: {
+                openInfoSheet(index);
+            }
 
             contentItem: RowLayout {
                 Layout.fillWidth: true
 
                 Rectangle {
-                    Layout.fillWidth: true
                     radius: height
                     Layout.preferredWidth: Kirigami.Units.largeSpacing
                     Layout.preferredHeight: Kirigami.Units.largeSpacing
@@ -98,21 +77,12 @@ Kirigami.ScrollablePage {
 
                 Kirigami.IconTitleSubtitle {
                     Layout.fillWidth: true
-                    Layout.preferredWidth: Kirigami.Units.largeSpacing * 30
-                    title: subtitleDelegate.text
-                    subtitle: subtitleDelegate.subtitle
+                    title: key
+                    subtitle: value
                     icon: icon.fromControlsIcon(subtitleDelegate.icon)
                 }
 
                 Controls.Button {
-                    icon.name: "kdocumentinfo"
-                    onClicked: {
-                        openInfoSheet(index);
-                    }
-                }
-
-                Controls.Button {
-                    Layout.fillWidth: true
                     icon.name: "edit-entry"
                     onClicked: {
                         pageStack.push("qrc:AddEditAttributePage.qml", {
@@ -122,6 +92,15 @@ Kirigami.ScrollablePage {
                     }
                 }
 
+            }
+
+        }
+
+        section.delegate: Kirigami.ListSectionHeader {
+            width: parent.width
+
+            Controls.ItemDelegate {
+                text: section
             }
 
         }
