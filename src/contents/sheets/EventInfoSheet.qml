@@ -12,6 +12,7 @@ Kirigami.OverlaySheet {
 
     property alias date: dateField.text
     property alias event: eventField.text
+    property alias servicer: servicerField.text
     property alias cost: costField.text
     property alias increment: incrementField.text
     property alias category: categoryField.text
@@ -35,6 +36,12 @@ Kirigami.OverlaySheet {
             id: eventField
 
             Kirigami.FormData.label: i18nc("@label:textbox", "Event:")
+        }
+
+        Controls.Label {
+            id: servicerField
+
+            Kirigami.FormData.label: i18nc("@label:textbox", "Servicer:")
         }
 
         Controls.Label {
