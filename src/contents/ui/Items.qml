@@ -194,22 +194,4 @@ Kirigami.ScrollablePage {
 
     }
 
-    header: Controls.ToolBar {
-        id: toolbar
-
-        RowLayout {
-            anchors.fill: parent
-
-            Kirigami.SearchField {
-                id: searchField
-
-                Layout.alignment: Qt.AlignHCenter
-                Layout.fillWidth: true
-                Layout.maximumWidth: Kirigami.Units.gridUnit * 30
-            }
-
-        }
-
-    }
-
 }

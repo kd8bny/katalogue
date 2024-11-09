@@ -33,7 +33,6 @@
 #include "models/documentModel.h"
 #include "models/eventModel.h"
 #include "models/itemModel.h"
-// #include "models/itemComponentModel.h"
 #include "models/noteModel.h"
 #include "models/taskModel.h"
 #include "models/uniqueValueModel.h"
@@ -99,7 +98,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterType<Document>("com.kd8bny.katalogue.entries", 1, 0, "EntryDocument");
 
     qmlRegisterUncreatableType<ItemModel>("com.kd8bny.katalogue", 1, 0, "ItemModel",
-                                          QStringLiteral("Access to ItemModel Emnum Classes"));
+                                          QStringLiteral("Access to ItemModel Enum Classes"));
 
     // Database and Data Interfaces
     if (DatabaseInit db; !db.connectKatalogueDb(qPath))
