@@ -98,6 +98,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterType<Task>("com.kd8bny.katalogue.entries", 1, 0, "EntryTask");
     qmlRegisterType<Document>("com.kd8bny.katalogue.entries", 1, 0, "EntryDocument");
 
+    qmlRegisterUncreatableType<ItemModel>("com.kd8bny.katalogue", 1, 0, "ItemModel",
+                                          QStringLiteral("Access to ItemModel Emnum Classes"));
+
     // Database and Data Interfaces
     if (DatabaseInit db; !db.connectKatalogueDb(qPath))
     {
@@ -130,30 +133,18 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterSingletonInstance<Defaults>("com.kd8bny.katalogue", 1, 0, "Defaults", &defaults);
     EventModel eventModel;
     qmlRegisterSingletonInstance<EventModel>("com.kd8bny.katalogue", 1, 0, "EventModel", &eventModel);
-
-    ItemModelFactory itemModelFactory;
-    qmlRegisterSingletonInstance<ItemModelFactory>(
-        "com.kd8bny.katalogue", 1, 0, "ItemModelFactory", &itemModelFactory);
-
-    // qmlRegisterType<ItemModel>("com.kd8bny.katalogue", 1, 0, "ItemModel");
-    // qmlRegisterUncreatableType<CustomQueryModel>("com.example", 1, 0, "CustomQueryModel", "Cannot create CustomQueryModel in QML");
-    // ItemModel itemModel(ItemModel::ITEMS, QStringLiteral(""));
-    // ItemModel *itemModel = ItemModelFactory().createItemModel();
-    // qmlRegisterSingletonInstance<ItemModel>("com.kd8bny.katalogue", 1, 0, "ItemModel", itemModel);
-    qmlRegisterUncreatableType<ItemModel>("com.kd8bny.katalogue", 1, 0, "ItemModel", QStringLiteral("reason"));
     NoteModel noteModel;
     qmlRegisterSingletonInstance<NoteModel>("com.kd8bny.katalogue", 1, 0, "NoteModel", &noteModel);
     TaskModel taskModel;
     qmlRegisterSingletonInstance<TaskModel>("com.kd8bny.katalogue", 1, 0, "TaskModel", &taskModel);
 
     // Unique Value Models
+    ItemModelFactory itemModelFactory;
+    qmlRegisterSingletonInstance<ItemModelFactory>(
+        "com.kd8bny.katalogue", 1, 0, "ItemModelFactory", &itemModelFactory);
     UniqueValueModelFactory uniqueValueModelFactory;
     qmlRegisterSingletonInstance<UniqueValueModelFactory>(
         "com.kd8bny.katalogue", 1, 0, "UniqueValueModelFactory", &uniqueValueModelFactory);
-
-    // ItemModelFactory itemModelFactory;
-    // qmlRegisterSingletonInstance<ItemModelFactory>(
-    //     "com.kd8bny.katalogue", 1, 0, "ItemModelFactory", &itemModelFactory);
 
     engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
