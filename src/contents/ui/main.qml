@@ -62,7 +62,6 @@ Kirigami.ApplicationWindow {
                 onTriggered: {
                     pageStack.clear();
                     pageStack.push('qrc:Items.qml');
-                    ItemModel.filterItem();
                 }
             },
             Kirigami.Action {
@@ -101,8 +100,9 @@ Kirigami.ApplicationWindow {
                 icon.name: "folder-tar-symbolic"
                 onTriggered: {
                     pageStack.clear();
-                    pageStack.push('qrc:Items.qml');
-                    ItemModel.filterArchive();
+                    pageStack.push("qrc:Items.qml", {
+                        "itemModelType": ItemModel.ARCHIVE
+                    });
                 }
             },
             Kirigami.Action {

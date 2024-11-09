@@ -12,23 +12,27 @@ import org.kde.kitemmodels as KTM
 Kirigami.ScrollablePage {
     id: itemsPage
 
-    property EntryItem entryComponent
-    property bool isComponentView: false
+    property EntryItem entryItem
+    property var itemModelType: ItemModel.ITEMS
+    property ItemModel itemModel
 
     function getEntryByIndex(index) {
-        var itemId = ItemModel.getId(index);
-        if (isComponentView)
-            itemId = ItemComponentModel.getId(index);
-
+        var itemId = itemModel.getId(index);
         return ItemDatabase.getEntryById(itemId);
     }
 
     Layout.fillWidth: true
-    title: (isComponentView) ? i18n(entryComponent.name + " Components") : i18n("Katalogued Items")
+    title: i18n("Katalogued Items")
     Component.onCompleted: {
-        if (isComponentView)
-            itemsLayout.model = ItemComponentModel;
-
+        if (itemModelType == ItemModel.ITEMS) {
+            itemModel = ItemModelFactory.createItemModel();
+        } else if (itemModelType == ItemModel.COMPONENTS) {
+            itemsPage.title = i18n(entryItem.name + " Components");
+            itemModel = ItemModelFactory.createItemComponentModel(entryItem.id);
+        } else if (itemModelType == ItemModel.ARCHIVE) {
+            itemsPage.title = i18n("Archive");
+            itemModel = ItemModelFactory.createItemArchivedModel();
+        }
     }
     actions: [
         Kirigami.Action {
@@ -37,34 +41,64 @@ Kirigami.ScrollablePage {
             tooltip: i18n("Add new item")
             onTriggered: pageStack.push("qrc:AddEditItemPage.qml")
         },
-        //TODO radio button and undo
         Kirigami.Action {
-            text: i18n("Include Components")
+            text: i18n("Sort By")
             icon.name: "extension-symbolic"
-            tooltip: i18n("Include Components")
-            onTriggered: {
-                ItemModel.filterComponent(); //TODO better name
+            tooltip: i18n("")
+
+            Kirigami.Action {
+                text: i18n("User")
+                icon.name: "extension-symbolic"
+                onTriggered: {
+                    itemModel.setSortField(ItemModel.SortField.USER);
+                }
+            }
+
+            Kirigami.Action {
+                text: i18n("Name")
+                icon.name: "extension-symbolic"
+                onTriggered: {
+                    itemModel.setSortField(ItemModel.SortField.NAME);
+                }
+            }
+
+            Kirigami.Action {
+                separator: true
+            }
+
+            Kirigami.Action {
+                text: i18n("Sort ASC")
+                icon.name: "extension-symbolic"
+                onTriggered: {
+                    itemModel.setSortOrder(ItemModel.SortOrder.ASC);
+                }
+            }
+
+            Kirigami.Action {
+                text: i18n("Sort DESC")
+                icon.name: "extension-symbolic"
+                onTriggered: {
+                    itemModel.setSortOrder(ItemModel.SortOrder.DESC);
+                }
+            }
+
+        },
+        Kirigami.Action {
+            text: i18n("Show Components")
+            icon.name: "extension-symbolic"
+            tooltip: i18n("")
+            checkable: true
+            visible: itemModelType != ItemModel.COMPONENTS
+            onToggled: {
+                itemModel.toggleComponents();
             }
         }
     ]
 
-    KTM.KSortFilterProxyModel {
-        id: filteredModel
-
-        sourceModel: ItemModel
-        filterRoleName: "name"
-        filterRegularExpression: {
-            if (searchField.text === "")
-                return new RegExp();
-
-            return new RegExp("%1".arg(searchField.text), "i");
-        }
-    }
-
     Kirigami.CardsListView {
         id: itemsLayout
 
-        model: filteredModel
+        model: itemModel
         delegate: itemsDelegate
 
         Kirigami.PlaceholderMessage {
@@ -109,7 +143,7 @@ Kirigami.ScrollablePage {
                     }
 
                     Kirigami.Icon {
-                        source: isComponentView ? "extension-symbolic" : "file-catalog-symbolic"
+                        source: fk_item_id ? "extension-symbolic" : "file-catalog-symbolic"
                         Layout.fillHeight: true
                         Layout.fillWidth: false
                         Layout.maximumHeight: Kirigami.Units.iconSizes.huge
@@ -128,7 +162,7 @@ Kirigami.ScrollablePage {
                         }
 
                         Controls.Label {
-                            text: `${year} ${make} ${model}`
+                            text: `${year} ${make} ${model} ${name}`
                         }
 
                     }
@@ -138,15 +172,15 @@ Kirigami.ScrollablePage {
                             icon.name: "arrow-up-symbolic"
                             visible: index == 0 ? false : true
                             onClicked: {
-                                ItemModel.setItemPosition(index, -1);
+                                itemModel.setItemPosition(index, -1);
                             }
                         }
 
                         Controls.Button {
                             icon.name: "arrow-down-symbolic"
-                            visible: index == (ItemModel.rowCount() - 1) ? false : true
+                            visible: index == (itemModel.rowCount() - 1) ? false : true
                             onClicked: {
-                                ItemModel.setItemPosition(index, 1);
+                                itemModel.setItemPosition(index, 1);
                             }
                         }
 

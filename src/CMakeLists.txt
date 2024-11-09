@@ -6,11 +6,11 @@ add_subdirectory(data)
 add_subdirectory(utils)
 
 set(katalogue_models_src
+    models/itemModelFactory.h
     models/uniqueValueModelFactory.h
     models/attributeModel.cpp
     models/documentModel.cpp
     models/eventModel.cpp
-    models/itemComponentModel.cpp
     models/itemModel.cpp
     models/noteModel.cpp
     models/taskModel.cpp

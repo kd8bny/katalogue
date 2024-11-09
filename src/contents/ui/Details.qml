@@ -120,10 +120,9 @@ Kirigami.ScrollablePage {
             onClicked: {
                 menuItemHighlighted = 5;
                 pageStack.push("qrc:Items.qml", {
-                    "entryComponent": entryItem,
-                    "isComponentView": true
+                    "entryItem": entryItem,
+                    "itemModelType": ItemModel.COMPONENTS
                 });
-                ItemComponentModel.filterParentItemId(entryItem.id);
             }
         }
 

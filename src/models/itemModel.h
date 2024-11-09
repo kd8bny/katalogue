@@ -26,43 +26,61 @@ public:
         rITEM_ID
     };
 
-    explicit ItemModel(QObject *parent = nullptr);
+    enum class ItemModelType
+    {
+        ITEMS,
+        COMPONENTS,
+        ARCHIVE
+    };
+    Q_ENUM(ItemModelType);
+
+    enum class SortByField
+    {
+        USER,
+        NAME
+    };
+    Q_ENUM(SortByField);
+
+    enum class SortOrder
+    {
+        ASC,
+        DESC
+    };
+    Q_ENUM(SortOrder);
+
+    explicit ItemModel(ItemModelType itemModelType, QString modelQueryBase, QObject *parent = nullptr);
     ~ItemModel() override = default;
 
     // Override the method that will return the data
     QVariant data(const QModelIndex &index, int role) const override;
-
     Q_INVOKABLE int getId(int row) const;
-    Q_INVOKABLE void setItemPosition(const int index, const int direction) const;
 
-    QString modelQuery;
+    ItemModelType getItemModelType() const { return itemModelType; }
 
 protected:
     QHash<int, QByteArray> roleNames() const override;
 
 private:
-    const QString modelQueryBase = QStringLiteral(
-                                       "SELECT id, %1, %2, %3, %4, %5, %6, %7 FROM %8 ")
-                                       .arg(DatabaseSchema::NAME, DatabaseSchema::MAKE, DatabaseSchema::MODEL, DatabaseSchema::YEAR,
-                                            DatabaseSchema::TYPE, DatabaseSchema::ARCHIVED, DatabaseSchema::USER_ORDER,
-                                            DatabaseSchema::TABLE_ITEMS);
-    const QString modelQueryParentItem = QStringLiteral("WHERE %1 IS NULL AND %2 IS 0 ")
-                                             .arg(DatabaseSchema::KEY_ITEM_ID, DatabaseSchema::ARCHIVED);
-    const QString modelQueryIncludeComponents = QStringLiteral("WHERE %2 IS 0 ").arg(DatabaseSchema::ARCHIVED);
-    const QString modelQueryArchive = QStringLiteral("WHERE %1 IS 1 ").arg(DatabaseSchema::ARCHIVED);
-    const QString modelQuerySortUser = QStringLiteral("ORDER BY %1 ASC NULLS LAST ").arg(DatabaseSchema::USER_ORDER);
+    QString modelQueryBase;
+    ItemModelType itemModelType;
+
+    bool includeComponent = false;
+    SortByField sortField = SortByField::USER;
+    QString sortOrder = DatabaseSchema::ORDER_ASC;
 
 Q_SIGNALS:
-    void filterItem();
-    void filterArchive();
-    void filterComponent();
-    void modelQueryChanged() const;
+    void setItemPosition(const int index, const int direction);
+    void setSortField(SortByField sortBy);
+    void setSortOrder(SortOrder order);
+    void toggleComponents();
+    void modelQueryChanged();
 
 public Q_SLOTS:
-    void setItemQuery();
-    void setArchiveQuery();
-    void setComponentQuery();
-    void refreshModel();
+    void onSetItemPosition(const int index, const int direction);
+    void onSetSortField(SortByField sortBy);
+    void onSetSortOrder(SortOrder order);
+    void onToggleComponents();
+    void onModelQueryChanged();
 };
 
 #endif

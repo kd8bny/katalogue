@@ -1,14 +1,20 @@
 #include "itemModel.h"
 
-ItemModel::ItemModel(QObject *parent) : QSqlQueryModel(parent)
+ItemModel::ItemModel(ItemModelType itemModelType, QString modelQueryBase, QObject *parent) : QSqlQueryModel(parent)
 {
-    QObject::connect(this, &ItemModel::filterItem, this, &ItemModel::setItemQuery);
-    QObject::connect(this, &ItemModel::filterArchive, this, &ItemModel::setArchiveQuery);
-    QObject::connect(this, &ItemModel::filterComponent, this, &ItemModel::setComponentQuery);
-    QObject::connect(this, &ItemModel::modelQueryChanged, this, &ItemModel::refreshModel);
+    QObject::connect(this, &ItemModel::setItemPosition, this, &ItemModel::onSetItemPosition);
+    QObject::connect(this, &ItemModel::setSortField, this, &ItemModel::onSetSortField);
+    QObject::connect(this, &ItemModel::setSortOrder, this, &ItemModel::onSetSortOrder);
+    QObject::connect(this, &ItemModel::toggleComponents, this, &ItemModel::onToggleComponents);
+    QObject::connect(this, &ItemModel::modelQueryChanged, this, &ItemModel::onModelQueryChanged);
 
-    Q_EMIT setItemQuery();
-    this->refreshModel();
+    this->itemModelType = itemModelType;
+    this->modelQueryBase = modelQueryBase;
+
+    if (itemModelType == ItemModelType::COMPONENTS)
+        includeComponent = true;
+
+    Q_EMIT modelQueryChanged();
 }
 
 QVariant ItemModel::data(const QModelIndex &index, int role) const
@@ -44,7 +50,7 @@ int ItemModel::getId(int row) const
     return this->data(this->index(row, 0), rID).toInt();
 }
 
-void ItemModel::setItemPosition(const int index, const int direction) const
+void ItemModel::onSetItemPosition(const int index, const int direction)
 {
     ItemDatabase db;
 
@@ -74,26 +80,48 @@ void ItemModel::setItemPosition(const int index, const int direction) const
     Q_EMIT modelQueryChanged();
 }
 
-void ItemModel::setItemQuery()
+void ItemModel::onSetSortField(SortByField field)
 {
-    modelQuery = this->modelQueryBase + this->modelQueryParentItem + this->modelQuerySortUser;
-    qDebug() << modelQuery;
+    this->sortField = field;
     Q_EMIT modelQueryChanged();
 }
 
-void ItemModel::setArchiveQuery()
+void ItemModel::onSetSortOrder(SortOrder order)
 {
-    modelQuery = this->modelQueryBase + this->modelQueryArchive + this->modelQuerySortUser;
+    switch (order)
+    {
+    case SortOrder::ASC:
+        this->sortOrder = DatabaseSchema::ORDER_ASC;
+        Q_EMIT modelQueryChanged();
+        break;
+    case SortOrder::DESC:
+        this->sortOrder = DatabaseSchema::ORDER_DESC;
+        Q_EMIT modelQueryChanged();
+        break;
+
+    default:
+        qDebug() << "Invalid sortOrder";
+        break;
+    }
+}
+
+void ItemModel::onToggleComponents()
+{
+    this->includeComponent = !this->includeComponent;
     Q_EMIT modelQueryChanged();
 }
 
-void ItemModel::setComponentQuery()
+void ItemModel::onModelQueryChanged()
 {
-    modelQuery = this->modelQueryBase + this->modelQueryIncludeComponents + this->modelQuerySortUser;
-    Q_EMIT modelQueryChanged();
-}
+    QString modelQueryBuilder = this->modelQueryBase;
 
-void ItemModel::refreshModel()
-{
-    this->setQuery(this->modelQuery);
+    if (!this->includeComponent)
+        modelQueryBuilder = modelQueryBuilder + QStringLiteral("AND %1 IS NULL ").arg(DatabaseSchema::KEY_ITEM_ID);
+
+    if (this->sortField == SortByField::USER)
+        modelQueryBuilder = modelQueryBuilder + QStringLiteral("ORDER BY %1 %2 NULLS LAST ").arg(DatabaseSchema::USER_ORDER, this->sortOrder);
+    else if (this->sortField == SortByField::NAME)
+        modelQueryBuilder = modelQueryBuilder + QStringLiteral("ORDER BY %1 %2 ").arg(DatabaseSchema::NAME, this->sortOrder);
+
+    this->setQuery(modelQueryBuilder);
 }

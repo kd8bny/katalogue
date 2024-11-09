@@ -49,6 +49,9 @@ namespace DatabaseSchema
      const QString KEY_NOTE_ID = QStringLiteral("fk_note_id");
      const QString KEY_TASK_ID = QStringLiteral("fk_task_id");
 
+     const QString ORDER_ASC = QStringLiteral("ASC");
+     const QString ORDER_DESC = QStringLiteral("DESC");
+
      const QString SCHEMA_ITEMS = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
                                                  "%2 DATE NOT NULL, "                          // CREATED
                                                  "%3 DATE NOT NULL, "                          // MODIFIED
