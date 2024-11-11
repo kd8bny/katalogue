@@ -1,6 +1,7 @@
 #include <QObject>
 
 #include "itemModel.h"
+#include "searchFilterProxyModel.h"
 
 #ifndef ITEM_MODEL_FACTORY_H
 #define ITEM_MODEL_FACTORY_H
@@ -13,13 +14,14 @@ public:
     ItemModelFactory() = default;
     ~ItemModelFactory() override = default;
 
-    Q_INVOKABLE ItemModel *createItemModel() const
+    Q_INVOKABLE SearchFilterProxyModel *createItemModel() const
     {
-        auto *itemModel = new ItemModel(
+        auto *proxyModel = new SearchFilterProxyModel();
+        proxyModel->setSourceModel(new ItemModel(
             ItemModel::ItemModelType::ITEMS,
-            this->itemsQuery + QStringLiteral("WHERE %1 IS 0 ").arg(DatabaseSchema::ARCHIVED));
+            this->itemsQuery + QStringLiteral("WHERE %1 IS 0 ").arg(DatabaseSchema::ARCHIVED)));
 
-        return itemModel;
+        return proxyModel;
     };
 
     Q_INVOKABLE ItemModel *createItemComponentModel(int itemId) const

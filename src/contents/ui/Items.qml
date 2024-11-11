@@ -14,7 +14,7 @@ Kirigami.ScrollablePage {
 
     property EntryItem entryItem
     property var itemModelType: ItemModel.ITEMS
-    property ItemModel itemModel
+    property SearchFilterProxyModel itemModel
 
     function getEntryByIndex(index) {
         var itemId = itemModel.getId(index);
@@ -188,6 +188,27 @@ Kirigami.ScrollablePage {
 
                 }
 
+            }
+
+        }
+
+    }
+
+    header: Controls.ToolBar {
+        id: toolbar
+
+        RowLayout {
+            anchors.fill: parent
+
+            Kirigami.SearchField {
+                id: searchField
+
+                Layout.alignment: Qt.AlignHCenter
+                Layout.fillWidth: true
+                Layout.maximumWidth: Kirigami.Units.gridUnit * 30
+                onTextChanged: {
+                    itemModel.setFilterString(text);
+                }
             }
 
         }

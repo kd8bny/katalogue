@@ -15,6 +15,7 @@ set(katalogue_models_src
     models/noteModel.cpp
     models/taskModel.cpp
     models/uniqueValueModel.cpp
+    models/searchFilterProxyModel.cpp
 )
 
 add_library(katalogue_models STATIC

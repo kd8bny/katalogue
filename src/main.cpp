@@ -99,6 +99,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     qmlRegisterUncreatableType<ItemModel>("com.kd8bny.katalogue", 1, 0, "ItemModel",
                                           QStringLiteral("Access to ItemModel Enum Classes"));
+    qmlRegisterUncreatableType<SearchFilterProxyModel>("com.kd8bny.katalogue", 1, 0, "SearchFilterProxyModel",
+                                                       QStringLiteral("Access to ItemModel Enum Classes"));
 
     // Database and Data Interfaces
     if (DatabaseInit db; !db.connectKatalogueDb(qPath))
