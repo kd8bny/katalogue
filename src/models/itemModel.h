@@ -28,6 +28,15 @@ public:
         rITEM_ID
     };
 
+    enum class SortRole
+    {
+        DEFAULT, // User Order
+        NAME,
+        TYPE,
+        YEAR
+    };
+    Q_ENUM(SortRole);
+
     enum class ItemModelType
     {
         ITEMS,
@@ -55,19 +64,19 @@ private:
     FilterProxyModel *filterProxyModel;
 
     bool includeComponent = false;
-    Roles sortField = ItemModel::rUSER_ORDER;
+    SortRole sortRole = SortRole::DEFAULT;
     QString sortOrder = DatabaseSchema::ORDER_ASC;
 
 Q_SIGNALS:
     void setItemPosition(const int index, const int direction);
-    void setSortRole(Roles sortBy);
+    void setSortRole(SortRole sortBy);
     void setSortOrder(Qt::SortOrder sortOrder);
     void toggleComponents();
     void modelQueryChanged();
 
 public Q_SLOTS:
     void onSetItemPosition(const int index, const int direction);
-    void onSetSortRole(Roles sortBy);
+    void onSetSortRole(SortRole sortBy);
     void onSetSortOrder(Qt::SortOrder sortOrder);
     void onToggleComponents();
     void onModelQueryChanged();

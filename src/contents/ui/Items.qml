@@ -47,10 +47,11 @@ Kirigami.ScrollablePage {
             tooltip: i18n("")
 
             Kirigami.Action {
-                text: i18n("User")
+                text: i18n("Default")
                 icon.name: "extension-symbolic"
                 onTriggered: {
-                    itemModel.setSortRole(ItemModel.rUSER_ORDER);
+                    itemModel.setSortRole(ItemModel.SortRole.DEFAULT);
+                    itemModel.setSortOrder(0);
                 }
             }
 
@@ -58,7 +59,7 @@ Kirigami.ScrollablePage {
                 text: i18n("Name")
                 icon.name: "extension-symbolic"
                 onTriggered: {
-                    itemModel.setSortRole(ItemModel.rNAME);
+                    itemModel.setSortRole(ItemModel.SortRole.NAME);
                 }
             }
 
@@ -89,7 +90,7 @@ Kirigami.ScrollablePage {
             icon.name: "extension-symbolic"
             tooltip: i18n("")
             checkable: true
-            visible: itemModelType != ItemModel.COMPONENTS
+            visible: itemModelType != ItemModel.ItemModelType.COMPONENTS
             onToggled: {
                 itemModel.toggleComponents();
             }

@@ -84,9 +84,10 @@ void ItemModel::onSetItemPosition(const int index, const int direction)
     Q_EMIT modelQueryChanged();
 }
 
-void ItemModel::onSetSortRole(Roles role)
+void ItemModel::onSetSortRole(SortRole role)
 {
-    this->sortField = role;
+    qDebug() << role;
+    this->sortRole = role;
     Q_EMIT modelQueryChanged();
 }
 
@@ -122,11 +123,13 @@ void ItemModel::onModelQueryChanged()
     if (!this->includeComponent)
         modelQueryBuilder = modelQueryBuilder + QStringLiteral("AND %1 IS NULL ").arg(DatabaseSchema::KEY_ITEM_ID);
 
-    if (this->sortField == ItemModel::rUSER_ORDER)
+    if (this->sortRole == SortRole::DEFAULT)
         modelQueryBuilder = modelQueryBuilder + QStringLiteral("ORDER BY %1 %2 NULLS LAST ").arg(DatabaseSchema::USER_ORDER, this->sortOrder);
-    else if (this->sortField == ItemModel::rNAME)
+    else if (this->sortRole == SortRole::NAME)
         modelQueryBuilder = modelQueryBuilder + QStringLiteral("ORDER BY %1 %2 ").arg(DatabaseSchema::NAME, this->sortOrder);
 
+    qDebug() << this->sortRole << ItemModel::rUSER_ORDER;
+    qDebug() << modelQueryBuilder;
     this->setQuery(modelQueryBuilder);
 
     // Set the filter proxy
