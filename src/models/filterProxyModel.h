@@ -1,15 +1,14 @@
 #include <QSortFilterProxyModel>
 
-#ifndef SEARCH_FILTER_PROXY_H
-#define SEARCH_FILTER_PROXY_H
+#ifndef FILTER_PROXY_H
+#define FILTER_PROXY_H
 
-class SearchFilterProxyModel : public QSortFilterProxyModel
+class FilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 
 public:
-    explicit SearchFilterProxyModel(QObject *parent = nullptr);
-    Q_INVOKABLE int getId(int row) const;
+    explicit FilterProxyModel(QObject *parent = nullptr);
 
 protected:
     // Override filterAcceptsRow to implement custom filtering

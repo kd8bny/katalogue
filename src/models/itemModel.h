@@ -5,6 +5,8 @@
 #include "itemDatabase.h"
 #include "item.h"
 
+#include "filterProxyModel.h"
+
 #ifndef ITEM_MODEL_H
 #define ITEM_MODEL_H
 
@@ -34,20 +36,6 @@ public:
     };
     Q_ENUM(ItemModelType);
 
-    enum class SortByField
-    {
-        USER,
-        NAME
-    };
-    Q_ENUM(SortByField);
-
-    enum class SortOrder
-    {
-        ASC,
-        DESC
-    };
-    Q_ENUM(SortOrder);
-
     explicit ItemModel(ItemModelType itemModelType, QString modelQueryBase, QObject *parent = nullptr);
     ~ItemModel() override = default;
 
@@ -56,6 +44,7 @@ public:
     Q_INVOKABLE int getId(int row) const;
 
     ItemModelType getItemModelType() const { return itemModelType; }
+    Q_INVOKABLE FilterProxyModel *getFilterProxyModel() { return filterProxyModel; }
 
 protected:
     QHash<int, QByteArray> roleNames() const override;
@@ -63,22 +52,23 @@ protected:
 private:
     QString modelQueryBase;
     ItemModelType itemModelType;
+    FilterProxyModel *filterProxyModel;
 
     bool includeComponent = false;
-    SortByField sortField = SortByField::USER;
+    Roles sortField = ItemModel::rUSER_ORDER;
     QString sortOrder = DatabaseSchema::ORDER_ASC;
 
 Q_SIGNALS:
     void setItemPosition(const int index, const int direction);
-    void setSortField(SortByField sortBy);
-    void setSortOrder(SortOrder order);
+    void setSortRole(Roles sortBy);
+    void setSortOrder(Qt::SortOrder sortOrder);
     void toggleComponents();
     void modelQueryChanged();
 
 public Q_SLOTS:
     void onSetItemPosition(const int index, const int direction);
-    void onSetSortField(SortByField sortBy);
-    void onSetSortOrder(SortOrder order);
+    void onSetSortRole(Roles sortBy);
+    void onSetSortOrder(Qt::SortOrder sortOrder);
     void onToggleComponents();
     void onModelQueryChanged();
 };

@@ -1,10 +1,22 @@
-#include <QString>
+#include <QObject>
 
 #ifndef DATABASE_SCHEMA_H
 #define DATABASE_SCHEMA_H
 
 namespace DatabaseSchema
 {
+     // Q_NAMESPACE
+     // Q_ENUM_NS(SortOrder);
+
+     // enum class SortOrder
+     // {
+     //      ASC,
+     //      DESC
+     // };
+
+     const QString ORDER_ASC = QStringLiteral("ASC");
+     const QString ORDER_DESC = QStringLiteral("DESC");
+
      const int DATABASE_VERSION = 1;
      const QString DATABASE_TYPE = QStringLiteral("QSQLITE");
      const QString DATABASE_NAME = QStringLiteral("katalogue.db");
@@ -48,9 +60,6 @@ namespace DatabaseSchema
      const QString KEY_EVENT_ID = QStringLiteral("fk_event_id");
      const QString KEY_NOTE_ID = QStringLiteral("fk_note_id");
      const QString KEY_TASK_ID = QStringLiteral("fk_task_id");
-
-     const QString ORDER_ASC = QStringLiteral("ASC");
-     const QString ORDER_DESC = QStringLiteral("DESC");
 
      const QString SCHEMA_ITEMS = QStringLiteral("CREATE TABLE %1 (id INTEGER PRIMARY KEY AUTOINCREMENT, "
                                                  "%2 DATE NOT NULL, "                          // CREATED

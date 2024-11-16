@@ -97,11 +97,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterType<Task>("com.kd8bny.katalogue.entries", 1, 0, "EntryTask");
     qmlRegisterType<Document>("com.kd8bny.katalogue.entries", 1, 0, "EntryDocument");
 
-    qmlRegisterUncreatableType<ItemModel>("com.kd8bny.katalogue", 1, 0, "ItemModel",
-                                          QStringLiteral("Access to ItemModel Enum Classes"));
-    qmlRegisterUncreatableType<SearchFilterProxyModel>("com.kd8bny.katalogue", 1, 0, "SearchFilterProxyModel",
-                                                       QStringLiteral("Access to ItemModel Enum Classes"));
-
     // Database and Data Interfaces
     if (DatabaseInit db; !db.connectKatalogueDb(qPath))
     {
@@ -125,6 +120,12 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     DocumentDatabase documentDatabase;
     qmlRegisterSingletonInstance<DocumentDatabase>("com.kd8bny.katalogue", 1, 0, "DocumentDatabase", &documentDatabase);
 
+    ItemModelFactory itemModelFactory;
+    qmlRegisterSingletonInstance<ItemModelFactory>(
+        "com.kd8bny.katalogue", 1, 0, "ItemModelFactory", &itemModelFactory);
+    qmlRegisterUncreatableType<ItemModel>("com.kd8bny.katalogue", 1, 0, "ItemModel",
+                                          QStringLiteral("Cannot Create ItemModel Type"));
+
     // Models
     AttributeModel attributeModel;
     qmlRegisterSingletonInstance<AttributeModel>("com.kd8bny.katalogue", 1, 0, "AttributeModel", &attributeModel);
@@ -140,9 +141,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qmlRegisterSingletonInstance<TaskModel>("com.kd8bny.katalogue", 1, 0, "TaskModel", &taskModel);
 
     // Unique Value Models
-    ItemModelFactory itemModelFactory;
-    qmlRegisterSingletonInstance<ItemModelFactory>(
-        "com.kd8bny.katalogue", 1, 0, "ItemModelFactory", &itemModelFactory);
     UniqueValueModelFactory uniqueValueModelFactory;
     qmlRegisterSingletonInstance<UniqueValueModelFactory>(
         "com.kd8bny.katalogue", 1, 0, "UniqueValueModelFactory", &uniqueValueModelFactory);

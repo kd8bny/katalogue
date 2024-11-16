@@ -14,7 +14,7 @@ Kirigami.ScrollablePage {
 
     property EntryItem entryItem
     property var itemModelType: ItemModel.ITEMS
-    property SearchFilterProxyModel itemModel
+    property ItemModel itemModel
 
     function getEntryByIndex(index) {
         var itemId = itemModel.getId(index);
@@ -50,7 +50,7 @@ Kirigami.ScrollablePage {
                 text: i18n("User")
                 icon.name: "extension-symbolic"
                 onTriggered: {
-                    itemModel.setSortField(ItemModel.SortField.USER);
+                    itemModel.setSortRole(ItemModel.rUSER_ORDER);
                 }
             }
 
@@ -58,7 +58,7 @@ Kirigami.ScrollablePage {
                 text: i18n("Name")
                 icon.name: "extension-symbolic"
                 onTriggered: {
-                    itemModel.setSortField(ItemModel.SortField.NAME);
+                    itemModel.setSortRole(ItemModel.rNAME);
                 }
             }
 
@@ -70,15 +70,16 @@ Kirigami.ScrollablePage {
                 text: i18n("Sort ASC")
                 icon.name: "extension-symbolic"
                 onTriggered: {
-                    itemModel.setSortOrder(ItemModel.SortOrder.ASC);
+                    itemModel.setSortOrder(0);
                 }
             }
 
             Kirigami.Action {
                 text: i18n("Sort DESC")
                 icon.name: "extension-symbolic"
+                checked: true
                 onTriggered: {
-                    itemModel.setSortOrder(ItemModel.SortOrder.DESC);
+                    itemModel.setSortOrder(1);
                 }
             }
 
@@ -98,7 +99,7 @@ Kirigami.ScrollablePage {
     Kirigami.CardsListView {
         id: itemsLayout
 
-        model: itemModel
+        model: itemModel.getFilterProxyModel()
         delegate: itemsDelegate
 
         Kirigami.PlaceholderMessage {
@@ -207,7 +208,7 @@ Kirigami.ScrollablePage {
                 Layout.fillWidth: true
                 Layout.maximumWidth: Kirigami.Units.gridUnit * 30
                 onTextChanged: {
-                    itemModel.setFilterString(text);
+                    itemModel.getFilterProxyModel().setFilterString(text);
                 }
             }
 
