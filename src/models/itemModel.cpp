@@ -86,7 +86,6 @@ void ItemModel::onSetItemPosition(const int index, const int direction)
 
 void ItemModel::onSetSortRole(SortRole role)
 {
-    qDebug() << role;
     this->sortRole = role;
     Q_EMIT modelQueryChanged();
 }
