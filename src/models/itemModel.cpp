@@ -123,13 +123,26 @@ void ItemModel::onModelQueryChanged()
     if (!this->includeComponent)
         modelQueryBuilder = modelQueryBuilder + QStringLiteral("AND %1 IS NULL ").arg(DatabaseSchema::KEY_ITEM_ID);
 
-    if (this->sortRole == SortRole::DEFAULT)
-        modelQueryBuilder = modelQueryBuilder + QStringLiteral("ORDER BY %1 %2 NULLS LAST ").arg(DatabaseSchema::USER_ORDER, this->sortOrder);
-    else if (this->sortRole == SortRole::NAME)
+    switch (this->sortRole)
+    {
+    case SortRole::NAME:
         modelQueryBuilder = modelQueryBuilder + QStringLiteral("ORDER BY %1 %2 ").arg(DatabaseSchema::NAME, this->sortOrder);
+        break;
 
-    qDebug() << this->sortRole << ItemModel::rUSER_ORDER;
-    qDebug() << modelQueryBuilder;
+    case SortRole::TYPE:
+        modelQueryBuilder = modelQueryBuilder + QStringLiteral("ORDER BY %1 %2 ").arg(DatabaseSchema::TYPE, this->sortOrder);
+        break;
+
+    case SortRole::YEAR:
+        modelQueryBuilder = modelQueryBuilder + QStringLiteral("ORDER BY %1 %2 ").arg(DatabaseSchema::YEAR, this->sortOrder);
+        break;
+
+    default:
+        this->sortOrder = DatabaseSchema::ORDER_ASC;
+        modelQueryBuilder = modelQueryBuilder + QStringLiteral("ORDER BY %1 %2 NULLS LAST ").arg(DatabaseSchema::USER_ORDER, this->sortOrder);
+        break;
+    }
+
     this->setQuery(modelQueryBuilder);
 
     // Set the filter proxy

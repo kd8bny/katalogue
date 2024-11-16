@@ -51,7 +51,6 @@ Kirigami.ScrollablePage {
                 icon.name: "extension-symbolic"
                 onTriggered: {
                     itemModel.setSortRole(ItemModel.SortRole.DEFAULT);
-                    itemModel.setSortOrder(0);
                 }
             }
 
@@ -60,6 +59,22 @@ Kirigami.ScrollablePage {
                 icon.name: "extension-symbolic"
                 onTriggered: {
                     itemModel.setSortRole(ItemModel.SortRole.NAME);
+                }
+            }
+
+            Kirigami.Action {
+                text: i18n("Type")
+                icon.name: "extension-symbolic"
+                onTriggered: {
+                    itemModel.setSortRole(ItemModel.SortRole.TYPE);
+                }
+            }
+
+            Kirigami.Action {
+                text: i18n("Year")
+                icon.name: "extension-symbolic"
+                onTriggered: {
+                    itemModel.setSortRole(ItemModel.SortRole.YEAR);
                 }
             }
 
