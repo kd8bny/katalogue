@@ -2,10 +2,9 @@
 #include <QSqlQueryModel>
 
 #include "databaseSchema.h"
+#include "filterProxyModel.h"
 #include "itemDatabase.h"
 #include "item.h"
-
-#include "filterProxyModel.h"
 
 #ifndef ITEM_MODEL_H
 #define ITEM_MODEL_H

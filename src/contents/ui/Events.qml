@@ -9,9 +9,12 @@ import com.kd8bny.katalogue.entries
 import org.kde.kirigami as Kirigami
 
 Kirigami.ScrollablePage {
+    // eventModel = EventModel;
+
     id: eventsPage
 
     required property EntryItem entryItem
+    property EventModel eventModel
 
     function getEntryByIndex(index) {
         return EventDatabase.getEntryById(EventModel.getId(index));
@@ -30,7 +33,10 @@ Kirigami.ScrollablePage {
 
     Layout.fillWidth: true
     title: i18n(entryItem.name + " Events")
-    Component.onCompleted: EventModel.setItemIdQuery(entryItem.id)
+    Component.onCompleted: {
+        eventModel = EventModel;
+        eventModel.setItemId(entryItem.id);
+    }
     actions: [
         Kirigami.Action {
             text: i18n("Add")
@@ -41,13 +47,64 @@ Kirigami.ScrollablePage {
                     "entryItem": entryItem
                 });
             }
+        },
+        Kirigami.Action {
+            text: i18n("Sort By")
+            icon.name: "extension-symbolic"
+            tooltip: i18n("")
+
+            Kirigami.Action {
+                text: i18n("Default")
+                icon.name: "extension-symbolic"
+                onTriggered: {
+                    eventModel.setSortRole(EventModel.SortRole.DEFAULT);
+                }
+            }
+
+            Kirigami.Action {
+                text: i18n("Event")
+                icon.name: "extension-symbolic"
+                onTriggered: {
+                    eventModel.setSortRole(EventModel.SortRole.EVENT);
+                }
+            }
+
+            Kirigami.Action {
+                text: i18n("Category")
+                icon.name: "extension-symbolic"
+                onTriggered: {
+                    eventModel.setSortRole(EventModel.SortRole.CATEGORY);
+                }
+            }
+
+            Kirigami.Action {
+                separator: true
+            }
+
+            Kirigami.Action {
+                text: i18n("Sort ASC")
+                icon.name: "extension-symbolic"
+                onTriggered: {
+                    eventModel.setSortOrder(0);
+                }
+            }
+
+            Kirigami.Action {
+                text: i18n("Sort DESC")
+                icon.name: "extension-symbolic"
+                checked: true
+                onTriggered: {
+                    eventModel.setSortOrder(1);
+                }
+            }
+
         }
     ]
 
     ListView {
         id: layout
 
-        model: EventModel
+        model: eventModel.getFilterProxyModel()
         focus: true
 
         Kirigami.PlaceholderMessage {
@@ -93,6 +150,27 @@ Kirigami.ScrollablePage {
                     }
                 }
 
+            }
+
+        }
+
+    }
+
+    header: Controls.ToolBar {
+        id: toolbar
+
+        RowLayout {
+            anchors.fill: parent
+
+            Kirigami.SearchField {
+                id: searchField
+
+                Layout.alignment: Qt.AlignHCenter
+                Layout.fillWidth: true
+                Layout.maximumWidth: Kirigami.Units.gridUnit * 30
+                onTextChanged: {
+                    eventModel.getFilterProxyModel().setFilterString(text);
+                }
             }
 
         }
