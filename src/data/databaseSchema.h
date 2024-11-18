@@ -1,19 +1,10 @@
-#include <QObject>
+#include <QString>
 
 #ifndef DATABASE_SCHEMA_H
 #define DATABASE_SCHEMA_H
 
 namespace DatabaseSchema
 {
-     // Q_NAMESPACE
-     // Q_ENUM_NS(SortOrder);
-
-     // enum class SortOrder
-     // {
-     //      ASC,
-     //      DESC
-     // };
-
      const QString ORDER_ASC = QStringLiteral("ASC");
      const QString ORDER_DESC = QStringLiteral("DESC");
 
