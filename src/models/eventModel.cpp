@@ -7,7 +7,6 @@ EventModel::EventModel(QObject *parent) : QSqlQueryModel(parent)
     QObject::connect(this, &EventModel::setSortOrder, this, &EventModel::onSetSortOrder);
     QObject::connect(this, &EventModel::modelQueryChanged, this, &EventModel::onModelQueryChanged);
 
-    this->itemId = itemId;
     // QSortFilterProxy requires a reimplementation to sort. I figure let the db do the work
     // Here we hold a reference to a proxy model we can return to the view for filtering
     this->filterProxyModel = new FilterProxyModel;
@@ -97,12 +96,13 @@ void EventModel::onModelQueryChanged()
 
     default:
         this->sortOrder = DatabaseSchema::ORDER_DESC;
-        modelQueryBuilder = modelQueryBuilder + QStringLiteral("ORDER BY %1 %2 NULLS LAST ").arg(DatabaseSchema::DATE, this->sortOrder);
+        modelQueryBuilder = modelQueryBuilder + QStringLiteral("ORDER BY %1 %2 ").arg(DatabaseSchema::DATE, this->sortOrder);
         break;
     }
 
     this->setQuery(modelQueryBuilder);
     qDebug() << modelQueryBuilder;
+
     // Set the filter proxy
     this->filterProxyModel->setSourceModel(this);
 }

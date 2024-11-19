@@ -14,6 +14,7 @@ Kirigami.ScrollablePage {
 
     property EntryItem entryItem
     property EntryDocument entryDocument
+    property DocumentModel documentModel
 
     function getEntryByIndex(index) {
         return DocumentDatabase.getEntryById(DocumentModel.getId(index));
@@ -22,8 +23,9 @@ Kirigami.ScrollablePage {
     Layout.fillWidth: true
     title: (entryItem) ? i18n(entryItem.name + " Documents") : i18n("All Documents")
     Component.onCompleted: {
+        documentModel = DocumentModel;
         if (entryItem)
-            DocumentModel.setItemIdQuery(entryItem.id);
+            documentModel.setItemId(entryItem.id);
 
     }
     actions: [
@@ -36,6 +38,49 @@ Kirigami.ScrollablePage {
                     "entryItem": entryItem
                 });
             }
+        },
+        Kirigami.Action {
+            text: i18n("Sort By")
+            icon.name: "extension-symbolic"
+            tooltip: i18n("")
+
+            Kirigami.Action {
+                text: i18n("Default")
+                icon.name: "extension-symbolic"
+                onTriggered: {
+                    documentModel.setSortRole(DocumentModel.SortRole.DEFAULT);
+                }
+            }
+
+            Kirigami.Action {
+                text: i18n("Filename")
+                icon.name: "extension-symbolic"
+                onTriggered: {
+                    documentModel.setSortRole(DocumentModel.SortRole.FILENAME);
+                }
+            }
+
+            Kirigami.Action {
+                separator: true
+            }
+
+            Kirigami.Action {
+                text: i18n("Sort ASC")
+                icon.name: "extension-symbolic"
+                onTriggered: {
+                    documentModel.setSortOrder(0);
+                }
+            }
+
+            Kirigami.Action {
+                text: i18n("Sort DESC")
+                icon.name: "extension-symbolic"
+                checked: true
+                onTriggered: {
+                    documentModel.setSortOrder(1);
+                }
+            }
+
         }
     ]
 
@@ -54,7 +99,7 @@ Kirigami.ScrollablePage {
     ListView {
         id: layout
 
-        model: DocumentModel
+        model: documentModel.getFilterProxyModel()
         focus: true
 
         Kirigami.PlaceholderMessage {
@@ -117,6 +162,27 @@ Kirigami.ScrollablePage {
                     }
                 }
 
+            }
+
+        }
+
+    }
+
+    header: Controls.ToolBar {
+        id: toolbar
+
+        RowLayout {
+            anchors.fill: parent
+
+            Kirigami.SearchField {
+                id: searchField
+
+                Layout.alignment: Qt.AlignHCenter
+                Layout.fillWidth: true
+                Layout.maximumWidth: Kirigami.Units.gridUnit * 30
+                onTextChanged: {
+                    documentModel.getFilterProxyModel().setFilterString(text);
+                }
             }
 
         }

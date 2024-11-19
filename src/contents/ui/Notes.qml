@@ -12,6 +12,7 @@ Kirigami.ScrollablePage {
     id: notesPage
 
     property EntryItem entryItem
+    property NoteModel noteModel
 
     function getEntryByIndex(index) {
         return NoteDatabase.getEntryById(NoteModel.getId(index));
@@ -19,8 +20,9 @@ Kirigami.ScrollablePage {
 
     title: (entryItem) ? i18n(entryItem.name + " Notes") : i18n("All Notes")
     Component.onCompleted: {
+        noteModel = NoteModel;
         if (entryItem)
-            NoteModel.setItemIdQuery(entryItem.id);
+            noteModel.setItemId(entryItem.id);
 
     }
     actions: [
@@ -33,13 +35,56 @@ Kirigami.ScrollablePage {
                     "entryItem": entryItem
                 });
             }
+        },
+        Kirigami.Action {
+            text: i18n("Sort By")
+            icon.name: "extension-symbolic"
+            tooltip: i18n("")
+
+            Kirigami.Action {
+                text: i18n("Default")
+                icon.name: "extension-symbolic"
+                onTriggered: {
+                    noteModel.setSortRole(NoteModel.SortRole.DEFAULT);
+                }
+            }
+
+            Kirigami.Action {
+                text: i18n("Note Content")
+                icon.name: "extension-symbolic"
+                onTriggered: {
+                    noteModel.setSortRole(NoteModel.SortRole.NOTE_CONTENT);
+                }
+            }
+
+            Kirigami.Action {
+                separator: true
+            }
+
+            Kirigami.Action {
+                text: i18n("Sort ASC")
+                icon.name: "extension-symbolic"
+                onTriggered: {
+                    noteModel.setSortOrder(0);
+                }
+            }
+
+            Kirigami.Action {
+                text: i18n("Sort DESC")
+                icon.name: "extension-symbolic"
+                checked: true
+                onTriggered: {
+                    noteModel.setSortOrder(1);
+                }
+            }
+
         }
     ]
 
     Kirigami.CardsListView {
         id: layout
 
-        model: NoteModel
+        model: noteModel.getFilterProxyModel()
         delegate: notesDelegate
         headerPositioning: ListView.OverlayHeader
 
@@ -100,6 +145,27 @@ Kirigami.ScrollablePage {
 
                 }
 
+            }
+
+        }
+
+    }
+
+    header: Controls.ToolBar {
+        id: toolbar
+
+        RowLayout {
+            anchors.fill: parent
+
+            Kirigami.SearchField {
+                id: searchField
+
+                Layout.alignment: Qt.AlignHCenter
+                Layout.fillWidth: true
+                Layout.maximumWidth: Kirigami.Units.gridUnit * 30
+                onTextChanged: {
+                    noteModel.getFilterProxyModel().setFilterString(text);
+                }
             }
 
         }

@@ -69,7 +69,6 @@ Kirigami.ApplicationWindow {
                 tooltip: i18n("View All Notes")
                 icon.name: "backgroundtool-symbolic"
                 onTriggered: {
-                    NoteModel.resetItemIdQuery();
                     pageStack.clear();
                     pageStack.push('qrc:Notes.qml');
                 }
@@ -79,7 +78,6 @@ Kirigami.ApplicationWindow {
                 tooltip: i18n("View All Documents")
                 icon.name: "folder-documents-symbolic"
                 onTriggered: {
-                    DocumentModel.resetItemIdQuery();
                     pageStack.clear();
                     pageStack.push('qrc:Documents.qml');
                 }

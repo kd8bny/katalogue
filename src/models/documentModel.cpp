@@ -2,11 +2,16 @@
 
 DocumentModel::DocumentModel(QObject *parent) : QSqlQueryModel(parent)
 {
-    QObject::connect(this, &DocumentModel::filterItemId, this, &DocumentModel::setItemIdQuery);
-    QObject::connect(this, &DocumentModel::resetFilterItemId, this, &DocumentModel::resetItemIdQuery);
-    QObject::connect(this, SIGNAL(modelQueryChanged()), this, SLOT(refreshModel()));
+    QObject::connect(this, &DocumentModel::setItemId, this, &DocumentModel::onSetItemId);
+    QObject::connect(this, &DocumentModel::setSortRole, this, &DocumentModel::onSetSortRole);
+    QObject::connect(this, &DocumentModel::setSortOrder, this, &DocumentModel::onSetSortOrder);
+    QObject::connect(this, &DocumentModel::modelQueryChanged, this, &DocumentModel::onModelQueryChanged);
 
-    this->refreshModel();
+    // QSortFilterProxy requires a reimplementation to sort. I figure let the db do the work
+    // Here we hold a reference to a proxy model we can return to the view for filtering
+    this->filterProxyModel = new FilterProxyModel;
+
+    Q_EMIT modelQueryChanged();
 }
 
 // The method for obtaining data from the model
@@ -37,22 +42,60 @@ int DocumentModel::getId(int row) const
     return this->data(this->index(row, 0), rID).toInt();
 }
 
-void DocumentModel::setItemIdQuery(QString itemId)
+void DocumentModel::onSetItemId(QString id)
 {
-    this->modelQuery = this->modelQueryBase + this->modelQuerySetId.arg(DatabaseSchema::KEY_ITEM_ID, itemId);
+    this->itemId = id;
 
-    this->setQuery(modelQuery);
     Q_EMIT modelQueryChanged();
 }
 
-void DocumentModel::resetItemIdQuery()
+void DocumentModel::onSetSortRole(SortRole role)
 {
-    this->modelQuery = this->modelQueryBase;
+    this->sortRole = role;
     Q_EMIT modelQueryChanged();
 }
 
-void DocumentModel::refreshModel()
+void DocumentModel::onSetSortOrder(Qt::SortOrder order)
 {
-    this->setQuery(this->modelQuery);
-    qDebug() << this->modelQuery;
+    switch (order)
+    {
+    case Qt::SortOrder::AscendingOrder:
+        this->sortOrder = DatabaseSchema::ORDER_ASC;
+        Q_EMIT modelQueryChanged();
+        break;
+    case Qt::SortOrder::DescendingOrder:
+        this->sortOrder = DatabaseSchema::ORDER_DESC;
+        Q_EMIT modelQueryChanged();
+        break;
+
+    default:
+        qDebug() << "Invalid sortOrder";
+        break;
+    }
+}
+
+void DocumentModel::onModelQueryChanged()
+{
+
+    QString modelQueryBuilder = this->modelQueryBase;
+    if (!this->itemId.isEmpty())
+        modelQueryBuilder += QStringLiteral("WHERE %1=%2 ").arg(DatabaseSchema::KEY_ITEM_ID, this->itemId);
+
+    switch (this->sortRole)
+    {
+    case SortRole::FILENAME:
+        modelQueryBuilder = modelQueryBuilder + QStringLiteral("ORDER BY %1 %2 ").arg(DatabaseSchema::FILE_NAME, this->sortOrder);
+        break;
+
+    default:
+        this->sortOrder = DatabaseSchema::ORDER_DESC;
+        modelQueryBuilder = modelQueryBuilder + QStringLiteral("ORDER BY %1 %2 ").arg(DatabaseSchema::NAME, this->sortOrder);
+        break;
+    }
+
+    this->setQuery(modelQueryBuilder);
+    qDebug() << modelQueryBuilder;
+
+    // Set the filter proxy
+    this->filterProxyModel->setSourceModel(this);
 }
