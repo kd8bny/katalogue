@@ -54,6 +54,16 @@ int ItemModel::getId(int row) const
     return this->data(this->index(row, 0), rID).toInt();
 }
 
+FilterProxyModel *ItemModel::getFilterProxyModel()
+{
+    // QSortFilterProxy requires a reimplementation to sort. I figure let the db do the work
+    // Here we hold a reference to a proxy model we can return to the view for filtering
+    auto *filterProxyModel = new FilterProxyModel;
+
+    filterProxyModel->setSourceModel(this);
+    return filterProxyModel;
+}
+
 void ItemModel::onSetItemPosition(const int index, const int direction)
 {
     ItemDatabase db;

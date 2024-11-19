@@ -47,6 +47,16 @@ int EventModel::getId(int row) const
     return this->data(this->index(row, 0), rID).toInt();
 }
 
+FilterProxyModel *EventModel::getFilterProxyModel()
+{
+    // QSortFilterProxy requires a reimplementation to sort. I figure let the db do the work
+    // Here we hold a reference to a proxy model we can return to the view for filtering
+    auto *filterProxyModel = new FilterProxyModel;
+
+    filterProxyModel->setSourceModel(this);
+    return filterProxyModel;
+}
+
 void EventModel::onSetItemId(QString id)
 {
     this->itemId = id;

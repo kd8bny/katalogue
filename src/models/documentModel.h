@@ -32,7 +32,7 @@ public:
     // Override the method that will return the data
     QVariant data(const QModelIndex &index, int role) const override;
     Q_INVOKABLE int getId(int row) const;
-    Q_INVOKABLE FilterProxyModel *getFilterProxyModel() { return filterProxyModel; }
+    Q_INVOKABLE FilterProxyModel *getFilterProxyModel();
 
 protected:
     QHash<int, QByteArray> roleNames() const override;
@@ -45,7 +45,6 @@ private:
     QString modelQuery;
 
     QString itemId;
-    FilterProxyModel *filterProxyModel;
     SortRole sortRole = SortRole::DEFAULT;
     QString sortOrder = DatabaseSchema::ORDER_ASC;
 

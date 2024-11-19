@@ -7,10 +7,6 @@ NoteModel::NoteModel(QObject *parent) : QSqlQueryModel(parent)
     QObject::connect(this, &NoteModel::setSortOrder, this, &NoteModel::onSetSortOrder);
     QObject::connect(this, &NoteModel::modelQueryChanged, this, &NoteModel::onModelQueryChanged);
 
-    // QSortFilterProxy requires a reimplementation to sort. I figure let the db do the work
-    // Here we hold a reference to a proxy model we can return to the view for filtering
-    this->filterProxyModel = new FilterProxyModel;
-
     Q_EMIT modelQueryChanged();
 }
 
@@ -41,6 +37,16 @@ QHash<int, QByteArray> NoteModel::roleNames() const
 int NoteModel::getId(int row) const
 {
     return this->data(this->index(row, 0), rID).toInt();
+}
+
+FilterProxyModel *NoteModel::getFilterProxyModel()
+{
+    // QSortFilterProxy requires a reimplementation to sort. I figure let the db do the work
+    // Here we hold a reference to a proxy model we can return to the view for filtering
+    auto *filterProxyModel = new FilterProxyModel;
+
+    filterProxyModel->setSourceModel(this);
+    return filterProxyModel;
 }
 
 void NoteModel::onSetItemId(QString id)
@@ -96,7 +102,4 @@ void NoteModel::onModelQueryChanged()
 
     this->setQuery(modelQueryBuilder);
     qDebug() << modelQueryBuilder;
-
-    // Set the filter proxy
-    this->filterProxyModel->setSourceModel(this);
 }

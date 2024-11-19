@@ -52,7 +52,7 @@ public:
     Q_INVOKABLE int getId(int row) const;
 
     ItemModelType getItemModelType() const { return itemModelType; }
-    Q_INVOKABLE FilterProxyModel *getFilterProxyModel() { return filterProxyModel; }
+    Q_INVOKABLE FilterProxyModel *getFilterProxyModel();
 
 protected:
     QHash<int, QByteArray> roleNames() const override;
@@ -60,7 +60,6 @@ protected:
 private:
     QString modelQueryBase;
     ItemModelType itemModelType;
-    FilterProxyModel *filterProxyModel;
 
     bool includeComponent = false;
     SortRole sortRole = SortRole::DEFAULT;
