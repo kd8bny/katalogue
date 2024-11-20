@@ -11,10 +11,6 @@ ItemModel::ItemModel(ItemModelType itemModelType, QString modelQueryBase, QObjec
     this->itemModelType = itemModelType;
     this->modelQueryBase = modelQueryBase;
 
-    // QSortFilterProxy requires a reimplementation to sort. I figure let the db do the work
-    // Here we hold a reference to a proxy model we can return to the view for filtering
-    this->filterProxyModel = new FilterProxyModel;
-
     if (itemModelType == ItemModelType::COMPONENTS)
         includeComponent = true;
 
@@ -153,7 +149,4 @@ void ItemModel::onModelQueryChanged()
     }
 
     this->setQuery(modelQueryBuilder);
-
-    // Set the filter proxy
-    this->filterProxyModel->setSourceModel(this);
 }

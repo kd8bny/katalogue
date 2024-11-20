@@ -7,10 +7,6 @@ DocumentModel::DocumentModel(QObject *parent) : QSqlQueryModel(parent)
     QObject::connect(this, &DocumentModel::setSortOrder, this, &DocumentModel::onSetSortOrder);
     QObject::connect(this, &DocumentModel::modelQueryChanged, this, &DocumentModel::onModelQueryChanged);
 
-    // QSortFilterProxy requires a reimplementation to sort. I figure let the db do the work
-    // Here we hold a reference to a proxy model we can return to the view for filtering
-    this->filterProxyModel = new FilterProxyModel;
-
     Q_EMIT modelQueryChanged();
 }
 
@@ -105,7 +101,4 @@ void DocumentModel::onModelQueryChanged()
 
     this->setQuery(modelQueryBuilder);
     qDebug() << modelQueryBuilder;
-
-    // Set the filter proxy
-    this->filterProxyModel->setSourceModel(this);
 }
