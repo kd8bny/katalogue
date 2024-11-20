@@ -7,10 +7,6 @@ EventModel::EventModel(QObject *parent) : QSqlQueryModel(parent)
     QObject::connect(this, &EventModel::setSortOrder, this, &EventModel::onSetSortOrder);
     QObject::connect(this, &EventModel::modelQueryChanged, this, &EventModel::onModelQueryChanged);
 
-    // QSortFilterProxy requires a reimplementation to sort. I figure let the db do the work
-    // Here we hold a reference to a proxy model we can return to the view for filtering
-    this->filterProxyModel = new FilterProxyModel;
-
     Q_EMIT modelQueryChanged();
 }
 
@@ -112,7 +108,4 @@ void EventModel::onModelQueryChanged()
 
     this->setQuery(modelQueryBuilder);
     qDebug() << modelQueryBuilder;
-
-    // Set the filter proxy
-    this->filterProxyModel->setSourceModel(this);
 }
