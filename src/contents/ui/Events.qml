@@ -9,8 +9,6 @@ import com.kd8bny.katalogue.entries
 import org.kde.kirigami as Kirigami
 
 Kirigami.ScrollablePage {
-    // eventModel = EventModel;
-
     id: eventsPage
 
     required property EntryItem entryItem

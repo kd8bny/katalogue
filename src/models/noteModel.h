@@ -39,15 +39,16 @@ protected:
     QHash<int, QByteArray> roleNames() const override;
 
 private:
-    const QString modelQueryBase = QStringLiteral("SELECT id, %1, %2, %3 FROM %4 ")
-                                       .arg(DatabaseSchema::TITLE, DatabaseSchema::NOTE_CONTENT, DatabaseSchema::KEY_ITEM_ID,
-                                            DatabaseSchema::TABLE_NOTES);
-
-    QString modelQuery;
-
     QString itemId;
     SortRole sortRole = SortRole::DEFAULT;
     QString sortOrder = DatabaseSchema::ORDER_ASC;
+
+    QPointer<FilterProxyModel> filterProxyModel = nullptr;
+
+    QString modelQuery;
+    const QString modelQueryBase = QStringLiteral("SELECT id, %1, %2, %3 FROM %4 ")
+                                       .arg(DatabaseSchema::TITLE, DatabaseSchema::NOTE_CONTENT, DatabaseSchema::KEY_ITEM_ID,
+                                            DatabaseSchema::TABLE_NOTES);
 
 Q_SIGNALS:
     void setItemId(QString id);
