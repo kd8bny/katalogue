@@ -82,7 +82,7 @@ Kirigami.ScrollablePage {
         shortcut: "Return"
         onTriggered: {
             if (insertUpdate()) {
-                ItemModel.refreshModel();
+                itemsPage.itemModel.modelQueryChanged();
                 pageStack.pop();
             } else {
                 msgInsertUpdateError.visible = true;
@@ -98,7 +98,7 @@ Kirigami.ScrollablePage {
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: {
             if (ItemDatabase.deleteEntryById(entryItem.id)) {
-                ItemModel.refreshModel();
+                itemsPage.itemModel.modelQueryChanged();
                 pageStack.clear();
                 pageStack.push("qrc:Items.qml");
             } else {
@@ -118,7 +118,7 @@ Kirigami.ScrollablePage {
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: {
             if (ItemDatabase.setArchived(entryItem.id, !entryItem.archived)) {
-                ItemModel.refreshModel();
+                itemsPage.itemModel.modelQueryChanged();
                 pageStack.clear();
                 pageStack.push("qrc:Items.qml");
             } else {

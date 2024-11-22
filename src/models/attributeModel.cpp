@@ -41,7 +41,7 @@ void AttributeModel::setItemIdQuery(QString itemId)
     Q_EMIT modelQueryChanged();
 }
 
-void AttributeModel::refreshModel()
+void AttributeModel::onModelQueryChanged()
 {
     this->setQuery(this->modelQuery);
     qDebug() << this->modelQuery;

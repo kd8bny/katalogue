@@ -83,7 +83,7 @@ Kirigami.ScrollablePage {
         shortcut: "Return"
         onTriggered: {
             if (insertUpdate()) {
-                EventModel.refreshModel();
+                EventModel.onModelQueryChanged();
                 pageStack.pop();
             } else {
                 msgInsertUpdateError.visible = true;
@@ -99,7 +99,7 @@ Kirigami.ScrollablePage {
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: {
             if (EventDatabase.deleteEntryById(EventModel.getId(entryEvent.id))) {
-                EventModel.refreshModel();
+                EventModel.onModelQueryChanged();
                 pageStack.pop();
             } else {
                 msgDeleteError.visible = true;
