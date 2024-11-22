@@ -47,10 +47,14 @@ FilterProxyModel *EventModel::getFilterProxyModel()
 {
     // QSortFilterProxy requires a reimplementation to sort. I figure let the db do the work
     // Here we hold a reference to a proxy model we can return to the view for filtering
-    auto *filterProxyModel = new FilterProxyModel;
+    if (!this->filterProxyModel)
+    {
+        this->filterProxyModel = new FilterProxyModel;
+    }
 
-    filterProxyModel->setSourceModel(this);
-    return filterProxyModel;
+    this->filterProxyModel->setSourceModel(this);
+
+    return this->filterProxyModel;
 }
 
 void EventModel::onSetItemId(QString id)

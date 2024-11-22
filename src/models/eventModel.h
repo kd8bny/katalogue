@@ -43,16 +43,17 @@ protected:
     QHash<int, QByteArray> roleNames() const override;
 
 private:
+    QString itemId;
+    SortRole sortRole = SortRole::DEFAULT;
+    QString sortOrder = DatabaseSchema::ORDER_ASC;
+
+    QPointer<FilterProxyModel> filterProxyModel = nullptr;
+
+    QString modelQuery;
     const QString modelQueryBase = QStringLiteral("SELECT id, %1, %2, %3, %4, %5, %6 FROM %7 ")
                                        .arg(DatabaseSchema::DATE, DatabaseSchema::EVENT, DatabaseSchema::COST,
                                             DatabaseSchema::INCREMENT, DatabaseSchema::CATEGORY, DatabaseSchema::COMMENT,
                                             DatabaseSchema::TABLE_EVENTS);
-
-    QString modelQuery;
-
-    QString itemId;
-    SortRole sortRole = SortRole::DEFAULT;
-    QString sortOrder = DatabaseSchema::ORDER_ASC;
 
 Q_SIGNALS:
     void setItemId(QString id);

@@ -9,6 +9,7 @@ class FilterProxyModel : public QSortFilterProxyModel
 
 public:
     explicit FilterProxyModel(QObject *parent = nullptr);
+    ~FilterProxyModel() override = default;
 
 protected:
     // Override filterAcceptsRow to implement custom filtering
