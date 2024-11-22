@@ -48,7 +48,7 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void setItemIdQuery(QString itemId);
-    void refreshModel();
+    void onModelQueryChanged();
 };
 
 #endif

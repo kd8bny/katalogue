@@ -3,7 +3,7 @@
 UniqueValueModel::UniqueValueModel(QObject *parent) : QSqlQueryModel(parent)
 {
 
-    QObject::connect(this, &UniqueValueModel::modelQueryChanged, this, &UniqueValueModel::refreshModel);
+    QObject::connect(this, &UniqueValueModel::modelQueryChanged, this, &UniqueValueModel::onModelQueryChanged);
 }
 
 void UniqueValueModel::setModelQuery(QString modelQuery)
@@ -19,7 +19,7 @@ int UniqueValueModel::getId(int row)
     return this->record(row).value(1).toInt();
 }
 
-void UniqueValueModel::refreshModel()
+void UniqueValueModel::onModelQueryChanged()
 {
     this->setQuery(this->modelQuery);
 }
