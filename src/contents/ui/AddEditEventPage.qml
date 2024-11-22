@@ -98,7 +98,7 @@ Kirigami.ScrollablePage {
         subtitle: i18n("Are you sure you want to delete: ")
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: {
-            if (EventDatabase.deleteEntryById(EventModel.getId(entryEvent.id))) {
+            if (EventDatabase.deleteEntryById(entryEvent.id)) {
                 EventModel.onModelQueryChanged();
                 pageStack.pop();
             } else {
