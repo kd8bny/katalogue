@@ -24,7 +24,7 @@ Q_SIGNALS:
     void modelQueryChanged();
 
 public Q_SLOTS:
-    void refreshModel();
+    void onModelQueryChanged();
 };
 
 #endif
