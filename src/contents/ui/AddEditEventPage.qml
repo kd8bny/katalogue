@@ -84,6 +84,7 @@ Kirigami.ScrollablePage {
         onTriggered: {
             if (insertUpdate()) {
                 EventModel.onModelQueryChanged();
+                EventModel.onModelQueryChanged();
                 pageStack.pop();
             } else {
                 msgInsertUpdateError.visible = true;
