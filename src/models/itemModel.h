@@ -58,12 +58,14 @@ protected:
     QHash<int, QByteArray> roleNames() const override;
 
 private:
-    QString modelQueryBase;
-    ItemModelType itemModelType;
-
+    ItemModelType itemModelType = ItemModelType::ITEMS;
     bool includeComponent = false;
     SortRole sortRole = SortRole::DEFAULT;
     QString sortOrder = DatabaseSchema::ORDER_ASC;
+
+    QPointer<FilterProxyModel> filterProxyModel = nullptr;
+
+    QString modelQueryBase;
 
 Q_SIGNALS:
     void setItemPosition(const int index, const int direction);
