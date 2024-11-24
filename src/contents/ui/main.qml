@@ -70,6 +70,7 @@ Kirigami.ApplicationWindow {
                 icon.name: "backgroundtool-symbolic"
                 onTriggered: {
                     pageStack.clear();
+                    NoteModel.setItemId("");
                     pageStack.push('qrc:Notes.qml');
                 }
             },
@@ -79,6 +80,7 @@ Kirigami.ApplicationWindow {
                 icon.name: "folder-documents-symbolic"
                 onTriggered: {
                     pageStack.clear();
+                    DocumentModel.setItemId("");
                     pageStack.push('qrc:Documents.qml');
                 }
             },
