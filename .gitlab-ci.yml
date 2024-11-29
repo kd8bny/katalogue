@@ -3,6 +3,7 @@ variables:
 
 stages:
   - mirror
+  - publish
 
 mirror-job:
   stage: mirror
@@ -20,4 +21,25 @@ mirror-job:
     - git remote add github git@github.com:kd8bny/katalogue.git
     - git checkout -b $CI_COMMIT_BRANCH
     - git branch
-    - git push -u github $CI_COMMIT_BRANCH
+    # - git push -u github $CI_COMMIT_BRANCH
+
+aur-git-job:
+  stage: publish
+  before_script:
+    - apt update
+    - apt install -y git
+    - echo "Pulling ssh key"
+    - mkdir ~/.ssh
+    - cp /builds/katalogue/katalogue.tmp/SSH_KEY_AUR ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -t ecdsa,ed25519,rsa -H aur.archlinux.org >> ~/.ssh/known_hosts
+    - git config --global user.email "kd8bny@gmail.com"
+    - git config --global user.name "Daryl Bennett"
+  script:
+    - mkdir /katalogue_aur/; cd /katalogue_aur/
+    - git clone aur.archlinux.org/katalogue-git.git
+    - cd katalogue-git
+    - git remote add aur aur@aur.archlinux.org/katalogue-git.git
+    - git branch
+    - ls -l
+    # - git push -u aur master $CI_COMMIT_BRANCH
