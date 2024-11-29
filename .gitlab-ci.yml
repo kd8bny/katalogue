@@ -13,7 +13,7 @@ build-job:
   stage: build
   before_script:
     - apt update
-    - apt install -y curl
+    - apt install -y curl sudo
     - curl 'https://invent.kde.org/sdk/kde-builder/-/raw/master/scripts/initial_setup.sh' > initial_setup.sh
     - chmod +x initial_setup.sh
     - ./initial_setup.sh
