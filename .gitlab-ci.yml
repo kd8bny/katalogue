@@ -16,6 +16,7 @@ build-job:
     - mkdir build
     - pwd
     - ls
+    - cmake .
     - cmake --build build --config Debug --target all --
 
 # test-job:
