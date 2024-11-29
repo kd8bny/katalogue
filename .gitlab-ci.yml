@@ -43,8 +43,8 @@ aur-git-job:
     - export VERSION=r$(git rev-list --count HEAD).$CI_COMMIT_SHORT_SHA
     - echo $VERSION
     - git branch
-    - sed "4 c pkgver=$VERSION" PKGBUILD > PKGBUILD
-    - sed "4 c pkgver=$VERSION" .SRCINFO > .SRCINFO
+    - sed "4 c pkgver=$VERSION" PKGBUILD
+    - sed "4 c pkgver=$VERSION" .SRCINFO
     - head PKGBUILD
     - head .SRCINFO
     # - git push -u aur master $CI_COMMIT_BRANCH
