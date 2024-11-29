@@ -3,7 +3,7 @@ variables:
 
 stages:
   # - test
-  # - build
+  - build
   - mirror
   - publish
 
