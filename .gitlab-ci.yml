@@ -26,3 +26,4 @@ build-job:       # This job runs in the build stage, which runs first.
     - apt update
     - apt install -y git
     - git remote
+    - git remote show origin
