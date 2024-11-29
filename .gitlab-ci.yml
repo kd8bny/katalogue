@@ -37,9 +37,10 @@ aur-git-job:
     - git config --global user.name "Daryl Bennett"
   script:
     - mkdir /katalogue_aur/; cd /katalogue_aur/
-    - git clone aur.archlinux.org/katalogue-git.git
+    - git clone https://aur.archlinux.org/katalogue-git.git
     - cd katalogue-git
-    - git remote add aur aur@aur.archlinux.org/katalogue-git.git
+    # - git remote add aur aur@aur.archlinux.org/katalogue-git.git
     - git branch
     - ls -l
+    - git fetch origin
     # - git push -u aur master $CI_COMMIT_BRANCH
