@@ -11,7 +11,7 @@ build-job:
   stage: build
   before_script:
     - apt update
-    - apt install -y cmake clang
+    - apt install -y clang cmake extra-cmake-modules
   script:
     - mkdir build
     - pwd
