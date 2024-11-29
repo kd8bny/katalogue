@@ -16,6 +16,9 @@
 # This specific template is located at:
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
+variables:
+  GIT_STRATEGY: clone
+
 stages:          # List of stages for jobs, and their order of execution
   - build
 build-job:       # This job runs in the build stage, which runs first.
@@ -36,7 +39,7 @@ build-job:       # This job runs in the build stage, which runs first.
     - git remote
     # - git remote add github git@github.com:kd8bny/katalogue.git
     - git branch
-    - git checkout origin $CI_COMMIT_BRANCH
+    - git checkout -b $CI_COMMIT_BRANCH
     - git branch
     - git fetch github
     - git push -u github $CI_COMMIT_BRANCH
