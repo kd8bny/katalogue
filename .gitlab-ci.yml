@@ -27,6 +27,9 @@ build-job:       # This job runs in the build stage, which runs first.
     - mkdir ~/.ssh
     - cp /builds/katalogue/katalogue.tmp/SSH_KEY_GITHUB ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -t ecdsa,ed25519,rsa -H github.com >> ~/.ssh/known_hosts
+    - git config --global user.email "kd8bny@gmail.com"
+    - git config --global user.name "Daryl Bennett"
   script:
     - echo "Compiling the code..."
     - echo "Compile complete."
