@@ -3,7 +3,7 @@ variables:
 
 stages:
   # - test
-  - build
+  # - build
   - mirror
   - publish
 
@@ -13,10 +13,15 @@ build-job:
   stage: build
   before_script:
     - apt update
-    - apt install -y curl sudo
-    - curl 'https://invent.kde.org/sdk/kde-builder/-/raw/master/scripts/initial_setup.sh' > initial_setup.sh
-    - chmod +x initial_setup.sh
-    - ./initial_setup.sh
+    - apt install -y curl sudo git python3
+    # - curl 'https://invent.kde.org/sdk/kde-builder/-/raw/master/scripts/initial_setup.sh' > initial_setup.sh
+    # - chmod +x initial_setup.sh
+    # - ./initial_setup.sh
+    - mkdir -p ~/.local/share
+    - cd ~/.local/share
+    - git clone https://invent.kde.org/sdk/kde-builder.git
+    - mkdir ~/.local/bin
+    - ln -sf ~/.local/share/kde-builder/kde-builder ~/.local/bin
     - kde-builder --install-distro-packages
     # - apt install -y clang cmake extra-cmake-modules qt6-base-dev qml-qt6 qt6-declarative-dev qt6-svg-dev
   script:
