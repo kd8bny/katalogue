@@ -44,8 +44,8 @@ aur-git-job:
     - echo $VERSION
     - git branch
     - ls -la
-    - sed "4 c pkgver=$VERSION" PKGBUILD > PKGBUILD
-    - sed "3 c pkgver=$VERSION" .SRCINFO > .SRCINFO
+    - sed -i "4 c pkgver=$VERSION" PKGBUILD
+    - sed -i "3 c pkgver=$VERSION" .SRCINFO
     - ls -la
     - head PKGBUILD
     - head .SRCINFO
