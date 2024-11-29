@@ -31,5 +31,5 @@ build-job:       # This job runs in the build stage, which runs first.
     - echo "Compiling the code..."
     - echo "Compile complete."
     - git remote
-    - git remote add github git@github.com:kd8bny/katalogue.git
+    # - git remote add github git@github.com:kd8bny/katalogue.git
     - git pull github $CI_COMMIT_BRANCH
