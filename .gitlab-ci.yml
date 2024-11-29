@@ -13,7 +13,7 @@ build-job:
   stage: build
   before_script:
     - apt update
-    - apt install -y clang cmake extra-cmake-modules qt6-base-dev
+    - apt install -y clang cmake extra-cmake-modules qt6-base-dev qml
   script:
     - mkdir build
     - pwd
