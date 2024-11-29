@@ -2,11 +2,27 @@ variables:
   GIT_STRATEGY: clone
 
 stages:
+  # - test
+  - build
   - mirror
   - publish
 
+build-job:
+  stage: build
+  before_script:
+    - apt update
+    - apt install -y cmake
+  script:
+  - cmake --build build --config Debug --target all --
+
+# test-job:
+#   stage: test
+#   before_script:
+#     - apt update
+#     - apt install -y cmake
+
 mirror-job:
-  stage: mirror
+  stage: publish
   before_script:
     - apt update
     - apt install -y git
@@ -43,10 +59,10 @@ aur-git-job:
     - export VERSION=r$(git rev-list --count HEAD).$CI_COMMIT_SHORT_SHA
     - echo $VERSION
     - git branch
-    - ls -la
     - sed -i "4 c pkgver=$VERSION" PKGBUILD
     - sed -i "3 c pkgver=$VERSION" .SRCINFO
-    - ls -la
     - head PKGBUILD
     - head .SRCINFO
-    # - git push -u aur master $CI_COMMIT_BRANCH
+    # - git push origin master
+  needs:
+    - mirror-job
