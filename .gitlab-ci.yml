@@ -36,5 +36,7 @@ build-job:       # This job runs in the build stage, which runs first.
     - git remote
     # - git remote add github git@github.com:kd8bny/katalogue.git
     - git branch
+    - git checkout $CI_COMMIT_BRANCH
+    - git branch
     - git fetch github
     - git push -u github $CI_COMMIT_BRANCH
