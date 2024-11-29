@@ -13,7 +13,10 @@ build-job:
     - apt update
     - apt install -y cmake
   script:
-  - cmake --build build --config Debug --target all --
+    - mkdir build
+    - pwd
+    - ls
+    - cmake --build build --config Debug --target all --
 
 # test-job:
 #   stage: test
