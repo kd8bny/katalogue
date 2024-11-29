@@ -22,7 +22,7 @@ build-job:
     - git clone https://invent.kde.org/sdk/kde-builder.git
     - mkdir ~/.local/bin
     - ln -sf ~/.local/share/kde-builder/kde-builder ~/.local/bin
-    - ~/.local/share/kde-builder/kde-builder --install-distro-packages
+    - ~/.local/share/kde-builder/kde-builder --install-distro-packages -y
     # - apt install -y clang cmake extra-cmake-modules qt6-base-dev qml-qt6 qt6-declarative-dev qt6-svg-dev
   script:
     - mkdir build
