@@ -13,9 +13,10 @@ build-job:
   stage: build
   before_script:
     - apt update
-    - apt install curl
+    - apt install -y curl
     - curl 'https://invent.kde.org/sdk/kde-builder/-/raw/master/scripts/initial_setup.sh' > initial_setup.sh
-    - bash initial_setup.sh
+    - chmod +x initial_setup.sh
+    - ./initial_setup.sh
     - kde-builder --install-distro-packages
     # - apt install -y clang cmake extra-cmake-modules qt6-base-dev qml-qt6 qt6-declarative-dev qt6-svg-dev
   script:
