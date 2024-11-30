@@ -12,7 +12,7 @@ build-job:
     - kde
   stage: build
   image:
-    name: kd8bny/kde-builder
+    name: kd8bny/kde-builder:29nov24
     pull_policy: never
   # before_script:
     # - apt update
