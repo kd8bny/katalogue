@@ -43,7 +43,6 @@ aur-git-job:
     - mkdir /katalogue_aur/; cd /katalogue_aur/
     - git clone https://aur.archlinux.org/katalogue-git.git
     - cd katalogue-git
-    # - git remote add aur aur@aur.archlinux.org/katalogue-git.git
     - export VERSION=r$(git rev-list --count HEAD).$CI_COMMIT_SHORT_SHA
     - echo $VERSION
     - git branch
