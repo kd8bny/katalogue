@@ -8,8 +8,7 @@ stages:
 mirror-job:
   stage: publish
   rules:
-    - if: $CI_COMMIT_BRANCH != 'main'
-      when: never
+    - if: $CI_COMMIT_BRANCH == "main"
   before_script:
     - apt update
     - apt install -y git
@@ -29,8 +28,7 @@ mirror-job:
 aur-git-job:
   stage: publish
   rules:
-    - if: $CI_COMMIT_BRANCH != 'main'
-      when: never
+    - if: $CI_COMMIT_BRANCH == "main"
   before_script:
     - apt update
     - apt install -y git
