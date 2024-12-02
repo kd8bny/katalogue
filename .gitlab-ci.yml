@@ -51,6 +51,7 @@ aur-git-job:
     - sed -i "3 c pkgver=$VERSION" .SRCINFO
     - head PKGBUILD
     - head .SRCINFO
+    - git commit -a -m "Updated upstream $VERSION $CI_COMMIT_DESCRIPTION"
     - git push origin master
   needs:
     - mirror-job
