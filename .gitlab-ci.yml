@@ -42,7 +42,7 @@ aur-git-job:
     - git config --global user.name "Daryl Bennett"
   script:
     - mkdir /katalogue_aur/; cd /katalogue_aur/
-    - git clone https://aur.archlinux.org/katalogue-git.git
+    - git clone ssh://aur@aur.archlinux.org/katalogue-git.git
     - cd katalogue-git
     - export VERSION=r$(git rev-list --count HEAD).$CI_COMMIT_SHORT_SHA
     - echo $VERSION
