@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # SPDX-FileCopyrightText: 2022 Daryl Bennett <kd8bny@gmail.com>
 
+add_subdirectory(adapters)
 add_subdirectory(entries)
 add_subdirectory(data)
 add_subdirectory(utils)
@@ -39,6 +40,7 @@ add_executable(katalogue
 )
 
 target_link_libraries(katalogue
+    katalogue_adapters
     katalogue_data
     katalogue_models
     katalogue_entries

@@ -20,6 +20,8 @@
 #include "version-katalogue.h"
 #include "constants/defaults.h"
 
+#include "adapters/systemClipboardAdapter.h"
+
 #include "data/databaseInit.h"
 #include "data/itemDatabase.h"
 #include "data/attributeDatabase.h"
@@ -103,8 +105,11 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
         return -1;
     }
 
+    // Adapters and Helpers
     DocumentIOHelper documentIOHelper;
     qmlRegisterSingletonInstance<DocumentIOHelper>("com.kd8bny.katalogue", 1, 0, "DocumentIOHelper", &documentIOHelper);
+    SystemClipboardAdapter systemClipboardAdapter;
+    qmlRegisterSingletonInstance<SystemClipboardAdapter>("com.kd8bny.katalogue.adapters", 1, 0, "SystemClipboardAdapter", &systemClipboardAdapter);
 
     ItemDatabase itemDatabase;
     qmlRegisterSingletonInstance<ItemDatabase>("com.kd8bny.katalogue", 1, 0, "ItemDatabase", &itemDatabase);

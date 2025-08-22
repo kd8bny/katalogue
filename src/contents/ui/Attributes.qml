@@ -5,6 +5,7 @@ import QtQuick
 import QtQuick.Controls as Controls
 import QtQuick.Layouts
 import com.kd8bny.katalogue
+import com.kd8bny.katalogue.adapters
 import com.kd8bny.katalogue.entries
 import org.kde.kirigami as Kirigami
 
@@ -67,6 +68,11 @@ Kirigami.ScrollablePage {
             contentItem: RowLayout {
                 Layout.fillWidth: true
 
+                Controls.ToolTip {
+                    text: i18n("Click for Details")
+                    visible: hovered
+                }
+
                 Rectangle {
                     radius: height
                     Layout.preferredWidth: Kirigami.Units.largeSpacing
@@ -82,6 +88,19 @@ Kirigami.ScrollablePage {
                 }
 
                 Controls.Button {
+                    icon.name: "edit-copy-symbolic"
+                    onClicked: {
+                        SystemClipboardAdapter.sendStringToSystemClipboard(value);
+                    }
+
+                    Controls.ToolTip {
+                        text: i18n("Copy to Clipboard")
+                        visible: parent.hovered
+                    }
+
+                }
+
+                Controls.Button {
                     icon.name: "edit-entry"
                     onClicked: {
                         pageStack.push("qrc:AddEditAttributePage.qml", {
@@ -89,6 +108,12 @@ Kirigami.ScrollablePage {
                             "entryAttribute": getEntryByIndex(index)
                         });
                     }
+
+                    Controls.ToolTip {
+                        text: i18n("Edit")
+                        visible: parent.hovered
+                    }
+
                 }
 
             }
